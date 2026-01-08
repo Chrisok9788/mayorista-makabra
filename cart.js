@@ -14,7 +14,7 @@ let cart = {};
  */
 export function loadCart() {
   try {
-    const stored = localStorage.getItem('cart');
+    const stored = localStorage.getItem("cart");
     cart = stored ? JSON.parse(stored) : {};
   } catch {
     cart = {};
@@ -25,7 +25,7 @@ export function loadCart() {
  * Guarda el carrito en localStorage.
  */
 export function saveCart() {
-  localStorage.setItem('cart', JSON.stringify(cart));
+  localStorage.setItem("cart", JSON.stringify(cart));
 }
 
 /**
@@ -52,12 +52,15 @@ export function addItem(productId) {
 
 /**
  * Actualiza la cantidad de un producto.
+ * - Si qty < 1 elimina el producto.
  */
 export function updateItem(productId, qty) {
-  if (qty < 1) {
+  const n = Number(qty);
+
+  if (!Number.isFinite(n) || n < 1) {
     delete cart[productId];
   } else {
-    cart[productId] = qty;
+    cart[productId] = n;
   }
   saveCart();
 }
@@ -90,11 +93,14 @@ export function totalAmount(cartObj, products) {
   let total = 0;
 
   for (const productId in cartObj) {
-    const qty = cartObj[productId];
-    const product = products.find(p => p.id === productId);
+    const qty = Number(cartObj[productId]) || 0;
+    const product = products.find((p) => p.id === productId);
 
-    if (product && typeof product.precio === 'number' && product.precio > 0) {
-      total += product.precio * qty;
+    if (product) {
+      const price = Number(product.precio) || 0;
+      if (price > 0) {
+        total += price * qty;
+      }
     }
   }
 
