@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://TU_USUARIO.github.io/mayorista-makabra-web/sitemap.xml
