@@ -1,127 +1,113 @@
 /*
  * Módulo de interfaz de usuario para el sitio del mayorista.
  * Contiene funciones para renderizar productos, el carrito,
- * actualizar contadores y filtrar resultados. Estas
- * funciones son independientes de la lógica de negocio y
- * permiten reutilizar comportamientos en distintos lugares.
+ * actualizar contadores y filtrar resultados.
+ * Totalmente compatible con GitHub Pages.
  */
 
 /**
- * Renderiza la lista de productos en un contenedor, creando una
- * tarjeta por cada producto. Se ofrece un manejador para
- * interceptar clics en el botón “Agregar”.
+ * Renderiza la lista de productos en un contenedor.
  *
  * @param {Array} list Lista de productos a mostrar.
  * @param {HTMLElement} container Elemento donde se insertan las tarjetas.
- * @param {Function} addHandler Función llamada con el ID del producto cuando se hace clic en “Agregar”.
+ * @param {Function} addHandler Función llamada con el ID del producto al hacer clic en “Agregar”.
  */
 export function renderProducts(list, container, addHandler) {
   container.innerHTML = '';
+
   if (!list.length) {
     container.innerHTML = '<p>No se encontraron productos.</p>';
     return;
   }
+
   list.forEach((product) => {
-    // Contenedor de la tarjeta
     const card = document.createElement('div');
     card.className = 'product-card';
 
-    // Determinar la etiqueta/badge según el estado del producto
+    /* ===== BADGE ===== */
     let badgeLabel = '';
     let badgeClass = '';
-    // Si existe una propiedad de stock y es cero o menor, mostramos "SIN STOCK"
+
     if (typeof product.stock !== 'undefined' && product.stock <= 0) {
       badgeLabel = 'SIN STOCK';
       badgeClass = 'sin-stock';
-    } else if (product.precio != null && product.precio > 0) {
-      // Si hay precio mayor a 0 consideramos que hay una oferta
+    } else if (product.oferta === true) {
       badgeLabel = 'OFERTA';
       badgeClass = 'oferta';
-    } else {
-      // Cuando no hay precio definido o es 0, pedimos consultar
+    } else if (product.precio == null || product.precio <= 0) {
       badgeLabel = 'CONSULTAR';
       badgeClass = 'consultar';
     }
-    // Crear y añadir el badge si corresponde
+
     if (badgeLabel) {
-      const badgeEl = document.createElement('span');
-      badgeEl.className = `badge ${badgeClass}`;
-      badgeEl.textContent = badgeLabel;
-      card.appendChild(badgeEl);
+      const badge = document.createElement('span');
+      badge.className = `badge ${badgeClass}`;
+      badge.textContent = badgeLabel;
+      card.appendChild(badge);
     }
 
-    // Imagen del producto
+    /* ===== IMAGEN ===== */
     const img = document.createElement('img');
     img.className = 'product-image';
-    // Calculamos la ruta base de manera segura. Si import.meta.env.BASE_URL
-    // no existe (por ejemplo, al abrir el HTML directamente sin Vite),
-    // utilizamos './'.
-    const BASE = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.BASE_URL)
-      ? import.meta.env.BASE_URL
-      : './';
-    // Si no hay imagen definida, usar el placeholder
+
+    const BASE =
+      typeof import.meta !== 'undefined' &&
+      import.meta.env &&
+      import.meta.env.BASE_URL
+        ? import.meta.env.BASE_URL
+        : './';
+
     img.src = product.imagen || `${BASE}placeholder.png`;
     img.alt = product.nombre;
     card.appendChild(img);
 
-    // Contenedor de contenido textual
+    /* ===== CONTENIDO ===== */
     const content = document.createElement('div');
     content.className = 'product-content';
 
-    // Nombre del producto
     const title = document.createElement('h3');
     title.textContent = product.nombre;
     content.appendChild(title);
 
-    // Información adicional: marca y presentación (si existen)
     const meta = document.createElement('div');
     meta.className = 'meta';
+
     if (product.marca) {
-      const spanMarca = document.createElement('span');
-      spanMarca.textContent = product.marca;
-      meta.appendChild(spanMarca);
+      meta.appendChild(document.createTextNode(product.marca));
     }
+
     if (product.presentacion) {
-      if (meta.childElementCount > 0) {
-        // Separador
-        const sep = document.createElement('span');
-        sep.textContent = ' · ';
-        meta.appendChild(sep);
-      }
-      const spanPres = document.createElement('span');
-      spanPres.textContent = product.presentacion;
-      meta.appendChild(spanPres);
-    }
-    if (product.categoria && meta.childElementCount === 0) {
-      // Si no hay marca ni presentación, mostrar la categoría
-      const cat = document.createElement('span');
-      cat.textContent = product.categoria;
-      meta.appendChild(cat);
-    }
-    if (meta.childElementCount > 0) {
-      content.appendChild(meta);
+      if (meta.childNodes.length) meta.appendChild(document.createTextNode(' · '));
+      meta.appendChild(document.createTextNode(product.presentacion));
     }
 
-    // Precio o mensaje de consulta
-    const precio = document.createElement('p');
-    precio.className = 'price';
+    if (!meta.childNodes.length && product.categoria) {
+      meta.appendChild(document.createTextNode(product.categoria));
+    }
+
+    if (meta.childNodes.length) content.appendChild(meta);
+
+    /* ===== PRECIO ===== */
+    const price = document.createElement('p');
+    price.className = 'price';
+
     if (product.stock !== undefined && product.stock <= 0) {
-      precio.textContent = 'Sin stock';
+      price.textContent = 'Sin stock';
     } else if (product.precio != null && product.precio > 0) {
-      precio.textContent = `$ ${product.precio}`;
+      price.textContent = `$ ${product.precio}`;
     } else {
-      precio.textContent = 'Consultar';
+      price.textContent = 'Consultar';
     }
-    content.appendChild(precio);
 
-    // Botón para agregar al carrito
-    const addBtn = document.createElement('button');
-    addBtn.className = 'btn btn-primary';
-    addBtn.textContent = 'Agregar al carrito';
-    addBtn.addEventListener('click', () => {
-      addHandler(product.id);
-    });
-    content.appendChild(addBtn);
+    content.appendChild(price);
+
+    /* ===== BOTÓN ===== */
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-primary';
+    btn.textContent = 'Agregar al carrito';
+    btn.addEventListener('click', () => addHandler(product.id));
+
+    content.appendChild(btn);
 
     card.appendChild(content);
     container.appendChild(card);
@@ -129,97 +115,80 @@ export function renderProducts(list, container, addHandler) {
 }
 
 /**
- * Renderiza los ítems del carrito en un contenedor. Cada ítem
- * incluye botones para incrementar, decrementar y eliminar,
- * así como un input para modificar la cantidad manualmente.
+ * Renderiza el carrito de compras.
  *
- * @param {Array} products Lista completa de productos (para buscar datos por id).
- * @param {Object} cart Objeto de carrito {id: qty}.
- * @param {HTMLElement} container Contenedor donde renderizar los ítems.
- * @param {Function} updateHandler Función llamada con (id, qty) para actualizar la cantidad de un ítem.
- * @param {Function} removeHandler Función llamada con (id) para eliminar un ítem.
+ * @param {Array} products Lista completa de productos.
+ * @param {Object} cart Objeto carrito {id: cantidad}.
+ * @param {HTMLElement} container Contenedor del carrito.
+ * @param {Function} updateHandler Función (id, qty).
+ * @param {Function} removeHandler Función (id).
  */
 export function renderCart(products, cart, container, updateHandler, removeHandler) {
   container.innerHTML = '';
+
   const entries = Object.entries(cart);
   if (!entries.length) {
     container.innerHTML = '<p>Tu carrito está vacío.</p>';
     return;
   }
+
   entries.forEach(([productId, qty]) => {
     const product = products.find((p) => p.id === productId);
     if (!product) return;
+
     const item = document.createElement('div');
     item.className = 'cart-item';
 
-    const nameDiv = document.createElement('div');
-    nameDiv.className = 'cart-item-name';
-    nameDiv.textContent = `${product.nombre}${product.presentacion ? ' (' + product.presentacion + ')' : ''}${product.marca ? ' [' + product.marca + ']' : ''}`;
-    item.appendChild(nameDiv);
+    const name = document.createElement('div');
+    name.className = 'cart-item-name';
+    name.textContent = product.nombre;
+    item.appendChild(name);
 
     const controls = document.createElement('div');
     controls.className = 'cart-item-controls';
 
-    const minusBtn = document.createElement('button');
-    minusBtn.textContent = '−';
-    minusBtn.addEventListener('click', () => {
-      const newQty = qty - 1;
-      updateHandler(productId, newQty);
-    });
-    controls.appendChild(minusBtn);
+    const minus = document.createElement('button');
+    minus.textContent = '−';
+    minus.onclick = () => updateHandler(productId, qty - 1);
 
-    const qtyInput = document.createElement('input');
-    qtyInput.type = 'number';
-    qtyInput.min = '1';
-    qtyInput.value = qty;
-    qtyInput.addEventListener('change', (e) => {
-      let value = parseInt(e.target.value, 10);
-      if (isNaN(value) || value < 1) {
-        value = 1;
-      }
-      updateHandler(productId, value);
-    });
-    controls.appendChild(qtyInput);
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.min = '1';
+    input.value = qty;
+    input.onchange = (e) => {
+      const v = parseInt(e.target.value, 10);
+      updateHandler(productId, isNaN(v) ? 1 : v);
+    };
 
-    const plusBtn = document.createElement('button');
-    plusBtn.textContent = '+';
-    plusBtn.addEventListener('click', () => {
-      updateHandler(productId, qty + 1);
-    });
-    controls.appendChild(plusBtn);
+    const plus = document.createElement('button');
+    plus.textContent = '+';
+    plus.onclick = () => updateHandler(productId, qty + 1);
 
-    const removeBtn = document.createElement('button');
-    removeBtn.textContent = '✖';
-    removeBtn.addEventListener('click', () => {
-      removeHandler(productId);
-    });
-    controls.appendChild(removeBtn);
+    const remove = document.createElement('button');
+    remove.textContent = '✖';
+    remove.onclick = () => removeHandler(productId);
 
+    controls.append(minus, input, plus, remove);
     item.appendChild(controls);
     container.appendChild(item);
   });
 }
 
 /**
- * Actualiza el texto del contador de items del carrito.
- *
- * @param {HTMLElement} countEl Elemento span donde mostrar el número.
- * @param {number} count Cantidad a mostrar.
+ * Actualiza el contador del carrito.
  */
 export function updateCartCount(countEl, count) {
   countEl.textContent = count;
 }
 
 /**
- * Llena un elemento select con las categorías únicas presentes en
- * la lista de productos. Las categorías se ordenan
- * alfabéticamente.
- *
- * @param {Array} products Lista de productos.
- * @param {HTMLSelectElement} select El select que se va a poblar.
+ * Carga categorías únicas en el select.
  */
 export function populateCategories(products, select) {
-  const categories = Array.from(new Set(products.map((p) => p.categoria))).sort();
+  const categories = Array.from(
+    new Set(products.map((p) => p.categoria).filter(Boolean))
+  ).sort();
+
   categories.forEach((cat) => {
     const opt = document.createElement('option');
     opt.value = cat;
@@ -229,27 +198,29 @@ export function populateCategories(products, select) {
 }
 
 /**
- * Devuelve una nueva lista filtrada de productos según una
- * categoría y un término de búsqueda. El término se busca
- * dentro del nombre, marca, categoría y tags del producto,
- * ignorando mayúsculas y minúsculas.
- *
- * @param {Array} products Lista completa de productos.
- * @param {string} category Valor del select de categoría (puede estar vacío).
- * @param {string} searchTerm Texto ingresado por el usuario en el buscador.
- * @returns {Array} Lista filtrada de productos.
+ * Filtra productos por categoría y texto.
  */
 export function filterProducts(products, category, searchTerm) {
-  let filtered = products;
+  let result = products;
+
   if (category) {
-    filtered = filtered.filter((p) => p.categoria === category);
+    result = result.filter((p) => p.categoria === category);
   }
+
   if (searchTerm) {
     const term = searchTerm.toLowerCase().trim();
-    filtered = filtered.filter((p) => {
-      const terms = [p.nombre, p.marca || '', p.categoria, (p.tags || []).join(' ')].join(' ').toLowerCase();
-      return terms.includes(term);
+    result = result.filter((p) => {
+      const text = [
+        p.nombre,
+        p.marca || '',
+        p.categoria || '',
+        (p.tags || []).join(' ')
+      ]
+        .join(' ')
+        .toLowerCase();
+      return text.includes(term);
     });
   }
-  return filtered;
+
+  return result;
 }
