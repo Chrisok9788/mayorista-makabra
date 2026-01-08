@@ -1,8 +1,6 @@
-// data.js — versión estable para GitHub Pages
+// data.js — versión final y correcta para GitHub Pages
 
-const BASE = "/mayorista-makabra/";
-
-export const PRODUCTS_URL = BASE + "data/products.json";
+export const PRODUCTS_URL = "./products.json";
 
 export async function fetchProducts() {
   const res = await fetch(PRODUCTS_URL, { cache: "no-store" });
