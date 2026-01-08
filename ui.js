@@ -22,46 +22,102 @@ export function renderProducts(list, container, addHandler) {
     return;
   }
   list.forEach((product) => {
+    // Contenedor de la tarjeta
     const card = document.createElement('div');
     card.className = 'product-card';
 
+    // Determinar la etiqueta/badge según el estado del producto
+    let badgeLabel = '';
+    let badgeClass = '';
+    // Si existe una propiedad de stock y es cero o menor, mostramos "SIN STOCK"
+    if (typeof product.stock !== 'undefined' && product.stock <= 0) {
+      badgeLabel = 'SIN STOCK';
+      badgeClass = 'sin-stock';
+    } else if (product.precio != null && product.precio > 0) {
+      // Si hay precio mayor a 0 consideramos que hay una oferta
+      badgeLabel = 'OFERTA';
+      badgeClass = 'oferta';
+    } else {
+      // Cuando no hay precio definido o es 0, pedimos consultar
+      badgeLabel = 'CONSULTAR';
+      badgeClass = 'consultar';
+    }
+    // Crear y añadir el badge si corresponde
+    if (badgeLabel) {
+      const badgeEl = document.createElement('span');
+      badgeEl.className = `badge ${badgeClass}`;
+      badgeEl.textContent = badgeLabel;
+      card.appendChild(badgeEl);
+    }
+
+    // Imagen del producto
     const img = document.createElement('img');
     img.className = 'product-image';
     // Calculamos la ruta base de manera segura. Si import.meta.env.BASE_URL
     // no existe (por ejemplo, al abrir el HTML directamente sin Vite),
-    // utilizamos '/'.
+    // utilizamos './'.
     const BASE = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.BASE_URL)
       ? import.meta.env.BASE_URL
-      : '/';
+      : './';
+    // Si no hay imagen definida, usar el placeholder
     img.src = product.imagen || `${BASE}placeholder.png`;
     img.alt = product.nombre;
     card.appendChild(img);
 
+    // Contenedor de contenido textual
     const content = document.createElement('div');
     content.className = 'product-content';
 
+    // Nombre del producto
     const title = document.createElement('h3');
     title.textContent = product.nombre;
     content.appendChild(title);
 
+    // Información adicional: marca y presentación (si existen)
+    const meta = document.createElement('div');
+    meta.className = 'meta';
     if (product.marca) {
-      const marca = document.createElement('p');
-      marca.textContent = product.marca;
-      content.appendChild(marca);
+      const spanMarca = document.createElement('span');
+      spanMarca.textContent = product.marca;
+      meta.appendChild(spanMarca);
+    }
+    if (product.presentacion) {
+      if (meta.childElementCount > 0) {
+        // Separador
+        const sep = document.createElement('span');
+        sep.textContent = ' · ';
+        meta.appendChild(sep);
+      }
+      const spanPres = document.createElement('span');
+      spanPres.textContent = product.presentacion;
+      meta.appendChild(spanPres);
+    }
+    if (product.categoria && meta.childElementCount === 0) {
+      // Si no hay marca ni presentación, mostrar la categoría
+      const cat = document.createElement('span');
+      cat.textContent = product.categoria;
+      meta.appendChild(cat);
+    }
+    if (meta.childElementCount > 0) {
+      content.appendChild(meta);
     }
 
-    const categoria = document.createElement('p');
-    categoria.textContent = product.categoria;
-    content.appendChild(categoria);
-
+    // Precio o mensaje de consulta
     const precio = document.createElement('p');
     precio.className = 'price';
-    precio.textContent = product.precio != null && product.precio !== '' ? `$ ${product.precio}` : 'Consultar';
+    if (product.stock !== undefined && product.stock <= 0) {
+      precio.textContent = 'Sin stock';
+    } else if (product.precio != null && product.precio > 0) {
+      precio.textContent = `$ ${product.precio}`;
+    } else {
+      precio.textContent = 'Consultar';
+    }
     content.appendChild(precio);
 
+    // Botón para agregar al carrito
     const addBtn = document.createElement('button');
-    addBtn.className = 'btn';
-    addBtn.textContent = 'Agregar';
+    addBtn.className = 'btn btn-primary';
+    addBtn.textContent = 'Agregar al carrito';
     addBtn.addEventListener('click', () => {
       addHandler(product.id);
     });
