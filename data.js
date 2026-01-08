@@ -20,7 +20,7 @@ const _base = (typeof import.meta !== 'undefined' && import.meta.env && import.m
   : '/';
 
 // Exportamos la ruta completa al JSON de productos utilizando la base calculada.
-export const PRODUCTS_URL = `${_base}data/products.json`;
+export const PRODUCTS_URL = `${_base}data'products.json`;
 
 /**
  * Obtiene los productos desde el JSON remoto.
