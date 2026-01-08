@@ -31,7 +31,11 @@
               <li><a href="#catalogue">Catálogo</a></li>
               <li><a href="#how">Cómo comprar</a></li>
               <li><a href="#contact">Contacto</a></li>
-              <li><a href="#cart">Carrito (<span id="cart-count">0</span>)</a></li>
+              <li>
+                <a href="#cart">
+                  Carrito (<span id="cart-count">0</span>)
+                </a>
+              </li>
             </ul>
           </nav>
         </div>
@@ -72,9 +76,17 @@
       <section id="cart" class="section">
         <div class="container">
           <h2>Carrito</h2>
+
           <div id="cart-container" class="cart-items"></div>
+
           <div class="cart-actions">
-            <button id="clear-cart-btn" class="btn" type="button">Vaciar carrito</button>
+            <div class="cart-total">
+              Total: $ <span id="cart-total">0</span>
+            </div>
+
+            <button id="clear-cart-btn" class="btn" type="button">
+              Vaciar carrito
+            </button>
             <button id="send-whatsapp-btn" class="btn btn-primary" type="button">
               Enviar pedido por WhatsApp
             </button>
@@ -106,7 +118,11 @@
             </li>
             <li>
               <strong>Instagram:</strong>
-              <a href="https://instagram.com/distribuidoramakabra" target="_blank" rel="noopener">
+              <a
+                href="https://instagram.com/distribuidoramakabra"
+                target="_blank"
+                rel="noopener"
+              >
                 @distribuidoramakabra
               </a>
             </li>
@@ -132,7 +148,7 @@
       </footer>
     </main>
 
-    <!-- IMPORTANTE: app.js está en la RAÍZ -->
+    <!-- app.js en la raíz -->
     <script type="module" src="./app.js"></script>
 
     <script>
