@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo Mayorista Altavista</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="hero">
+        <div class="hero__content">
+            <img src="logo.svg" alt="Logo Distribuidora Altavista" class="hero__logo" width="196" height="48">
+            <p class="hero__tagline">Distribución para cafeterías, hoteles y negocios independientes.</p>
+            <h1>Catálogo mayorista 2024</h1>
+            <p>Actualizamos semanalmente la disponibilidad y precios por caja para que armes tu pedido en minutos y lo confirmes por WhatsApp.</p>
+            <ul class="hero__chips">
+                <li>Pedido mínimo $1,500 MXN</li>
+                <li>Envíos al día siguiente CDMX y Edo. Mex.</li>
+                <li>Pagos SPEI / Transferencia</li>
+            </ul>
+            <div class="hero__actions">
+                <button class="hero__cta" id="scrollToCatalog" type="button">Ver catálogo</button>
+                <button class="hero__cta hero__cta--secondary" id="copiarLink" type="button">Copiar link para compartir</button>
+            </div>
+            <p class="hero__notice">Comparte este mismo enlace con tus clientes B2B o úsalo para recibir pedidos en piso de ventas.</p>
+            <div class="hero__toast" id="toastLink" role="status" aria-live="polite"></div>
+        </div>
+        <div class="hero__badge">
+            <p>Stock verificado</p>
+            <span>24h</span>
+        </div>
+    </header>
+
+    <main>
+        <section class="catalogo" id="catalogo">
+            <div class="catalogo__header">
+                <div>
+                    <h2>Productos por caja o display</h2>
+                    <p>Selecciona lo que necesitas y agrega al carrito mayorista.</p>
+                </div>
+                <label class="buscar">
+                    <span class="buscar__icon">🔍</span>
+                    <input id="buscador" type="text" placeholder="Buscar por nombre o SKU">
+                </label>
+            </div>
+            <div id="productos" class="productos-grid"></div>
+        </section>
+
+        <aside class="carrito">
+            <h3>Tu pedido mayorista</h3>
+            <p class="carrito__minimo" id="minimoPedido"></p>
+            <ul id="carritoItems" class="carrito__items"></ul>
+            <div class="carrito__totales">
+                <label class="campo">
+                    <span>Nombre del comprador</span>
+                    <input type="text" id="nombreCliente" placeholder="Ingresa el nombre del negocio">
+                </label>
+                <p class="total">Total: <strong id="total">$0.00</strong></p>
+                <p class="carrito__estado" id="estadoCarrito">Agrega productos para calcular tu pedido.</p>
+            </div>
+            <button id="enviarPedido" class="btn-whatsapp" disabled>Enviar pedido por WhatsApp</button>
+        </aside>
+    </main>
+
+    <template id="productoTemplate">
+        <article class="producto">
+            <img class="producto__imagen" alt="">
+            <div class="producto__info">
+                <div>
+                    <div class="producto__cabecera">
+                        <h3 class="producto__titulo"></h3>
+                        <span class="producto__sku"></span>
+                    </div>
+                    <p class="producto__desc"></p>
+                    <p class="producto__paquete"></p>
+                </div>
+                <div class="producto__footer">
+                    <span class="producto__precio"></span>
+                    <button class="producto__btn">Agregar al pedido</button>
+                </div>
+            </div>
+        </article>
+    </template>
+
+    <template id="itemCarritoTemplate">
+        <li class="item-carrito">
+            <div>
+                <p class="item-carrito__titulo"></p>
+                <small class="item-carrito__detalle"></small>
+            </div>
+            <div class="item-carrito__acciones">
+                <button class="item-carrito__btn" data-accion="restar">-</button>
+                <span class="item-carrito__cantidad"></span>
+                <button class="item-carrito__btn" data-accion="sumar">+</button>
+            </div>
+        </li>
+    </template>
+
+    <script src="app.js" type="module"></script>
+</body>
+</html>

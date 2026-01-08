@@ -1,0 +1,388 @@
+:root {
+    font-family: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #0f172a;
+    background-color: #f4f6fb;
+    line-height: 1.5;
+    font-weight: 400;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    background: radial-gradient(circle at top, rgba(52, 211, 153, 0.15), transparent 45%), #f8fafc;
+    color: #0f172a;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    border-radius: 20px;
+}
+
+.hero {
+    width: min(1200px, 100%);
+    margin: 2rem auto;
+    padding: 3rem;
+    border-radius: 32px;
+    background: linear-gradient(130deg, #0f172a 0%, #12263a 65%, #1f3047 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.hero__logo {
+    width: 200px;
+    height: auto;
+}
+
+.hero__tagline {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+.hero h1 {
+    font-size: clamp(2.4rem, 4vw, 3.8rem);
+    line-height: 1.1;
+}
+
+.hero__chips {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.hero__chips li {
+    background: rgba(15, 23, 42, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+}
+
+.hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.hero__cta {
+    padding: 0.95rem 1.6rem;
+    border-radius: 999px;
+    border: none;
+    background: #38bdf8;
+    color: #0f172a;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 20px 40px rgba(56, 189, 248, 0.3);
+}
+
+.hero__cta--secondary {
+    background: transparent;
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    color: #e2e8f0;
+    box-shadow: none;
+}
+
+.hero__notice {
+    font-size: 0.9rem;
+    color: #cbd5f5;
+}
+
+.hero__toast {
+    min-height: 24px;
+    font-size: 0.9rem;
+    color: #e2e8f0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.hero__toast.is-visible {
+    opacity: 1;
+}
+
+.hero__badge {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1rem 1.4rem;
+    border-radius: 16px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+}
+
+.hero__badge span {
+    display: block;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+main {
+    width: min(1200px, 100%);
+    margin: 0 auto 4rem;
+    padding: 0 1.5rem;
+    display: grid;
+    grid-template-columns: 3fr 1.3fr;
+    gap: 2rem;
+}
+
+.catalogo {
+    background: #fff;
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+}
+
+.catalogo__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.buscar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1rem;
+    border-radius: 999px;
+    background: #f1f5f9;
+}
+
+.buscar input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 0.95rem;
+}
+
+.productos-grid {
+    display: grid;
+    gap: 1.2rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.producto {
+    background: #f8fafc;
+    border-radius: 24px;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border: 1px solid rgba(15, 23, 42, 0.05);
+}
+
+.producto__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    flex: 1;
+}
+
+.producto__cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+}
+
+.producto__sku {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.producto__titulo {
+    font-size: 1.2rem;
+}
+
+.producto__desc {
+    color: #475569;
+    font-size: 0.95rem;
+}
+
+.producto__paquete {
+    font-weight: 500;
+    color: #0f172a;
+}
+
+.producto__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.producto__precio {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.producto__btn {
+    border: none;
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+    background: #2563eb;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.carrito {
+    position: sticky;
+    top: 1rem;
+    align-self: start;
+    background: #0f172a;
+    color: #fff;
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: 0 30px 60px rgba(15, 23, 42, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    height: fit-content;
+}
+
+.carrito__minimo {
+    color: #a5b4fc;
+    font-weight: 600;
+}
+
+.carrito__items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.item-carrito {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(248, 250, 252, 0.08);
+    padding: 0.8rem 1rem;
+    border-radius: 16px;
+}
+
+.item-carrito__titulo {
+    font-weight: 600;
+}
+
+.item-carrito__detalle {
+    color: #cbd5f5;
+}
+
+.item-carrito__acciones {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.item-carrito__btn {
+    border: none;
+    background: #1d4ed8;
+    color: #fff;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+}
+
+.item-carrito__cantidad {
+    min-width: 24px;
+    text-align: center;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.campo input {
+    padding: 0.5rem;
+    border-radius: 12px;
+    border: none;
+}
+
+.total {
+    font-size: 1.2rem;
+}
+
+.carrito__estado {
+    font-size: 0.95rem;
+    color: #cbd5f5;
+}
+
+.btn-whatsapp {
+    border: none;
+    border-radius: 16px;
+    padding: 1rem 1.2rem;
+    background: #25d366;
+    color: #0f172a;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-whatsapp:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 960px) {
+    main {
+        grid-template-columns: 1fr;
+    }
+
+    .carrito {
+        position: static;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        flex-direction: column;
+        padding: 2rem;
+    }
+
+    .hero__badge {
+        position: static;
+        align-self: flex-start;
+        margin-top: 1rem;
+    }
+}
+
+@media (max-width: 520px) {
+    .hero__actions {
+        flex-direction: column;
+    }
+
+    .buscar {
+        width: 100%;
+    }
+}
