@@ -5,16 +5,12 @@
  * recargas.
  */
 
-// Estructura interna del carrito. Las claves son IDs de
-// productos y los valores son cantidades. Se inicializa vacío
-// y se actualiza al cargar desde almacenamiento.
+// Estructura interna del carrito.
+// Clave: productId | Valor: cantidad
 let cart = {};
 
 /**
- * Carga el carrito desde localStorage. Si no hay datos
- * guardados o ocurre un error al parsear, se inicializa un
- * carrito vacío. Se recomienda llamar a esta función una vez
- * al iniciar la aplicación.
+ * Carga el carrito desde localStorage.
  */
 export function loadCart() {
   try {
@@ -26,41 +22,28 @@ export function loadCart() {
 }
 
 /**
- * Guarda el estado actual del carrito en localStorage. Esta
- * función se invoca internamente cada vez que se modifica el
- * carrito.
+ * Guarda el carrito en localStorage.
  */
 export function saveCart() {
   localStorage.setItem('cart', JSON.stringify(cart));
 }
 
 /**
- * Devuelve una copia superficial del carrito actual. Así se
- * evita que otras funciones modifiquen accidentalmente la
- * referencia interna.
- *
- * @returns {Object} Una copia del objeto de carrito actual.
+ * Devuelve una copia del carrito actual.
  */
 export function getCart() {
   return { ...cart };
 }
 
 /**
- * Devuelve el número total de ítems en el carrito, sumando
- * cantidades. Por ejemplo, si hay 2 unidades del producto 1 y
- * 3 del producto 2, totalItems() devolverá 5.
- *
- * @returns {number} Cantidad total de ítems.
+ * Devuelve el total de ítems (sumatoria de cantidades).
  */
 export function totalItems() {
   return Object.values(cart).reduce((sum, qty) => sum + qty, 0);
 }
 
 /**
- * Agrega una unidad del producto indicado al carrito. Si el
- * producto ya existe en el carrito, incrementa la cantidad.
- *
- * @param {string} productId Identificador del producto.
+ * Agrega una unidad de un producto al carrito.
  */
 export function addItem(productId) {
   cart[productId] = (cart[productId] || 0) + 1;
@@ -68,11 +51,7 @@ export function addItem(productId) {
 }
 
 /**
- * Establece la cantidad de un producto en el carrito. Si la
- * cantidad es menor a 1 se elimina el ítem.
- *
- * @param {string} productId Identificador del producto.
- * @param {number} qty Cantidad deseada.
+ * Actualiza la cantidad de un producto.
  */
 export function updateItem(productId, qty) {
   if (qty < 1) {
@@ -85,8 +64,6 @@ export function updateItem(productId, qty) {
 
 /**
  * Elimina un producto del carrito.
- *
- * @param {string} productId Identificador del producto a eliminar.
  */
 export function removeItem(productId) {
   delete cart[productId];
@@ -94,9 +71,32 @@ export function removeItem(productId) {
 }
 
 /**
- * Vacía completamente el carrito y actualiza el almacenamiento.
+ * Vacía completamente el carrito.
  */
 export function clearCart() {
   cart = {};
   saveCart();
+}
+
+/**
+ * Calcula el MONTO TOTAL del carrito en base a los productos.
+ * - Ignora productos con precio 0 (Consultar)
+ *
+ * @param {Object} cartObj Carrito (id -> cantidad)
+ * @param {Array} products Lista de productos
+ * @returns {number} Total en pesos
+ */
+export function totalAmount(cartObj, products) {
+  let total = 0;
+
+  for (const productId in cartObj) {
+    const qty = cartObj[productId];
+    const product = products.find(p => p.id === productId);
+
+    if (product && typeof product.precio === 'number' && product.precio > 0) {
+      total += product.precio * qty;
+    }
+  }
+
+  return total;
 }
