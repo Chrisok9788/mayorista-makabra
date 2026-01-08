@@ -5,7 +5,7 @@
  * cuando el usuario interactúa.
  */
 
-import { fetchProducts } from './data.js';
+import { fetchProducts } from "./data.js";
 import {
   loadCart,
   getCart,
@@ -15,15 +15,15 @@ import {
   clearCart,
   totalItems,
   totalAmount,
-} from './cart.js';
+} from "./cart.js";
 import {
   renderProducts,
   renderCart,
   updateCartCount,
   populateCategories,
   filterProducts,
-} from './ui.js';
-import { sendOrder } from './whatsapp.js';
+} from "./ui.js";
+import { sendOrder } from "./whatsapp.js";
 
 // Lista de productos cargada desde el JSON
 let products = [];
@@ -33,139 +33,125 @@ let products = [];
  * Requiere un elemento con id="cart-total" en el HTML.
  */
 function updateTotal() {
-  const totalEl = document.getElementById('cart-total');
-  if (!totalEl) return; // por si el usuario elimina el bloque del total en HTML
+  const totalEl = document.getElementById("cart-total");
+  if (!totalEl) return;
 
   const total = totalAmount(getCart(), products);
-  totalEl.textContent = total.toLocaleString('es-UY');
+  // Formato $ 1.234
+  totalEl.textContent = "$ " + (Number(total) || 0).toLocaleString("es-UY");
+}
+
+/**
+ * Re-render del carrito + contador + total (para evitar duplicación).
+ */
+function rerenderCartUI() {
+  updateCartCount(document.getElementById("cart-count"), totalItems());
+
+  renderCart(
+    products,
+    getCart(),
+    document.getElementById("cart-container"),
+    handleUpdate,
+    handleRemove
+  );
+
+  updateTotal();
 }
 
 /**
  * Manejador para agregar un producto al carrito.
- *
- * @param {string} productId Identificador del producto a agregar.
  */
 function handleAdd(productId) {
   addItem(productId);
-  updateCartCount(document.getElementById('cart-count'), totalItems());
-  renderCart(
-    products,
-    getCart(),
-    document.getElementById('cart-container'),
-    handleUpdate,
-    handleRemove
-  );
-  updateTotal();
+  rerenderCartUI();
 }
 
 /**
  * Manejador para actualizar la cantidad de un producto en el carrito.
- *
- * @param {string} productId Identificador del producto.
- * @param {number} qty Nueva cantidad.
  */
 function handleUpdate(productId, qty) {
   updateItem(productId, qty);
-  updateCartCount(document.getElementById('cart-count'), totalItems());
-  renderCart(
-    products,
-    getCart(),
-    document.getElementById('cart-container'),
-    handleUpdate,
-    handleRemove
-  );
-  updateTotal();
+  rerenderCartUI();
 }
 
 /**
  * Manejador para eliminar un producto del carrito.
- *
- * @param {string} productId Identificador del producto a eliminar.
  */
 function handleRemove(productId) {
   removeItem(productId);
-  updateCartCount(document.getElementById('cart-count'), totalItems());
-  renderCart(
-    products,
-    getCart(),
-    document.getElementById('cart-container'),
-    handleUpdate,
-    handleRemove
-  );
-  updateTotal();
+  rerenderCartUI();
 }
 
 /**
- * Aplica el filtrado según la categoría seleccionada y el término
- * de búsqueda ingresado, luego renderiza la grilla de productos.
+ * Aplica filtrado por categoría y búsqueda y vuelve a renderizar.
  */
 function applySearchAndFilter() {
-  const searchTerm = document.getElementById('search-input').value;
-  const selectedCategory = document.getElementById('category-filter').value;
+  const searchInput = document.getElementById("search-input");
+  const categorySelect = document.getElementById("category-filter");
+
+  const searchTerm = searchInput ? searchInput.value : "";
+  const selectedCategory = categorySelect ? categorySelect.value : "";
+
   const filtered = filterProducts(products, selectedCategory, searchTerm);
-  renderProducts(filtered, document.getElementById('products-container'), handleAdd);
+  renderProducts(filtered, document.getElementById("products-container"), handleAdd);
 }
 
 /**
- * Inicializa la aplicación. Carga el carrito y los productos,
- * renderiza la interfaz inicial y configura los eventos de
- * interacción del usuario.
+ * Inicializa la aplicación.
  */
 async function init() {
-  // Recuperar el carrito almacenado
+  // Cargar carrito desde localStorage
   loadCart();
-  updateCartCount(document.getElementById('cart-count'), totalItems());
+  updateCartCount(document.getElementById("cart-count"), totalItems());
 
   try {
+    // Cargar productos
     products = await fetchProducts();
 
-    populateCategories(products, document.getElementById('category-filter'));
-    renderProducts(products, document.getElementById('products-container'), handleAdd);
+    // Categorías
+    const categoryFilter = document.getElementById("category-filter");
+    if (categoryFilter) populateCategories(products, categoryFilter);
 
-    renderCart(
-      products,
-      getCart(),
-      document.getElementById('cart-container'),
-      handleUpdate,
-      handleRemove
-    );
+    // Render catálogo
+    renderProducts(products, document.getElementById("products-container"), handleAdd);
 
-    // Total inicial (cuando ya cargaron productos)
-    updateTotal();
+    // Render carrito inicial + total
+    rerenderCartUI();
   } catch (err) {
     console.error(err);
-    document.getElementById('products-container').innerHTML =
-      `<p>Ocurrió un error al cargar los productos.</p>`;
+    const pc = document.getElementById("products-container");
+    if (pc) pc.innerHTML = `<p>Ocurrió un error al cargar los productos.</p>`;
   }
 
-  // Configurar eventos
-  document.getElementById('search-input').addEventListener('input', applySearchAndFilter);
-  document.getElementById('category-filter').addEventListener('change', applySearchAndFilter);
+  // Eventos filtros
+  const searchEl = document.getElementById("search-input");
+  if (searchEl) searchEl.addEventListener("input", applySearchAndFilter);
 
-  document.getElementById('clear-cart-btn').addEventListener('click', () => {
-    clearCart();
-    updateCartCount(document.getElementById('cart-count'), totalItems());
+  const catEl = document.getElementById("category-filter");
+  if (catEl) catEl.addEventListener("change", applySearchAndFilter);
 
-    renderCart(
-      products,
-      getCart(),
-      document.getElementById('cart-container'),
-      handleUpdate,
-      handleRemove
-    );
+  // Vaciar carrito
+  const clearBtn = document.getElementById("clear-cart-btn");
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      clearCart();
+      rerenderCartUI();
+    });
+  }
 
-    updateTotal();
-  });
-
-  document.getElementById('send-whatsapp-btn').addEventListener('click', () => {
-    const currentCart = getCart();
-    if (Object.keys(currentCart).length === 0) {
-      alert('Tu carrito está vacío');
-      return;
-    }
-    sendOrder(currentCart, products);
-  });
+  // Enviar WhatsApp
+  const sendBtn = document.getElementById("send-whatsapp-btn");
+  if (sendBtn) {
+    sendBtn.addEventListener("click", () => {
+      const currentCart = getCart();
+      if (Object.keys(currentCart).length === 0) {
+        alert("Tu carrito está vacío");
+        return;
+      }
+      sendOrder(currentCart, products);
+    });
+  }
 }
 
-// Ejecutar la inicialización al cargar el módulo
+// Ejecutar inicialización
 init();
