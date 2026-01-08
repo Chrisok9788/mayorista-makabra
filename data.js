@@ -1,31 +1,19 @@
-/*
- * Módulo para cargar productos desde el archivo JSON.
- *
- * Construye correctamente la ruta al archivo products.json
- * tanto para GitHub Pages como para ejecución local.
- */
+// data.js
+// Carga de productos desde products.json compatible con GitHub Pages
 
-// Determinar la base correcta (GitHub Pages / entorno normal)
-const BASE_URL =
-  (typeof import.meta !== 'undefined' &&
-    import.meta.env &&
-    import.meta.env.BASE_URL)
+const BASE =
+  typeof import.meta !== "undefined" &&
+  import.meta.env &&
+  import.meta.env.BASE_URL
     ? import.meta.env.BASE_URL
-    : './';
+    : "/";
 
-// Ruta FINAL y correcta al JSON de productos
-export const PRODUCTS_URL = `${BASE_URL}products.json`;
+export const PRODUCTS_URL = `${BASE}products.json`;
 
-/**
- * Obtiene los productos desde el JSON.
- * @returns {Promise<Array>}
- */
 export async function fetchProducts() {
-  const response = await fetch(PRODUCTS_URL);
-
-  if (!response.ok) {
-    throw new Error(`No se pudo cargar el catálogo desde ${PRODUCTS_URL}`);
+  const res = await fetch(PRODUCTS_URL);
+  if (!res.ok) {
+    throw new Error(`No se pudo cargar products.json (${res.status})`);
   }
-
-  return await response.json();
+  return await res.json();
 }
