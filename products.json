@@ -398,7 +398,7 @@
   {
     "id": "cerveza-patricia-1lt-12-39",
     "nombre": "Cerveza Patricia 1Lt*12",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 1630.0,
     "imagen": "",
     "oferta": false,
@@ -409,7 +409,7 @@
   {
     "id": "cerveza-pilsen-1lt-12-40",
     "nombre": "Cerveza Pilsen 1Lt  *12",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 1479.0,
     "imagen": "",
     "oferta": false,
@@ -420,7 +420,7 @@
   {
     "id": "cerveza-schin-473cc-lata-12-41",
     "nombre": "Cerveza Schin 473Cc Lata*12",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 465.0,
     "imagen": "",
     "oferta": false,
@@ -431,7 +431,7 @@
   {
     "id": "cerveza-chopito-pilsen-24-42",
     "nombre": "Cerveza Chopito Pilsen *24",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 890.0,
     "imagen": "",
     "oferta": false,
@@ -6393,7 +6393,7 @@
   {
     "id": "jugos-clight-20-725",
     "nombre": "Jugos Clight *20",
-    "categoria": "Jugos",
+    "categoria": "Jugo",
     "precio": 380.0,
     "imagen": "",
     "oferta": false,
@@ -6492,7 +6492,7 @@
   {
     "id": "pilsen-lata-6-739",
     "nombre": "Pilsen Lata *6",
-    "categoria": "Otros",
+    "categoria": "Cerveza",
     "precio": 410.0,
     "imagen": "",
     "oferta": false,
@@ -6525,7 +6525,7 @@
   {
     "id": "colina-cerveza-12-746",
     "nombre": "Colina Cerveza *12",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 449.0,
     "imagen": "",
     "oferta": false,
@@ -6921,7 +6921,7 @@
   {
     "id": "wafles-limon-795",
     "nombre": "Wafles Limon",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Galletas",
     "precio": 16.0,
     "imagen": "",
     "oferta": false,
@@ -6987,7 +6987,7 @@
   {
     "id": "cepita-naranja-995ml-6-801",
     "nombre": "Cepita Naranja 995Ml*6",
-    "categoria": "Frutas y Verduras",
+    "categoria": "jugo",
     "precio": 399.0,
     "imagen": "",
     "oferta": false,
@@ -6998,7 +6998,7 @@
   {
     "id": "cepita-manzana-995ml-6-802",
     "nombre": "Cepita Manzana 995Ml*6",
-    "categoria": "Frutas y Verduras",
+    "categoria": "jugo",
     "precio": 399.0,
     "imagen": "",
     "oferta": false,
@@ -7031,7 +7031,7 @@
   {
     "id": "malta-1lt-12-806",
     "nombre": "Malta 1Lt *12",
-    "categoria": "Otros",
+    "categoria": "Cerveza",
     "precio": 1650.0,
     "imagen": "",
     "oferta": false,
@@ -7064,7 +7064,7 @@
   {
     "id": "atun-nidemar-agua-810",
     "nombre": "Atun Nidemar Agua",
-    "categoria": "Agua",
+    "categoria": "Enlatados",
     "precio": 35.0,
     "imagen": "",
     "oferta": false,
@@ -7218,7 +7218,7 @@
   {
     "id": "atun-aida-aceite-834",
     "nombre": "Atun Aida Aceite",
-    "categoria": "Desayuno",
+    "categoria": "Enlatado",
     "precio": 38.0,
     "imagen": "",
     "oferta": false,
@@ -7284,7 +7284,7 @@
   {
     "id": "rulito-bronce-841",
     "nombre": "Rulito Bronce",
-    "categoria": "Alcohol",
+    "categoria": "",
     "precio": 35.0,
     "imagen": "",
     "oferta": false,
@@ -7317,7 +7317,7 @@
   {
     "id": "wafle-surtido-844",
     "nombre": "Wafle Surtido",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 16.0,
     "imagen": "",
     "oferta": false,
@@ -7328,7 +7328,7 @@
   {
     "id": "cerv-corona-330cc-24-845",
     "nombre": "Cerv Corona 330Cc *24",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 1450.0,
     "imagen": "",
     "oferta": false,
@@ -7416,7 +7416,7 @@
   {
     "id": "nativa-sin-gas-1-650-858",
     "nombre": "Nativa Sin Gas 1.650",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 72.0,
     "imagen": "",
     "oferta": false,
@@ -7449,7 +7449,7 @@
   {
     "id": "turron-olimpo-blanco-861",
     "nombre": "Turron Olimpo Blanco",
-    "categoria": "Alcohol",
+    "categoria": "Turron",
     "precio": 38.0,
     "imagen": "",
     "oferta": false,
@@ -9605,7 +9605,7 @@
   {
     "id": "cerveza-chopito-patricia-24-1190",
     "nombre": "Cerveza Chopito Patricia *24",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 1190.0,
     "imagen": "",
     "oferta": false,
@@ -9924,7 +9924,7 @@
   {
     "id": "cerveza-alemana-5-0-12-1223",
     "nombre": "Cerveza Alemana 5.0 *12",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 649.0,
     "imagen": "",
     "oferta": false,
