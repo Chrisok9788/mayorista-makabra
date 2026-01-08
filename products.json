@@ -44,7 +44,7 @@
     "tags": [],
     "id": "jager-750cc",
     "imagen": "",
-    "oferta": false
+    "oferta": true
   },
   {
     "nombre": "JOHNNIE Rojo 1LT",
@@ -53,7 +53,7 @@
     "tags": [],
     "id": "johnnie-rojo-1lt",
     "imagen": "",
-    "oferta": false
+    "oferta": true
   },
   {
     "nombre": "GRATED NIDEMAR 170GR",
@@ -278,7 +278,7 @@
     "tags": [],
     "id": "picadas-lays-320gr",
     "imagen": "",
-    "oferta": false
+    "oferta": true
   },
   {
     "nombre": "MANIX 50GR",
@@ -368,7 +368,7 @@
     "tags": [],
     "id": "cerveza-patricia-1lt-12",
     "imagen": "",
-    "oferta": false
+    "oferta": true
   },
   {
     "nombre": "CERVEZA PILSEN 1LT  *12",
@@ -377,7 +377,7 @@
     "tags": [],
     "id": "cerveza-pilsen-1lt-12",
     "imagen": "",
-    "oferta": false
+    "oferta": true
   },
   {
     "nombre": "CERVEZA SCHIN 473cc LATA*12",
@@ -395,7 +395,7 @@
     "tags": [],
     "id": "cerveza-chopito-pilsen-24",
     "imagen": "",
-    "oferta": false
+    "oferta": true
   },
   {
     "nombre": "COCA COLA 1.5*6",
