@@ -783,7 +783,7 @@
   {
     "id": "powerade-600-6-naranja-78",
     "nombre": "Powerade 600*6 Naranja",
-    "categoria": "Coca Cola",
+    "categoria": "Energizante",
     "precio": 290.0,
     "imagen": "",
     "oferta": false,
@@ -794,7 +794,7 @@
   {
     "id": "full-sport-azul-640-ml-6-79",
     "nombre": "Full Sport Azul 640 Ml*6",
-    "categoria": "Otros",
+    "categoria": "Energizante",
     "precio": 270.0,
     "imagen": "",
     "oferta": false,
@@ -805,7 +805,7 @@
   {
     "id": "full-sport-manzana-640ml-6-80",
     "nombre": "Full Sport Manzana 640Ml*6",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Energizante",
     "precio": 270.0,
     "imagen": "",
     "oferta": false,
@@ -816,7 +816,7 @@
   {
     "id": "full-sport-naranja-640ml-6-81",
     "nombre": "Full Sport Naranja 640Ml*6",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Energizante",
     "precio": 270.0,
     "imagen": "",
     "oferta": false,
@@ -1113,7 +1113,7 @@
   {
     "id": "agua-jane-1lt-113",
     "nombre": "Agua Jane 1Lt",
-    "categoria": "Agua",
+    "categoria": "Desinfectantes",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
@@ -1322,7 +1322,7 @@
   {
     "id": "vino-roses-1lt-tinto-suave-134",
     "nombre": "Vino Roses 1Lt Tinto Suave",
-    "categoria": "Alcohol",
+    "categoria": "Vinos",
     "precio": 117.0,
     "imagen": "",
     "oferta": false,
@@ -1333,7 +1333,7 @@
   {
     "id": "vino-roses-1lt-rosado-dulce-135",
     "nombre": "Vino Roses 1Lt Rosado  Dulce",
-    "categoria": "Alcohol",
+    "categoria": "Vinos",
     "precio": 117.0,
     "imagen": "",
     "oferta": false,
@@ -1344,7 +1344,7 @@
   {
     "id": "vino-roses-1lt-rosado-136",
     "nombre": "Vino Roses 1Lt Rosado",
-    "categoria": "Alcohol",
+    "categoria": "Vinos",
     "precio": 117.0,
     "imagen": "",
     "oferta": false,
@@ -1355,7 +1355,7 @@
   {
     "id": "faisan-1lt-tinto-137",
     "nombre": "Faisan 1Lt Tinto",
-    "categoria": "Otros",
+    "categoria": "Vinos",
     "precio": 112.0,
     "imagen": "",
     "oferta": false,
@@ -1366,7 +1366,7 @@
   {
     "id": "faisan-1lt-merlot-138",
     "nombre": "Faisan 1Lt Merlot",
-    "categoria": "Otros",
+    "categoria": "Vinos",
     "precio": 112.0,
     "imagen": "",
     "oferta": false,
@@ -1377,7 +1377,7 @@
   {
     "id": "faisan-1lt-moscatel-139",
     "nombre": "Faisan 1Lt Moscatel",
-    "categoria": "Desayuno",
+    "categoria": "Vinos",
     "precio": 112.0,
     "imagen": "",
     "oferta": false,
@@ -1388,7 +1388,7 @@
   {
     "id": "faisan-1lt-rosado-dulce-140",
     "nombre": "Faisan 1Lt Rosado Dulce",
-    "categoria": "Dulces y Chocolates",
+    "categoria": "Vinos",
     "precio": 112.0,
     "imagen": "",
     "oferta": false,
@@ -1399,7 +1399,7 @@
   {
     "id": "faisan-1lt-tinto-dulce-141",
     "nombre": "Faisan 1Lt Tinto Dulce",
-    "categoria": "Dulces y Chocolates",
+    "categoria": "Vinos",
     "precio": 112.0,
     "imagen": "",
     "oferta": false,
@@ -1410,7 +1410,7 @@
   {
     "id": "aceite-condesa-900cc-143",
     "nombre": "Aceite Condesa 900Cc",
-    "categoria": "Desayuno",
+    "categoria": "Aceite",
     "precio": 69.0,
     "imagen": "",
     "oferta": false,
@@ -1421,7 +1421,7 @@
   {
     "id": "aceite-optimo-900cc-144",
     "nombre": "Aceite Optimo 900Cc",
-    "categoria": "Desayuno",
+    "categoria": "Aceite",
     "precio": 94.0,
     "imagen": "",
     "oferta": false,
@@ -1432,7 +1432,7 @@
   {
     "id": "aceite-uruguay-900cc-145",
     "nombre": "Aceite Uruguay 900Cc",
-    "categoria": "Desayuno",
+    "categoria": "Aceite",
     "precio": 83.0,
     "imagen": "",
     "oferta": false,
@@ -1443,7 +1443,7 @@
   {
     "id": "adobo-moncayo-1kg-146",
     "nombre": "Adobo Moncayo 1Kg",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 335.0,
     "imagen": "",
     "oferta": false,
@@ -1454,7 +1454,7 @@
   {
     "id": "cafe-aguila-120-sobres-147",
     "nombre": "Cafe Aguila *120 Sobres",
-    "categoria": "Desayuno",
+    "categoria": "Cafe",
     "precio": 397.0,
     "imagen": "",
     "oferta": false,
@@ -1465,7 +1465,7 @@
   {
     "id": "ajo-y-perejil-moncayo-1kg-148",
     "nombre": "Ajo Y Perejil Moncayo 1Kg",
-    "categoria": "Otros",
+    "categoria": "Condimento",
     "precio": 390.0,
     "imagen": "",
     "oferta": false,
@@ -1773,7 +1773,7 @@
   {
     "id": "polenta-aida-400gr-193",
     "nombre": "Polenta Aida *400Gr",
-    "categoria": "Otros",
+    "categoria": "Polenta",
     "precio": 22.0,
     "imagen": "",
     "oferta": false,
@@ -1784,7 +1784,7 @@
   {
     "id": "polenta-puritas-450gr-194",
     "nombre": "Polenta Puritas 450Gr",
-    "categoria": "Otros",
+    "categoria": "Polenta",
     "precio": 32.0,
     "imagen": "",
     "oferta": false,
@@ -1839,7 +1839,7 @@
   {
     "id": "pimenton-moncayo-1kg-199",
     "nombre": "Pimenton Moncayo 1Kg",
-    "categoria": "Otros",
+    "categoria": "Condimento",
     "precio": 299.0,
     "imagen": "",
     "oferta": false,
