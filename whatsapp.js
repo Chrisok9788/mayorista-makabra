@@ -1,58 +1,106 @@
 /*
- * Módulo para construir y enviar el pedido por WhatsApp.
- * Genera un texto con los productos del carrito y abre wa.me
- * con el mensaje prellenado.
+ * whatsapp.js
+ * Genera y envía el pedido por WhatsApp con:
+ * - ID interno de pedido
+ * - ID de cliente persistente
+ * - Dirección para clientes nuevos
+ * - Detalle de productos
+ * - Total del pedido
  */
 
+function formatUYU(n) {
+  const num = Number(n) || 0;
+  return "$ " + num.toLocaleString("es-UY");
+}
+
+function makeOrderId() {
+  // ID interno de pedido (ej: MK-LS8F2Q)
+  return "MK-" + Date.now().toString(36).toUpperCase();
+}
+
+function getOrCreateCustomerId() {
+  let id = localStorage.getItem("customerId");
+  if (!id) {
+    id = "C-" + Math.floor(Math.random() * 900000 + 100000);
+    localStorage.setItem("customerId", id);
+  }
+  return id;
+}
+
+/**
+ * Envía el pedido armado por WhatsApp
+ *
+ * @param {Object} cart Objeto carrito { productId: qty }
+ * @param {Array} products Lista completa de productos
+ */
 export function sendOrder(cart, products) {
-  // Número WhatsApp (sin +). Ajustalo si querés.
-  const phone = "59896405927";
+  const customerId = getOrCreateCustomerId();
+  const orderId = makeOrderId();
 
-  // Ayudante: buscar producto por id
-  const findProduct = (id) => products.find((p) => p.id === id);
+  // Dirección (solo se pide una vez)
+  let address = localStorage.getItem("customerAddress") || "";
+  const isNewCustomer = !address;
 
-  let lines = [];
-  let total = 0;
+  if (isNewCustomer) {
+    address =
+      prompt(
+        "Cliente nuevo:\nIngresá tu dirección para coordinar la entrega."
+      ) || "";
 
-  lines.push("Hola Makabra, quiero hacer un pedido:");
-  lines.push("");
-
-  // Construimos líneas del pedido
-  for (const productId of Object.keys(cart)) {
-    const qty = cart[productId];
-    const product = findProduct(productId);
-
-    if (!product) continue;
-
-    const nameParts = [
-      product.nombre || "Producto",
-      product.marca ? `(${product.marca})` : "",
-      product.presentacion ? `- ${product.presentacion}` : "",
-    ].filter(Boolean);
-
-    const title = nameParts.join(" ").replace(/\s+/g, " ").trim();
-
-    const price = typeof product.precio === "number" ? product.precio : 0;
-
-    if (price > 0) {
-      const lineSubtotal = price * qty;
-      total += lineSubtotal;
-
-      lines.push(
-        `• ${title} x${qty} — $${price.toLocaleString("es-UY")} c/u = $${lineSubtotal.toLocaleString("es-UY")}`
-      );
-    } else {
-      lines.push(`• ${title} x${qty} — CONSULTAR`);
+    if (address.trim()) {
+      localStorage.setItem("customerAddress", address.trim());
     }
   }
 
+  const lines = [];
+  lines.push(`Pedido: ${orderId}`);
+  lines.push(`Cliente: ${customerId}`);
   lines.push("");
-  lines.push(`TOTAL: $${total.toLocaleString("es-UY")}`);
+
+  let total = 0;
+  let hasConsult = false;
+
+  Object.entries(cart).forEach(([productId, qty]) => {
+    const product = products.find((p) => p.id === productId);
+    if (!product) return;
+
+    const price = Number(product.precio) || 0;
+
+    if (price <= 0) {
+      hasConsult = true;
+      lines.push(`${qty} x ${product.nombre} — Consultar precio`);
+      return;
+    }
+
+    const subtotal = price * qty;
+    total += subtotal;
+
+    lines.push(
+      `${qty} x ${product.nombre} — ${formatUYU(price)} c/u — Subtotal: ${formatUYU(subtotal)}`
+    );
+  });
+
   lines.push("");
-  lines.push("Gracias.");
 
-  const message = encodeURIComponent(lines.join("\n"));
-  const url = `https://wa.me/${phone}?text=${message}`;
+  if (hasConsult) {
+    lines.push("Nota: Algunos productos quedan como 'Consultar precio'.");
+  }
 
-  window.open(url, "_blank", "noopener");
+  lines.push(`Total (sin consultables): ${formatUYU(total)}`);
+
+  if (address.trim()) {
+    lines.push("");
+    lines.push(`Dirección: ${address.trim()}`);
+  }
+
+  lines.push("");
+  lines.push(
+    "A la brevedad nos comunicaremos vía WhatsApp para coordinar."
+  );
+
+  const message = lines.join("\n");
+  const whatsappURL =
+    "https://wa.me/59896405927?text=" + encodeURIComponent(message);
+
+  window.open(whatsappURL, "_blank");
 }
