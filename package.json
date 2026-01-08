@@ -1,0 +1,17 @@
+{
+  "name": "mayorista-makabra-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build:products": "node scripts/build-products.mjs"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vite": "^5.0.10",
+    "xlsx": "^0.18.5"
+  }
+}
