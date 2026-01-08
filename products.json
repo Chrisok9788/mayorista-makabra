@@ -46,7 +46,7 @@
   {
     "id": "kotex-normal-8-6",
     "nombre": "Kotex Normal*8",
-    "categoria": "Desayuno",
+    "categoria": "Cuidado Femenino",
     "precio": 84.0,
     "imagen": "",
     "oferta": false,
@@ -57,7 +57,7 @@
   {
     "id": "toallitas-mimosa-normal-8-7",
     "nombre": "Toallitas Mimosa Normal*8",
-    "categoria": "Otros",
+    "categoria": "Cuidado Femenino",
     "precio": 54.0,
     "imagen": "",
     "oferta": false,
@@ -68,7 +68,7 @@
   {
     "id": "toallitas-mimosa-nocturna-8-8",
     "nombre": "Toallitas Mimosa Nocturna*8",
-    "categoria": "Otros",
+    "categoria": "Cuidado Femenino",
     "precio": 96.0,
     "imagen": "",
     "oferta": false,
@@ -79,7 +79,7 @@
   {
     "id": "protectores-diarios-mimosa-20-9",
     "nombre": "Protectores Diarios Mimosa*20",
-    "categoria": "Desayuno",
+    "categoria": "Cuidado Femenino",
     "precio": 62.0,
     "imagen": "",
     "oferta": false,
@@ -90,7 +90,7 @@
   {
     "id": "toallitas-mili-8-suave-10",
     "nombre": "Toallitas Mili *8 Suave",
-    "categoria": "Otros",
+    "categoria": "Cuidado Femenino",
     "precio": 43.0,
     "imagen": "",
     "oferta": false,
@@ -112,7 +112,7 @@
   {
     "id": "aspirina-10-comprimidos-12",
     "nombre": "Aspirina*10 Comprimidos",
-    "categoria": "Otros",
+    "categoria": "Médico a domicilio",
     "precio": 71.0,
     "imagen": "",
     "oferta": false,
@@ -123,7 +123,7 @@
   {
     "id": "biogrip-soluble-5-sobres-13",
     "nombre": "Biogrip Soluble*5 Sobres",
-    "categoria": "Otros",
+    "categoria": "Médico a domicilio",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
@@ -156,7 +156,7 @@
   {
     "id": "novemina-fuerte-10-16",
     "nombre": "Novemina Fuerte *10",
-    "categoria": "Desayuno",
+    "categoria": "Médico a domicilio",
     "precio": 82.0,
     "imagen": "",
     "oferta": false,
@@ -200,7 +200,7 @@
   {
     "id": "flodigrip-10-comprimidos-20",
     "nombre": "Flodigrip *10 Comprimidos",
-    "categoria": "Otros",
+    "categoria": "Médico a domicilio",
     "precio": 116.0,
     "imagen": "",
     "oferta": false,
@@ -244,7 +244,7 @@
   {
     "id": "uvasal-12-sobres-24",
     "nombre": "Uvasal *12 Sobres",
-    "categoria": "Otros",
+    "categoria": "Médico a domicilio",
     "precio": 210.0,
     "imagen": "",
     "oferta": false,
@@ -255,7 +255,7 @@
   {
     "id": "cheetos-23gr-26",
     "nombre": "Cheetos 23Gr",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 41.0,
     "imagen": "",
     "oferta": false,
@@ -299,7 +299,7 @@
   {
     "id": "manix-50gr-30",
     "nombre": "Manix 50Gr",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 31.0,
     "imagen": "",
     "oferta": false,
@@ -387,7 +387,7 @@
   {
     "id": "cepita-naranja-1-5-6-38",
     "nombre": "Cepita Naranja 1.5*6",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Jugo",
     "precio": 510.0,
     "imagen": "",
     "oferta": false,
@@ -717,7 +717,7 @@
   {
     "id": "petaca-gregson-71",
     "nombre": "Petaca Gregson",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 124.0,
     "imagen": "",
     "oferta": false,
@@ -860,7 +860,7 @@
   {
     "id": "sprite-mini-6-85",
     "nombre": "Sprite Mini*6",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 185.0,
     "imagen": "",
     "oferta": false,
@@ -904,7 +904,7 @@
   {
     "id": "bombon-oreo-247gr-89",
     "nombre": "Bombon Oreo 247Gr",
-    "categoria": "Otros",
+    "categoria": "Dulces y Chocolates",
     "precio": 190.0,
     "imagen": "",
     "oferta": false,
@@ -937,7 +937,7 @@
   {
     "id": "fini-bananitas-500gr-92",
     "nombre": "Fini Bananitas 500Gr",
-    "categoria": "Otros",
+    "categoria": "Dulces y Chocolates",
     "precio": 146.0,
     "imagen": "",
     "oferta": false,
@@ -948,7 +948,7 @@
   {
     "id": "fini-frutillitas-500gr-93",
     "nombre": "Fini Frutillitas 500Gr",
-    "categoria": "Otros",
+    "categoria": "Dulces y Chocolates",
     "precio": 146.0,
     "imagen": "",
     "oferta": false,
@@ -959,7 +959,7 @@
   {
     "id": "fini-aritos-500gr-94",
     "nombre": "Fini Aritos 500Gr",
-    "categoria": "Otros",
+    "categoria": "Dulces y Chocolates",
     "precio": 146.0,
     "imagen": "",
     "oferta": false,
@@ -970,7 +970,7 @@
   {
     "id": "fini-moras-500gr-95",
     "nombre": "Fini Moras 500Gr",
-    "categoria": "Otros",
+    "categoria": "Dulces y Chocolates",
     "precio": 146.0,
     "imagen": "",
     "oferta": false,
@@ -981,7 +981,7 @@
   {
     "id": "fini-dentadura-500gr-96",
     "nombre": "Fini Dentadura 500Gr",
-    "categoria": "Otros",
+    "categoria": "Dulces y Chocolates",
     "precio": 146.0,
     "imagen": "",
     "oferta": false,
@@ -992,7 +992,7 @@
   {
     "id": "fini-gusanos-acidos-500gr-97",
     "nombre": "Fini Gusanos Acidos 500Gr",
-    "categoria": "Otros",
+    "categoria": "Dulces y Chocolates",
     "precio": 146.0,
     "imagen": "",
     "oferta": false,
@@ -1003,7 +1003,7 @@
   {
     "id": "fini-gusanos-brillo-500gr-98",
     "nombre": "Fini Gusanos Brillo 500Gr",
-    "categoria": "Otros",
+    "categoria": "Dulces y Chocolates",
     "precio": 146.0,
     "imagen": "",
     "oferta": false,
@@ -1014,7 +1014,7 @@
   {
     "id": "fini-surtidas-acidas-500gr-99",
     "nombre": "Fini Surtidas Acidas 500Gr",
-    "categoria": "Otros",
+    "categoria": "Dulces y Chocolates",
     "precio": 146.0,
     "imagen": "",
     "oferta": false,
@@ -1025,7 +1025,7 @@
   {
     "id": "fini-surtidas-brillo-500gr-100",
     "nombre": "Fini Surtidas Brillo 500Gr",
-    "categoria": "Otros",
+    "categoria": "Dulces y Chocolates",
     "precio": 146.0,
     "imagen": "",
     "oferta": false,
@@ -1036,7 +1036,7 @@
   {
     "id": "gall-redondas-rell-frutilla-110gr-101",
     "nombre": "Gall. Redondas Rell Frutilla 110Gr",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 13.0,
     "imagen": "",
     "oferta": false,
@@ -1047,7 +1047,7 @@
   {
     "id": "gall-redondas-rell-chocolate110gr-102",
     "nombre": "Gall. Redondas Rell Chocolate110Gr",
-    "categoria": "Desayuno",
+    "categoria": "Galletas",
     "precio": 13.0,
     "imagen": "",
     "oferta": false,
@@ -1058,7 +1058,7 @@
   {
     "id": "gall-redondas-choco-blanco-110gr-103",
     "nombre": "Gall.Redondas Choco Blanco 110Gr",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 13.0,
     "imagen": "",
     "oferta": false,
@@ -1080,7 +1080,7 @@
   {
     "id": "wafle-chocolate-84gr-ninfa-108",
     "nombre": "Wafle Chocolate 84Gr Ninfa",
-    "categoria": "Desayuno",
+    "categoria": "Galletas",
     "precio": 16.0,
     "imagen": "",
     "oferta": false,
@@ -1091,7 +1091,7 @@
   {
     "id": "wafle-84gr-ninfa-109",
     "nombre": "Wafle  84Gr Ninfa",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 16.0,
     "imagen": "",
     "oferta": false,
@@ -1311,7 +1311,7 @@
   {
     "id": "kotex-nocturna-8-133",
     "nombre": "Kotex Nocturna *8",
-    "categoria": "Desayuno",
+    "categoria": "Cuidado Femenino",
     "precio": 136.0,
     "imagen": "",
     "oferta": false,
@@ -1597,7 +1597,7 @@
   {
     "id": "gall-surtidas-isabela-300gr-175",
     "nombre": "Gall Surtidas Isabela 300Gr",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 42.0,
     "imagen": "",
     "oferta": false,
@@ -1608,7 +1608,7 @@
   {
     "id": "gall-tostex-chips-colores-400gr-176",
     "nombre": "Gall Tostex Chips Colores 400Gr",
-    "categoria": "Desayuno",
+    "categoria": "Galletas",
     "precio": 78.0,
     "imagen": "",
     "oferta": false,
@@ -1619,7 +1619,7 @@
   {
     "id": "gall-tostex-chips-mani-400gr-177",
     "nombre": "Gall Tostex Chips Mani 400Gr",
-    "categoria": "Desayuno",
+    "categoria": "Galletas",
     "precio": 78.0,
     "imagen": "",
     "oferta": false,
@@ -1630,7 +1630,7 @@
   {
     "id": "gall-tostex-surtidas-400gr-178",
     "nombre": "Gall Tostex Surtidas 400Gr",
-    "categoria": "Desayuno",
+    "categoria": "Galletas",
     "precio": 78.0,
     "imagen": "",
     "oferta": false,
@@ -1707,7 +1707,7 @@
   {
     "id": "malteada-punta-ball-380gr-187",
     "nombre": "Malteada Punta Ball 380Gr",
-    "categoria": "Desayuno",
+    "categoria": "Galletas",
     "precio": 129.0,
     "imagen": "",
     "oferta": false,
@@ -1718,7 +1718,7 @@
   {
     "id": "malteada-punta-ballena-sin-sal-380gr-188",
     "nombre": "Malteada Punta Ballena Sin Sal 380Gr",
-    "categoria": "Desayuno",
+    "categoria": "Galletas",
     "precio": 132.0,
     "imagen": "",
     "oferta": false,
@@ -1729,7 +1729,7 @@
   {
     "id": "malteada-triguena-500gr-189",
     "nombre": "Malteada Trigueña 500Gr",
-    "categoria": "Desayuno",
+    "categoria": "Galletas",
     "precio": 125.0,
     "imagen": "",
     "oferta": false,
@@ -1795,7 +1795,7 @@
   {
     "id": "pan-de-molde-430gr-marbella-195",
     "nombre": "Pan De Molde 430Gr Marbella",
-    "categoria": "Panadería y Pastas",
+    "categoria": "Panadería",
     "precio": 89.0,
     "imagen": "",
     "oferta": false,
@@ -1806,7 +1806,7 @@
   {
     "id": "pan-de-molde-integral-430gr-196",
     "nombre": "Pan De Molde Integral 430Gr",
-    "categoria": "Desayuno",
+    "categoria": "Panadería",
     "precio": 106.0,
     "imagen": "",
     "oferta": false,
@@ -1817,7 +1817,7 @@
   {
     "id": "pan-rallado-paladar-400g-10-197",
     "nombre": "Pan Rallado Paladar 400G *10",
-    "categoria": "Panadería y Pastas",
+    "categoria": "Panadería",
     "precio": 330.0,
     "imagen": "",
     "oferta": false,
@@ -1828,7 +1828,7 @@
   {
     "id": "pan-rallado-paladar-saborizado-400-10-198",
     "nombre": "Pan Rallado Paladar Saborizado 400*10",
-    "categoria": "Panadería y Pastas",
+    "categoria": "Panadería",
     "precio": 360.0,
     "imagen": "",
     "oferta": false,
@@ -1982,7 +1982,7 @@
   {
     "id": "vinagre-gamberoni-1lt-213",
     "nombre": "Vinagre Gamberoni 1Lt",
-    "categoria": "Alcohol",
+    "categoria": "Vinagres",
     "precio": 69.0,
     "imagen": "",
     "oferta": false,
@@ -2004,7 +2004,7 @@
   {
     "id": "alf-portezuelo-triple-choco-12-215",
     "nombre": "Alf.Portezuelo Triple Choco*12",
-    "categoria": "Desayuno",
+    "categoria": "Alfajores",
     "precio": 339.0,
     "imagen": "",
     "oferta": false,
@@ -2015,7 +2015,7 @@
   {
     "id": "alf-portezuelo-nieve-triple-12-217",
     "nombre": "Alf.Portezuelo Nieve Triple *12",
-    "categoria": "Desayuno",
+    "categoria": "Alfajores",
     "precio": 339.0,
     "imagen": "",
     "oferta": false,
@@ -2026,7 +2026,7 @@
   {
     "id": "alf-triple-punta-ballena-12-218",
     "nombre": "Alf.Triple Punta Ballena *12",
-    "categoria": "Otros",
+    "categoria": "Alfajores",
     "precio": 349.0,
     "imagen": "",
     "oferta": false,
@@ -2048,7 +2048,7 @@
   {
     "id": "sprite-1-5lt-6-220",
     "nombre": "Sprite 1.5Lt *6",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 780.0,
     "imagen": "",
     "oferta": false,
@@ -2070,7 +2070,7 @@
   {
     "id": "sprite-zero-1-5-lt-6-222",
     "nombre": "Sprite Zero 1.5 Lt*6",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 780.0,
     "imagen": "",
     "oferta": false,
@@ -2103,7 +2103,7 @@
   {
     "id": "sprite-2lt-9-225",
     "nombre": "Sprite 2Lt *9",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 1099.0,
     "imagen": "",
     "oferta": false,
@@ -2136,7 +2136,7 @@
   {
     "id": "spriite-zero-2lt-9-228",
     "nombre": "Spriite Zero 2Lt *9",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 1055.0,
     "imagen": "",
     "oferta": false,
@@ -2180,7 +2180,7 @@
   {
     "id": "sprite-2-25-6-232",
     "nombre": "Sprite 2.25 *6",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 980.0,
     "imagen": "",
     "oferta": false,
@@ -2191,7 +2191,7 @@
   {
     "id": "sprite-zero-2-25lt-6-233",
     "nombre": "Sprite Zero 2.25Lt *6",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 980.0,
     "imagen": "",
     "oferta": false,
@@ -2235,7 +2235,7 @@
   {
     "id": "sprite-600-12-237",
     "nombre": "Sprite 600 *12",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 764.0,
     "imagen": "",
     "oferta": false,
@@ -2279,7 +2279,7 @@
   {
     "id": "sprite-1lt-12-242",
     "nombre": "Sprite 1Lt *12",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 999.0,
     "imagen": "",
     "oferta": false,
@@ -2301,7 +2301,7 @@
   {
     "id": "sprite-zero-1lt-12-244",
     "nombre": "Sprite Zero 1Lt *12",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 999.0,
     "imagen": "",
     "oferta": false,
@@ -2312,7 +2312,7 @@
   {
     "id": "sprite-zero-600cc-12-245",
     "nombre": "Sprite Zero 600Cc*12",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 764.0,
     "imagen": "",
     "oferta": false,
@@ -2323,7 +2323,7 @@
   {
     "id": "sprite-3lt-4-246",
     "nombre": "Sprite 3Lt*4",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 780.0,
     "imagen": "",
     "oferta": false,
@@ -2433,7 +2433,7 @@
   {
     "id": "petaca-grappamiel-vesubio-260",
     "nombre": "Petaca Grappamiel Vesubio",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 92.0,
     "imagen": "",
     "oferta": false,
@@ -2444,7 +2444,7 @@
   {
     "id": "vat-69-1lt-261",
     "nombre": "Vat 69 1Lt",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 699.0,
     "imagen": "",
     "oferta": false,
@@ -2928,7 +2928,7 @@
   {
     "id": "petacas-mac-pay-317",
     "nombre": "Petacas Mac Pay",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 80.0,
     "imagen": "",
     "oferta": false,
@@ -2939,7 +2939,7 @@
   {
     "id": "matutina-con-gas-2-5-6-318",
     "nombre": "Matutina Con Gas 2.5*6",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 299.0,
     "imagen": "",
     "oferta": false,
@@ -2950,7 +2950,7 @@
   {
     "id": "matutina-sin-gas-2-5-6-319",
     "nombre": "Matutina Sin Gas 2.5*6",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 299.0,
     "imagen": "",
     "oferta": false,
@@ -2961,7 +2961,7 @@
   {
     "id": "bidon-salus-6-25lt-320",
     "nombre": "Bidon Salus 6.25Lt",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 125.0,
     "imagen": "",
     "oferta": false,
@@ -2972,7 +2972,7 @@
   {
     "id": "pack-matu-4-2-25-sin-gas-321",
     "nombre": "Pack Matu *4 2.25 Sin Gas",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 155.0,
     "imagen": "",
     "oferta": false,
@@ -3027,7 +3027,7 @@
   {
     "id": "amarga-5-raices-327",
     "nombre": "Amarga 5 Raices",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -3951,7 +3951,7 @@
   {
     "id": "buby-500grs-431",
     "nombre": "Buby 500Grs",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 135.0,
     "imagen": "",
     "oferta": false,
@@ -3962,7 +3962,7 @@
   {
     "id": "petaca-william-432",
     "nombre": "Petaca William",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 174.0,
     "imagen": "",
     "oferta": false,
@@ -3973,7 +3973,7 @@
   {
     "id": "buby-24grs-20-433",
     "nombre": "Buby 24Grs *20",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 155.0,
     "imagen": "",
     "oferta": false,
@@ -3984,7 +3984,7 @@
   {
     "id": "martini-bianco-1l-434",
     "nombre": "Martini Bianco 1L",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 444.0,
     "imagen": "",
     "oferta": false,
@@ -4039,7 +4039,7 @@
   {
     "id": "cerveza-escudo-473-6-442",
     "nombre": "Cerveza Escudo 473*6",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 340.0,
     "imagen": "",
     "oferta": false,
@@ -4061,7 +4061,7 @@
   {
     "id": "chopito-miller-330-6-444",
     "nombre": "Chopito Miller 330*6",
-    "categoria": "Otros",
+    "categoria": "Cerveza",
     "precio": 470.0,
     "imagen": "",
     "oferta": false,
@@ -4072,7 +4072,7 @@
   {
     "id": "cerveza-heineken-1l-6-445",
     "nombre": "Cerveza Heineken 1L*6",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 1119.0,
     "imagen": "",
     "oferta": false,
@@ -4083,7 +4083,7 @@
   {
     "id": "cerveza-heineken-710-6-446",
     "nombre": "Cerveza Heineken 710*6",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 879.0,
     "imagen": "",
     "oferta": false,
@@ -4094,7 +4094,7 @@
   {
     "id": "cerveza-chopito-heineken-330-6-447",
     "nombre": "Cerveza Chopito Heineken 330*6",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 510.0,
     "imagen": "",
     "oferta": false,
@@ -4105,7 +4105,7 @@
   {
     "id": "cerveza-heineken-473-6-448",
     "nombre": "Cerveza Heineken 473*6",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 660.0,
     "imagen": "",
     "oferta": false,
@@ -4116,7 +4116,7 @@
   {
     "id": "cerveza-schneider-1l-6-449",
     "nombre": "Cerveza Schneider 1L*6",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 855.0,
     "imagen": "",
     "oferta": false,
@@ -4127,7 +4127,7 @@
   {
     "id": "cerveza-schneider-710-6-450",
     "nombre": "Cerveza Schneider 710*6",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 635.0,
     "imagen": "",
     "oferta": false,
@@ -4138,7 +4138,7 @@
   {
     "id": "cerveza-schneider-473-6-451",
     "nombre": "Cerveza Schneider 473*6",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 470.0,
     "imagen": "",
     "oferta": false,
@@ -4149,7 +4149,7 @@
   {
     "id": "cerveza-stella-1l-12-452",
     "nombre": "Cerveza Stella 1L*12",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 2010.0,
     "imagen": "",
     "oferta": false,
@@ -4160,7 +4160,7 @@
   {
     "id": "cerveza-zillertal-1l-12-453",
     "nombre": "Cerveza Zillertal 1L*12",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 2010.0,
     "imagen": "",
     "oferta": false,
@@ -4259,7 +4259,7 @@
   {
     "id": "bidon-unika-10l-462",
     "nombre": "Bidon Unika 10L",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 115.0,
     "imagen": "",
     "oferta": false,
@@ -4270,7 +4270,7 @@
   {
     "id": "bidon-nativa-6l-464",
     "nombre": "Bidon Nativa 6L",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 115.0,
     "imagen": "",
     "oferta": false,
@@ -4281,7 +4281,7 @@
   {
     "id": "jugos-watts-200-naranja-6-465",
     "nombre": "Jugos Watts 200 Naranja*6",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Jugos",
     "precio": 153.0,
     "imagen": "",
     "oferta": false,
@@ -4292,7 +4292,7 @@
   {
     "id": "jugos-watts-200-manzana-6-466",
     "nombre": "Jugos Watts 200 Manzana *6",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Jugos",
     "precio": 153.0,
     "imagen": "",
     "oferta": false,
@@ -4303,7 +4303,7 @@
   {
     "id": "nativa-s-gas-2-25-467",
     "nombre": "Nativa S/Gas 2.25",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 74.0,
     "imagen": "",
     "oferta": false,
@@ -4314,7 +4314,7 @@
   {
     "id": "nativa-c-gas-2-25-468",
     "nombre": "Nativa C/Gas 2.25",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 74.0,
     "imagen": "",
     "oferta": false,
@@ -4325,7 +4325,7 @@
   {
     "id": "nativa-c-gas-1-650-469",
     "nombre": "Nativa C/Gas 1.650",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 72.0,
     "imagen": "",
     "oferta": false,
@@ -4336,7 +4336,7 @@
   {
     "id": "nativa-sport-1l-s-gas-471",
     "nombre": "Nativa Sport 1L S/Gas",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 71.0,
     "imagen": "",
     "oferta": false,
@@ -4347,7 +4347,7 @@
   {
     "id": "nativa-1l-s-gas-472",
     "nombre": "Nativa 1L S/Gas",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 69.0,
     "imagen": "",
     "oferta": false,
@@ -4358,7 +4358,7 @@
   {
     "id": "nativa-1l-c-gas-473",
     "nombre": "Nativa 1L C/Gas",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 69.0,
     "imagen": "",
     "oferta": false,
@@ -4369,7 +4369,7 @@
   {
     "id": "nativa-600-c-gas-474",
     "nombre": "Nativa 600 C/Gas",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 60.0,
     "imagen": "",
     "oferta": false,
@@ -4380,7 +4380,7 @@
   {
     "id": "nativa-600-s-gas-475",
     "nombre": "Nativa 600 S/Gas",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 60.0,
     "imagen": "",
     "oferta": false,
@@ -4413,7 +4413,7 @@
   {
     "id": "nix-lima-500-12-481",
     "nombre": "Nix Lima 500*12",
-    "categoria": "Otros",
+    "categoria": "Gaseosa",
     "precio": 399.0,
     "imagen": "",
     "oferta": false,
@@ -4424,7 +4424,7 @@
   {
     "id": "nix-lima-2l-6-483",
     "nombre": "Nix Lima 2L*6",
-    "categoria": "Otros",
+    "categoria": "Gaseosa",
     "precio": 555.0,
     "imagen": "",
     "oferta": false,
@@ -4435,7 +4435,7 @@
   {
     "id": "nix-lima-2-5-6-484",
     "nombre": "Nix Lima 2.5*6",
-    "categoria": "Otros",
+    "categoria": "Gaseosa",
     "precio": 665.0,
     "imagen": "",
     "oferta": false,
@@ -4446,7 +4446,7 @@
   {
     "id": "nix-mandarina-500-12-485",
     "nombre": "Nix Mandarina 500*12",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Gaseosa",
     "precio": 399.0,
     "imagen": "",
     "oferta": false,
@@ -4457,7 +4457,7 @@
   {
     "id": "nix-mandarina-1l-6-486",
     "nombre": "Nix Mandarina 1L*6",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Gaseosa",
     "precio": 370.0,
     "imagen": "",
     "oferta": false,
@@ -4468,7 +4468,7 @@
   {
     "id": "nix-mandarina-2l-6-487",
     "nombre": "Nix Mandarina 2L*6",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Gaseosa",
     "precio": 555.0,
     "imagen": "",
     "oferta": false,
@@ -4479,7 +4479,7 @@
   {
     "id": "nix-mandarina-2-5-6-488",
     "nombre": "Nix Mandarina 2.5*6",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Gaseosa",
     "precio": 665.0,
     "imagen": "",
     "oferta": false,
@@ -4490,7 +4490,7 @@
   {
     "id": "nix-pomelo-500-12-489",
     "nombre": "Nix Pomelo 500*12",
-    "categoria": "Otros",
+    "categoria": "Gaseosa",
     "precio": 399.0,
     "imagen": "",
     "oferta": false,
@@ -4501,7 +4501,7 @@
   {
     "id": "nix-pomelo-1l-6-490",
     "nombre": "Nix Pomelo 1L*6",
-    "categoria": "Otros",
+    "categoria": "Gaseosa",
     "precio": 370.0,
     "imagen": "",
     "oferta": false,
@@ -4512,7 +4512,7 @@
   {
     "id": "nix-pomelo-2l-6-491",
     "nombre": "Nix Pomelo 2L*6",
-    "categoria": "Otros",
+    "categoria": "Gaseosa",
     "precio": 555.0,
     "imagen": "",
     "oferta": false,
@@ -4523,7 +4523,7 @@
   {
     "id": "nix-pomelo-2-5-6-492",
     "nombre": "Nix Pomelo 2.5 *6",
-    "categoria": "Otros",
+    "categoria": "Gaseosa",
     "precio": 665.0,
     "imagen": "",
     "oferta": false,
@@ -4534,7 +4534,7 @@
   {
     "id": "nix-guarana-500-12-493",
     "nombre": "Nix Guarana 500 *12",
-    "categoria": "Otros",
+    "categoria": "Gaseosa",
     "precio": 399.0,
     "imagen": "",
     "oferta": false,
@@ -4545,7 +4545,7 @@
   {
     "id": "nix-guarana-1l-6-494",
     "nombre": "Nix Guarana 1L*6",
-    "categoria": "Otros",
+    "categoria": "Gaseosa",
     "precio": 370.0,
     "imagen": "",
     "oferta": false,
@@ -4556,7 +4556,7 @@
   {
     "id": "nix-guarana-2-5-6-495",
     "nombre": "Nix Guarana 2.5 *6",
-    "categoria": "Otros",
+    "categoria": "Gaseosa",
     "precio": 665.0,
     "imagen": "",
     "oferta": false,
@@ -4644,7 +4644,7 @@
   {
     "id": "nix-lima-1lt-6-504",
     "nombre": "Nix Lima 1Lt*6",
-    "categoria": "Otros",
+    "categoria": "Gaseosa",
     "precio": 370.0,
     "imagen": "",
     "oferta": false,
@@ -4710,7 +4710,7 @@
   {
     "id": "sidra-el-aguante-1-5-6-511",
     "nombre": "Sidra El Aguante 1.5*6",
-    "categoria": "Desayuno",
+    "categoria": "Alcohol",
     "precio": 385.0,
     "imagen": "",
     "oferta": false,
@@ -4754,7 +4754,7 @@
   {
     "id": "cana-bambu-1-lt-516",
     "nombre": "Caña Bambu 1 Lt",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 276.0,
     "imagen": "",
     "oferta": false,
