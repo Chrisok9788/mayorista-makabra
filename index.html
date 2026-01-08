@@ -14,56 +14,85 @@
       name="description"
       content="Mayorista Makabra: catálogo para revendedores en Uruguay con pedido por WhatsApp."
     />
+
     <title>Mayorista Makabra | Catálogo Mayorista en Uruguay</title>
     <link rel="stylesheet" href="./style.css" />
   </head>
 
   <body>
-    <main role="main">
-      <header class="site-header">
-        <div class="container">
-          <h1 class="logo">
-            <img src="./logo.png" alt="Mayorista Makabra logo" />
-          </h1>
-          <nav class="main-nav">
-            <ul>
-              <li><a href="#home">Inicio</a></li>
-              <li><a href="#catalogue">Catálogo</a></li>
-              <li><a href="#how">Cómo comprar</a></li>
-              <li><a href="#contact">Contacto</a></li>
-              <li>
-                <a href="#cart">
-                  Carrito (<span id="cart-count">0</span>)
-                </a>
-              </li>
-            </ul>
-          </nav>
+    <header class="site-header">
+      <div class="container header-row">
+        <div class="brand">
+          <img src="./logo.png" class="brand-logo" alt="Mayorista Makabra logo" />
+          <div class="brand-text">
+            <div class="brand-title">Mayorista Makabra</div>
+            <div class="brand-subtitle">Catálogo mayorista • Pedidos por WhatsApp</div>
+          </div>
         </div>
-      </header>
 
-      <section id="home" class="section">
-        <div class="container home-section">
-          <h2>Bienvenido a Mayorista Makabra</h2>
-          <p>Distribuimos productos para revendedores en Uruguay con entrega coordinada.</p>
-          <a
-            href="https://wa.me/59896405927?text=Hola%20Makabra,%20quiero%20hacer%20un%20pedido"
-            class="btn btn-primary"
-            target="_blank"
-            rel="noopener"
-            >Hacer pedido por WhatsApp</a
-          >
+        <nav class="main-nav">
+          <a href="#home">Inicio</a>
+          <a href="#catalogue">Catálogo</a>
+          <a href="#how">Cómo comprar</a>
+          <a href="#contact">Contacto</a>
+          <a class="nav-cart" href="#cart">Carrito <span class="pill">(<span id="cart-count">0</span>)</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main role="main">
+      <!-- INICIO -->
+      <section id="home" class="section hero">
+        <div class="container">
+          <div class="hero-card">
+            <h1>Bienvenido a Mayorista Makabra</h1>
+            <p>Somos un mayorista uruguayo para revendedores. Mirá el catálogo, armá tu carrito y enviá tu pedido por WhatsApp.</p>
+
+            <div class="hero-actions">
+              <a
+                href="https://wa.me/59896405927?text=Hola%20Makabra,%20quiero%20hacer%20un%20pedido"
+                class="btn btn-primary"
+                target="_blank"
+                rel="noopener"
+              >
+                Hacer pedido por WhatsApp
+              </a>
+              <a href="#catalogue" class="btn btn-ghost">Ver catálogo</a>
+            </div>
+
+            <div class="hint">
+              Tip: podés <strong>arrastrar una imagen</strong> encima de la foto de un producto para asignarla (queda guardada en este dispositivo).
+            </div>
+          </div>
         </div>
       </section>
 
+      <!-- OFERTAS (SOLO ACÁ) -->
+      <section class="section offers-section" aria-label="Ofertas">
+        <div class="container">
+          <div class="section-title-row">
+            <h2>OFERTAS</h2>
+            <span class="muted">Solo productos seleccionados</span>
+          </div>
+
+          <div class="offers-frame">
+            <div id="offers-track" class="offers-track">
+              <!-- se llena con JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CATÁLOGO -->
       <section id="catalogue" class="section">
         <div class="container">
-          <h2>Catálogo</h2>
+          <div class="section-title-row">
+            <h2>Catálogo</h2>
+            <span class="muted">Buscá y filtrá por categoría</span>
+          </div>
+
           <div class="filters">
-            <input
-              type="text"
-              id="search-input"
-              placeholder="Buscar por nombre, marca, categoría..."
-            />
+            <input type="text" id="search-input" placeholder="Buscar por nombre, categoría..." />
             <select id="category-filter">
               <option value="">Todas las categorías</option>
             </select>
@@ -73,72 +102,89 @@
         </div>
       </section>
 
-      <section id="cart" class="section">
+      <!-- CARRITO -->
+      <section id="cart" class="section section-soft">
         <div class="container">
-          <h2>Carrito</h2>
+          <div class="section-title-row">
+            <h2>Carrito</h2>
+            <span class="muted">Total y envío por WhatsApp</span>
+          </div>
 
           <div id="cart-container" class="cart-items"></div>
 
-          <div class="cart-actions">
-            <div class="cart-total">
-              Total: $ <span id="cart-total">0</span>
+          <div class="cart-summary">
+            <div class="total-line">
+              <span>Total:</span>
+              <strong id="cart-total">$ 0</strong>
             </div>
-
-            <button id="clear-cart-btn" class="btn" type="button">
-              Vaciar carrito
-            </button>
-            <button id="send-whatsapp-btn" class="btn btn-primary" type="button">
-              Enviar pedido por WhatsApp
-            </button>
+            <div class="cart-actions">
+              <button id="clear-cart-btn" class="btn" type="button">Vaciar carrito</button>
+              <button id="send-whatsapp-btn" class="btn btn-primary" type="button">Enviar pedido por WhatsApp</button>
+            </div>
+            <div class="muted small">
+              Nota: si un producto tiene precio 0, se enviará como “Consultar”.
+            </div>
           </div>
         </div>
       </section>
 
+      <!-- CÓMO COMPRAR -->
       <section id="how" class="section">
         <div class="container">
-          <h2>Cómo comprar</h2>
+          <div class="section-title-row">
+            <h2>Cómo comprar</h2>
+            <span class="muted">Rápido y simple</span>
+          </div>
           <ol class="how-to-list">
             <li>Explorá el catálogo y buscá los productos que necesitás.</li>
             <li>Agregá al carrito la cantidad deseada de cada producto.</li>
             <li>Revisá tu carrito y hacé clic en “Enviar pedido por WhatsApp”.</li>
-            <li>Coordiná el pago y la entrega con nuestro equipo.</li>
+            <li>Si sos cliente nuevo, completás tu dirección y te contactamos por WhatsApp para coordinar.</li>
           </ol>
         </div>
       </section>
 
-      <section id="contact" class="section">
+      <!-- CONTACTO -->
+      <section id="contact" class="section section-soft">
         <div class="container">
-          <h2>Contacto</h2>
-          <ul class="contact-list">
-            <li>
-              <strong>WhatsApp:</strong>
-              <a href="https://wa.me/59896405927" target="_blank" rel="noopener">
-                +598 096 405 927
-              </a>
-            </li>
-            <li>
-              <strong>Instagram:</strong>
-              <a
-                href="https://instagram.com/distribuidoramakabra"
-                target="_blank"
-                rel="noopener"
-              >
-                @distribuidoramakabra
-              </a>
-            </li>
-            <li><strong>Dirección:</strong> <span class="placeholder">Editar dirección aquí</span></li>
-            <li><strong>Horarios:</strong> <span class="placeholder">Editar horarios aquí</span></li>
-          </ul>
+          <div class="section-title-row">
+            <h2>Contacto</h2>
+            <span class="muted">Respondemos por WhatsApp</span>
+          </div>
+
+          <div class="contact-card">
+            <div class="contact-item">
+              <strong>WhatsApp</strong>
+              <a href="https://wa.me/59896405927" target="_blank" rel="noopener">+598 096 405 927</a>
+            </div>
+
+            <div class="contact-item">
+              <strong>Instagram</strong>
+              <a href="https://instagram.com/distribuidoramakabra" target="_blank" rel="noopener">@distribuidoramakabra</a>
+            </div>
+
+            <div class="contact-item">
+              <strong>Horarios</strong>
+              <span>Lunes a sábados de 9:00 a 19:00</span>
+            </div>
+
+            <div class="contact-item">
+              <strong>Dirección</strong>
+              <span class="muted">Se coordina por WhatsApp</span>
+            </div>
+          </div>
         </div>
       </section>
 
+      <!-- Botón flotante WhatsApp -->
       <a
         href="https://wa.me/59896405927?text=Hola%20Makabra,%20quiero%20hacer%20un%20pedido"
         class="whatsapp-float"
         target="_blank"
         rel="noopener"
+        aria-label="WhatsApp"
       >
-        📱
+        WhatsApp
       </a>
 
       <footer class="site-footer" role="contentinfo">
@@ -148,9 +194,7 @@
       </footer>
     </main>
 
-    <!-- app.js en la raíz -->
     <script type="module" src="./app.js"></script>
-
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
     </script>
