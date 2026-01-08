@@ -14,6 +14,7 @@ import {
   removeItem,
   clearCart,
   totalItems,
+  totalAmount,
 } from './cart.js';
 import {
   renderProducts,
@@ -28,6 +29,18 @@ import { sendOrder } from './whatsapp.js';
 let products = [];
 
 /**
+ * Actualiza el total en $ del carrito en la UI.
+ * Requiere un elemento con id="cart-total" en el HTML.
+ */
+function updateTotal() {
+  const totalEl = document.getElementById('cart-total');
+  if (!totalEl) return; // por si el usuario elimina el bloque del total en HTML
+
+  const total = totalAmount(getCart(), products);
+  totalEl.textContent = total.toLocaleString('es-UY');
+}
+
+/**
  * Manejador para agregar un producto al carrito.
  *
  * @param {string} productId Identificador del producto a agregar.
@@ -35,7 +48,14 @@ let products = [];
 function handleAdd(productId) {
   addItem(productId);
   updateCartCount(document.getElementById('cart-count'), totalItems());
-  renderCart(products, getCart(), document.getElementById('cart-container'), handleUpdate, handleRemove);
+  renderCart(
+    products,
+    getCart(),
+    document.getElementById('cart-container'),
+    handleUpdate,
+    handleRemove
+  );
+  updateTotal();
 }
 
 /**
@@ -47,7 +67,14 @@ function handleAdd(productId) {
 function handleUpdate(productId, qty) {
   updateItem(productId, qty);
   updateCartCount(document.getElementById('cart-count'), totalItems());
-  renderCart(products, getCart(), document.getElementById('cart-container'), handleUpdate, handleRemove);
+  renderCart(
+    products,
+    getCart(),
+    document.getElementById('cart-container'),
+    handleUpdate,
+    handleRemove
+  );
+  updateTotal();
 }
 
 /**
@@ -58,7 +85,14 @@ function handleUpdate(productId, qty) {
 function handleRemove(productId) {
   removeItem(productId);
   updateCartCount(document.getElementById('cart-count'), totalItems());
-  renderCart(products, getCart(), document.getElementById('cart-container'), handleUpdate, handleRemove);
+  renderCart(
+    products,
+    getCart(),
+    document.getElementById('cart-container'),
+    handleUpdate,
+    handleRemove
+  );
+  updateTotal();
 }
 
 /**
@@ -81,23 +115,48 @@ async function init() {
   // Recuperar el carrito almacenado
   loadCart();
   updateCartCount(document.getElementById('cart-count'), totalItems());
+
   try {
     products = await fetchProducts();
+
     populateCategories(products, document.getElementById('category-filter'));
     renderProducts(products, document.getElementById('products-container'), handleAdd);
-    renderCart(products, getCart(), document.getElementById('cart-container'), handleUpdate, handleRemove);
+
+    renderCart(
+      products,
+      getCart(),
+      document.getElementById('cart-container'),
+      handleUpdate,
+      handleRemove
+    );
+
+    // Total inicial (cuando ya cargaron productos)
+    updateTotal();
   } catch (err) {
     console.error(err);
-    document.getElementById('products-container').innerHTML = `<p>Ocurrió un error al cargar los productos.</p>`;
+    document.getElementById('products-container').innerHTML =
+      `<p>Ocurrió un error al cargar los productos.</p>`;
   }
+
   // Configurar eventos
   document.getElementById('search-input').addEventListener('input', applySearchAndFilter);
   document.getElementById('category-filter').addEventListener('change', applySearchAndFilter);
+
   document.getElementById('clear-cart-btn').addEventListener('click', () => {
     clearCart();
     updateCartCount(document.getElementById('cart-count'), totalItems());
-    renderCart(products, getCart(), document.getElementById('cart-container'), handleUpdate, handleRemove);
+
+    renderCart(
+      products,
+      getCart(),
+      document.getElementById('cart-container'),
+      handleUpdate,
+      handleRemove
+    );
+
+    updateTotal();
   });
+
   document.getElementById('send-whatsapp-btn').addEventListener('click', () => {
     const currentCart = getCart();
     if (Object.keys(currentCart).length === 0) {
