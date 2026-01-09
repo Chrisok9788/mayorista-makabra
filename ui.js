@@ -115,6 +115,79 @@ export function renderProducts(list, container, addHandler) {
 }
 
 /**
+ * Renderiza el carrusel de OFERTAS.
+ *
+ * Reglas:
+ * - Oferta = product.oferta === true
+ * - Si stock existe y <=0, no se muestra en ofertas
+ * - Si no hay ofertas, muestra mensaje en el frame
+ *
+ * @param {Array} products Lista completa de productos
+ * @param {HTMLElement} frameEl Contenedor .offers-frame (para mensaje vacío)
+ * @param {HTMLElement} trackEl Contenedor .offers-track (donde van las tarjetas)
+ * @param {Function} onClick Callback opcional al clickear una oferta (recibe product.id)
+ */
+export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
+  if (!frameEl || !trackEl) return;
+
+  // Limpia track y mensaje previo
+  trackEl.innerHTML = '';
+  const prevEmpty = frameEl.querySelector('.offers-empty');
+  if (prevEmpty) prevEmpty.remove();
+
+  const offers = (products || []).filter((p) => {
+    const hasStockInfo = typeof p.stock !== 'undefined';
+    const inStock = !hasStockInfo || p.stock > 0;
+    return p.oferta === true && inStock;
+  });
+
+  if (offers.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'offers-empty';
+    empty.textContent = 'No hay ofertas cargadas.';
+    frameEl.appendChild(empty);
+    return;
+  }
+
+  // Armado de tarjetas compatibles con tu CSS actual (.offer-card, .offer-img, etc.)
+  const cardsHtml = offers
+    .map((p) => {
+      const name = p.nombre || 'Producto';
+      const img = p.imagen || '';
+      const price =
+        p.precio != null && p.precio > 0 ? `$ ${p.precio}` : 'Consultar';
+
+      return `
+        <div class="offer-card" data-id="${p.id ?? ''}">
+          ${
+            img
+              ? `<img class="offer-img" src="${img}" alt="${name}">`
+              : `<div class="offer-img"></div>`
+          }
+          <div class="offer-body">
+            <p class="offer-title">${name}</p>
+            <div class="offer-price">${price}</div>
+          </div>
+        </div>
+      `;
+    })
+    .join('');
+
+  // Inserta 1 vez y duplica para que la animación -50% no deje el track vacío
+  trackEl.innerHTML = cardsHtml + cardsHtml;
+
+  // Click handler opcional
+  if (typeof onClick === 'function') {
+    trackEl.querySelectorAll('.offer-card').forEach((el) => {
+      el.addEventListener('click', () => {
+        const id = el.getAttribute('data-id');
+        if (id != null && id !== '') onClick(id);
+      });
+    });
+  }
+}
+
+/**
  * Renderiza el carrito de compras.
  *
  * @param {Array} products Lista completa de productos.
