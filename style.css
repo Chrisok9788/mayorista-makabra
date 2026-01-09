@@ -345,3 +345,24 @@ a { color: inherit; text-decoration: none; }
   .products-grid { grid-template-columns: 1fr; }
   .brand-subtitle { display: none; }
 }
+/* Header más compacto SOLO en celular */
+@media (max-width: 560px) {
+  .header-row {
+    padding: 4px 0;
+  }
+
+  .brand-logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  .main-nav a {
+    padding: 5px 6px;
+    font-size: 13px;
+  }
+
+  .nav-cart {
+    padding: 5px 8px;
+    font-size: 13px;
+  }
+}
