@@ -563,7 +563,7 @@
   {
     "id": "monster-mango-loco-6-55",
     "nombre": "Monster Mango Loco *6",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 580.0,
     "imagen": "",
     "oferta": false,
@@ -574,7 +574,7 @@
   {
     "id": "monster-verde-6-paradise-57",
     "nombre": "Monster Verde*6 Paradise",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 580.0,
     "imagen": "",
     "oferta": false,
@@ -4050,7 +4050,7 @@
   {
     "id": "energizante-speed-473cc-12-443",
     "nombre": "Energizante Speed 473Cc*12",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 1160.0,
     "imagen": "",
     "oferta": false,
@@ -4567,7 +4567,7 @@
   {
     "id": "monster-blanco-6-ultra-496",
     "nombre": "Monster Blanco *6 Ultra",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 580.0,
     "imagen": "",
     "oferta": false,
@@ -4941,7 +4941,7 @@
   {
     "id": "monster-negro-6-542",
     "nombre": "Monster Negro *6",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 580.0,
     "imagen": "",
     "oferta": false,
@@ -9176,7 +9176,7 @@
   {
     "id": "monster-6-naranja-1124",
     "nombre": "Monster *6 Naranja",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 555.0,
     "imagen": "",
     "oferta": false,
@@ -10518,7 +10518,7 @@
   {
     "id": "monster-500ml-1302",
     "nombre": "Monster 500Ml",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 140.0,
     "imagen": "",
     "oferta": false,
@@ -10617,7 +10617,7 @@
   {
     "id": "monster-6-grandes-surt-1311",
     "nombre": "Monster *6 Grandes Surt",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 750.0,
     "imagen": "",
     "oferta": false,
@@ -10661,7 +10661,7 @@
   {
     "id": "monster-6-grandes-rosa-1316",
     "nombre": "Monster *6 Grandes Rosa",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 750.0,
     "imagen": "",
     "oferta": false,
@@ -10804,7 +10804,7 @@
   {
     "id": "monster-6-grandes-amarilla-1334",
     "nombre": "Monster *6 Grandes Amarilla",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 750.0,
     "imagen": "",
     "oferta": false,
@@ -10826,7 +10826,7 @@
   {
     "id": "monster-hamilton-6-1336",
     "nombre": "Monster Hamilton*6",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 750.0,
     "imagen": "",
     "oferta": false,
@@ -10958,7 +10958,7 @@
   {
     "id": "monster-6-grandes-celeste-1349",
     "nombre": "Monster *6 Grandes Celeste",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 750.0,
     "imagen": "",
     "oferta": false,
@@ -11409,7 +11409,7 @@
   {
     "id": "monster-500ml-premium-1396",
     "nombre": "Monster 500Ml Premium",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 140.0,
     "imagen": "",
     "oferta": false,
@@ -11783,7 +11783,7 @@
   {
     "id": "monster-negro-unidad-1443",
     "nombre": "Monster Negro  Unidad",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 110.0,
     "imagen": "",
     "oferta": false,
@@ -12234,7 +12234,7 @@
   {
     "id": "monster-6-surt-1491",
     "nombre": "Monster *6 Surt",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 750.0,
     "imagen": "",
     "oferta": false,
@@ -18636,7 +18636,7 @@
   {
     "id": "caramelos-monsters-30-2141",
     "nombre": "Caramelos Monsters *30",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 210.0,
     "imagen": "",
     "oferta": false,
@@ -20353,7 +20353,7 @@
   {
     "id": "monster-grandes-2301",
     "nombre": "Monster Grandes",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 140.0,
     "imagen": "",
     "oferta": false,
@@ -25644,7 +25644,7 @@
   {
     "id": "vodka-siberia-750ml-baly-1l-2789",
     "nombre": "Vodka Siberia 750Ml + Baly 1L",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 425.0,
     "imagen": "",
     "oferta": false,
@@ -30363,7 +30363,7 @@
   {
     "id": "monster-blanco-1-ultra-3225",
     "nombre": "Monster Blanco *1 Ultra",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 110.0,
     "imagen": "",
     "oferta": false,
@@ -31749,7 +31749,7 @@
   {
     "id": "monster-mango-loco-1-3354",
     "nombre": "Monster Mango Loco *1",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 110.0,
     "imagen": "",
     "oferta": false,
@@ -32222,7 +32222,7 @@
   {
     "id": "baly-lata-1-3398",
     "nombre": "Baly Lata *1",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
@@ -32574,7 +32574,7 @@
   {
     "id": "energizante-baly-1l-3431",
     "nombre": "Energizante Baly 1L",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 155.0,
     "imagen": "",
     "oferta": false,
@@ -32629,7 +32629,7 @@
   {
     "id": "monster-negra-1-3436",
     "nombre": "Monster Negra *1",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 100.0,
     "imagen": "",
     "oferta": false,
@@ -33014,7 +33014,7 @@
   {
     "id": "jagger-750cc-4-monster-3471",
     "nombre": "Jagger 750Cc + 4 Monster",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 1200.0,
     "imagen": "",
     "oferta": false,
@@ -33212,7 +33212,7 @@
   {
     "id": "baly-lata-6-frutos-tropicales-3489",
     "nombre": "Baly Lata *6 Frutos Tropicales",
-    "categoria": "Energizarte",
+    "categoria": "Energizante",
     "precio": 450.0,
     "imagen": "",
     "oferta": false,
