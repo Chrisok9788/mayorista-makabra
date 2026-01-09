@@ -297,3 +297,78 @@ export function filterProducts(products, category, searchTerm) {
 
   return result;
 }
+
+/**
+ * Renderiza un panel de categorías y subcategorías en formato acordeón.
+ *
+ * Agrupa los productos por su categoría (`categoria`) y muestra cada producto
+ * dentro de su categoría como una fila. Al hacer clic en una fila se emite
+ * un evento personalizado `productSelected` con el id del producto.
+ *
+ * Para hacer uso de este panel en tu aplicación, llamá a esta función
+ * pasando la lista completa de productos. Luego, escuchá el evento
+ * `productSelected` en `document` para recibir el ID del producto seleccionado.
+ *
+ * @param {Array} products Lista completa de productos.
+ */
+export function renderCategoryAccordion(products) {
+  const el = document.getElementById('categoryAccordion');
+  if (!el || !Array.isArray(products)) return;
+
+  // Agrupa los productos por categoría
+  const map = new Map();
+  products.forEach((p) => {
+    const cat = (p.categoria || 'Otros').trim();
+    if (!map.has(cat)) {
+      map.set(cat, []);
+    }
+    map.get(cat).push(p);
+  });
+
+  // Limpia el acordeón
+  el.innerHTML = '';
+
+  // Obtiene las categorías ordenadas alfabéticamente
+  const cats = Array.from(map.keys()).sort((a, b) => a.localeCompare(b));
+
+  // Crea un item por categoría
+  cats.forEach((cat) => {
+    const prods = map.get(cat);
+
+    const item = document.createElement('div');
+    item.className = 'accordion-item';
+
+    const btn = document.createElement('button');
+    btn.className = 'accordion-btn';
+    btn.type = 'button';
+    btn.innerHTML = `<span>${cat}</span><span class="chev">▾</span>`;
+
+    const body = document.createElement('div');
+    body.className = 'accordion-body';
+
+    // Genera filas para cada producto en la categoría
+    prods.forEach((p) => {
+      const row = document.createElement('div');
+      row.className = 'subcat';
+      const price =
+        p.precio != null && p.precio > 0 ? `$ ${p.precio}` : 'Consultar';
+      row.innerHTML = `<span>${p.nombre}</span><small>${price}</small>`;
+      row.onclick = () => {
+        const event = new CustomEvent('productSelected', {
+          detail: p.id,
+        });
+        document.dispatchEvent(event);
+      };
+      body.appendChild(row);
+    });
+
+    // Toggle del cuerpo al click
+    btn.onclick = () => {
+      body.classList.toggle('open');
+    };
+
+    item.appendChild(btn);
+    item.appendChild(body);
+    el.appendChild(item);
+  });
+}

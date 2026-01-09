@@ -1,0 +1,546 @@
+
+:root {
+  /* ✅ Cambios: paleta clara (fondo blanco) manteniendo la identidad verde */
+  --bg: #ffffff;
+  --card: #ffffff;
+  --soft: #f6f8fb;
+  --text: #0b1220;
+  --muted: #5b6777;
+  --brand: #1aa36b;
+  --brand-2: #118357;
+  --border: rgba(11,18,32,0.10);
+  --shadow: 0 10px 30px rgba(16,24,40,0.12);
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+a { color: inherit; text-decoration: none; }
+.container { width: min(1100px, 92%); margin: 0 auto; }
+
+.section { padding: 28px 0; }
+.section-soft { background: var(--soft); }
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  /* ✅ Antes: rgba(11,15,20,0.9) */
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 0;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+.brand-title { font-weight: 800; letter-spacing: 0.2px; }
+.brand-subtitle { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+.main-nav { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.main-nav a { padding: 10px 10px; border-radius: 10px; color: var(--muted); }
+.main-nav a:hover { background: rgba(17,24,39,0.06); color: var(--text); }
+.nav-cart {
+  background: rgba(26,163,107,0.10);
+  color: var(--text) !important;
+  border: 1px solid rgba(26,163,107,0.35);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  /* ✅ Antes: rgba(255,255,255,0.08) */
+  background: rgba(17,24,39,0.06);
+  margin-left: 6px;
+  font-size: 12px;
+}
+
+.hero { padding-top: 20px; }
+.hero-card {
+  /* ✅ Fondo claro con acento verde */
+  background: linear-gradient(135deg, rgba(26,163,107,0.14), rgba(11,18,32,0.02));
+  border: 1px solid rgba(26,163,107,0.22);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.hero-card h1 { margin: 0 0 10px; font-size: 28px; }
+.hero-card p { margin: 0 0 14px; color: var(--muted); line-height: 1.45; }
+
+.hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn {
+  appearance: none;
+  border: 1px solid var(--border);
+  /* ✅ Antes: rgba(255,255,255,0.06) */
+  background: rgba(11,18,32,0.04);
+  color: var(--text);
+  padding: 12px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.btn:hover { background: rgba(11,18,32,0.06); }
+.btn-primary {
+  background: var(--brand);
+  border-color: rgba(26,163,107,0.7);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--brand-2); }
+.btn-ghost { background: transparent; }
+
+.hint {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 13px;
+  /* ✅ Antes: dashed rgba(255,255,255,0.12) */
+  border-top: 1px dashed rgba(11,18,32,0.14);
+  padding-top: 10px;
+}
+
+.section-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.section-title-row h2 { margin: 0; font-size: 22px; }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+
+.filters {
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: 10px;
+  margin: 14px 0;
+}
+.filters input, .filters select {
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  /* ✅ Antes: rgba(255,255,255,0.04) (sobre oscuro) */
+  background: #ffffff;
+  color: var(--text);
+  outline: none;
+}
+.filters input::placeholder { color: rgba(91,103,119,0.75); }
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.product-card {
+  /* ✅ Antes: rgba(255,255,255,0.04) (oscuro) */
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.product-top { display: flex; gap: 12px; align-items: center; }
+.product-img {
+  width: 74px;
+  height: 74px;
+  border-radius: 14px;
+  object-fit: cover;
+  /* ✅ Antes: rgba(255,255,255,0.08) */
+  background: rgba(11,18,32,0.04);
+  border: 1px solid rgba(11,18,32,0.10);
+  flex: 0 0 auto;
+}
+
+.drop-hint {
+  font-size: 11px;
+  color: rgba(91,103,119,0.85);
+  margin-top: 6px;
+}
+.drop-active { outline: 2px dashed rgba(26,163,107,0.85); outline-offset: 4px; }
+
+.product-meta { min-width: 0; }
+.product-name { margin: 0; font-size: 16px; }
+.product-cat { color: var(--muted); font-size: 12px; margin-top: 4px; }
+.price-row { margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.price { font-weight: 900; }
+.price.muted { font-weight: 700; }
+
+.product-actions { display: flex; gap: 8px; margin-top: 10px; }
+.product-actions button { width: 100%; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(26,163,107,0.35);
+  background: rgba(26,163,107,0.12);
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.offers-section { padding-top: 10px; }
+.offers-frame {
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  /* ✅ Antes: rgba(255,255,255,0.03) */
+  background: #ffffff;
+  box-shadow: var(--shadow);
+  padding: 10px;
+}
+
+.offers-track {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+  animation: offers-scroll 28s linear infinite;
+}
+
+.offer-card {
+  width: 180px;
+  flex: 0 0 auto;
+  border-radius: 14px;
+  border: 1px solid rgba(11,18,32,0.10);
+  /* ✅ Antes: rgba(255,255,255,0.04) */
+  background: #ffffff;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(16,24,40,0.10);
+}
+.offer-card:hover { transform: translateY(-1px); }
+
+.offer-img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  display: block;
+  background: rgba(11,18,32,0.04);
+}
+.offer-body { padding: 10px; }
+.offer-title { font-weight: 800; font-size: 13px; margin: 0; }
+.offer-price { margin-top: 6px; font-weight: 900; }
+.offer-price.muted { font-weight: 700; }
+
+@keyframes offers-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.cart-items { display: grid; gap: 10px; }
+.cart-item {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  box-shadow: var(--shadow);
+}
+.cart-item h4 { margin: 0; font-size: 14px; }
+.cart-item .muted { font-size: 12px; }
+
+.qty-controls { display: flex; align-items: center; gap: 8px; }
+.qty-controls input {
+  width: 64px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  color: var(--text);
+  text-align: center;
+}
+
+.cart-summary {
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #ffffff;
+  padding: 12px;
+  box-shadow: var(--shadow);
+}
+
+.total-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 16px;
+}
+.cart-actions { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+
+.how-to-list { margin: 0; padding-left: 18px; color: var(--muted); line-height: 1.6; }
+
+.contact-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #ffffff;
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.contact-item { display: grid; gap: 4px; }
+
+.whatsapp-float {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  background: var(--brand);
+  color: #fff;
+  padding: 12px 14px;
+  border-radius: 999px;
+  font-weight: 900;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(26,163,107,0.6);
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 16px 0;
+  color: var(--muted);
+  text-align: center;
+  /* ✅ Antes: rgba(0,0,0,0.12) */
+  background: #ffffff;
+}
+
+/* Responsive */
+@media (max-width: 920px) {
+  .products-grid { grid-template-columns: repeat(2, 1fr); }
+  .filters { grid-template-columns: 1fr; }
+  .main-nav { justify-content: flex-end; }
+}
+
+@media (max-width: 560px) {
+  .products-grid { grid-template-columns: 1fr; }
+  .brand-subtitle { display: none; }
+}
+/* Header más compacto SOLO en celular */
+@media (max-width: 560px) {
+  .header-row {
+    padding: 4px 0;
+  }
+
+  .brand-logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  .main-nav a {
+    padding: 5px 6px;
+    font-size: 13px;
+  }
+
+  .nav-cart {
+    padding: 5px 8px;
+    font-size: 13px;
+  }
+}
+.offers-frame { 
+  min-height: 150px;   /* evita que parezca que “no existe” */
+}
+
+.offers-empty {
+  padding: 12px;
+  color: var(--muted);
+  font-size: 13px;
+}@media (max-width: 560px) {
+  .offer-card { width: 200px; }
+  .offer-img { height: 190px; }
+}
+/* =========================
+   FIX IMÁGENES OFERTAS
+   ========================= */
+
+.offer-card {
+  width: 180px;
+  flex: 0 0 auto;
+  border-radius: 14px;
+  border: 1px solid rgba(11,18,32,0.10);
+  background: #ffffff;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(16,24,40,0.10);
+
+  /* Estructura estable */
+  display: flex;
+  flex-direction: column;
+}
+
+.offer-img {
+  width: 100%;
+  height: 160px;           /* Más alto para botellas */
+  object-fit: contain;     /* NO recorta */
+  object-position: center;
+  display: block;
+  background: rgba(11,18,32,0.04);
+}
+
+/* =========================
+   AJUSTE SOLO EN CELULAR
+   ========================= */
+@media (max-width: 560px) {
+  .offer-card {
+    width: 200px;
+  }
+
+  .offer-img {
+    height: 190px;
+  }
+}/* =========================
+   FIX GENERAL DE IMÁGENES EN CARDS
+   (evita imágenes gigantes y recortes)
+   ========================= */
+
+/* Cualquier imagen dentro de una tarjeta */
+.product-card img,
+.offer-card img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Si la imagen es la “grande” (como la de oferta) */
+.offer-card img {
+  height: 180px;          /* controla el alto visible */
+  object-fit: contain;    /* NO recorta */
+  object-position: center;
+  background: rgba(11,18,32,0.04);
+}
+
+/* En celular, un poco más alta para botellas */
+@media (max-width: 560px) {
+  .offer-card img {
+    height: 220px;
+  }
+}
+
+/* =========================
+   PANEL DE CATEGORÍAS / SUBCATEGORÍAS
+   ========================= */
+.cat-panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+  box-shadow: var(--shadow);
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.cat-title {
+  margin: 6px 6px 10px;
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.accordion-item {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin: 8px 0;
+  overflow: hidden;
+  background: #fff;
+}
+
+.accordion-btn {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 12px;
+  border: 0;
+  background: rgba(17, 24, 39, 0.04);
+  font-weight: 900;
+  cursor: pointer;
+}
+.accordion-btn span { color: var(--text); }
+.accordion-btn .chev { font-weight: 900; color: var(--muted); }
+
+.accordion-body {
+  display: none;
+  padding: 8px;
+}
+.accordion-body.open {
+  display: block;
+}
+
+.subcat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--text);
+}
+.subcat:hover {
+  background: rgba(26,163,107,0.10);
+}
+.subcat small {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+@media (max-width: 920px) {
+  .cat-panel {
+    margin-bottom: 12px;
+  }
+}
+
+/* =========================
+   OVERRIDE OFERTAS IMÁGENES
+   (para asegurar que las botellas no se recorten)
+   ========================= */
+.offer-card {
+  /* Asegura layout en columna para imagen y texto */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ajustes específicos para la imagen dentro de la tarjeta de oferta */
+.offer-card .offer-img {
+  /* Más alto para botellas */
+  height: 160px;
+  /* Ajusta la imagen completa */
+  object-fit: contain;
+  object-position: center;
+}
+
+@media (max-width: 560px) {
+  .offer-card .offer-img {
+    height: 190px;
+  }
+}
