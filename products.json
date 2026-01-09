@@ -5,7 +5,7 @@
     "categoria": "Alcohol",
     "precio": 750.0,
     "imagen": "",
-    "oferta": false,
+    "oferta": true,
     "marca": "",
     "presentacion": "",
     "tags": []
@@ -16,7 +16,7 @@
     "categoria": "Alcohol",
     "precio": 720.0,
     "imagen": "",
-    "oferta": false,
+    "oferta": true,
     "marca": "",
     "presentacion": "",
     "tags": []
