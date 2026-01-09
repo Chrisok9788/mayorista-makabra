@@ -22,7 +22,7 @@ import {
   updateCartCount,
   populateCategories,
   filterProducts,
-  renderOffersCarousel, // ✅ NUEVO: importar carrusel de ofertas
+  renderOffersCarousel, // ✅ Carrusel de ofertas
 } from "./ui.js";
 import { sendOrder } from "./whatsapp.js";
 
@@ -30,12 +30,12 @@ import { sendOrder } from "./whatsapp.js";
 let products = [];
 
 /**
- * ✅ NUEVO
- * Lleva al catálogo y muestra el producto tocado en el carrusel de ofertas.
- * Requiere que en el HTML exista un elemento con id="catalogo".
+ * Lleva al catálogo (HTML actual: id="catalogue") y muestra el producto tocado en ofertas.
+ * Esto NO rompe el sitio porque respeta tus anclas existentes.
  */
 function goToCatalogAndShowProduct(productId) {
-  const catalogSection = document.getElementById("catalogo");
+  // ✅ Usamos el id real existente en tu HTML
+  const catalogSection = document.getElementById("catalogue");
   if (catalogSection) {
     catalogSection.scrollIntoView({ behavior: "smooth", block: "start" });
   }
@@ -46,7 +46,7 @@ function goToCatalogAndShowProduct(productId) {
   // Mostrar SOLO el producto seleccionado en el catálogo
   renderProducts([prod], document.getElementById("products-container"), handleAdd);
 
-  // Opcional: limpiar filtros visualmente para que no “confunda”
+  // Limpiar filtros visualmente (evita confusión)
   const searchInput = document.getElementById("search-input");
   if (searchInput) searchInput.value = "";
 
@@ -63,7 +63,6 @@ function updateTotal() {
   if (!totalEl) return;
 
   const total = totalAmount(getCart(), products);
-  // Formato $ 1.234
   totalEl.textContent = "$ " + (Number(total) || 0).toLocaleString("es-UY");
 }
 
@@ -141,11 +140,11 @@ async function init() {
     // Render catálogo
     renderProducts(products, document.getElementById("products-container"), handleAdd);
 
-    // ✅ NUEVO: Render carrusel de ofertas + click => ir al catálogo
+    // ✅ Render carrusel de ofertas + click => ir al catálogo
     renderOffersCarousel(
       products,
       document.querySelector(".offers-frame"),
-      document.querySelector(".offers-track"),
+      document.querySelector("#offers-track"), // ✅ en tu HTML es ID
       (productId) => goToCatalogAndShowProduct(productId)
     );
 
