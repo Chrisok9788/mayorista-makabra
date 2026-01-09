@@ -7218,7 +7218,7 @@
   {
     "id": "atun-aida-aceite-834",
     "nombre": "Atun Aida Aceite",
-    "categoria": "Enlatado",
+    "categoria": "Enlatados",
     "precio": 38.0,
     "imagen": "",
     "oferta": false,
@@ -12080,7 +12080,7 @@
   {
     "id": "atun-demenuzado-170g-bachi-1475",
     "nombre": "Atun Demenuzado 170G Bachi",
-    "categoria": "Pescados y Mariscos",
+    "categoria": "Enlatados",
     "precio": 39.0,
     "imagen": "",
     "oferta": false,
