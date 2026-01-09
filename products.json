@@ -6910,7 +6910,7 @@
   {
     "id": "refresco-limol-uva-792",
     "nombre": "Refresco Limol Uva",
-    "categoria": "",
+    "categoria": "Limol y Nix",
     "precio": 465.0,
     "imagen": "",
     "oferta": false,
@@ -10086,17 +10086,7 @@
     "presentacion": "",
     "tags": []
   },
-  {
-    "id": "bandera-limol-1252",
-    "nombre": "Bandera Limol",
-    "categoria": "Otros",
-    "precio": 0.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": []
-  },
+  
   {
     "id": "dispensador-chicles-varon-1253",
     "nombre": "Dispensador Chicles Varon",
@@ -10914,7 +10904,7 @@
   {
     "id": "sprite-2lt-9-zero-1344",
     "nombre": "Sprite 2Lt *9 Zero",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 1099.0,
     "imagen": "",
     "oferta": false,
@@ -10922,17 +10912,7 @@
     "presentacion": "",
     "tags": []
   },
-  {
-    "id": "devolucion-cambios-1345",
-    "nombre": "Devolucion Cambios",
-    "categoria": "Otros",
-    "precio": -146.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": []
-  },
+  
   {
     "id": "william-1lt-1347",
     "nombre": "William 1Lt",
@@ -13257,7 +13237,7 @@
   {
     "id": "limol-unidad-2-litros-1615",
     "nombre": "Limol Unidad 2 Litros",
-    "categoria": "Otros",
+    "categoria": "Limol y Nix",
     "precio": 90.0,
     "imagen": "",
     "oferta": false,
@@ -22949,7 +22929,7 @@
   {
     "id": "bidon-limol-6l-2544",
     "nombre": "Bidon Limol 6L",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 85.0,
     "imagen": "",
     "oferta": false,
@@ -31452,7 +31432,7 @@
   {
     "id": "flotador-mor-largo-3326",
     "nombre": "Flotador Mor Largo",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 120.0,
     "imagen": "",
     "oferta": false,
@@ -31463,7 +31443,7 @@
   {
     "id": "colchonetas-sunclub-3327",
     "nombre": "Colchonetas Sunclub",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 250.0,
     "imagen": "",
     "oferta": false,
@@ -31760,7 +31740,7 @@
   {
     "id": "repasador-3355",
     "nombre": "Repasador",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 45.0,
     "imagen": "",
     "oferta": false,
@@ -32265,8 +32245,8 @@
   },
   {
     "id": "coca-600-3402",
-    "nombre": "Coca 600",
-    "categoria": "Limol y Nix",
+    "nombre": "Coca Cola 600 x1",
+    "categoria": "Coca Cola",
     "precio": 70.0,
     "imagen": "",
     "oferta": false,
@@ -32277,7 +32257,7 @@
   {
     "id": "brahama-473ml-6-3403",
     "nombre": "Brahama 473Ml *6",
-    "categoria": "Otros",
+    "categoria": "Cerveza",
     "precio": 325.0,
     "imagen": "",
     "oferta": false,
@@ -32332,7 +32312,7 @@
   {
     "id": "cerv-skol-6-3409",
     "nombre": "Cerv Skol *6",
-    "categoria": "Otros",
+    "categoria": "Cerveza",
     "precio": 270.0,
     "imagen": "",
     "oferta": false,
