@@ -706,7 +706,7 @@
   {
     "id": "jugo-rinde-2-20-sobres-70",
     "nombre": "Jugo Rinde 2 *20 Sobres",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -4996,7 +4996,7 @@
   {
     "id": "jugo-rinde-2-20-sobres-frutilla-547",
     "nombre": "Jugo Rinde 2 *20 Sobres Frutilla",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -5007,7 +5007,7 @@
   {
     "id": "jugo-rinde-2-20-sobres-durazno-551",
     "nombre": "Jugo Rinde 2 *20 Sobres Durazno",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -5051,7 +5051,7 @@
   {
     "id": "jugo-rinde-2-20-sobres-naranja-banana-558",
     "nombre": "Jugo Rinde 2 *20 Sobres Naranja Banana",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -5205,7 +5205,7 @@
   {
     "id": "jugo-rinde-2-20-sobres-limon-579",
     "nombre": "Jugo Rinde 2 *20 Sobres Limon",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -5216,7 +5216,7 @@
   {
     "id": "jugo-rinde-2-20-sobres-anana-580",
     "nombre": "Jugo Rinde 2 *20 Sobres Anana",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -5315,7 +5315,7 @@
   {
     "id": "jugo-rinde-2-20-sobres-pera-598",
     "nombre": "Jugo Rinde 2 *20 Sobres Pera",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -5436,7 +5436,7 @@
   {
     "id": "rinde-dos-20-mandarina-612",
     "nombre": "Rinde Dos *20 Mandarina",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -5447,7 +5447,7 @@
   {
     "id": "jugo-rinde-2-20-sobres-mix-614",
     "nombre": "Jugo Rinde 2 *20 Sobres Mix",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -7526,7 +7526,7 @@
   {
     "id": "sidra-del-valle-vidrio-870",
     "nombre": "Sidra Del Valle Vidrio",
-    "categoria": "Jugo",
+    "categoria": "Sidra",
     "precio": 109.0,
     "imagen": "",
     "oferta": false,
@@ -8076,7 +8076,7 @@
   {
     "id": "jugo-tang-naranja-951",
     "nombre": "Jugo Tang Naranja",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -8087,7 +8087,7 @@
   {
     "id": "jugo-tang-durazno-952",
     "nombre": "Jugo Tang Durazno",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -12597,7 +12597,7 @@
   {
     "id": "jugo-tang-limonada-1535",
     "nombre": "Jugo Tang Limonada",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -12608,7 +12608,7 @@
   {
     "id": "jugo-tang-durazno-multifruta-1536",
     "nombre": "Jugo Tang Durazno Multifruta",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -13873,7 +13873,7 @@
   {
     "id": "jugo-tang-1-1683",
     "nombre": "Jugo Tang *1",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 20.0,
     "imagen": "",
     "oferta": false,
@@ -22871,7 +22871,7 @@
   {
     "id": "disp-tang-2-repuest-2536",
     "nombre": "Disp Tang+2 Repuest",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 569.0,
     "imagen": "",
     "oferta": false,
@@ -23113,7 +23113,7 @@
   {
     "id": "jugo-de-uva-roses-1l-2558",
     "nombre": "Jugo De Uva Roses 1L",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 119.0,
     "imagen": "",
     "oferta": false,
@@ -28096,7 +28096,7 @@
   {
     "id": "jugo-rinde-2-20-sobres-manzana-3014",
     "nombre": "Jugo Rinde 2 *20 Sobres Manzana",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
