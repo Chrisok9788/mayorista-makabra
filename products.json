@@ -8527,7 +8527,7 @@
   {
     "id": "caldos-apti-costilla-1032",
     "nombre": "Caldos Apti Costilla",
-    "categoria": "Otros",
+    "categoria": "Caldos y Sopas",
     "precio": 150.0,
     "imagen": "",
     "oferta": false,
@@ -8703,7 +8703,7 @@
   {
     "id": "caldos-apti-panceta-1065",
     "nombre": "Caldos Apti Panceta",
-    "categoria": "Otros",
+    "categoria": "Caldos y Sopas",
     "precio": 150.0,
     "imagen": "",
     "oferta": false,
@@ -8802,7 +8802,7 @@
   {
     "id": "caldos-knorr-24-panceta-1074",
     "nombre": "Caldos Knorr *24 Panceta",
-    "categoria": "Otros",
+    "categoria": "Caldos y Sopas",
     "precio": 350.0,
     "imagen": "",
     "oferta": false,
@@ -8912,7 +8912,7 @@
   {
     "id": "sopas-knorr-tipo-caseras-fideos-1086",
     "nombre": "Sopas Knorr Tipo Caseras Fideos",
-    "categoria": "Pasta",
+    "categoria": "Caldos y Sopas",
     "precio": 69.0,
     "imagen": "",
     "oferta": false,
@@ -8956,7 +8956,7 @@
   {
     "id": "polenta-bios-5kg-1093",
     "nombre": "Polenta Bios 5Kg",
-    "categoria": "Otros",
+    "categoria": "Polenta",
     "precio": 239.0,
     "imagen": "",
     "oferta": false,
@@ -8967,7 +8967,7 @@
   {
     "id": "lager-22-1094",
     "nombre": "Lager 22",
-    "categoria": "Otros",
+    "categoria": "Mascotas",
     "precio": 1740.0,
     "imagen": "",
     "oferta": false,
@@ -9055,7 +9055,7 @@
   {
     "id": "ed-mas-10-amarillo-1106",
     "nombre": "Ed Mas *10 Amarillo",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 153.0,
     "imagen": "",
     "oferta": false,
@@ -9066,7 +9066,7 @@
   {
     "id": "ed-mas-10-naranja-1107",
     "nombre": "Ed Mas *10 Naranja",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Snacks",
     "precio": 153.0,
     "imagen": "",
     "oferta": false,
@@ -9077,7 +9077,7 @@
   {
     "id": "ed-mas-10-verde-1108",
     "nombre": "Ed Mas *10 Verde",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 153.0,
     "imagen": "",
     "oferta": false,
@@ -9517,7 +9517,7 @@
   {
     "id": "faisan-5lt-tinto-1179",
     "nombre": "Faisan 5Lt Tinto",
-    "categoria": "Otros",
+    "categoria": "Vinos",
     "precio": 465.0,
     "imagen": "",
     "oferta": false,
@@ -9539,7 +9539,7 @@
   {
     "id": "aceite-de-oliva-500ml-1183",
     "nombre": "Aceite De Oliva 500Ml",
-    "categoria": "Desayuno",
+    "categoria": "Aceite",
     "precio": 299.0,
     "imagen": "",
     "oferta": false,
@@ -9737,7 +9737,7 @@
   {
     "id": "desodorante-rexona-hombre-1207",
     "nombre": "Desodorante Rexona Hombre",
-    "categoria": "Desayuno",
+    "categoria": "Desodorantes",
     "precio": 160.0,
     "imagen": "",
     "oferta": false,
@@ -9748,7 +9748,7 @@
   {
     "id": "desodorante-dove-hombre-1208",
     "nombre": "Desodorante Dove Hombre",
-    "categoria": "Desayuno",
+    "categoria": "Desodorantes",
     "precio": 185.0,
     "imagen": "",
     "oferta": false,
