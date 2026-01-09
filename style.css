@@ -366,3 +366,12 @@ a { color: inherit; text-decoration: none; }
     font-size: 13px;
   }
 }
+.offers-frame { 
+  min-height: 150px;   /* evita que parezca que “no existe” */
+}
+
+.offers-empty {
+  padding: 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
