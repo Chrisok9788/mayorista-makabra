@@ -417,4 +417,31 @@ a { color: inherit; text-decoration: none; }
   .offer-img {
     height: 190px;
   }
+}/* =========================
+   FIX GENERAL DE IMÁGENES EN CARDS
+   (evita imágenes gigantes y recortes)
+   ========================= */
+
+/* Cualquier imagen dentro de una tarjeta */
+.product-card img,
+.offer-card img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Si la imagen es la “grande” (como la de oferta) */
+.offer-card img {
+  height: 180px;          /* controla el alto visible */
+  object-fit: contain;    /* NO recorta */
+  object-position: center;
+  background: rgba(11,18,32,0.04);
+}
+
+/* En celular, un poco más alta para botellas */
+@media (max-width: 560px) {
+  .offer-card img {
+    height: 220px;
+  }
 }
