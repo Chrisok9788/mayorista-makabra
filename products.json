@@ -1,5 +1,4 @@
-[
-  {
+
     "id": "jager-750cc-2",
     "nombre": "Jager 750Cc",
     "categoria": "Alcohol",
@@ -3401,7 +3400,7 @@
   {
     "id": "nix-cola-2lt-6-372",
     "nombre": "Nix Cola 2Lt*6",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 555.0,
     "imagen": "",
     "oferta": false,
@@ -6910,7 +6909,7 @@
   {
     "id": "refresco-limol-uva-792",
     "nombre": "Refresco Limol Uva",
-    "categoria": "Gaseosa",
+    "categoria": "",
     "precio": 465.0,
     "imagen": "",
     "oferta": false,
@@ -16590,7 +16589,7 @@
   {
     "id": "lata-pepsi-twist-354cc-1948",
     "nombre": "Lata Pepsi Twist 354Cc",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 40.0,
     "imagen": "",
     "oferta": false,
@@ -24698,7 +24697,7 @@
   {
     "id": "refresco-rinde-2-x4-naranja-2703",
     "nombre": "Refresco Rinde 2 X4 Naranja",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 315.0,
     "imagen": "",
     "oferta": false,
@@ -24709,7 +24708,7 @@
   {
     "id": "refresco-rinde-2-x4-mix-frutal-2704",
     "nombre": "Refresco Rinde 2 X4 Mix Frutal",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 315.0,
     "imagen": "",
     "oferta": false,
@@ -24720,7 +24719,7 @@
   {
     "id": "refresco-rinde-2-x4-durazno-2705",
     "nombre": "Refresco Rinde 2 X4 Durazno",
-    "categoria": "Gaseosa",
+    "categoria": "Jugos",
     "precio": 315.0,
     "imagen": "",
     "oferta": false,
@@ -24731,7 +24730,7 @@
   {
     "id": "refresco-rinde-2-x4-manzana-2706",
     "nombre": "Refresco Rinde 2 X4 Manzana",
-    "categoria": "Gaseosa",
+    "categoria": "Jugos",
     "precio": 315.0,
     "imagen": "",
     "oferta": false,
@@ -26535,7 +26534,7 @@
   {
     "id": "pepsi-lata-black-x6-354cc-2872",
     "nombre": "Pepsi Lata Black X6 354Cc",
-    "categoria": "Gaseosa",
+    "categoria": "Paso de los Toros",
     "precio": 225.0,
     "imagen": "",
     "oferta": false,
@@ -28482,7 +28481,7 @@
   {
     "id": "nix-cola-mini-275ml-1-3050",
     "nombre": "Nix Cola Mini 275Ml *1",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 36.0,
     "imagen": "",
     "oferta": false,
@@ -28647,7 +28646,7 @@
   {
     "id": "nix-cola-500-1-3066",
     "nombre": "Nix Cola 500 *1",
-    "categoria": "Gaseosa",
+    "categoria": "Paso de los Toros",
     "precio": 45.0,
     "imagen": "",
     "oferta": false,
@@ -28757,7 +28756,7 @@
   {
     "id": "nix-mandarina-500-1-3076",
     "nombre": "Nix Mandarina 500*1",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 50.0,
     "imagen": "",
     "oferta": false,
@@ -28768,7 +28767,7 @@
   {
     "id": "limol-pomelo-2lt-x1-3077",
     "nombre": "Limol Pomelo 2Lt X1",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 95.0,
     "imagen": "",
     "oferta": false,
@@ -28779,7 +28778,7 @@
   {
     "id": "limol-lima-2lt-3078",
     "nombre": "Limol Lima 2Lt",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 95.0,
     "imagen": "",
     "oferta": false,
@@ -28790,7 +28789,7 @@
   {
     "id": "limol-mandarina-2lt-x1-3079",
     "nombre": "Limol Mandarina 2Lt X1",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 95.0,
     "imagen": "",
     "oferta": false,
@@ -28801,7 +28800,7 @@
   {
     "id": "limol-cola-2lt-x1-3080",
     "nombre": "Limol Cola 2Lt X1",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 95.0,
     "imagen": "",
     "oferta": false,
@@ -28812,7 +28811,7 @@
   {
     "id": "limol-guarana-2lt-x1-3081",
     "nombre": "Limol Guarana 2Lt X1",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 95.0,
     "imagen": "",
     "oferta": false,
@@ -31331,7 +31330,7 @@
   {
     "id": "nix-surtidas-500-12-no-cola-3315",
     "nombre": "Nix Surtidas 500 *12 (No Cola)",
-    "categoria": "Gaseosa",
+    "categoria": "Paso de los Toros",
     "precio": 399.0,
     "imagen": "",
     "oferta": false,
@@ -31595,7 +31594,7 @@
   {
     "id": "refresco-limol-surtido-2lt-3339",
     "nombre": "Refresco Limol Surtido 2Lt",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 465.0,
     "imagen": "",
     "oferta": false,
@@ -32266,7 +32265,7 @@
   {
     "id": "coca-600-3402",
     "nombre": "Coca 600",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 70.0,
     "imagen": "",
     "oferta": false,
@@ -32959,7 +32958,7 @@
   {
     "id": "refresco-rinde-2-x1-mix-frutal-3466",
     "nombre": "Refresco Rinde 2 X1 Mix Frutal",
-    "categoria": "Gaseosa",
+    "categoria": "Jugos",
     "precio": 90.0,
     "imagen": "",
     "oferta": false,
