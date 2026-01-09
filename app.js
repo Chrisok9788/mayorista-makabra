@@ -22,11 +22,37 @@ import {
   updateCartCount,
   populateCategories,
   filterProducts,
+  renderOffersCarousel, // ✅ NUEVO: importar carrusel de ofertas
 } from "./ui.js";
 import { sendOrder } from "./whatsapp.js";
 
 // Lista de productos cargada desde el JSON
 let products = [];
+
+/**
+ * ✅ NUEVO
+ * Lleva al catálogo y muestra el producto tocado en el carrusel de ofertas.
+ * Requiere que en el HTML exista un elemento con id="catalogo".
+ */
+function goToCatalogAndShowProduct(productId) {
+  const catalogSection = document.getElementById("catalogo");
+  if (catalogSection) {
+    catalogSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  const prod = products.find((p) => p.id === productId);
+  if (!prod) return;
+
+  // Mostrar SOLO el producto seleccionado en el catálogo
+  renderProducts([prod], document.getElementById("products-container"), handleAdd);
+
+  // Opcional: limpiar filtros visualmente para que no “confunda”
+  const searchInput = document.getElementById("search-input");
+  if (searchInput) searchInput.value = "";
+
+  const categorySelect = document.getElementById("category-filter");
+  if (categorySelect) categorySelect.value = "";
+}
 
 /**
  * Actualiza el total en $ del carrito en la UI.
@@ -114,6 +140,14 @@ async function init() {
 
     // Render catálogo
     renderProducts(products, document.getElementById("products-container"), handleAdd);
+
+    // ✅ NUEVO: Render carrusel de ofertas + click => ir al catálogo
+    renderOffersCarousel(
+      products,
+      document.querySelector(".offers-frame"),
+      document.querySelector(".offers-track"),
+      (productId) => goToCatalogAndShowProduct(productId)
+    );
 
     // Render carrito inicial + total
     rerenderCartUI();
