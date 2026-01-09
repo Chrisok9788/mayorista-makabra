@@ -2862,7 +2862,7 @@
   {
     "id": "refresco-limol-lima-2lt-311",
     "nombre": "Refresco Limol Lima 2Lt",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 465.0,
     "imagen": "",
     "oferta": false,
@@ -2873,7 +2873,7 @@
   {
     "id": "refresco-limol-mandarina-2lt-312",
     "nombre": "Refresco Limol Mandarina 2Lt",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 465.0,
     "imagen": "",
     "oferta": false,
@@ -2884,7 +2884,7 @@
   {
     "id": "refresco-limol-pomelo-2lt-313",
     "nombre": "Refresco Limol Pomelo 2Lt",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 465.0,
     "imagen": "",
     "oferta": false,
@@ -2895,7 +2895,7 @@
   {
     "id": "refresco-limol-cola-2lt-314",
     "nombre": "Refresco Limol Cola 2Lt",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 465.0,
     "imagen": "",
     "oferta": false,
@@ -2906,7 +2906,7 @@
   {
     "id": "refresco-limol-guarana-2lt-315",
     "nombre": "Refresco Limol Guarana 2Lt",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 465.0,
     "imagen": "",
     "oferta": false,
@@ -4402,7 +4402,7 @@
   {
     "id": "nix-cola-500-12-477",
     "nombre": "Nix Cola 500 *12",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 399.0,
     "imagen": "",
     "oferta": false,
@@ -4413,7 +4413,7 @@
   {
     "id": "nix-lima-500-12-481",
     "nombre": "Nix Lima 500*12",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 399.0,
     "imagen": "",
     "oferta": false,
@@ -4424,7 +4424,7 @@
   {
     "id": "nix-lima-2l-6-483",
     "nombre": "Nix Lima 2L*6",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 555.0,
     "imagen": "",
     "oferta": false,
@@ -4435,7 +4435,7 @@
   {
     "id": "nix-lima-2-5-6-484",
     "nombre": "Nix Lima 2.5*6",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 665.0,
     "imagen": "",
     "oferta": false,
@@ -4446,7 +4446,7 @@
   {
     "id": "nix-mandarina-500-12-485",
     "nombre": "Nix Mandarina 500*12",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 399.0,
     "imagen": "",
     "oferta": false,
@@ -4457,7 +4457,7 @@
   {
     "id": "nix-mandarina-1l-6-486",
     "nombre": "Nix Mandarina 1L*6",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 370.0,
     "imagen": "",
     "oferta": false,
@@ -4468,7 +4468,7 @@
   {
     "id": "nix-mandarina-2l-6-487",
     "nombre": "Nix Mandarina 2L*6",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 555.0,
     "imagen": "",
     "oferta": false,
@@ -4479,7 +4479,7 @@
   {
     "id": "nix-mandarina-2-5-6-488",
     "nombre": "Nix Mandarina 2.5*6",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 665.0,
     "imagen": "",
     "oferta": false,
@@ -4490,7 +4490,7 @@
   {
     "id": "nix-pomelo-500-12-489",
     "nombre": "Nix Pomelo 500*12",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 399.0,
     "imagen": "",
     "oferta": false,
@@ -4501,7 +4501,7 @@
   {
     "id": "nix-pomelo-1l-6-490",
     "nombre": "Nix Pomelo 1L*6",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 370.0,
     "imagen": "",
     "oferta": false,
@@ -4512,7 +4512,7 @@
   {
     "id": "nix-pomelo-2l-6-491",
     "nombre": "Nix Pomelo 2L*6",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 555.0,
     "imagen": "",
     "oferta": false,
@@ -4523,7 +4523,7 @@
   {
     "id": "nix-pomelo-2-5-6-492",
     "nombre": "Nix Pomelo 2.5 *6",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 665.0,
     "imagen": "",
     "oferta": false,
@@ -4534,7 +4534,7 @@
   {
     "id": "nix-guarana-500-12-493",
     "nombre": "Nix Guarana 500 *12",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 399.0,
     "imagen": "",
     "oferta": false,
@@ -4545,7 +4545,7 @@
   {
     "id": "nix-guarana-1l-6-494",
     "nombre": "Nix Guarana 1L*6",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 370.0,
     "imagen": "",
     "oferta": false,
@@ -4556,7 +4556,7 @@
   {
     "id": "nix-guarana-2-5-6-495",
     "nombre": "Nix Guarana 2.5 *6",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 665.0,
     "imagen": "",
     "oferta": false,
@@ -4633,7 +4633,7 @@
   {
     "id": "nix-cola-1lt-6-503",
     "nombre": "Nix Cola 1Lt*6",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 370.0,
     "imagen": "",
     "oferta": false,
@@ -4644,7 +4644,7 @@
   {
     "id": "nix-lima-1lt-6-504",
     "nombre": "Nix Lima 1Lt*6",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 370.0,
     "imagen": "",
     "oferta": false,
@@ -4655,7 +4655,7 @@
   {
     "id": "nix-cola-2-5lt-6-506",
     "nombre": "Nix Cola 2.5Lt*6",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 665.0,
     "imagen": "",
     "oferta": false,
@@ -6041,7 +6041,7 @@
   {
     "id": "nix-cola-2lt-6-zero-684",
     "nombre": "Nix Cola 2Lt*6 Zero",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 555.0,
     "imagen": "",
     "oferta": false,
@@ -7889,7 +7889,7 @@
   {
     "id": "esqueletos-coca-926",
     "nombre": "Esqueletos Coca",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 600.0,
     "imagen": "",
     "oferta": false,
@@ -9440,7 +9440,7 @@
   {
     "id": "coca-lata-marvel-6-473cc-1169",
     "nombre": "Coca Lata Marvel*6 473Cc",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 420.0,
     "imagen": "",
     "oferta": false,
@@ -11365,7 +11365,7 @@
   {
     "id": "refresco-limol-surt-1391",
     "nombre": "Refresco Limol Surt",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 465.0,
     "imagen": "",
     "oferta": false,
@@ -11508,7 +11508,7 @@
   {
     "id": "limol-500ml-12-cola-1405",
     "nombre": "Limol 500Ml*12 Cola",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 349.0,
     "imagen": "",
     "oferta": false,
@@ -11530,7 +11530,7 @@
   {
     "id": "limol-500ml-12-uva-1408",
     "nombre": "Limol 500Ml*12 Uva",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 365.0,
     "imagen": "",
     "oferta": false,
@@ -11541,7 +11541,7 @@
   {
     "id": "limol-500ml-12-pomelo-1409",
     "nombre": "Limol 500Ml*12 Pomelo",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 365.0,
     "imagen": "",
     "oferta": false,
@@ -13906,7 +13906,7 @@
   {
     "id": "coca-1-5-1686",
     "nombre": "Coca 1.5",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 140.0,
     "imagen": "",
     "oferta": false,
@@ -14654,7 +14654,7 @@
   {
     "id": "refrescos-nix-500-unidad-1761",
     "nombre": "Refrescos Nix 500 Unidad",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 39.0,
     "imagen": "",
     "oferta": false,
@@ -14665,7 +14665,7 @@
   {
     "id": "refrescos-nix-1lt-1762",
     "nombre": "Refrescos Nix 1Lt",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 72.0,
     "imagen": "",
     "oferta": false,
@@ -14676,7 +14676,7 @@
   {
     "id": "refrescos-nix-2l-1763",
     "nombre": "Refrescos Nix 2L",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 108.0,
     "imagen": "",
     "oferta": false,
@@ -14687,7 +14687,7 @@
   {
     "id": "refrescos-nix-2-5-1764",
     "nombre": "Refrescos Nix 2.5",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 130.0,
     "imagen": "",
     "oferta": false,
@@ -17833,7 +17833,7 @@
   {
     "id": "nix-cola-mini-275ml-9-2067",
     "nombre": "Nix Cola Mini 275Ml *9",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 193.0,
     "imagen": "",
     "oferta": false,
@@ -19560,7 +19560,7 @@
   {
     "id": "nix-cola-2-5lt-2225",
     "nombre": "Nix Cola 2.5Lt",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 110.0,
     "imagen": "",
     "oferta": false,
