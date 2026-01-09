@@ -11486,7 +11486,7 @@
   {
     "id": "limol-500ml-12-lima-1403",
     "nombre": "Limol 500Ml*12 Lima",
-    "categoria": "Lima",
+    "categoria": "Limol y Nix",
     "precio": 349.0,
     "imagen": "",
     "oferta": false,
@@ -11497,7 +11497,7 @@
   {
     "id": "limol-500ml-12-mandarina-1404",
     "nombre": "Limol 500Ml*12 Mandarina",
-    "categoria": "Gaseosa",
+    "categoria": "Limol y Nix",
     "precio": 349.0,
     "imagen": "",
     "oferta": false,
@@ -11542,7 +11542,7 @@
     "id": "limol-500ml-12-pomelo-1409",
     "nombre": "Limol 500Ml*12 Pomelo",
     "categoria": "Limol y Nix",
-    "precio": 365.0,
+    "precio": 349.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
@@ -11937,7 +11937,7 @@
   {
     "id": "limol-500ml-12-guarana-1459",
     "nombre": "Limol 500Ml*12 Guarana",
-    "categoria": "Otros",
+    "categoria": "Limol y Nix",
     "precio": 349.0,
     "imagen": "",
     "oferta": false,
@@ -14434,7 +14434,7 @@
   {
     "id": "limol-500ml-12-surtidas-1737",
     "nombre": "Limol 500Ml*12 Surtidas",
-    "categoria": "Otros",
+    "categoria": "Limol y Nix",
     "precio": 349.0,
     "imagen": "",
     "oferta": false,
