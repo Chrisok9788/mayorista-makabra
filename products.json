@@ -2499,7 +2499,7 @@
   {
     "id": "sopa-en-vaso-carne-270",
     "nombre": "Sopa En Vaso Carne",
-    "categoria": "Carnes",
+    "categoria": "Caldos y Sopas",
     "precio": 71.0,
     "imagen": "",
     "oferta": false,
@@ -2510,7 +2510,7 @@
   {
     "id": "sopa-en-vaso-pollo-271",
     "nombre": "Sopa En Vaso Pollo",
-    "categoria": "Carnes",
+    "categoria": "Caldos y Sopas",
     "precio": 71.0,
     "imagen": "",
     "oferta": false,
@@ -2521,7 +2521,7 @@
   {
     "id": "sopa-en-vaso-pollo-picante-272",
     "nombre": "Sopa En Vaso Pollo Picante",
-    "categoria": "Desayuno",
+    "categoria": "Caldos y Sopas",
     "precio": 71.0,
     "imagen": "",
     "oferta": false,
@@ -2532,7 +2532,7 @@
   {
     "id": "sopa-en-vaso-verduras-273",
     "nombre": "Sopa En Vaso Verduras",
-    "categoria": "Otros",
+    "categoria": "Caldos y Sopas",
     "precio": 71.0,
     "imagen": "",
     "oferta": false,
@@ -2543,7 +2543,7 @@
   {
     "id": "sopa-en-vaso-surtidas-276",
     "nombre": "Sopa En Vaso Surtidas",
-    "categoria": "Otros",
+    "categoria": "Caldos y Sopas",
     "precio": 71.0,
     "imagen": "",
     "oferta": false,
@@ -14599,7 +14599,7 @@
   {
     "id": "sopa-c-fideos-delier-65-gr-1756",
     "nombre": "Sopa C/Fideos Delier 65 Gr",
-    "categoria": "Pasta",
+    "categoria": "Caldos y Sopas",
     "precio": 55.0,
     "imagen": "",
     "oferta": false,
@@ -14610,7 +14610,7 @@
   {
     "id": "sopa-sobre-15-gr-delier-1757",
     "nombre": "Sopa Sobre 15 Gr Delier",
-    "categoria": "Otros",
+    "categoria": "Caldos y Sopas",
     "precio": 26.0,
     "imagen": "",
     "oferta": false,
@@ -14896,7 +14896,7 @@
   {
     "id": "sopa-en-vaso-cheddar-1788",
     "nombre": "Sopa En Vaso Cheddar",
-    "categoria": "Otros",
+    "categoria": "Caldos y Sopas",
     "precio": 71.0,
     "imagen": "",
     "oferta": false,
@@ -19318,7 +19318,7 @@
   {
     "id": "sopapa-de-goma-50-12-2203",
     "nombre": "Sopapa De Goma 50*12",
-    "categoria": "Otros",
+    "categoria": "Caldos y Sopas",
     "precio": 59.0,
     "imagen": "",
     "oferta": false,
