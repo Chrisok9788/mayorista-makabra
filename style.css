@@ -374,4 +374,7 @@ a { color: inherit; text-decoration: none; }
   padding: 12px;
   color: var(--muted);
   font-size: 13px;
+}@media (max-width: 560px) {
+  .offer-card { width: 200px; }
+  .offer-img { height: 190px; }
 }
