@@ -2466,7 +2466,7 @@
   {
     "id": "caldos-knorr-24-carne-263",
     "nombre": "Caldos Knorr *24 Carne",
-    "categoria": "Carnes",
+    "categoria": "Caldos y Sopas",
     "precio": 350.0,
     "imagen": "",
     "oferta": false,
@@ -2477,7 +2477,7 @@
   {
     "id": "caldos-knorr-verduras-24-264",
     "nombre": "Caldos Knorr Verduras*24",
-    "categoria": "Otros",
+    "categoria": "Caldos y Sopas",
     "precio": 350.0,
     "imagen": "",
     "oferta": false,
@@ -3214,7 +3214,7 @@
   {
     "id": "caldos-knorr-gallina-24-351",
     "nombre": "Caldos Knorr Gallina *24",
-    "categoria": "Otros",
+    "categoria": "Caldos y Sopas",
     "precio": 350.0,
     "imagen": "",
     "oferta": false,
@@ -5568,7 +5568,7 @@
   {
     "id": "caldo-maggi-panceta-x24-627",
     "nombre": "Caldo Maggi Panceta X24",
-    "categoria": "Otros",
+    "categoria": "Caldos y Sopas",
     "precio": 325.0,
     "imagen": "",
     "oferta": false,
@@ -8439,7 +8439,7 @@
   {
     "id": "caldo-maggi-gallina-1023",
     "nombre": "Caldo Maggi Gallina",
-    "categoria": "Otros",
+    "categoria": "Caldos y Sopas",
     "precio": 325.0,
     "imagen": "",
     "oferta": false,
@@ -10760,7 +10760,7 @@
   {
     "id": "caldos-apti-verdura-1329",
     "nombre": "Caldos Apti Verdura",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Caldos y Sopas",
     "precio": 150.0,
     "imagen": "",
     "oferta": false,
@@ -10848,7 +10848,7 @@
   {
     "id": "caldos-apti-gallina-1338",
     "nombre": "Caldos Apti Gallina",
-    "categoria": "Otros",
+    "categoria": "Caldos y Sopas",
     "precio": 150.0,
     "imagen": "",
     "oferta": false,
@@ -10892,7 +10892,7 @@
   {
     "id": "caldos-knorr-24-costilla-1342",
     "nombre": "Caldos Knorr *24 Costilla",
-    "categoria": "Otros",
+    "categoria": "Caldos y Sopas",
     "precio": 350.0,
     "imagen": "",
     "oferta": false,
@@ -25193,7 +25193,7 @@
   {
     "id": "caldos-knorr-x12-carne-2748",
     "nombre": "Caldos Knorr X12 Carne",
-    "categoria": "Carnes",
+    "categoria": "Caldos y Sopas",
     "precio": 85.0,
     "imagen": "",
     "oferta": false,
@@ -25204,7 +25204,7 @@
   {
     "id": "caldos-knorr-x12-gallina-2749",
     "nombre": "Caldos Knorr X12 Gallina",
-    "categoria": "Otros",
+    "categoria": "Caldos y Sopas",
     "precio": 85.0,
     "imagen": "",
     "oferta": false,
