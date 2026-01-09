@@ -291,7 +291,7 @@
     "categoria": "Snack",
     "precio": 275.0,
     "imagen": "",
-    "oferta": false,
+    "oferta": true,
     "marca": "",
     "presentacion": "",
     "tags": []
@@ -566,7 +566,7 @@
     "categoria": "Energizante",
     "precio": 580.0,
     "imagen": "",
-    "oferta": false,
+    "oferta": true,
     "marca": "",
     "presentacion": "",
     "tags": []
@@ -22621,10 +22621,10 @@
   {
     "id": "cana-800ml-2515",
     "nombre": "Caña 800Ml",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 89.0,
     "imagen": "",
-    "oferta": false,
+    "oferta": true,
     "marca": "",
     "presentacion": "",
     "tags": []
