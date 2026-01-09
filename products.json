@@ -31352,7 +31352,7 @@
   {
     "id": "tortugas-casero-pan-3316",
     "nombre": "Tortugas Casero Pan",
-    "categoria": "Panadería y Pastas",
+    "categoria": "Panadería",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
@@ -31484,7 +31484,7 @@
   {
     "id": "pistola-de-agua-con-tanque-3328",
     "nombre": "Pistola De Agua Con Tanque",
-    "categoria": "Agua",
+    "categoria": "Juguetes",
     "precio": 350.0,
     "imagen": "",
     "oferta": false,
@@ -31495,7 +31495,7 @@
   {
     "id": "aro-inflable-con-respaldo-3329",
     "nombre": "Aro Inflable Con Respaldo",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 499.0,
     "imagen": "",
     "oferta": false,
@@ -31517,7 +31517,7 @@
   {
     "id": "picada-la-previa-469gr-3331",
     "nombre": "Picada La Previa 469Gr",
-    "categoria": "Otros",
+    "categoria": "Snack",
     "precio": 255.0,
     "imagen": "",
     "oferta": false,
@@ -31616,7 +31616,7 @@
   {
     "id": "arbejas-3340",
     "nombre": "Arbejas",
-    "categoria": "Otros",
+    "categoria": "Enlatados",
     "precio": 26.0,
     "imagen": "",
     "oferta": false,
@@ -31627,7 +31627,7 @@
   {
     "id": "bota-navidena-reno-3341",
     "nombre": "Bota Navideña Reno",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 59.0,
     "imagen": "",
     "oferta": false,
@@ -31638,7 +31638,7 @@
   {
     "id": "bota-navidena-santa-3342",
     "nombre": "Bota Navideña Santa",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 78.0,
     "imagen": "",
     "oferta": false,
@@ -31693,7 +31693,7 @@
   {
     "id": "arveja-lata-petitosa-3347",
     "nombre": "Arveja Lata Petitosa",
-    "categoria": "Otros",
+    "categoria": "Enlatados",
     "precio": 23.0,
     "imagen": "",
     "oferta": false,
@@ -31704,7 +31704,7 @@
   {
     "id": "sprite-2-25-1-3348",
     "nombre": "Sprite 2.25 *1",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 185.0,
     "imagen": "",
     "oferta": false,
@@ -31858,7 +31858,7 @@
   {
     "id": "pack-urban-care-4-3363",
     "nombre": "Pack Urban Care #4",
-    "categoria": "Otros",
+    "categoria": "Desodorantes",
     "precio": 490.0,
     "imagen": "",
     "oferta": false,
@@ -31869,7 +31869,7 @@
   {
     "id": "pack-urban-care-deep-blue-3364",
     "nombre": "Pack Urban Care Deep Blue",
-    "categoria": "Otros",
+    "categoria": "Desodorantes",
     "precio": 399.0,
     "imagen": "",
     "oferta": false,
@@ -31880,7 +31880,7 @@
   {
     "id": "desire-sexy-black-gel-3365",
     "nombre": "Desire Sexy Black +Gel",
-    "categoria": "Otros",
+    "categoria": "Desodorantes",
     "precio": 890.0,
     "imagen": "",
     "oferta": false,
@@ -31900,20 +31900,9 @@
     "tags": []
   },
   {
-    "id": "queso-horma-299-3367",
-    "nombre": "Queso Horma 299",
-    "categoria": "Lácteos",
-    "precio": 299.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": []
-  },
-  {
     "id": "queso-horma-casero-3368",
     "nombre": "Queso Horma Casero",
-    "categoria": "Lácteos",
+    "categoria": "Frescos",
     "precio": 320.0,
     "imagen": "",
     "oferta": false,
@@ -31924,7 +31913,7 @@
   {
     "id": "chorizo-schneck-puro-cerdo-7-3369",
     "nombre": "Chorizo Schneck Puro Cerdo *7",
-    "categoria": "Fiambres y Embutidos",
+    "categoria": "Frescos",
     "precio": 359.0,
     "imagen": "",
     "oferta": false,
@@ -31935,7 +31924,7 @@
   {
     "id": "desodorante-dove-fresh-care-3370",
     "nombre": "Desodorante Dove Fresh Care",
-    "categoria": "Cuidados personal",
+    "categoria": "Desodorantes",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
@@ -31946,7 +31935,7 @@
   {
     "id": "longaniza-schneck-160gr-3371",
     "nombre": "Longaniza Schneck  160Gr",
-    "categoria": "Otros",
+    "categoria": "Fiambres y Embutidos",
     "precio": 149.0,
     "imagen": "",
     "oferta": false,
@@ -31968,7 +31957,7 @@
   {
     "id": "finzeta-dona-coca-3373",
     "nombre": "Finzeta Doña Coca",
-    "categoria": "Gaseosa",
+    "categoria": "Fiambres y Embutidos",
     "precio": 295.0,
     "imagen": "",
     "oferta": false,
@@ -31979,7 +31968,7 @@
   {
     "id": "juguitos-puritas-24-multifruta-3374",
     "nombre": "Juguitos Puritas*24 Multifruta",
-    "categoria": "Otros",
+    "categoria": "Jugos",
     "precio": 250.0,
     "imagen": "",
     "oferta": false,
@@ -32056,7 +32045,7 @@
   {
     "id": "dr-lemon-mojito-473ml-3381",
     "nombre": "Dr. Lemon Mojito 473Ml",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 151.0,
     "imagen": "",
     "oferta": false,
@@ -32111,7 +32100,7 @@
   {
     "id": "wisky-hallmark-1l-3386",
     "nombre": "Wisky Hallmark 1L",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 499.0,
     "imagen": "",
     "oferta": false,
@@ -32144,7 +32133,7 @@
   {
     "id": "clerico-del-valle-3389",
     "nombre": "Clerico Del Valle",
-    "categoria": "Jugo",
+    "categoria": "Sidra",
     "precio": 139.0,
     "imagen": "",
     "oferta": false,
@@ -32199,7 +32188,7 @@
   {
     "id": "finzeta-sarubbi-3394",
     "nombre": "Finzeta Sarubbi",
-    "categoria": "Otros",
+    "categoria": "Fiambres y Embutidos",
     "precio": 325.0,
     "imagen": "",
     "oferta": false,
@@ -32210,7 +32199,7 @@
   {
     "id": "ficeta-sarubi-3395",
     "nombre": "Ficeta Sarubi",
-    "categoria": "Otros",
+    "categoria": "Fiambres y Embutidos",
     "precio": 325.0,
     "imagen": "",
     "oferta": false,
@@ -32221,7 +32210,7 @@
   {
     "id": "anana-fizz-pedrense-1-3396",
     "nombre": "Anana Fizz Pedrense *1",
-    "categoria": "Otros",
+    "categoria": "Sidra",
     "precio": 95.0,
     "imagen": "",
     "oferta": false,
@@ -32232,7 +32221,7 @@
   {
     "id": "mix-frutal-pedrense-1-3397",
     "nombre": "Mix Frutal Pedrense *1",
-    "categoria": "Otros",
+    "categoria": "Sidra",
     "precio": 95.0,
     "imagen": "",
     "oferta": false,
@@ -32276,7 +32265,7 @@
   {
     "id": "frutilla-pizz-pedrense-3401",
     "nombre": "Frutilla Pizz Pedrense",
-    "categoria": "Otros",
+    "categoria": "Sidra",
     "precio": 390.0,
     "imagen": "",
     "oferta": false,
@@ -32309,7 +32298,7 @@
   {
     "id": "ph-tropicos-16-60mt-3404",
     "nombre": "Ph Tropicos 16*60Mt",
-    "categoria": "Otros",
+    "categoria": "Higiene",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
@@ -32342,7 +32331,7 @@
   {
     "id": "ph-regio-12x50-3407",
     "nombre": "Ph Regio 12X50",
-    "categoria": "Otros",
+    "categoria": "Higiene",
     "precio": 169.0,
     "imagen": "",
     "oferta": false,
@@ -32397,7 +32386,7 @@
   {
     "id": "corona-lata-473cc-6-3413",
     "nombre": "Corona Lata 473Cc *6",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 579.0,
     "imagen": "",
     "oferta": false,
@@ -32408,7 +32397,7 @@
   {
     "id": "corona-lata-unidad-3414",
     "nombre": "Corona Lata Unidad",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 100.0,
     "imagen": "",
     "oferta": false,
@@ -32474,7 +32463,7 @@
   {
     "id": "faisan-1lt-surtido-3420",
     "nombre": "Faisan 1Lt Surtido",
-    "categoria": "Otros",
+    "categoria": "Vinos",
     "precio": 112.0,
     "imagen": "",
     "oferta": false,
@@ -32496,7 +32485,7 @@
   {
     "id": "malta-1lt-3422",
     "nombre": "Malta 1Lt",
-    "categoria": "Otros",
+    "categoria": "Cerveza",
     "precio": 1375.0,
     "imagen": "",
     "oferta": false,
@@ -32507,7 +32496,7 @@
   {
     "id": "espiral-clinch-10u-3423",
     "nombre": "Espiral Clinch 10U",
-    "categoria": "Otros",
+    "categoria": "Control de Plagas",
     "precio": 40.0,
     "imagen": "",
     "oferta": false,
@@ -32529,7 +32518,7 @@
   {
     "id": "servilleta-griselda-50u-3425",
     "nombre": "Servilleta Griselda 50U",
-    "categoria": "Otros",
+    "categoria": "Higiene",
     "precio": 35.0,
     "imagen": "",
     "oferta": false,
@@ -32551,7 +32540,7 @@
   {
     "id": "panchos-sabroseros-37-3427",
     "nombre": "Panchos Sabroseros *37",
-    "categoria": "Otros",
+    "categoria": "Frescos",
     "precio": 500.0,
     "imagen": "",
     "oferta": false,
@@ -32584,7 +32573,7 @@
   {
     "id": "knorr-verdura-12-3430",
     "nombre": "Knorr Verdura *12",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Caldos y Sopas",
     "precio": 85.0,
     "imagen": "",
     "oferta": false,
@@ -32628,7 +32617,7 @@
   {
     "id": "funky-gomas-3434",
     "nombre": "Funky Gomas",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 18.0,
     "imagen": "",
     "oferta": false,
@@ -32639,7 +32628,7 @@
   {
     "id": "funky-pop-silbato-x12-3435",
     "nombre": "Funky Pop Silbato X12",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 420.0,
     "imagen": "",
     "oferta": false,
@@ -32661,7 +32650,7 @@
   {
     "id": "choclo-y-arvejas-petitosa-dueto-3437",
     "nombre": "Choclo Y Arvejas Petitosa Dueto",
-    "categoria": "Otros",
+    "categoria": "Enlatados",
     "precio": 30.0,
     "imagen": "",
     "oferta": false,
@@ -32694,7 +32683,7 @@
   {
     "id": "choclo-en-lata-300grs-petitosa-3440",
     "nombre": "Choclo En Lata 300Grs Petitosa",
-    "categoria": "Otros",
+    "categoria": "Enlatados",
     "precio": 36.0,
     "imagen": "",
     "oferta": false,
@@ -32727,7 +32716,7 @@
   {
     "id": "lata-dueto-arveja-y-zanahoria-oderich-3443",
     "nombre": "Lata Dueto Arveja Y Zanahoria Oderich",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Enlatados",
     "precio": 30.0,
     "imagen": "",
     "oferta": false,
@@ -32738,7 +32727,7 @@
   {
     "id": "morcilla-kali-3444",
     "nombre": "Morcilla Kali",
-    "categoria": "Otros",
+    "categoria": "Frescos",
     "precio": 149.0,
     "imagen": "",
     "oferta": false,
@@ -32760,7 +32749,7 @@
   {
     "id": "chorizo-rauza-x7-3446",
     "nombre": "Chorizo Rauza X7",
-    "categoria": "Fiambres y Embutidos",
+    "categoria": "Frescos",
     "precio": 259.0,
     "imagen": "",
     "oferta": false,
@@ -32859,7 +32848,7 @@
   {
     "id": "cepita-manzana-1-5-3455",
     "nombre": "Cepita Manzana 1.5",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Jugos",
     "precio": 90.0,
     "imagen": "",
     "oferta": false,
@@ -32881,7 +32870,7 @@
   {
     "id": "chimichurri-picante-barcatti-400g-3457",
     "nombre": "Chimichurri Picante Barcatti 400G",
-    "categoria": "Desayuno",
+    "categoria": "Condimentos",
     "precio": 57.0,
     "imagen": "",
     "oferta": false,
@@ -32892,7 +32881,7 @@
   {
     "id": "panchos-sarubbi-15-3458",
     "nombre": "Panchos Sarubbi *15",
-    "categoria": "Otros",
+    "categoria": "Frescos",
     "precio": 195.0,
     "imagen": "",
     "oferta": false,
@@ -32914,7 +32903,7 @@
   {
     "id": "corte-justo-1-5-1-3460",
     "nombre": "Corte Justo 1.5 *1",
-    "categoria": "Desayuno",
+    "categoria": "Sidra",
     "precio": 68.0,
     "imagen": "",
     "oferta": false,
@@ -32925,7 +32914,7 @@
   {
     "id": "desodorante-rexona-fut-fanaticas-3461",
     "nombre": "Desodorante Rexona Fut Fanaticas",
-    "categoria": "Desayuno",
+    "categoria": "Desodorantes",
     "precio": 160.0,
     "imagen": "",
     "oferta": false,
@@ -32958,7 +32947,7 @@
   {
     "id": "jagger-750cc-1-bally-1l-3464",
     "nombre": "Jagger 750Cc + 1 Bally 1L",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 899.0,
     "imagen": "",
     "oferta": false,
@@ -33002,7 +32991,7 @@
   {
     "id": "smirnof-raspberry-700ml-3468",
     "nombre": "Smirnof Raspberry 700Ml",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 549.0,
     "imagen": "",
     "oferta": false,
@@ -33013,7 +33002,7 @@
   {
     "id": "smirnof-tropical-700ml-3469",
     "nombre": "Smirnof Tropical 700Ml",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 549.0,
     "imagen": "",
     "oferta": false,
@@ -33145,7 +33134,7 @@
   {
     "id": "desodorante-dove-fresh-care-pepino-3481",
     "nombre": "Desodorante Dove Fresh Care  Pepino",
-    "categoria": "Cuidados personal",
+    "categoria": "Desodorantes",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
@@ -33156,7 +33145,7 @@
   {
     "id": "desodorante-dove-fresh-care-pomelo-3482",
     "nombre": "Desodorante Dove Fresh Care Pomelo",
-    "categoria": "Cuidados personal",
+    "categoria": "Desodorantes",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
@@ -33167,7 +33156,7 @@
   {
     "id": "desodorante-dove-fresh-care-pera-3483",
     "nombre": "Desodorante Dove Fresh Care Pera",
-    "categoria": "Cuidados personal",
+    "categoria": "Desodorantes",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
@@ -33178,7 +33167,7 @@
   {
     "id": "desodorante-dove-invisible-care-violeta-3484",
     "nombre": "Desodorante Dove Invisible Care Violeta",
-    "categoria": "Desayuno",
+    "categoria": "Desodorantes",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
@@ -33200,7 +33189,7 @@
   {
     "id": "geladhino-1-3486",
     "nombre": "Geladhino *1",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 10.0,
     "imagen": "",
     "oferta": false,
@@ -33321,7 +33310,7 @@
   {
     "id": "pimienta-blanca-molida-3497",
     "nombre": "Pimienta Blanca Molida",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 85.0,
     "imagen": "",
     "oferta": false,
@@ -33332,7 +33321,7 @@
   {
     "id": "pimienta-negra-molida-3498",
     "nombre": "Pimienta Negra Molida",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 66.0,
     "imagen": "",
     "oferta": false,
@@ -33376,7 +33365,7 @@
   {
     "id": "cerv-corona-330cc-6-3502",
     "nombre": "Cerv Corona 330Cc *6",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 610.0,
     "imagen": "",
     "oferta": false,
@@ -33387,7 +33376,7 @@
   {
     "id": "salus-2-25-con-gas-1-3503",
     "nombre": "Salus 2.25 Con Gas*1",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 85.0,
     "imagen": "",
     "oferta": false,
@@ -33442,7 +33431,7 @@
   {
     "id": "canilla-de-pared-pvc-3508",
     "nombre": "Canilla De Pared Pvc",
-    "categoria": "Otros",
+    "categoria": "Herramientas",
     "precio": 85.0,
     "imagen": "",
     "oferta": false,
@@ -33453,7 +33442,7 @@
   {
     "id": "sifon-corrugado-3509",
     "nombre": "Sifon Corrugado",
-    "categoria": "Otros",
+    "categoria": "Herramientas",
     "precio": 85.0,
     "imagen": "",
     "oferta": false,
@@ -33464,7 +33453,7 @@
   {
     "id": "cinta-metrica-3m-3510",
     "nombre": "Cinta Metrica 3M",
-    "categoria": "Otros",
+    "categoria": "Herramientas",
     "precio": 89.0,
     "imagen": "",
     "oferta": false,
@@ -33475,7 +33464,7 @@
   {
     "id": "llave-de-paso-metal-de-media-3511",
     "nombre": "Llave De Paso Metal De Media",
-    "categoria": "Paso de los Toros",
+    "categoria": "Herramientas",
     "precio": 155.0,
     "imagen": "",
     "oferta": false,
@@ -33486,7 +33475,7 @@
   {
     "id": "canilla-de-metal-3512",
     "nombre": "Canilla De Metal",
-    "categoria": "Otros",
+    "categoria": "Herramientas",
     "precio": 155.0,
     "imagen": "",
     "oferta": false,
@@ -33497,7 +33486,7 @@
   {
     "id": "set-herramientas-trincheta-3513",
     "nombre": "Set Herramientas Trincheta",
-    "categoria": "Otros",
+    "categoria": "Herramientas",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
@@ -33530,7 +33519,7 @@
   {
     "id": "sapolio-mata-cuca-y-hormigas-3516",
     "nombre": "Sapolio Mata Cuca Y Hormigas",
-    "categoria": "Otros",
+    "categoria": "Control de Plagas",
     "precio": 119.0,
     "imagen": "",
     "oferta": false,
@@ -33563,7 +33552,7 @@
   {
     "id": "alf-3-deseos-black-extra-ddl-3519",
     "nombre": "Alf. 3 Deseos Black Extra Ddl",
-    "categoria": "Otros",
+    "categoria": "Alfajores",
     "precio": 420.0,
     "imagen": "",
     "oferta": false,
@@ -33596,7 +33585,7 @@
   {
     "id": "malta-1lt-6-3522",
     "nombre": "Malta 1Lt *6",
-    "categoria": "Otros",
+    "categoria": "Cerveza",
     "precio": 850.0,
     "imagen": "",
     "oferta": false,
@@ -33607,7 +33596,7 @@
   {
     "id": "ph-savior-16-3523",
     "nombre": "Ph Savior *16",
-    "categoria": "Otros",
+    "categoria": "Higiene",
     "precio": 99.0,
     "imagen": "",
     "oferta": false,
