@@ -10232,8 +10232,8 @@
   {
     "id": "odorono-en-crema-60g-1269",
     "nombre": "Odorono En Crema 60G",
-    "categoria": "Desodorantes",
-    "precio": 129.0,
+    "categoria": "Alcohol",
+    "precio": 110.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
@@ -10452,7 +10452,7 @@
   {
     "id": "desodorantes-250ml-1294",
     "nombre": "Desodorantes 250Ml",
-    "categoria": "Desayuno",
+    "categoria": "Desodorantes",
     "precio": 145.0,
     "imagen": "",
     "oferta": false,
@@ -27514,7 +27514,7 @@
   {
     "id": "desodorante-dove-original-150ml-2962",
     "nombre": "Desodorante Dove Original 150Ml",
-    "categoria": "Alcohol",
+    "categoria": "Desodorantes",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
@@ -28614,7 +28614,7 @@
   {
     "id": "sakala-rollon-caballero-3063",
     "nombre": "Sakala Rollon Caballero",
-    "categoria": "Desodorantes",
+    "categoria": "Otros",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
@@ -28625,7 +28625,7 @@
   {
     "id": "sakala-rollon-dama-3064",
     "nombre": "Sakala Rollon Dama",
-    "categoria": "Desodorantes",
+    "categoria": "Otros",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
