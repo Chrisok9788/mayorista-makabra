@@ -11310,7 +11310,7 @@
   {
     "id": "medio-tabaco-cerrito-1386",
     "nombre": "Medio Tabaco Cerrito",
-    "categoria": "Tabaco",
+    "categoria": "Cigarros y Tabaco",
     "precio": 690.0,
     "imagen": "",
     "oferta": false,
@@ -11321,7 +11321,7 @@
   {
     "id": "medio-nevada-grande-1387",
     "nombre": "Medio Nevada Grande",
-    "categoria": "Otros",
+    "categoria": "Cigarros y Tabaco",
     "precio": 995.0,
     "imagen": "",
     "oferta": false,
@@ -11332,7 +11332,7 @@
   {
     "id": "medio-coronado-grande-1388",
     "nombre": "Medio Coronado Grande",
-    "categoria": "Alcohol",
+    "categoria": "Cigarros y Tabaco",
     "precio": 995.0,
     "imagen": "",
     "oferta": false,
@@ -11343,7 +11343,7 @@
   {
     "id": "medio-nevada-chico-1389",
     "nombre": "Medio Nevada Chico",
-    "categoria": "Otros",
+    "categoria": "Cigarros y Tabaco",
     "precio": 520.0,
     "imagen": "",
     "oferta": false,
@@ -11354,7 +11354,7 @@
   {
     "id": "medio-coronado-chico-1390",
     "nombre": "Medio Coronado Chico",
-    "categoria": "Alcohol",
+    "categoria": "Cigarros y Tabaco",
     "precio": 520.0,
     "imagen": "",
     "oferta": false,
@@ -11464,7 +11464,7 @@
   {
     "id": "neo-redondas-1401",
     "nombre": "Neo Redondas",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 24.0,
     "imagen": "",
     "oferta": false,
@@ -11486,7 +11486,7 @@
   {
     "id": "limol-500ml-12-lima-1403",
     "nombre": "Limol 500Ml*12 Lima",
-    "categoria": "Otros",
+    "categoria": "Lima",
     "precio": 349.0,
     "imagen": "",
     "oferta": false,
@@ -11497,7 +11497,7 @@
   {
     "id": "limol-500ml-12-mandarina-1404",
     "nombre": "Limol 500Ml*12 Mandarina",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Gaseosa",
     "precio": 349.0,
     "imagen": "",
     "oferta": false,
@@ -11530,7 +11530,7 @@
   {
     "id": "limol-500ml-12-uva-1408",
     "nombre": "Limol 500Ml*12 Uva",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Gaseosa",
     "precio": 365.0,
     "imagen": "",
     "oferta": false,
@@ -11541,7 +11541,7 @@
   {
     "id": "limol-500ml-12-pomelo-1409",
     "nombre": "Limol 500Ml*12 Pomelo",
-    "categoria": "Otros",
+    "categoria": "Gaseosa",
     "precio": 365.0,
     "imagen": "",
     "oferta": false,
@@ -11585,7 +11585,7 @@
   {
     "id": "sprite-2lt-9-combinado-1413",
     "nombre": "Sprite 2Lt *9 Combinado",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 1099.0,
     "imagen": "",
     "oferta": false,
@@ -11651,7 +11651,7 @@
   {
     "id": "promo-jhonnie-rojo-3-speed-1422",
     "nombre": "Promo Jhonnie Rojo +3 Speed",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 1200.0,
     "imagen": "",
     "oferta": false,
@@ -11673,7 +11673,7 @@
   {
     "id": "promo-jhonnie-rojo-4-speed-1426",
     "nombre": "Promo Jhonnie Rojo +4 Speed",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 1200.0,
     "imagen": "",
     "oferta": false,
@@ -11684,7 +11684,7 @@
   {
     "id": "trofeo-20-1427",
     "nombre": "Trofeo *20",
-    "categoria": "Otros",
+    "categoria": "Snack",
     "precio": 270.0,
     "imagen": "",
     "oferta": false,
@@ -11728,7 +11728,7 @@
   {
     "id": "encendedor-25-1433",
     "nombre": "Encendedor  *25",
-    "categoria": "Otros",
+    "categoria": "Cigarros y Tabaco",
     "precio": 250.0,
     "imagen": "",
     "oferta": false,
@@ -11849,7 +11849,7 @@
   {
     "id": "tabaco-unidad-1449",
     "nombre": "Tabaco Unidad",
-    "categoria": "Tabaco",
+    "categoria": "Cigarros y Tabaco",
     "precio": 140.0,
     "imagen": "",
     "oferta": false,
@@ -11904,7 +11904,7 @@
   {
     "id": "finopel-perfumado-4-1456",
     "nombre": "Finopel Perfumado *4",
-    "categoria": "Otros",
+    "categoria": "Higiene",
     "precio": 29.0,
     "imagen": "",
     "oferta": false,
@@ -11959,7 +11959,7 @@
   {
     "id": "ph-qualitie-doble-hoja-4-1461",
     "nombre": "Ph Qualitie Doble Hoja *4",
-    "categoria": "Otros",
+    "categoria": "Higiene",
     "precio": 50.0,
     "imagen": "",
     "oferta": false,
@@ -11970,7 +11970,7 @@
   {
     "id": "finopel-neutro-4-1462",
     "nombre": "Finopel Neutro*4",
-    "categoria": "Otros",
+    "categoria": "Higiene",
     "precio": 26.0,
     "imagen": "",
     "oferta": false,
@@ -12190,7 +12190,7 @@
   {
     "id": "tabaco-cerrito-1-1486",
     "nombre": "Tabaco Cerrito *1",
-    "categoria": "Tabaco",
+    "categoria": "Cigarros y Tabaco",
     "precio": 150.0,
     "imagen": "",
     "oferta": false,
@@ -12201,7 +12201,7 @@
   {
     "id": "cigarro-grande-1-1487",
     "nombre": "Cigarro Grande*1",
-    "categoria": "Otros",
+    "categoria": "Cigarros y Tabaco",
     "precio": 220.0,
     "imagen": "",
     "oferta": false,
@@ -12267,7 +12267,7 @@
   {
     "id": "higienol-naranja-4-rollos-1495",
     "nombre": "Higienol Naranja *4 Rollos",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Higiene",
     "precio": 52.0,
     "imagen": "",
     "oferta": false,
@@ -12289,7 +12289,7 @@
   {
     "id": "buby-100gr-1498",
     "nombre": "Buby 100Gr",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 38.0,
     "imagen": "",
     "oferta": false,
@@ -12443,7 +12443,7 @@
   {
     "id": "ph-clarys-16-r-30mts-1518",
     "nombre": "Ph Clarys 16 R*30Mts",
-    "categoria": "Otros",
+    "categoria": "Higiene",
     "precio": 110.0,
     "imagen": "",
     "oferta": false,
@@ -12531,7 +12531,7 @@
   {
     "id": "surtidas-delicias-400gr-1529",
     "nombre": "Surtidas Delicias 400Gr",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 70.0,
     "imagen": "",
     "oferta": false,
@@ -12751,7 +12751,7 @@
   {
     "id": "ph-clara-16-1554",
     "nombre": "Ph Clara *16",
-    "categoria": "Otros",
+    "categoria": "Higiene",
     "precio": 215.0,
     "imagen": "",
     "oferta": false,
@@ -12806,7 +12806,7 @@
   {
     "id": "pitzer-1-1562",
     "nombre": "Pitzer *1",
-    "categoria": "Otros",
+    "categoria": "Salsas",
     "precio": 22.0,
     "imagen": "",
     "oferta": false,
@@ -12817,7 +12817,7 @@
   {
     "id": "ph-notavel-12-20-doble-hoja-1563",
     "nombre": "Ph Notavel 12*20 Doble Hoja",
-    "categoria": "Otros",
+    "categoria": "Higiene",
     "precio": 135.0,
     "imagen": "",
     "oferta": false,
@@ -27447,7 +27447,7 @@
   {
     "id": "dorito-235gr-2955",
     "nombre": "Dorito 235Gr",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 189.0,
     "imagen": "",
     "oferta": false,
@@ -27942,7 +27942,7 @@
   {
     "id": "juguitos-puritas-24-anana-3000",
     "nombre": "Juguitos Puritas*24 Anana",
-    "categoria": "Otros",
+    "categoria": "Jugos",
     "precio": 250.0,
     "imagen": "",
     "oferta": false,
@@ -28074,7 +28074,7 @@
   {
     "id": "cepita-multifruta-995ml-6-3012",
     "nombre": "Cepita Multifruta 995Ml *6",
-    "categoria": "Otros",
+    "categoria": "Jugos",
     "precio": 399.0,
     "imagen": "",
     "oferta": false,
@@ -28085,7 +28085,7 @@
   {
     "id": "cepita-naranja-995ml-1-3013",
     "nombre": "Cepita Naranja 995Ml *1",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Jugos",
     "precio": 70.0,
     "imagen": "",
     "oferta": false,
@@ -28162,7 +28162,7 @@
   {
     "id": "takis-original-56g-3020",
     "nombre": "Takis Original 56G",
-    "categoria": "Alcohol",
+    "categoria": "Snacks",
     "precio": 48.0,
     "imagen": "",
     "oferta": false,
@@ -28305,7 +28305,7 @@
   {
     "id": "tortitas-x3-frutilla-300gr-3033",
     "nombre": "Tortitas X3 Frutilla 300Gr",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 52.0,
     "imagen": "",
     "oferta": false,
@@ -28316,7 +28316,7 @@
   {
     "id": "tortitas-x3-chocolate-300gr-3034",
     "nombre": "Tortitas X3 Chocolate 300Gr",
-    "categoria": "Desayuno",
+    "categoria": "Galletas",
     "precio": 52.0,
     "imagen": "",
     "oferta": false,
@@ -28327,7 +28327,7 @@
   {
     "id": "tortitas-x3-limon-300gr-3035",
     "nombre": "Tortitas X3 Limon 300Gr",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Galletas",
     "precio": 52.0,
     "imagen": "",
     "oferta": false,
@@ -28338,7 +28338,7 @@
   {
     "id": "tortitas-x3-vainilla-300gr-3036",
     "nombre": "Tortitas X3 Vainilla 300Gr",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 52.0,
     "imagen": "",
     "oferta": false,
@@ -28415,7 +28415,7 @@
   {
     "id": "caramelo-surtido-piteco-300gr-3043",
     "nombre": "Caramelo Surtido Piteco 300Gr",
-    "categoria": "Desayuno",
+    "categoria": "Golosina",
     "precio": 39.0,
     "imagen": "",
     "oferta": false,
@@ -28448,7 +28448,7 @@
   {
     "id": "pack-vodka-siberia-frutos-rojos-y-baly-fresa-3046",
     "nombre": "Pack Vodka Siberia Frutos Rojos Y Baly Fresa",
-    "categoria": "Energizarte",
+    "categoria": "Alcohol",
     "precio": 415.0,
     "imagen": "",
     "oferta": false,
@@ -28580,7 +28580,7 @@
   {
     "id": "delicious-surtidos-20g-3058",
     "nombre": "Delicious Surtidos 20G",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 5.0,
     "imagen": "",
     "oferta": false,
@@ -28690,7 +28690,7 @@
   {
     "id": "tabaco-cerrito-4-3069",
     "nombre": "Tabaco Cerrito*4",
-    "categoria": "Tabaco",
+    "categoria": "Cigarros y Tabaco",
     "precio": 560.0,
     "imagen": "",
     "oferta": false,
@@ -28745,7 +28745,7 @@
   {
     "id": "oyama-vermouth-rojo-3074",
     "nombre": "Oyama Vermouth Rojo",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 305.0,
     "imagen": "",
     "oferta": false,
@@ -28756,7 +28756,7 @@
   {
     "id": "oyama-vermouth-blanco-3075",
     "nombre": "Oyama Vermouth Blanco",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 305.0,
     "imagen": "",
     "oferta": false,
@@ -28767,7 +28767,7 @@
   {
     "id": "nix-mandarina-500-1-3076",
     "nombre": "Nix Mandarina 500*1",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Gaseosa",
     "precio": 50.0,
     "imagen": "",
     "oferta": false,
@@ -28778,7 +28778,7 @@
   {
     "id": "limol-pomelo-2lt-x1-3077",
     "nombre": "Limol Pomelo 2Lt X1",
-    "categoria": "Otros",
+    "categoria": "Gaseosa",
     "precio": 95.0,
     "imagen": "",
     "oferta": false,
@@ -28789,7 +28789,7 @@
   {
     "id": "limol-lima-2lt-3078",
     "nombre": "Limol Lima 2Lt",
-    "categoria": "Otros",
+    "categoria": "Gaseosa",
     "precio": 95.0,
     "imagen": "",
     "oferta": false,
@@ -28800,7 +28800,7 @@
   {
     "id": "limol-mandarina-2lt-x1-3079",
     "nombre": "Limol Mandarina 2Lt X1",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Gaseosa",
     "precio": 95.0,
     "imagen": "",
     "oferta": false,
@@ -28822,7 +28822,7 @@
   {
     "id": "limol-guarana-2lt-x1-3081",
     "nombre": "Limol Guarana 2Lt X1",
-    "categoria": "Otros",
+    "categoria": "Gaseosa",
     "precio": 95.0,
     "imagen": "",
     "oferta": false,
@@ -28943,7 +28943,7 @@
   {
     "id": "takis-original-152g-3092",
     "nombre": "Takis Original 152G",
-    "categoria": "Alcohol",
+    "categoria": "Snacks",
     "precio": 149.0,
     "imagen": "",
     "oferta": false,
@@ -28965,7 +28965,7 @@
   {
     "id": "patricia-lata-1-3094",
     "nombre": "Patricia Lata*1",
-    "categoria": "Otros",
+    "categoria": "Cerveza",
     "precio": 55.0,
     "imagen": "",
     "oferta": false,
@@ -28976,7 +28976,7 @@
   {
     "id": "crush-mandarina-2-25-1-3095",
     "nombre": "Crush Mandarina 2.25*1",
-    "categoria": "Cuidados personal",
+    "categoria": "Coca Cola",
     "precio": 105.0,
     "imagen": "",
     "oferta": false,
@@ -28998,7 +28998,7 @@
   {
     "id": "juguitos-puritas-24-frutos-tropicales-3097",
     "nombre": "Juguitos Puritas*24 Frutos Tropicales",
-    "categoria": "Otros",
+    "categoria": "Jugos",
     "precio": 250.0,
     "imagen": "",
     "oferta": false,
@@ -29064,7 +29064,7 @@
   {
     "id": "bosforf-700ml-3103",
     "nombre": "Bosforf 700Ml",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 420.0,
     "imagen": "",
     "oferta": false,
@@ -29075,7 +29075,7 @@
   {
     "id": "cerv-skol-1-3104",
     "nombre": "Cerv Skol *1",
-    "categoria": "Otros",
+    "categoria": "Cerveza",
     "precio": 50.0,
     "imagen": "",
     "oferta": false,
@@ -29108,7 +29108,7 @@
   {
     "id": "sprite-1lt-6-3107",
     "nombre": "Sprite 1Lt *6",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 500.0,
     "imagen": "",
     "oferta": false,
@@ -29130,7 +29130,7 @@
   {
     "id": "martini-bianco-rojo-1l-3109",
     "nombre": "Martini Bianco Rojo 1L",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 444.0,
     "imagen": "",
     "oferta": false,
@@ -29361,7 +29361,7 @@
   {
     "id": "cerv-corona-330cc-6-sin-alcohol-3131",
     "nombre": "Cerv Corona 330Cc *6 Sin Alcohol",
-    "categoria": "Alcohol",
+    "categoria": "Cerveza",
     "precio": 610.0,
     "imagen": "",
     "oferta": false,
@@ -29372,7 +29372,7 @@
   {
     "id": "sprite-2lt-3132",
     "nombre": "Sprite 2Lt",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 122.0,
     "imagen": "",
     "oferta": false,
