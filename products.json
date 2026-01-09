@@ -134,7 +134,7 @@
   {
     "id": "curitas-readyplast-80-unidades-14",
     "nombre": "Curitas Readyplast *80 Unidades",
-    "categoria": "Jugos",
+    "categoria": "Médico a domicilio",
     "precio": 227.0,
     "imagen": "",
     "oferta": false,
@@ -530,7 +530,7 @@
   {
     "id": "crush-limon-2-25-6-52",
     "nombre": "Crush Limon 2.25*6",
-    "categoria": "Cuidados personal",
+    "categoria": "Coca Cola",
     "precio": 559.0,
     "imagen": "",
     "oferta": false,
@@ -541,7 +541,7 @@
   {
     "id": "crush-mandarina-2-25-6-53",
     "nombre": "Crush Mandarina 2.25*6",
-    "categoria": "Cuidados personal",
+    "categoria": "Coca Cola",
     "precio": 559.0,
     "imagen": "",
     "oferta": false,
@@ -552,7 +552,7 @@
   {
     "id": "crush-pomelo-2-25-6-54",
     "nombre": "Crush Pomelo 2.25*6",
-    "categoria": "Cuidados personal",
+    "categoria": "Coca Cola",
     "precio": 559.0,
     "imagen": "",
     "oferta": false,
@@ -926,7 +926,7 @@
   {
     "id": "surtidas-portezuelo-400gr-91",
     "nombre": "Surtidas Portezuelo 400Gr",
-    "categoria": "Desayuno",
+    "categoria": "Galletas",
     "precio": 128.0,
     "imagen": "",
     "oferta": false,
@@ -1102,7 +1102,7 @@
   {
     "id": "afeita-bic-comfort-verde-azul-12-112",
     "nombre": "Afeita Bic Comfort Verde Azul *12",
-    "categoria": "Otros",
+    "categoria": "Cuidados personal",
     "precio": 535.0,
     "imagen": "",
     "oferta": false,
@@ -1157,7 +1157,7 @@
   {
     "id": "fabuloso-500ml-118",
     "nombre": "Fabuloso 500Ml",
-    "categoria": "Otros",
+    "categoria": "Desinfectantes",
     "precio": 49.0,
     "imagen": "",
     "oferta": false,
@@ -1234,7 +1234,7 @@
   {
     "id": "perfumol-sapolio-900ml-126",
     "nombre": "Perfumol Sapolio 900Ml",
-    "categoria": "Otros",
+    "categoria": "Desinfectantes",
     "precio": 45.0,
     "imagen": "",
     "oferta": false,
@@ -1245,7 +1245,7 @@
   {
     "id": "prestobarba-azul-12-127",
     "nombre": "Prestobarba Azul *12",
-    "categoria": "Otros",
+    "categoria": "Cuidados personal",
     "precio": 455.0,
     "imagen": "",
     "oferta": false,
@@ -1278,7 +1278,7 @@
   {
     "id": "solucion-zorzal-1lt-12-130",
     "nombre": "Solucion Zorzal 1Lt*12",
-    "categoria": "Otros",
+    "categoria": "Desinfectantes",
     "precio": 325.0,
     "imagen": "",
     "oferta": false,
@@ -1289,7 +1289,7 @@
   {
     "id": "perfumol-zorzal-1lt-12-131",
     "nombre": "Perfumol Zorzal 1Lt*12",
-    "categoria": "Otros",
+    "categoria": "Desinfectantes",
     "precio": 325.0,
     "imagen": "",
     "oferta": false,
@@ -1300,7 +1300,7 @@
   {
     "id": "detergente-zorzal-1lt-12-132",
     "nombre": "Detergente Zorzal 1Lt*12",
-    "categoria": "Desayuno",
+    "categoria": "Desinfectantes",
     "precio": 325.0,
     "imagen": "",
     "oferta": false,
@@ -1575,7 +1575,7 @@
   {
     "id": "extracto-tomate-pitzer-12-60gr-161",
     "nombre": "Extracto Tomate Pitzer*12 60Gr",
-    "categoria": "Desayuno",
+    "categoria": "Salsas",
     "precio": 230.0,
     "imagen": "",
     "oferta": false,
@@ -1949,7 +1949,7 @@
   {
     "id": "savora-60gr-210",
     "nombre": "Savora 60Gr",
-    "categoria": "Otros",
+    "categoria": "Aderezos",
     "precio": 45.0,
     "imagen": "",
     "oferta": false,
@@ -2455,7 +2455,7 @@
   {
     "id": "aceite-de-diez-900cc-262",
     "nombre": "Aceite De Diez 900Cc",
-    "categoria": "Desayuno",
+    "categoria": "Aceite",
     "precio": 72.0,
     "imagen": "",
     "oferta": false,
@@ -2620,7 +2620,7 @@
   {
     "id": "goma-tubo-30-285",
     "nombre": "Goma Tubo *30",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 145.0,
     "imagen": "",
     "oferta": false,
@@ -2631,7 +2631,7 @@
   {
     "id": "pasti-coloreti-festa-x18-286",
     "nombre": "Pasti. Coloreti Festa X18",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 139.0,
     "imagen": "",
     "oferta": false,
@@ -2697,7 +2697,7 @@
   {
     "id": "chocolate-florestal-292",
     "nombre": "Chocolate Florestal",
-    "categoria": "Desayuno",
+    "categoria": "Golosina",
     "precio": 59.0,
     "imagen": "",
     "oferta": false,
@@ -2752,7 +2752,7 @@
   {
     "id": "palitos-buby-60g-queso-20-298",
     "nombre": "Palitos Buby 60G Queso*20",
-    "categoria": "Lácteos",
+    "categoria": "Snack",
     "precio": 242.0,
     "imagen": "",
     "oferta": false,
@@ -2763,7 +2763,7 @@
   {
     "id": "palitos-buby-60gr-jamon-20-299",
     "nombre": "Palitos Buby 60Gr Jamon *20",
-    "categoria": "Fiambres y Embutidos",
+    "categoria": "Snack",
     "precio": 242.0,
     "imagen": "",
     "oferta": false,
@@ -2928,7 +2928,7 @@
   {
     "id": "petacas-mac-pay-317",
     "nombre": "Petacas Mac Pay",
-    "categoria": "Cuidados personal",
+    "categoria": "Alcohol",
     "precio": 80.0,
     "imagen": "",
     "oferta": false,
@@ -3071,7 +3071,7 @@
   {
     "id": "higienol-verde-4-332",
     "nombre": "Higienol Verde *4",
-    "categoria": "Otros",
+    "categoria": "Higiene",
     "precio": 50.0,
     "imagen": "",
     "oferta": false,
@@ -3082,7 +3082,7 @@
   {
     "id": "p-h-aguipel-4-30mt-334",
     "nombre": "P.H Aguipel 4*30Mt",
-    "categoria": "Otros",
+    "categoria": "Higiene",
     "precio": 30.0,
     "imagen": "",
     "oferta": false,
@@ -3115,7 +3115,7 @@
   {
     "id": "maltead-338",
     "nombre": "Maltead",
-    "categoria": "Desayuno",
+    "categoria": "Galletas",
     "precio": 0.0,
     "imagen": "",
     "oferta": false,
@@ -3126,7 +3126,7 @@
   {
     "id": "galletitas-lulu-en-tubo-115gr-339",
     "nombre": "Galletitas Lulu En Tubo 115Gr",
-    "categoria": "Panadería y Pastas",
+    "categoria": "Galletas",
     "precio": 61.0,
     "imagen": "",
     "oferta": false,
@@ -3148,7 +3148,7 @@
   {
     "id": "gall-surtidas-dos-en-uno-400gr-341",
     "nombre": "Gall Surtidas Dos En Uno 400Gr",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 86.0,
     "imagen": "",
     "oferta": false,
@@ -3313,7 +3313,7 @@
   {
     "id": "alikal-12-362",
     "nombre": "Alikal *12",
-    "categoria": "Otros",
+    "categoria": "Médico a domicilio",
     "precio": 265.0,
     "imagen": "",
     "oferta": false,
@@ -3632,7 +3632,7 @@
   {
     "id": "ed-10-35-gr-397",
     "nombre": "Ed+ *10 35 Gr",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 153.0,
     "imagen": "",
     "oferta": false,
@@ -3643,7 +3643,7 @@
   {
     "id": "3d-88gr-398",
     "nombre": "3D 88Gr",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 121.0,
     "imagen": "",
     "oferta": false,
@@ -3654,7 +3654,7 @@
   {
     "id": "3d-17grs-399",
     "nombre": "3D 17Grs",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 31.0,
     "imagen": "",
     "oferta": false,
@@ -3720,7 +3720,7 @@
   {
     "id": "cheetos-95grs-406",
     "nombre": "Cheetos 95Grs",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 121.0,
     "imagen": "",
     "oferta": false,
@@ -4017,7 +4017,7 @@
   {
     "id": "afeita-bic-amarilla-24-440",
     "nombre": "Afeita Bic Amarilla *24",
-    "categoria": "Otros",
+    "categoria": "Cuidados personal",
     "precio": 510.0,
     "imagen": "",
     "oferta": false,
@@ -4050,7 +4050,7 @@
   {
     "id": "energizante-speed-473cc-12-443",
     "nombre": "Energizante Speed 473Cc*12",
-    "categoria": "Desayuno",
+    "categoria": "Energizarte",
     "precio": 1160.0,
     "imagen": "",
     "oferta": false,
@@ -4765,7 +4765,7 @@
   {
     "id": "odex-crema-500cc-518",
     "nombre": "Odex Crema 500Cc",
-    "categoria": "Lácteos",
+    "categoria": "Otros",
     "precio": 103.0,
     "imagen": "",
     "oferta": false,
@@ -5117,7 +5117,7 @@
   {
     "id": "gall-redondas-rell-110gr-surtidas-564",
     "nombre": "Gall. Redondas Rell 110Gr Surtidas",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 13.0,
     "imagen": "",
     "oferta": false,
@@ -5183,7 +5183,7 @@
   {
     "id": "preservativos-prime-3-576",
     "nombre": "Preservativos Prime*3",
-    "categoria": "Otros",
+    "categoria": "Médico a domicilio",
     "precio": 117.0,
     "imagen": "",
     "oferta": false,
@@ -5238,7 +5238,7 @@
   {
     "id": "dankel-600ml-12-582",
     "nombre": "Dankel 600Ml *12",
-    "categoria": "Otros",
+    "categoria": "Cerveza",
     "precio": 799.0,
     "imagen": "",
     "oferta": false,
@@ -5282,7 +5282,7 @@
   {
     "id": "pack-promo-puritas-587",
     "nombre": "Pack Promo Puritas",
-    "categoria": "Otros",
+    "categoria": "Pasta",
     "precio": 290.0,
     "imagen": "",
     "oferta": false,
@@ -5337,7 +5337,7 @@
   {
     "id": "tallarin-punto-y-coma-500grs-x10-600",
     "nombre": "Tallarin Punto Y Coma 500Grs X10",
-    "categoria": "Otros",
+    "categoria": "Pasta",
     "precio": 550.0,
     "imagen": "",
     "oferta": false,
@@ -5425,7 +5425,7 @@
   {
     "id": "pepsi-1-5-6-610",
     "nombre": "Pepsi 1.5 *6",
-    "categoria": "Gaseosa",
+    "categoria": "Paso de los Toros",
     "precio": 690.0,
     "imagen": "",
     "oferta": false,
@@ -5436,7 +5436,7 @@
   {
     "id": "rinde-dos-20-mandarina-612",
     "nombre": "Rinde Dos *20 Mandarina",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Jugo",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -5458,7 +5458,7 @@
   {
     "id": "pack-matutina-sin-gas-4-615",
     "nombre": "Pack Matutina Sin Gas*4",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 152.0,
     "imagen": "",
     "oferta": false,
@@ -5513,7 +5513,7 @@
   {
     "id": "toallitas-hum-oris-60-622",
     "nombre": "Toallitas Hum.Oris *60",
-    "categoria": "Otros",
+    "categoria": "Cuidados personal",
     "precio": 62.0,
     "imagen": "",
     "oferta": false,
@@ -5535,7 +5535,7 @@
   {
     "id": "gillette-3-hojas-12-624",
     "nombre": "Gillette 3 Hojas *12",
-    "categoria": "Desayuno",
+    "categoria": "Cuidados personal",
     "precio": 715.0,
     "imagen": "",
     "oferta": false,
@@ -5557,7 +5557,7 @@
   {
     "id": "sprite-zero-3lt-4-626",
     "nombre": "Sprite Zero 3Lt*4",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 780.0,
     "imagen": "",
     "oferta": false,
@@ -5579,7 +5579,7 @@
   {
     "id": "gel-para-cabello-628",
     "nombre": "Gel Para Cabello",
-    "categoria": "Otros",
+    "categoria": "Cuidados personal",
     "precio": 39.0,
     "imagen": "",
     "oferta": false,
@@ -5645,7 +5645,7 @@
   {
     "id": "quitaesmalte-636",
     "nombre": "Quitaesmalte",
-    "categoria": "Desayuno",
+    "categoria": "Cuidados personal",
     "precio": 29.0,
     "imagen": "",
     "oferta": false,
@@ -5656,7 +5656,7 @@
   {
     "id": "azufre-caja-637",
     "nombre": "Azufre * Caja",
-    "categoria": "Otros",
+    "categoria": "Médico a domicilio",
     "precio": 300.0,
     "imagen": "",
     "oferta": false,
@@ -5711,7 +5711,7 @@
   {
     "id": "rinde-dos-20-manzana-644",
     "nombre": "Rinde Dos *20 Manzana",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Jugo",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -5722,7 +5722,7 @@
   {
     "id": "schweppwes-pomelo-3lt-4-645",
     "nombre": "Schweppwes Pomelo 3Lt*4",
-    "categoria": "Otros",
+    "categoria": "Coca Cola",
     "precio": 780.0,
     "imagen": "",
     "oferta": false,
@@ -5733,7 +5733,7 @@
   {
     "id": "nevada-chico-carton-646",
     "nombre": "Nevada Chico Carton",
-    "categoria": "Otros",
+    "categoria": "Cigarros y Tabaco",
     "precio": 1035.0,
     "imagen": "",
     "oferta": false,
@@ -5744,7 +5744,7 @@
   {
     "id": "nevada-grande-carton-647",
     "nombre": "Nevada Grande Carton",
-    "categoria": "Otros",
+    "categoria": "Cigarros y Tabaco",
     "precio": 1980.0,
     "imagen": "",
     "oferta": false,
@@ -5755,7 +5755,7 @@
   {
     "id": "tabaco-cerrito-carton-648",
     "nombre": "Tabaco Cerrito Carton",
-    "categoria": "Tabaco",
+    "categoria": "Cigarros y Tabaco",
     "precio": 1360.0,
     "imagen": "",
     "oferta": false,
@@ -5788,7 +5788,7 @@
   {
     "id": "ibumidol-651",
     "nombre": "Ibumidol",
-    "categoria": "Otros",
+    "categoria": "Médico a domicilio",
     "precio": 185.0,
     "imagen": "",
     "oferta": false,
@@ -5810,7 +5810,7 @@
   {
     "id": "cebadura-el-cebador-funda-20-654",
     "nombre": "Cebadura El Cebador Funda*20",
-    "categoria": "Otros",
+    "categoria": "Yerba Mate",
     "precio": 265.0,
     "imagen": "",
     "oferta": false,
@@ -5986,7 +5986,7 @@
   {
     "id": "gall-oreo-tubo-676",
     "nombre": "Gall Oreo Tubo",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 68.0,
     "imagen": "",
     "oferta": false,
@@ -5997,7 +5997,7 @@
   {
     "id": "gall-mini-oreo-677",
     "nombre": "Gall. Mini Oreo",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 41.0,
     "imagen": "",
     "oferta": false,
@@ -6228,7 +6228,7 @@
   {
     "id": "sandy-mac-whisky-704",
     "nombre": "Sandy Mac Whisky",
-    "categoria": "Cuidados personal",
+    "categoria": "Alcohol",
     "precio": 990.0,
     "imagen": "",
     "oferta": false,
@@ -6316,7 +6316,7 @@
   {
     "id": "coronado-chico-carton-717",
     "nombre": "Coronado Chico Carton",
-    "categoria": "Alcohol",
+    "categoria": "Cigarros y Tabaco"",
     "precio": 1035.0,
     "imagen": "",
     "oferta": false,
@@ -6327,7 +6327,7 @@
   {
     "id": "coronado-grande-carton-718",
     "nombre": "Coronado Grande Carton",
-    "categoria": "Alcohol",
+    "categoria": "Cigarros y Tabaco"",
     "precio": 1980.0,
     "imagen": "",
     "oferta": false,
@@ -6338,7 +6338,7 @@
   {
     "id": "hojillas-job-719",
     "nombre": "Hojillas Job",
-    "categoria": "Otros",
+    "categoria": "Cigarros y Tabaco"",
     "precio": 35.0,
     "imagen": "",
     "oferta": false,
@@ -6349,7 +6349,7 @@
   {
     "id": "hojillas-atala-720",
     "nombre": "Hojillas Atala",
-    "categoria": "Otros",
+    "categoria": "Cigarros y Tabaco"",
     "precio": 35.0,
     "imagen": "",
     "oferta": false,
@@ -6459,7 +6459,7 @@
   {
     "id": "sachet-pantene-acond-24-732",
     "nombre": "Sachet Pantene Acond *24",
-    "categoria": "Desayuno",
+    "categoria": "Cuidados personal",
     "precio": 170.0,
     "imagen": "",
     "oferta": false,
@@ -6580,7 +6580,7 @@
   {
     "id": "tallarin-punto-y-coma-500grs-x10-capeletis-753",
     "nombre": "Tallarin Punto Y Coma 500Grs X10 Capeletis",
-    "categoria": "Otros",
+    "categoria": "Pasta",
     "precio": 55.0,
     "imagen": "",
     "oferta": false,
@@ -6624,7 +6624,7 @@
   {
     "id": "pack-pantene-400-200-758",
     "nombre": "Pack Pantene 400+200",
-    "categoria": "Desayuno",
+    "categoria": "Cuidados personal",
     "precio": 365.0,
     "imagen": "",
     "oferta": false,
@@ -6646,7 +6646,7 @@
   {
     "id": "pastilleros-30-760",
     "nombre": "Pastilleros *30",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 190.0,
     "imagen": "",
     "oferta": false,
@@ -6668,7 +6668,7 @@
   {
     "id": "pastilleros-30-lentes-762",
     "nombre": "Pastilleros *30 Lentes",
-    "categoria": "Desayuno",
+    "categoria": "Golosina",
     "precio": 205.0,
     "imagen": "",
     "oferta": false,
@@ -6679,7 +6679,7 @@
   {
     "id": "pastilleros-30-trompetas-763",
     "nombre": "Pastilleros *30 Trompetas",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 190.0,
     "imagen": "",
     "oferta": false,
@@ -6701,7 +6701,7 @@
   {
     "id": "pastilleros-30-patineta-765",
     "nombre": "Pastilleros *30 Patineta",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 190.0,
     "imagen": "",
     "oferta": false,
@@ -6712,7 +6712,7 @@
   {
     "id": "pastilleros-30-flyper-767",
     "nombre": "Pastilleros *30 Flyper",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 190.0,
     "imagen": "",
     "oferta": false,
@@ -6778,7 +6778,7 @@
   {
     "id": "cebadura-el-cebador-funda-20-intenso-778",
     "nombre": "Cebadura El Cebador  Funda*20 Intenso",
-    "categoria": "Desayuno",
+    "categoria": "Yerba Mate",
     "precio": 265.0,
     "imagen": "",
     "oferta": false,
@@ -7493,7 +7493,7 @@
   {
     "id": "mani-1kgs-866",
     "nombre": "Mani 1Kgs",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 215.0,
     "imagen": "",
     "oferta": false,
@@ -7581,7 +7581,7 @@
   {
     "id": "cepita-1-5-6manzana-877",
     "nombre": "Cepita  1.5*6Manzana",
-    "categoria": "Otros",
+    "categoria": "Jugos",
     "precio": 510.0,
     "imagen": "",
     "oferta": false,
