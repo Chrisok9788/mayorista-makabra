@@ -8758,7 +8758,7 @@
   {
     "id": "pan-rallado-morixe-5kg-1070",
     "nombre": "Pan Rallado Morixe 5Kg",
-    "categoria": "Panadería y Pastas",
+    "categoria": "Panadería",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -9044,7 +9044,7 @@
   {
     "id": "sprite-mini-6-zero-1105",
     "nombre": "Sprite Mini*6 Zero",
-    "categoria": "Desayuno",
+    "categoria": "Coca Cola",
     "precio": 185.0,
     "imagen": "",
     "oferta": false,
@@ -9198,7 +9198,7 @@
   {
     "id": "tiras-acidas-lico-ricox54-1128",
     "nombre": "Tiras Acidas Lico Ricox54",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 329.0,
     "imagen": "",
     "oferta": false,
@@ -9231,7 +9231,7 @@
   {
     "id": "blenders-1l-1136",
     "nombre": "Blenders 1L",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 525.0,
     "imagen": "",
     "oferta": false,
@@ -9297,7 +9297,7 @@
   {
     "id": "leche-en-polvo-saint-48-1145",
     "nombre": "Leche En Polvo Saint*48",
-    "categoria": "Frescos",
+    "categoria": "Desayuno",
     "precio": 240.0,
     "imagen": "",
     "oferta": false,
@@ -9319,7 +9319,7 @@
   {
     "id": "caramelo-de-yogurt-1148",
     "nombre": "Caramelo De Yogurt",
-    "categoria": "Lácteos",
+    "categoria": "Golosina",
     "precio": 115.0,
     "imagen": "",
     "oferta": false,
@@ -9341,7 +9341,7 @@
   {
     "id": "gall-9-de-oro-200gr-1159",
     "nombre": "Gall. 9 De Oro 200Gr",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 45.0,
     "imagen": "",
     "oferta": false,
@@ -9352,7 +9352,7 @@
   {
     "id": "gall-9-de-oro-420gr-1160",
     "nombre": "Gall. 9 De Oro 420Gr",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 78.0,
     "imagen": "",
     "oferta": false,
@@ -9473,7 +9473,7 @@
   {
     "id": "chicles-blong-fruta-1173",
     "nombre": "Chicles Blong Fruta",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Golosina",
     "precio": 58.0,
     "imagen": "",
     "oferta": false,
@@ -9484,7 +9484,7 @@
   {
     "id": "chicles-blong-menta-1174",
     "nombre": "Chicles Blong Menta",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 58.0,
     "imagen": "",
     "oferta": false,
@@ -9561,7 +9561,7 @@
   {
     "id": "pastillitas-delikuki-500gr-1185",
     "nombre": "Pastillitas Delikuki 500Gr",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 94.0,
     "imagen": "",
     "oferta": false,
@@ -9572,7 +9572,7 @@
   {
     "id": "gelatinas-50-unidades-1187",
     "nombre": "Gelatinas *50 Unidades",
-    "categoria": "Jugos",
+    "categoria": "Golosina",
     "precio": 105.0,
     "imagen": "",
     "oferta": false,
@@ -9583,7 +9583,7 @@
   {
     "id": "monedas-de-chocolate-100-unit-1188",
     "nombre": "Monedas De Chocolate *100 Unit",
-    "categoria": "Desayuno",
+    "categoria": "Golosina",
     "precio": 144.0,
     "imagen": "",
     "oferta": false,
@@ -9660,7 +9660,7 @@
   {
     "id": "pepsi-2lt-6-1197",
     "nombre": "Pepsi 2Lt *6",
-    "categoria": "Gaseosa",
+    "categoria": "Paso de los Toros",
     "precio": 695.0,
     "imagen": "",
     "oferta": false,
@@ -9682,7 +9682,7 @@
   {
     "id": "palitos-buby-60g-20-1199",
     "nombre": "Palitos Buby 60G *20",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 242.0,
     "imagen": "",
     "oferta": false,
@@ -9704,7 +9704,7 @@
   {
     "id": "petaca-don-felipe-200ml-1202",
     "nombre": "Petaca Don Felipe 200Ml",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 69.0,
     "imagen": "",
     "oferta": false,
@@ -9715,7 +9715,7 @@
   {
     "id": "don-felipe-1-litro-1203",
     "nombre": "Don Felipe 1 Litro",
-    "categoria": "Otros",
+    "categoria": "Sidra",
     "precio": 160.0,
     "imagen": "",
     "oferta": false,
@@ -9781,7 +9781,7 @@
   {
     "id": "miller-lata-473cc-6-1211",
     "nombre": "Miller Lata 473Cc *6",
-    "categoria": "Otros",
+    "categoria": "Cerveza",
     "precio": 560.0,
     "imagen": "",
     "oferta": false,
@@ -9792,7 +9792,7 @@
   {
     "id": "dispensador-chicles-1212",
     "nombre": "Dispensador Chicles",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 79.0,
     "imagen": "",
     "oferta": false,
@@ -9814,7 +9814,7 @@
   {
     "id": "chupetin-flopito-600gr-1214",
     "nombre": "Chupetin Flopito 600Gr",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 125.0,
     "imagen": "",
     "oferta": false,
@@ -9836,7 +9836,7 @@
   {
     "id": "cereal-maiz-azucarado-60gr-1216",
     "nombre": "Cereal Maiz Azucarado 60Gr",
-    "categoria": "Dulces",
+    "categoria": "Cereales",
     "precio": 24.0,
     "imagen": "",
     "oferta": false,
@@ -9880,7 +9880,7 @@
   {
     "id": "malvaviscos-azues-220gr-1220",
     "nombre": "Malvaviscos Azues 220Gr",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 74.0,
     "imagen": "",
     "oferta": false,
@@ -9902,7 +9902,7 @@
   {
     "id": "tico-tico-10-pimba-1222",
     "nombre": "Tico Tico *10 Pimba",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 130.0,
     "imagen": "",
     "oferta": false,
@@ -10023,7 +10023,7 @@
   {
     "id": "pimba-chedar-10-1243",
     "nombre": "Pimba Chedar *10",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 130.0,
     "imagen": "",
     "oferta": false,
@@ -10067,7 +10067,7 @@
   {
     "id": "azucar-1kg-1250",
     "nombre": "Azucar 1Kg",
-    "categoria": "Dulces",
+    "categoria": "Azucar y Endulzantes",
     "precio": 46.0,
     "imagen": "",
     "oferta": false,
@@ -10100,7 +10100,7 @@
   {
     "id": "dispensador-chicles-varon-1253",
     "nombre": "Dispensador Chicles Varon",
-    "categoria": "Alcohol",
+    "categoria": "Golosina",
     "precio": 79.0,
     "imagen": "",
     "oferta": false,
@@ -10122,7 +10122,7 @@
   {
     "id": "picadas-fiesta-savoy-1256",
     "nombre": "Picadas Fiesta Savoy",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 255.0,
     "imagen": "",
     "oferta": false,
@@ -10133,7 +10133,7 @@
   {
     "id": "picadas-super-josmar-1257",
     "nombre": "Picadas Super Josmar",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 289.0,
     "imagen": "",
     "oferta": false,
@@ -10144,7 +10144,7 @@
   {
     "id": "chicles-blong-frutilla-1258",
     "nombre": "Chicles Blong Frutilla",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 58.0,
     "imagen": "",
     "oferta": false,
@@ -10166,7 +10166,7 @@
   {
     "id": "pan-rallado-morixe-500grs-1261",
     "nombre": "Pan Rallado Morixe 500Grs",
-    "categoria": "Panadería y Pastas",
+    "categoria": "Panadería",
     "precio": 54.0,
     "imagen": "",
     "oferta": false,
@@ -10298,7 +10298,7 @@
   {
     "id": "chocolate-florestal-blanco-1277",
     "nombre": "Chocolate Florestal  Blanco",
-    "categoria": "Desayuno",
+    "categoria": "Golosina",
     "precio": 59.0,
     "imagen": "",
     "oferta": false,
@@ -10309,7 +10309,7 @@
   {
     "id": "chopito-heineken-330-6-cero-1278",
     "nombre": "Chopito Heineken 330*6 Cero",
-    "categoria": "Otros",
+    "categoria": "Cerveza",
     "precio": 510.0,
     "imagen": "",
     "oferta": false,
@@ -10342,7 +10342,7 @@
   {
     "id": "jugo-tang-1283",
     "nombre": "Jugo Tang",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -10430,7 +10430,7 @@
   {
     "id": "gall-tostex-d-de-leche-400grs-1292",
     "nombre": "Gall Tostex D De Leche 400Grs",
-    "categoria": "Frescos",
+    "categoria": "Galletas",
     "precio": 78.0,
     "imagen": "",
     "oferta": false,
@@ -10463,7 +10463,7 @@
   {
     "id": "gall-tucs-100gr-churrasco-1295",
     "nombre": "Gall Tucs 100Gr Churrasco",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 23.0,
     "imagen": "",
     "oferta": false,
@@ -10474,7 +10474,7 @@
   {
     "id": "gall-tucs-100gr-pizza-1296",
     "nombre": "Gall Tucs 100Gr Pizza",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 23.0,
     "imagen": "",
     "oferta": false,
@@ -10529,7 +10529,7 @@
   {
     "id": "coca-lata-oreo-6-1303",
     "nombre": "Coca Lata Oreo *6",
-    "categoria": "Gaseosa",
+    "categoria": "Coca Cola",
     "precio": 420.0,
     "imagen": "",
     "oferta": false,
@@ -11926,7 +11926,7 @@
   {
     "id": "rosquillas-300g-coco-1458",
     "nombre": "Rosquillas 300G Coco",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 35.0,
     "imagen": "",
     "oferta": false,
@@ -12025,7 +12025,7 @@
   {
     "id": "gall-dallas-leche-100g-1468",
     "nombre": "Gall.Dallas Leche 100G",
-    "categoria": "Frescos",
+    "categoria": "Galletas",
     "precio": 20.0,
     "imagen": "",
     "oferta": false,
