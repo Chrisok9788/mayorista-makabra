@@ -3786,7 +3786,7 @@
   {
     "id": "toallitas-sym-nocturnas-412",
     "nombre": "Toallitas Sym Nocturnas",
-    "categoria": "Otros",
+    "categoria": "Cuidado Femenino",
     "precio": 48.0,
     "imagen": "",
     "oferta": false,
@@ -5689,7 +5689,7 @@
   {
     "id": "arvejas-300gr-640",
     "nombre": "Arvejas 300Gr",
-    "categoria": "Otros",
+    "categoria": "Enlatados",
     "precio": 23.0,
     "imagen": "",
     "oferta": false,
@@ -5711,7 +5711,7 @@
   {
     "id": "rinde-dos-20-manzana-644",
     "nombre": "Rinde Dos *20 Manzana",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -5920,7 +5920,7 @@
   {
     "id": "toallitas-sym-8-suave-667",
     "nombre": "Toallitas Sym *8 Suave",
-    "categoria": "Otros",
+    "categoria": "Cuidado Femenino",
     "precio": 37.0,
     "imagen": "",
     "oferta": false,
@@ -5931,7 +5931,7 @@
   {
     "id": "toallitas-sym-8-naranja-668",
     "nombre": "Toallitas Sym *8 Naranja",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Cuidado Femenino",
     "precio": 37.0,
     "imagen": "",
     "oferta": false,
@@ -5942,7 +5942,7 @@
   {
     "id": "crema-de-choclo-670",
     "nombre": "Crema De Choclo",
-    "categoria": "Lácteos",
+    "categoria": "Enlatados",
     "precio": 38.0,
     "imagen": "",
     "oferta": false,
@@ -5953,7 +5953,7 @@
   {
     "id": "jardinera-lata-petitosa-671",
     "nombre": "Jardinera Lata Petitosa",
-    "categoria": "Otros",
+    "categoria": "Enlatados",
     "precio": 33.0,
     "imagen": "",
     "oferta": false,
@@ -6019,7 +6019,7 @@
   {
     "id": "caldos-apti-680",
     "nombre": "Caldos Apti",
-    "categoria": "Otros",
+    "categoria": "Caldos y Sopas",
     "precio": 150.0,
     "imagen": "",
     "oferta": false,
@@ -6030,7 +6030,7 @@
   {
     "id": "caldos-apti-carne-681",
     "nombre": "Caldos Apti Carne",
-    "categoria": "Carnes",
+    "categoria": "Caldos y Sopas",
     "precio": 150.0,
     "imagen": "",
     "oferta": false,
@@ -6107,7 +6107,7 @@
   {
     "id": "miirinda-1-5-691",
     "nombre": "Miirinda 1.5",
-    "categoria": "Otros",
+    "categoria": "Paso de los Toros",
     "precio": 635.0,
     "imagen": "",
     "oferta": false,
@@ -6118,7 +6118,7 @@
   {
     "id": "mirinda-1-5lt-6-692",
     "nombre": "Mirinda 1.5Lt*6",
-    "categoria": "Otros",
+    "categoria": "Paso de los Toros",
     "precio": 635.0,
     "imagen": "",
     "oferta": false,
@@ -6217,7 +6217,7 @@
   {
     "id": "caldo-maggi-carne-24-703",
     "nombre": "Caldo Maggi Carne*24",
-    "categoria": "Carnes",
+    "categoria": "Caldos y Sopas",
     "precio": 325.0,
     "imagen": "",
     "oferta": false,
@@ -6250,7 +6250,7 @@
   {
     "id": "jugo-rinde-2-20-mango-707",
     "nombre": "Jugo Rinde 2 *20 Mango",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -6261,7 +6261,7 @@
   {
     "id": "jugo-rinde-2-20-sobres-naranja-mango-708",
     "nombre": "Jugo Rinde 2 *20 Sobres Naranja Mango",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -6305,7 +6305,7 @@
   {
     "id": "sardina-coqueiro-125gr-716",
     "nombre": "Sardina Coqueiro 125Gr",
-    "categoria": "Pescados y Mariscos",
+    "categoria": "Enlatados",
     "precio": 52.0,
     "imagen": "",
     "oferta": false,
@@ -6382,7 +6382,7 @@
   {
     "id": "sara-roja-500gr-724",
     "nombre": "Sara Roja 500Gr",
-    "categoria": "Otros",
+    "categoria": "Yerba Mate",
     "precio": 86.0,
     "imagen": "",
     "oferta": false,
@@ -6426,7 +6426,7 @@
   {
     "id": "lager-22-10kg-729",
     "nombre": "Lager 22+10Kg",
-    "categoria": "Otros",
+    "categoria": "Mascotas",
     "precio": 1980.0,
     "imagen": "",
     "oferta": false,
