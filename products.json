@@ -24,7 +24,7 @@
   {
     "id": "grated-pequena-granja-170g-4",
     "nombre": "Grated Pequeña Granja 170G",
-    "categoria": "Desayuno",
+    "categoria": "Enlatados",
     "precio": 35.0,
     "imagen": "",
     "oferta": false,
@@ -387,7 +387,7 @@
   {
     "id": "cepita-naranja-1-5-6-38",
     "nombre": "Cepita Naranja 1.5*6",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 510.0,
     "imagen": "",
     "oferta": false,
@@ -4886,7 +4886,7 @@
   {
     "id": "jugo-rinde-2-20-sobres-naranja-534",
     "nombre": "Jugo Rinde 2 *20 Sobres Naranja",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -4897,7 +4897,7 @@
   {
     "id": "jugo-rinde-2-20-sobres-multifruta-535",
     "nombre": "Jugo Rinde 2 *20 Sobres Multifruta",
-    "categoria": "Jugo",
+    "categoria": "Jugos",
     "precio": 345.0,
     "imagen": "",
     "oferta": false,
@@ -4930,7 +4930,7 @@
   {
     "id": "pack-matutina-con-gas-4-541",
     "nombre": "Pack Matutina Con Gas*4",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 155.0,
     "imagen": "",
     "oferta": false,
