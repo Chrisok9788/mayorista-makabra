@@ -8021,7 +8021,7 @@
   {
     "id": "desodorante-axe-black-944",
     "nombre": "Desodorante Axe Black",
-    "categoria": "Desayuno",
+    "categoria": "Desodorantes",
     "precio": 150.0,
     "imagen": "",
     "oferta": false,
@@ -10232,8 +10232,8 @@
   {
     "id": "odorono-en-crema-60g-1269",
     "nombre": "Odorono En Crema 60G",
-    "categoria": "Alcohol",
-    "precio": 110.0,
+    "categoria": "Desodorantes",
+    "precio": 129.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
@@ -14940,7 +14940,7 @@
   {
     "id": "desodorantes-nivea-aerosol-150ml-1792",
     "nombre": "Desodorantes Nivea Aerosol 150Ml",
-    "categoria": "Desayuno",
+    "categoria": "Desodorantes",
     "precio": 170.0,
     "imagen": "",
     "oferta": false,
@@ -22619,7 +22619,7 @@
   {
     "id": "desodorante-axe-200ml-marine-2513",
     "nombre": "Desodorante Axe 200Ml Marine",
-    "categoria": "Desayuno",
+    "categoria": "Desodorantes",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
@@ -27492,7 +27492,7 @@
   {
     "id": "desodorante-axe-marine-2960",
     "nombre": "Desodorante Axe Marine",
-    "categoria": "Desayuno",
+    "categoria": "Desodorantes",
     "precio": 150.0,
     "imagen": "",
     "oferta": false,
@@ -27503,7 +27503,7 @@
   {
     "id": "desodorante-axe-musk-2961",
     "nombre": "Desodorante Axe Musk",
-    "categoria": "Desayuno",
+    "categoria": "Desodorantes",
     "precio": 150.0,
     "imagen": "",
     "oferta": false,
@@ -28614,7 +28614,7 @@
   {
     "id": "sakala-rollon-caballero-3063",
     "nombre": "Sakala Rollon Caballero",
-    "categoria": "Otros",
+    "categoria": "Desodorantes",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
@@ -28625,7 +28625,7 @@
   {
     "id": "sakala-rollon-dama-3064",
     "nombre": "Sakala Rollon Dama",
-    "categoria": "Otros",
+    "categoria": "Desodorantes",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
@@ -30671,7 +30671,7 @@
   {
     "id": "desodorante-axe-230ml-musk-3253",
     "nombre": "Desodorante Axe 230Ml Musk",
-    "categoria": "Desayuno",
+    "categoria": "Desodorantes",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
