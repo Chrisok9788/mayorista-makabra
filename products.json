@@ -21300,21 +21300,9 @@
     "subcategoria": "Vitale"
   },
   {
-    "id": "hipopo-2230",
-    "nombre": "Hipopo",
-    "categoria": "Otros",
-    "precio": 218.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Hipopo"
-  },
-  {
     "id": "cuerda-para-saltar-hw1046-2231",
     "nombre": "Cuerda Para Saltar Hw1046",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 110.0,
     "imagen": "",
     "oferta": false,
@@ -21326,7 +21314,7 @@
   {
     "id": "tambor-con-accesorios-hw3976-2232",
     "nombre": "Tambor Con Accesorios Hw3976",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
@@ -21338,31 +21326,19 @@
   {
     "id": "set-de-maquillaje-hw3101-2233",
     "nombre": "Set De Maquillaje Hw3101",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Set"
-  },
-  {
-    "id": "petacas-flor-4878-2234",
-    "nombre": "Petacas Flor 4878",
-    "categoria": "Otros",
-    "precio": 62.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Petacas"
+    "subcategoria": "Maquillaje"
   },
   {
     "id": "muneca-hw1776-2235",
     "nombre": "Muñeca Hw1776",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 129.0,
     "imagen": "",
     "oferta": false,
@@ -21374,7 +21350,7 @@
   {
     "id": "muneca-con-accesorios-hw9325-2236",
     "nombre": "Muñeca Con Accesorios Hw9325",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 153.0,
     "imagen": "",
     "oferta": false,
@@ -21386,7 +21362,7 @@
   {
     "id": "tractor-oc1253-2237",
     "nombre": "Tractor Oc1253",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 145.0,
     "imagen": "",
     "oferta": false,
@@ -21398,31 +21374,31 @@
   {
     "id": "set-de-maquillaje-hw3027-2238",
     "nombre": "Set De Maquillaje *Hw3027*",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 105.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Set"
+    "subcategoria": "Maquillaje"
   },
   {
     "id": "set-juego-de-policia-hw68142-2239",
     "nombre": "Set Juego De Policia *Hw68142*",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 99.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Set"
+    "subcategoria": "Armas"
   },
   {
     "id": "inflador-de-bomba-hw8082-2240",
     "nombre": "Inflador De Bomba *Hw8082*",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 129.0,
     "imagen": "",
     "oferta": false,
@@ -21434,31 +21410,31 @@
   {
     "id": "juego-de-dardos-hw6006-2241",
     "nombre": "Juego De Dardos *Hw6006*",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 120.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Juego"
+    "subcategoria": "Dardos"
   },
   {
     "id": "pistola-de-agua-zh6735-2242",
     "nombre": "Pistola De Agua *Zh6735*",
-    "categoria": "Agua",
+    "categoria": "Juguetes",
     "precio": 89.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Pistola"
+    "subcategoria": "Armas"
   },
   {
     "id": "keller-7kg-2243",
     "nombre": "Keller 7Kg",
-    "categoria": "Otros",
+    "categoria": "Mascotas",
     "precio": 524.0,
     "imagen": "",
     "oferta": false,
@@ -21513,24 +21489,24 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Pack"
+    "subcategoria": "Tocador"
   },
   {
     "id": "agua-sanitaria-5l-gota-limpa-2248",
     "nombre": "Agua Sanitaria 5L Gota Limpa",
-    "categoria": "Agua",
+    "categoria": "Limpieza e Higiene",
     "precio": 165.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Agua"
+    "subcategoria": "Jane"
   },
   {
     "id": "esponjas-griselda-5-2249",
     "nombre": "Esponjas Griselda *5",
-    "categoria": "Otros",
+    "categoria": "Limpieza e Higiene",
     "precio": 89.0,
     "imagen": "",
     "oferta": false,
