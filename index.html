@@ -89,7 +89,7 @@
         </div>
       </section>
 
-      <!-- OFERTAS (SOLO ACÁ) -->
+      <!-- OFERTAS -->
       <section class="section offers-section" aria-label="Ofertas">
         <div class="container">
           <div class="section-title-row">
@@ -119,12 +119,19 @@
               id="search-input"
               placeholder="Buscar por nombre, categoría..."
             />
+
+            <!-- ✅ Categoría (nativo iPhone: abre/cierra y se cierra solo al elegir) -->
             <select id="category-filter">
               <option value="">Todas las categorías</option>
             </select>
+
+            <!-- ✅ Subcategoría (aparece solo cuando elegís una categoría) -->
+            <select id="subcategory-filter" style="display: none;">
+              <option value="">Todas las subcategorías</option>
+            </select>
           </div>
 
-          <!-- Panel de categorías y subcategorías -->
+          <!-- ✅ Panel tipo acordeón (categorías → subcategorías con “volver”) -->
           <aside class="cat-panel">
             <h3 class="cat-title">Categorías</h3>
             <div id="categoryAccordion" class="accordion"></div>
@@ -145,7 +152,7 @@
           <div id="cart-container" class="cart-items"></div>
 
           <div class="cart-summary">
-            <div class="total-line">
+            <div classtf class="total-line">
               <span>Total:</span>
               <strong id="cart-total">$ 0</strong>
             </div>
@@ -251,7 +258,7 @@
       document.getElementById("year").textContent = new Date().getFullYear();
     </script>
 
-    <!-- ÚNICO inicializador: app.js -->
+    <!-- ✅ ÚNICO inicializador -->
     <script type="module" src="./app.js"></script>
   </body>
 </html>
