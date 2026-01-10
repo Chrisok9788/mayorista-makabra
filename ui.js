@@ -9,9 +9,10 @@
  * Renderiza la lista de productos en un contenedor.
  */
 export function renderProducts(list, container, addHandler) {
+  if (!container) return;
   container.innerHTML = '';
 
-  if (!list.length) {
+  if (!list || !list.length) {
     container.innerHTML = '<p>No se encontraron productos.</p>';
     return;
   }
@@ -54,7 +55,7 @@ export function renderProducts(list, container, addHandler) {
         : './';
 
     img.src = product.imagen || `${BASE}placeholder.png`;
-    img.alt = product.nombre;
+    img.alt = product.nombre || 'Producto';
     card.appendChild(img);
 
     // CONTENIDO
@@ -62,7 +63,7 @@ export function renderProducts(list, container, addHandler) {
     content.className = 'product-content';
 
     const title = document.createElement('h3');
-    title.textContent = product.nombre;
+    title.textContent = product.nombre || 'Producto';
     content.appendChild(title);
 
     const meta = document.createElement('div');
@@ -99,7 +100,7 @@ export function renderProducts(list, container, addHandler) {
     const btn = document.createElement('button');
     btn.className = 'btn btn-primary';
     btn.textContent = 'Agregar al carrito';
-    btn.addEventListener('click', () => addHandler(product.id));
+    btn.addEventListener('click', () => addHandler && addHandler(product.id));
     content.appendChild(btn);
 
     card.appendChild(content);
@@ -109,6 +110,9 @@ export function renderProducts(list, container, addHandler) {
 
 /**
  * Renderiza el carrusel de OFERTAS.
+ * - Si hay 0 ofertas: muestra mensaje
+ * - Si hay 1 oferta: muestra 1 tarjeta (sin duplicar)
+ * - Si hay 2+ ofertas: duplica para animación continua
  */
 export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
   if (!frameEl || !trackEl) return;
@@ -153,13 +157,14 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
     })
     .join('');
 
-  trackEl.innerHTML = cardsHtml + cardsHtml;
+  // 1 sola oferta: no duplicar
+  trackEl.innerHTML = offers.length >= 2 ? (cardsHtml + cardsHtml) : cardsHtml;
 
   if (typeof onClick === 'function') {
     trackEl.querySelectorAll('.offer-card').forEach((el) => {
       el.addEventListener('click', () => {
         const id = el.getAttribute('data-id');
-        if (id != null && id !== '') onClick(id);
+        if (id) onClick(id);
       });
     });
   }
@@ -169,16 +174,17 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
  * Renderiza el carrito.
  */
 export function renderCart(products, cart, container, updateHandler, removeHandler) {
+  if (!container) return;
   container.innerHTML = '';
 
-  const entries = Object.entries(cart);
+  const entries = Object.entries(cart || {});
   if (!entries.length) {
     container.innerHTML = '<p>Tu carrito está vacío.</p>';
     return;
   }
 
   entries.forEach(([productId, qty]) => {
-    const product = products.find((p) => p.id === productId);
+    const product = (products || []).find((p) => p.id === productId);
     if (!product) return;
 
     const item = document.createElement('div');
@@ -186,7 +192,7 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
 
     const name = document.createElement('div');
     name.className = 'cart-item-name';
-    name.textContent = product.nombre;
+    name.textContent = product.nombre || 'Producto';
     item.appendChild(name);
 
     const controls = document.createElement('div');
@@ -194,7 +200,7 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
 
     const minus = document.createElement('button');
     minus.textContent = '−';
-    minus.onclick = () => updateHandler(productId, qty - 1);
+    minus.onclick = () => updateHandler && updateHandler(productId, qty - 1);
 
     const input = document.createElement('input');
     input.type = 'number';
@@ -202,16 +208,17 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
     input.value = qty;
     input.onchange = (e) => {
       const v = parseInt(e.target.value, 10);
-      updateHandler(productId, isNaN(v) ? 1 : v);
+      const safe = isNaN(v) ? 1 : Math.max(1, v);
+      updateHandler && updateHandler(productId, safe);
     };
 
     const plus = document.createElement('button');
     plus.textContent = '+';
-    plus.onclick = () => updateHandler(productId, qty + 1);
+    plus.onclick = () => updateHandler && updateHandler(productId, qty + 1);
 
     const remove = document.createElement('button');
     remove.textContent = '✖';
-    remove.onclick = () => removeHandler(productId);
+    remove.onclick = () => removeHandler && removeHandler(productId);
 
     controls.append(minus, input, plus, remove);
     item.appendChild(controls);
@@ -233,7 +240,6 @@ export function updateCartCount(countEl, count) {
 export function populateCategories(products, select) {
   if (!select) return;
 
-  // Limpia dejando el primero ("Todas...")
   const keepFirst = select.querySelector('option[value=""]');
   select.innerHTML = '';
   if (keepFirst) select.appendChild(keepFirst);
@@ -245,7 +251,7 @@ export function populateCategories(products, select) {
   }
 
   const categories = Array.from(
-    new Set((products || []).map((p) => p.categoria).filter(Boolean))
+    new Set((products || []).map((p) => (p.categoria || '').trim()).filter(Boolean))
   ).sort((a, b) => a.localeCompare(b, 'es'));
 
   categories.forEach((cat) => {
@@ -257,10 +263,39 @@ export function populateCategories(products, select) {
 }
 
 /**
+ * NUEVO: Carga subcategorías en el select, según categoría elegida.
+ */
+export function populateSubcategories(products, category, select) {
+  if (!select) return;
+
+  select.innerHTML = '';
+  const opt0 = document.createElement('option');
+  opt0.value = '';
+  opt0.textContent = 'Todas las subcategorías';
+  select.appendChild(opt0);
+
+  const subs = Array.from(
+    new Set(
+      (products || [])
+        .filter((p) => (p.categoria || '').trim() === category)
+        .map((p) => (p.subcategoria || '').trim())
+        .filter(Boolean)
+    )
+  ).sort((a, b) => a.localeCompare(b, 'es'));
+
+  subs.forEach((sub) => {
+    const opt = document.createElement('option');
+    opt.value = sub;
+    opt.textContent = sub;
+    select.appendChild(opt);
+  });
+}
+
+/**
  * Filtra por categoría y texto.
  */
 export function filterProducts(products, category, searchTerm) {
-  let result = products;
+  let result = products || [];
 
   if (category) {
     result = result.filter((p) => (p.categoria || '').trim() === category);
@@ -286,14 +321,11 @@ export function filterProducts(products, category, searchTerm) {
 }
 
 /**
- * NUEVO COMPORTAMIENTO:
- * - Solo muestra LISTA de categorías al inicio.
- * - Al tocar una categoría => muestra SOLO subcategorías de esa categoría (abrir/cerrar).
- * - Incluye un buscador dentro del panel para subcategorías.
- * - Botón "Volver a categorías".
- *
- * @param {Array} products
- * @param {Function} onSelect (listaFiltrada) => la app renderiza productos con esa lista
+ * Panel tipo acordeón:
+ * - Lista de categorías
+ * - Al tocar una categoría: muestra solo subcategorías
+ * - Buscador de subcategorías
+ * - Volver a categorías
  */
 export function renderCategoryAccordion(products, onSelect) {
   const accordion = document.getElementById('categoryAccordion');
@@ -302,7 +334,7 @@ export function renderCategoryAccordion(products, onSelect) {
 
   const allProducts = Array.isArray(products) ? products : [];
 
-  // Construye mapa: categoria -> (subcategoria -> productos[])
+  // categoria -> subcategoria -> productos[]
   const catMap = new Map();
   for (const p of allProducts) {
     const cat = (p.categoria || 'Otros').trim();
@@ -315,7 +347,6 @@ export function renderCategoryAccordion(products, onSelect) {
 
   const categories = Array.from(catMap.keys()).sort((a, b) => a.localeCompare(b, 'es'));
 
-  // --- Helpers de UI ---
   const title = document.createElement('div');
   title.className = 'cat-panel-head';
   title.innerHTML = `<strong>Filtrar</strong>`;
@@ -328,7 +359,6 @@ export function renderCategoryAccordion(products, onSelect) {
     const list = document.createElement('div');
     list.className = 'cat-list';
 
-    // Botón ver todo
     const allBtn = document.createElement('button');
     allBtn.type = 'button';
     allBtn.className = 'cat-pill';
@@ -357,7 +387,6 @@ export function renderCategoryAccordion(products, onSelect) {
     accordion.innerHTML = '';
     accordion.appendChild(title);
 
-    // Header con volver
     const head = document.createElement('div');
     head.className = 'subcats-head';
 
@@ -375,7 +404,6 @@ export function renderCategoryAccordion(products, onSelect) {
     head.appendChild(back);
     head.appendChild(h);
 
-    // Buscador de subcategorías (solo dentro de esta categoría)
     const subSearch = document.createElement('input');
     subSearch.type = 'text';
     subSearch.placeholder = 'Buscar subcategoría...';
@@ -384,11 +412,9 @@ export function renderCategoryAccordion(products, onSelect) {
     accordion.appendChild(head);
     accordion.appendChild(subSearch);
 
-    // Contenedor subcats
     const body = document.createElement('div');
     body.className = 'accordion-body open';
 
-    // Ver toda la categoría
     const allCat = document.createElement('div');
     allCat.className = 'subcat';
     const totalCount = Array.from(subMap.values()).reduce((a, arr) => a + arr.length, 0);
@@ -401,7 +427,6 @@ export function renderCategoryAccordion(products, onSelect) {
     body.appendChild(allCat);
 
     const renderSubList = (term = '') => {
-      // borra subcats menos el "ver toda"
       body.querySelectorAll('.subcat.row').forEach((n) => n.remove());
 
       const t = term.trim().toLowerCase();
@@ -417,15 +442,12 @@ export function renderCategoryAccordion(products, onSelect) {
         body.appendChild(row);
       });
 
-      // Si no hay subcats
       if (subs.length === 0) {
         const empty = document.createElement('div');
-        empty.className = 'offers-empty';
+        empty.className = 'offers-empty sub-empty';
         empty.textContent = 'No hay subcategorías que coincidan.';
         empty.style.marginTop = '8px';
-        // evitar duplicados
         body.querySelectorAll('.sub-empty').forEach((n) => n.remove());
-        empty.classList.add('sub-empty');
         body.appendChild(empty);
       } else {
         body.querySelectorAll('.sub-empty').forEach((n) => n.remove());
@@ -441,6 +463,5 @@ export function renderCategoryAccordion(products, onSelect) {
     accordion.appendChild(body);
   };
 
-  // Render inicial: categorías
   renderCategoriesList();
 }
