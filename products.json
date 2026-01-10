@@ -2338,7 +2338,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otras Gaseosas"
+    "subcategoria": "Sprite"
   },
   {
     "id": "fanta-2-25lt-6-229",
@@ -22117,18 +22117,6 @@
     "subcategoria": "Monster"
   },
   {
-    "id": "coca-60-2302",
-    "nombre": "Coca 60",
-    "categoria": "Gaseosa",
-    "precio": 1.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Coca"
-  },
-  {
     "id": "leche-bolsa-2303",
     "nombre": "Leche Bolsa",
     "categoria": "Frescos",
@@ -28827,7 +28815,7 @@
   {
     "id": "pepsi-lata-x6-354cc-2870",
     "nombre": "Pepsi Lata X6 354Cc",
-    "categoria": "Gaseosa",
+    "categoria": "Paso de los Toros",
     "precio": 225.0,
     "imagen": "",
     "oferta": false,
@@ -34323,7 +34311,7 @@
   {
     "id": "pepsi-2l-6-3335",
     "nombre": "Pepsi 2L *6",
-    "categoria": "Gaseosa",
+    "categoria": "Paso de los Toros",
     "precio": 699.0,
     "imagen": "",
     "oferta": false,
@@ -34335,7 +34323,7 @@
   {
     "id": "pepsi-2l-1-3336",
     "nombre": "Pepsi 2L *1",
-    "categoria": "Gaseosa",
+    "categoria": "Paso de los Toros",
     "precio": 120.0,
     "imagen": "",
     "oferta": false,
@@ -34599,7 +34587,7 @@
   {
     "id": "pepsi-lata-black-x1-354cc-3359",
     "nombre": "Pepsi Lata Black X1 354Cc",
-    "categoria": "Gaseosa",
+    "categoria": "Paso de los Toros",
     "precio": 40.0,
     "imagen": "",
     "oferta": false,
