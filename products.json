@@ -20607,7 +20607,7 @@
   {
     "id": "miller-lata-710cc-unidad-2172",
     "nombre": "Miller Lata 710Cc Unidad",
-    "categoria": "Cerveza
+    "categoria": "Cerveza"
 ",
     "precio": 132.0,
     "imagen": "",
@@ -35296,8 +35296,7 @@
   {
     "id": "vinagre-gamberoni-de-manzana-500ml-3419",
     "nombre": "Vinagre Gamberoni De Manzana 500Ml",
-    "categoria": "Aderezos
-",
+    "categoria": "Aderezos",
     "precio": 74.0,
     "imagen": "",
     "oferta": false,
