@@ -6087,14 +6087,14 @@
   {
     "id": "cereal-frutado-1kg-633",
     "nombre": "Cereal  Frutado 1Kg",
-    "categoria": "Cereales",
+    "categoria": "Desayuno",
     "precio": 210.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Cereal"
+    "subcategoria": "Cereales"
   },
   {
     "id": "miel-primavera-160gr-634",
@@ -7143,7 +7143,7 @@
   {
     "id": "cereales-azucarados-1kg-754",
     "nombre": "Cereales Azucarados 1Kg",
-    "categoria": "Dulces",
+    "categoria": "Desayuno",
     "precio": 195.0,
     "imagen": "",
     "oferta": false,
@@ -29545,18 +29545,6 @@
     "subcategoria": "Muñeca"
   },
   {
-    "id": "vale-2931",
-    "nombre": "Vale",
-    "categoria": "Otros",
-    "precio": 5000.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Vale"
-  },
-  {
     "id": "bolsa-12x24-2932",
     "nombre": "Bolsa 12X24",
     "categoria": "Otros",
@@ -31971,14 +31959,14 @@
   {
     "id": "powerade-600-1-manzana-3137",
     "nombre": "Powerade 600 *1 Manzana",
-    "categoria": "Coca Cola",
+    "categoria": "Energizante",
     "precio": 50.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otras Gaseosas"
+    "subcategoria": "Powerade"
   },
   {
     "id": "perfumol-zorzal-1lt-12-bebe-3138",
@@ -32943,62 +32931,62 @@
   {
     "id": "powerade-600-1-naranja-3219",
     "nombre": "Powerade 600*1 Naranja",
-    "categoria": "Coca Cola",
+    "categoria": "Energizante",
     "precio": 50.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otras Gaseosas"
+    "subcategoria": "Powerade"
   },
   {
     "id": "powerade-azul-1-600ml-3220",
     "nombre": "Powerade Azul*1 600Ml",
-    "categoria": "Coca Cola",
+    "categoria": "Energizante",
     "precio": 50.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otras Gaseosas"
+    "subcategoria": "Powerade"
   },
   {
     "id": "powerade-rojo-1-600ml-3221",
     "nombre": "Powerade Rojo *1 600Ml",
-    "categoria": "Coca Cola",
+    "categoria": "Energizante",
     "precio": 50.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otras Gaseosas"
+    "subcategoria": "Powerade"
   },
   {
     "id": "powerade-600-6-sour-3222",
     "nombre": "Powerade 600 *6 Sour",
-    "categoria": "Coca Cola",
+    "categoria": "Energizante",
     "precio": 290.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otras Gaseosas"
+    "subcategoria": "Powerade"
   },
   {
     "id": "powerade-600-1-sour-3223",
     "nombre": "Powerade 600 *1 Sour",
-    "categoria": "Coca Cola",
+    "categoria": "Energizante",
     "precio": 50.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otras Gaseosas"
+    "subcategoria": "Powerade"
   },
   {
     "id": "lentejon-puritas-450gr-3224",
@@ -33087,7 +33075,7 @@
   {
     "id": "barra-de-cereal-frutos-rojos-3231",
     "nombre": "Barra De Cereal Frutos Rojos",
-    "categoria": "Cereales",
+    "categoria": "Snack",
     "precio": 15.0,
     "imagen": "",
     "oferta": false,
@@ -33099,7 +33087,7 @@
   {
     "id": "pan-flauta-x3-3232",
     "nombre": "Pan Flauta X3",
-    "categoria": "Panadería y Pastas",
+    "categoria": "Panadería",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
@@ -33111,7 +33099,7 @@
   {
     "id": "medallon-seara-100gr-3233",
     "nombre": "Medallon Seara 100Gr",
-    "categoria": "Otros",
+    "categoria": "Congelados",
     "precio": 26.0,
     "imagen": "",
     "oferta": false,
@@ -33135,7 +33123,7 @@
   {
     "id": "fini-sapo-500gr-3235",
     "nombre": "Fini Sapo 500Gr",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 146.0,
     "imagen": "",
     "oferta": false,
@@ -33159,7 +33147,7 @@
   {
     "id": "batidora-stand-mixer-2l-3237",
     "nombre": "Batidora Stand Mixer 2L",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 1200.0,
     "imagen": "",
     "oferta": false,
@@ -33171,7 +33159,7 @@
   {
     "id": "pasas-de-uva-150gr-delier-3238",
     "nombre": "Pasas De Uva 150Gr Delier",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Snacks",
     "precio": 62.0,
     "imagen": "",
     "oferta": false,
@@ -33181,21 +33169,9 @@
     "subcategoria": "Pasas"
   },
   {
-    "id": "dd-48-3239",
-    "nombre": "Dd 48",
-    "categoria": "Otros",
-    "precio": 83.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Dd"
-  },
-  {
     "id": "postre-apti-chocolate-40gr-3240",
     "nombre": "Postre Apti Chocolate 40Gr",
-    "categoria": "Desayuno",
+    "categoria": "Almacen",
     "precio": 17.0,
     "imagen": "",
     "oferta": false,
@@ -33207,7 +33183,7 @@
   {
     "id": "postre-apti-vainilla-40gr-3241",
     "nombre": "Postre Apti Vainilla 40Gr",
-    "categoria": "Otros",
+    "categoria": "Almacen",
     "precio": 17.0,
     "imagen": "",
     "oferta": false,
@@ -33219,7 +33195,7 @@
   {
     "id": "postre-apti-caramelo-40gr-3242",
     "nombre": "Postre Apti Caramelo 40Gr",
-    "categoria": "Dulces y Chocolates",
+    "categoria": "Almacen",
     "precio": 17.0,
     "imagen": "",
     "oferta": false,
@@ -33231,7 +33207,7 @@
   {
     "id": "postre-apti-frutilla-40r-3243",
     "nombre": "Postre Apti Frutilla 40R",
-    "categoria": "Otros",
+    "categoria": "Almacen",
     "precio": 17.0,
     "imagen": "",
     "oferta": false,
@@ -33243,7 +33219,7 @@
   {
     "id": "flan-apti-chocolate-60gr-3244",
     "nombre": "Flan Apti Chocolate 60Gr",
-    "categoria": "Desayuno",
+    "categoria": "Almacen",
     "precio": 33.0,
     "imagen": "",
     "oferta": false,
@@ -33255,7 +33231,7 @@
   {
     "id": "flan-apti-vainilla-60gr-3245",
     "nombre": "Flan Apti Vainilla 60Gr",
-    "categoria": "Otros",
+    "categoria": "Almacen",
     "precio": 33.0,
     "imagen": "",
     "oferta": false,
@@ -33298,12 +33274,12 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Fideos"
+    "subcategoria": "Don Gusto"
   },
   {
     "id": "gelatina-apti-limon-20gr-3249",
     "nombre": "Gelatina Apti Limon 20Gr",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Almacen",
     "precio": 15.0,
     "imagen": "",
     "oferta": false,
@@ -33315,7 +33291,7 @@
   {
     "id": "gelatina-apti-frutilla-20gr-3250",
     "nombre": "Gelatina Apti Frutilla 20Gr",
-    "categoria": "Otros",
+    "categoria": "Almacen",
     "precio": 15.0,
     "imagen": "",
     "oferta": false,
@@ -35031,14 +35007,14 @@
   {
     "id": "mix-frutal-pedrense-1-3397",
     "nombre": "Mix Frutal Pedrense *1",
-    "categoria": "Sidra",
+    "categoria": "Alcohol",
     "precio": 95.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Mix"
+    "subcategoria": "Sidra"
   },
   {
     "id": "baly-lata-1-3398",
@@ -35050,7 +35026,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Energizantes"
+    "subcategoria": "Baly"
   },
   {
     "id": "tenedores-3399",
