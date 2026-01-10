@@ -17727,19 +17727,19 @@
   {
     "id": "morron-barcatti-sachet-450g-1924",
     "nombre": "Morron Barcatti Sachet 450G",
-    "categoria": "Alcohol",
+    "categoria": "Condimentos",
     "precio": 82.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Ron"
+    "subcategoria": "Morron"
   },
   {
     "id": "encendedor-bic-1-1925",
     "nombre": "Encendedor Bic *1",
-    "categoria": "Otros",
+    "categoria": "Cigarros y Tabaco",
     "precio": 55.0,
     "imagen": "",
     "oferta": false,
@@ -23115,7 +23115,7 @@
   {
     "id": "picantina-barcatti-1k-2391",
     "nombre": "Picantina Barcatti 1K",
-    "categoria": "Otros",
+    "categoria": "Aderezos",
     "precio": 99.0,
     "imagen": "",
     "oferta": false,
@@ -32115,19 +32115,19 @@
   {
     "id": "ajo-y-perejil-barcatti-400gr-3148",
     "nombre": "Ajo Y Perejil Barcatti 400Gr",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 57.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Ajo"
+    "subcategoria": "Ajo Y Perejil"
   },
   {
     "id": "adobo-parrillero-barcatti-400gr-3149",
     "nombre": "Adobo Parrillero Barcatti 400Gr",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 57.0,
     "imagen": "",
     "oferta": false,
@@ -32139,7 +32139,7 @@
   {
     "id": "mixed-pickles-barcatti-400gr-3150",
     "nombre": "Mixed Pickles Barcatti 400Gr",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 66.0,
     "imagen": "",
     "oferta": false,
@@ -32151,7 +32151,7 @@
   {
     "id": "primavera-barcatti-400gr-3151",
     "nombre": "Primavera Barcatti 400Gr",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 57.0,
     "imagen": "",
     "oferta": false,
@@ -32163,7 +32163,7 @@
   {
     "id": "chimichurri-barcatti-400gr-3152",
     "nombre": "Chimichurri Barcatti 400Gr",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 57.0,
     "imagen": "",
     "oferta": false,
@@ -32931,7 +32931,7 @@
   {
     "id": "ajies-catalanes-barcatti-440gr-3217",
     "nombre": "Ajies Catalanes Barcatti 440Gr",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 57.0,
     "imagen": "",
     "oferta": false,
@@ -32943,14 +32943,14 @@
   {
     "id": "morrones-bacartti-440gr-3218",
     "nombre": "Morrones Bacartti 440Gr",
-    "categoria": "Alcohol",
+    "categoria": "Condimentos",
     "precio": 57.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Ron"
+    "subcategoria": "Morron"
   },
   {
     "id": "powerade-600-1-naranja-3219",
@@ -34119,7 +34119,7 @@
   {
     "id": "adobo-picante-barcatti-400gr-3318",
     "nombre": "Adobo Picante Barcatti 400Gr",
-    "categoria": "Desayuno",
+    "categoria": "Condimentos",
     "precio": 57.0,
     "imagen": "",
     "oferta": false,
@@ -34131,14 +34131,14 @@
   {
     "id": "morron-con-ajo-barcatti-400gr-3319",
     "nombre": "Morron Con Ajo Barcatti 400Gr",
-    "categoria": "Alcohol",
+    "categoria": "Condimentos",
     "precio": 57.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Ron"
+    "subcategoria": "Moron"
   },
   {
     "id": "papitas-portezuelo-400g-pak-mani-3320",
@@ -34150,7 +34150,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Maní"
+    "subcategoria": "Papas"
   },
   {
     "id": "gelatinas-hornex-manzana-3321",
