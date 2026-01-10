@@ -6459,7 +6459,7 @@
   {
     "id": "champignones-enteros-184g-672",
     "nombre": "Champignones Enteros 184G",
-    "categoria": "Desayuno",
+    "categoria": "Enlatados",
     "precio": 55.0,
     "imagen": "",
     "oferta": false,
@@ -6562,7 +6562,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Fideos"
+    "subcategoria": "Buonapasta"
   },
   {
     "id": "fideos-buonapasta-tirabuzon-686",
@@ -6574,7 +6574,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Fideos"
+    "subcategoria": "Buonapasta"
   },
   {
     "id": "gall-maria-360gr-687",
@@ -7618,7 +7618,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Fideos"
+    "subcategoria": "Buonapasta"
   },
   {
     "id": "malta-1lt-12-806",
@@ -8242,7 +8242,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Fideos"
+    "subcategoria": "Buonapasta"
   },
   {
     "id": "vino-santa-t-880",
@@ -8830,7 +8830,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Fideos"
+    "subcategoria": "Buonapasta"
   },
   {
     "id": "fideos-buonapasta-monas-963",
@@ -8842,7 +8842,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Fideos"
+    "subcategoria": "Buonapasta"
   },
   {
     "id": "agua-nix-sin-gas-500-964",
@@ -8998,7 +8998,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Fideos"
+    "subcategoria": "Buonapasta"
   },
   {
     "id": "pastillas-freegels-12-vita-c-1002",
@@ -10114,7 +10114,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Fideos"
+    "subcategoria": "Buonapasta"
   },
   {
     "id": "caramelo-de-yogurt-1148",
@@ -10474,7 +10474,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Fideos"
+    "subcategoria": "Buonapasta"
   },
   {
     "id": "fideos-buonapasta-cucuzu-1196",
@@ -10486,7 +10486,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Fideos"
+    "subcategoria": "Buonapasta"
   },
   {
     "id": "pepsi-2lt-6-1197",
@@ -17470,7 +17470,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Fideos"
+    "subcategoria": "Buonapasta"
   },
   {
     "id": "trofeo-20-queso-1903",
@@ -17554,7 +17554,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Ron"
+    "subcategoria": "Grapamiel"
   },
   {
     "id": "petaca-grappamiel-cimarron-190ml-1910",
@@ -17566,7 +17566,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Ron"
+    "subcategoria": "Petacas"
   },
   {
     "id": "fideos-buonapasta-codito-1911",
@@ -17578,7 +17578,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Fideos"
+    "subcategoria": "Buonapasta"
   },
   {
     "id": "llaveros-lilo-stich-1912",
@@ -17595,7 +17595,7 @@
   {
     "id": "encendedores-mini-bic-12-1913",
     "nombre": "Encendedores Mini Bic *12",
-    "categoria": "Otros",
+    "categoria": "Cigarros y Tabaco",
     "precio": 450.0,
     "imagen": "",
     "oferta": false,
@@ -17607,7 +17607,7 @@
   {
     "id": "encendedores-mini-bic-1-1914",
     "nombre": "Encendedores Mini Bic *1",
-    "categoria": "Otros",
+    "categoria": "Cigarros y Tabaco",
     "precio": 40.0,
     "imagen": "",
     "oferta": false,
