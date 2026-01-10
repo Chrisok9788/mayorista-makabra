@@ -5667,7 +5667,7 @@
   {
     "id": "atun-aida-al-agua-577",
     "nombre": "Atun Aida Al Agua",
-    "categoria": "Agua",
+    "categoria": "Enlatados",
     "precio": 38.0,
     "imagen": "",
     "oferta": false,
@@ -8187,7 +8187,7 @@
   {
     "id": "atun-emigrante-170grs-867",
     "nombre": "Atun Emigrante 170Grs",
-    "categoria": "Desayuno",
+    "categoria": "Enlatados",
     "precio": 82.0,
     "imagen": "",
     "oferta": false,
@@ -8919,7 +8919,7 @@
   {
     "id": "atun-nidemar-aceite-968",
     "nombre": "Atun Nidemar Aceite",
-    "categoria": "Desayuno",
+    "categoria": "Enlatados",
     "precio": 35.0,
     "imagen": "",
     "oferta": false,
@@ -8931,14 +8931,14 @@
   {
     "id": "choclo-y-arvejas-en-lata-dueto-969",
     "nombre": "Choclo Y Arvejas En Lata Dueto",
-    "categoria": "Otros",
+    "categoria": "Enlatados",
     "precio": 30.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Choclo"
+    "subcategoria": "Dueto"
   },
   {
     "id": "pilas-aa-52-panasonic-971",
@@ -22131,7 +22131,7 @@
   {
     "id": "atun-fish-3-2297",
     "nombre": "Atun Fish *3",
-    "categoria": "Cuidados personal",
+    "categoria": "Enlatados",
     "precio": 110.0,
     "imagen": "",
     "oferta": false,
@@ -24099,7 +24099,7 @@
   {
     "id": "atun-en-trozos-al-aceite-500g-2467",
     "nombre": "Atun En Trozos Al Aceite 500G",
-    "categoria": "Desayuno",
+    "categoria": "Enlatados",
     "precio": 205.0,
     "imagen": "",
     "oferta": false,
@@ -26415,7 +26415,7 @@
   {
     "id": "atun-lomito-peq-granja-al-agua-2661",
     "nombre": "Atun Lomito Peq Granja Al Agua",
-    "categoria": "Agua",
+    "categoria": "Enlatados",
     "precio": 72.0,
     "imagen": "",
     "oferta": false,
@@ -33207,7 +33207,7 @@
   {
     "id": "atun-lomito-peq-granja-al-aceite-3234",
     "nombre": "Atun Lomito Peq Granja Al Aceite",
-    "categoria": "Desayuno",
+    "categoria": "Enlatados",
     "precio": 72.0,
     "imagen": "",
     "oferta": false,
