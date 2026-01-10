@@ -322,7 +322,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Lay's"
+    "subcategoria": "Picadas"
   },
   {
     "id": "manix-50gr-30",
@@ -34697,12 +34697,12 @@
     "nombre": "Picadas Lays 320Gr Juntada",
     "categoria": "Snack",
     "precio": 275.0,
-    "imagen": "",
-    "oferta": false,
+    "imagen": "images/Picada-juntada-Lays .webp.WEBP.JPG.WEBP",
+    "oferta": true,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Lay's"
+    "subcategoria": "Picadas"
   },
   {
     "id": "bondiola-sarubbi-3362",
