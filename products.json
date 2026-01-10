@@ -1,8 +1,8 @@
 
 [
   {
-    "id": "jager-750cc-2",
-    "nombre": "Jager 750Cc",
+    "id": "jagger-750cc-2",
+    "nombre": "jagger 750Cc",
     "categoria": "Alcohol",
     "precio": 750.0,
     "imagen": "images/images:jagger-750-ml.webp.JPG",
@@ -10,7 +10,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "jagger"
   },
   {
     "id": "johnnie-rojo-1lt-3",
@@ -22,7 +22,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Whisky"
   },
   {
     "id": "grated-pequena-granja-170g-4",
@@ -46,7 +46,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Saint"
+    "subcategoria": "Cocoa"
   },
   {
     "id": "kotex-normal-8-6",
@@ -286,7 +286,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Cheetos"
+    "subcategoria": "Lay's"
   },
   {
     "id": "doritos-28g-27",
@@ -334,7 +334,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Maní"
+    "subcategoria": "Lay's"
   },
   {
     "id": "rueditas-35gr-31",
@@ -346,7 +346,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Rueditas"
+    "subcategoria": "Lay's"
   },
   {
     "id": "yerba-baldo-500gr-32",
@@ -670,7 +670,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Jugo"
+    "subcategoria": "Big C"
   },
   {
     "id": "jugo-big-c-200ml-naranja-62",
@@ -682,7 +682,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Jugo"
+    "subcategoria": "Big C"
   },
   {
     "id": "jugo-big-c-200ml-multifruta-63",
@@ -694,7 +694,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Jugo"
+    "subcategoria": "Big C"
   },
   {
     "id": "jugo-big-c-200ml-banana-frutilla-64",
@@ -706,7 +706,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Jugo"
+    "subcategoria": "Big C"
   },
   {
     "id": "jugo-big-c-200ml-surtidos-65",
@@ -718,7 +718,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Jugo"
+    "subcategoria": "Big C"
   },
   {
     "id": "jugo-big-c-1lt-surtidos-66",
@@ -730,7 +730,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Jugo"
+    "subcategoria": "Big C"
   },
   {
     "id": "jugo-big-c-1lt-manzana-67",
@@ -742,7 +742,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Jugo"
+    "subcategoria": "Big C"
   },
   {
     "id": "jugo-big-c-1lt-naranja-68",
@@ -754,7 +754,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Jugo"
+    "subcategoria": "Big C"
   },
   {
     "id": "jugo-big-c-1lt-multifruta-69",
@@ -766,7 +766,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Jugo"
+    "subcategoria": "Big C"
   },
   {
     "id": "jugo-rinde-2-20-sobres-70",
@@ -778,7 +778,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Jugo"
+    "subcategoria": "Rinde 2"
   },
   {
     "id": "petaca-gregson-71",
@@ -790,7 +790,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Petacas"
   },
   {
     "id": "schweppes-citrus-1-5-6-72",
@@ -819,38 +819,38 @@
   {
     "id": "powerade-azul-6-600ml-75",
     "nombre": "Powerade Azul*6 600Ml",
-    "categoria": "Coca Cola",
+    "categoria": "Energizante",
     "precio": 290.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otras Gaseosas"
+    "subcategoria": "Powerade"
   },
   {
     "id": "powerade-rojo-6-600ml-76",
     "nombre": "Powerade Rojo *6 600Ml",
-    "categoria": "Coca Cola",
+    "categoria": "Energizante",
     "precio": 290.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otras Gaseosas"
+    "subcategoria": "Powerade"
   },
   {
     "id": "powerade-600-6-manzana-77",
     "nombre": "Powerade 600 *6 Manzana",
-    "categoria": "Coca Cola",
+    "categoria": "Energizante",
     "precio": 290.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otras Gaseosas"
+    "subcategoria": "Powerade"
   },
   {
     "id": "powerade-600-6-naranja-78",
@@ -1138,7 +1138,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Gall."
+    "subcategoria": "Redondas"
   },
   {
     "id": "gall-redondas-rell-chocolate110gr-102",
@@ -1150,7 +1150,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Gall."
+    "subcategoria": "Redondas"
   },
   {
     "id": "gall-redondas-choco-blanco-110gr-103",
@@ -1162,7 +1162,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Gall.redondas"
+    "subcategoria": "Redondas"
   },
   {
     "id": "pico-dulce-48-unit-104",
@@ -1222,7 +1222,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Agua"
+    "subcategoria": "Jane"
   },
   {
     "id": "pasta-colgate-180gr-114",
