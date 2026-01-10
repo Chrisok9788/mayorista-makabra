@@ -2641,18 +2641,6 @@
     "subcategoria": "Malta"
   },
   {
-    "id": "whisky-monje-1lt-259",
-    "nombre": "Whisky Monje 1Lt",
-    "categoria": "Alcohol",
-    "precio": 605.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Whisky"
-  },
-  {
     "id": "petaca-grappamiel-vesubio-260",
     "nombre": "Petaca Grappamiel Vesubio",
     "categoria": "Alcohol",
@@ -2662,7 +2650,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Petacas"
   },
   {
     "id": "vat-69-1lt-261",
@@ -2674,7 +2662,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Whisky"
   },
   {
     "id": "aceite-de-diez-900cc-262",
@@ -3202,7 +3190,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Petacas"
   },
   {
     "id": "matutina-con-gas-2-5-6-318",
@@ -3310,7 +3298,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Amarga"
   },
   {
     "id": "saint-te-100-sobres-328",
@@ -3322,7 +3310,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Saint"
+    "subcategoria": "Te"
   },
   {
     "id": "chuker-600ml-329",
@@ -4251,19 +4239,19 @@
   {
     "id": "vinagre-gamberoni-500ml-424",
     "nombre": "Vinagre Gamberoni 500Ml",
-    "categoria": "Alcohol",
+    "categoria": "Aderezos",
     "precio": 41.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Ron"
+    "subcategoria": "Vinagre"
   },
   {
     "id": "vinagre-toscano-750ml-425",
     "nombre": "Vinagre Toscano 750Ml",
-    "categoria": "Otros",
+    "categoria": "Aderezos",
     "precio": 33.0,
     "imagen": "",
     "oferta": false,
@@ -4300,7 +4288,7 @@
     "id": "whisky-jhonnie-negro-1l-430",
     "nombre": "Whisky Jhonnie Negro 1L",
     "categoria": "Alcohol",
-    "precio": 1450.0,
+    "precio": 1490.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
@@ -4320,19 +4308,7 @@
     "tags": [],
     "subcategoria": "Buby"
   },
-  {
-    "id": "petaca-william-432",
-    "nombre": "Petaca William",
-    "categoria": "Alcohol",
-    "precio": 174.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Otros Alcoholes"
-  },
-  {
+ {
     "id": "buby-24grs-20-433",
     "nombre": "Buby 24Grs *20",
     "categoria": "Snacks",
@@ -4354,24 +4330,24 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Martini"
   },
   {
     "id": "vascolet-200grs-435",
     "nombre": "Vascolet 200Grs",
-    "categoria": "Otros",
+    "categoria": "Desayuno",
     "precio": 79.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Vascolet"
+    "subcategoria": "Cocoa"
   },
   {
     "id": "suavizante-conejo-900ml-2-437",
     "nombre": "Suavizante Conejo 900Ml*2",
-    "categoria": "Desayuno",
+    "categoria": "Limpieza",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
@@ -5173,18 +5149,6 @@
     "subcategoria": "Aceite"
   },
   {
-    "id": "saldo-anterior-515",
-    "nombre": "Saldo Anterior",
-    "categoria": "Desayuno",
-    "precio": 1.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Saldo"
-  },
-  {
     "id": "cana-bambu-1-lt-516",
     "nombre": "Caña Bambu 1 Lt",
     "categoria": "Alcohol",
@@ -5194,7 +5158,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Caña"
   },
   {
     "id": "odex-crema-500cc-518",
@@ -5291,18 +5255,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Combo"
-  },
-  {
-    "id": "johnnie-negro-530",
-    "nombre": "Johnnie Negro",
-    "categoria": "Alcohol",
-    "precio": 1490.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Otros Alcoholes"
   },
   {
     "id": "solucion-cristal-1lt-531",
@@ -6238,7 +6190,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Rinde"
+    "subcategoria": "Rinde 2"
   },
   {
     "id": "schweppwes-pomelo-3lt-4-645",
@@ -6807,7 +6759,7 @@
   {
     "id": "babysec-verde-talle-g-705",
     "nombre": "Babysec Verde Talle G",
-    "categoria": "Otros",
+    "categoria": "otros",
     "precio": 505.0,
     "imagen": "",
     "oferta": false,
@@ -10078,7 +10030,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Whisky"
   },
   {
     "id": "vitale-manzana-4-1137",
@@ -10594,19 +10546,19 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Petacas"
   },
   {
     "id": "don-felipe-1-litro-1203",
     "nombre": "Don Felipe 1 Litro",
-    "categoria": "Sidra",
+    "categoria": "Alcohol",
     "precio": 160.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Don"
+    "subcategoria": "Sidra"
   },
   {
     "id": "pomelo-paso-d-toros-2-5lt-1206",
@@ -10834,7 +10786,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Vodka"
+    "subcategoria": "Petacas"
   },
   {
     "id": "ketchup-pontevedra-60g-unidad-1230",
@@ -10887,7 +10839,7 @@
   {
     "id": "biogrip-soluble-plus-5-1237",
     "nombre": "Biogrip Soluble Plus *5",
-    "categoria": "Otros",
+    "categoria": "Médico a domicilio",
     "precio": 245.0,
     "imagen": "",
     "oferta": false,
@@ -10923,7 +10875,7 @@
   {
     "id": "perfumol-zorzal-1lt-12-levantar-1241",
     "nombre": "Perfumol Zorzal 1Lt*12 Levantar",
-    "categoria": "Otros",
+    "categoria": "Limpieza e Higiene",
     "precio": 0.0,
     "imagen": "",
     "oferta": false,
@@ -10978,31 +10930,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otras Cervezas"
-  },
-  {
-    "id": "azucar-1kg-1250",
-    "nombre": "Azucar 1Kg",
-    "categoria": "Azucar y Endulzantes",
-    "precio": 46.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Azucar"
-  },
-  {
-    "id": "promo-descuento-1251",
-    "nombre": "Promo Descuento",
-    "categoria": "Otros",
-    "precio": -105.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Promo"
+    "subcategoria": "Imperial"
   },
   {
     "id": "dispensador-chicles-varon-1253",
@@ -11014,7 +10942,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Dispensador"
+    "subcategoria": "Chicles"
   },
   {
     "id": "cereal-frutado-60g0-1254",
