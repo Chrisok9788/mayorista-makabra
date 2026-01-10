@@ -2163,7 +2163,7 @@
   {
     "id": "vinagre-gamberoni-1lt-213",
     "nombre": "Vinagre Gamberoni 1Lt",
-    "categoria": "Vinagres",
+    "categoria": "Aderezos",
     "precio": 69.0,
     "imagen": "",
     "oferta": false,
@@ -12903,7 +12903,7 @@
   {
     "id": "vinagre-de-manzana-500ml-1457",
     "nombre": "Vinagre De Manzana 500Ml",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Aderezos",
     "precio": 74.0,
     "imagen": "",
     "oferta": false,
@@ -16851,19 +16851,19 @@
   {
     "id": "morron-al-vinagre-400g-1851",
     "nombre": "Morron Al Vinagre 400G",
-    "categoria": "Alcohol",
+    "categoria": "Condimentos",
     "precio": 108.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Ron"
+    "subcategoria": "Morron"
   },
   {
     "id": "ajies-catalanes-310g-1852",
     "nombre": "Ajies Catalanes 310G",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 49.0,
     "imagen": "",
     "oferta": false,
@@ -16875,7 +16875,7 @@
   {
     "id": "inamora-grande-1853",
     "nombre": "Inamora Grande",
-    "categoria": "Otros",
+    "categoria": "Cigarros y Tabaco",
     "precio": 220.0,
     "imagen": "",
     "oferta": false,
@@ -16923,7 +16923,7 @@
   {
     "id": "galletita-en-lata-adoro-270-gr-1857",
     "nombre": "Galletita En Lata Adoro 270 Gr",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 119.0,
     "imagen": "",
     "oferta": false,
@@ -16935,14 +16935,14 @@
   {
     "id": "vinagre-gamberoni-de-manzana-1lt-1858",
     "nombre": "Vinagre Gamberoni De Manzana 1Lt",
-    "categoria": "Alcohol",
+    "categoria": "Aderezos",
     "precio": 99.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Ron"
+    "subcategoria": "Vinagre"
   },
   {
     "id": "fernet-branca-1-lt-1859",
@@ -17955,14 +17955,14 @@
   {
     "id": "morron-1kg-al-vinagre-1944",
     "nombre": "Morron 1Kg Al Vinagre",
-    "categoria": "Alcohol",
+    "categoria": "Condimentos",
     "precio": 275.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Ron"
+    "subcategoria": "Morron"
   },
   {
     "id": "masc-capilar-keratina-370g-1945",
@@ -20595,7 +20595,7 @@
   {
     "id": "vinagre-uruguay-1l-2171",
     "nombre": "Vinagre Uruguay 1L",
-    "categoria": "Otros",
+    "categoria": "Aderezos",
     "precio": 55.0,
     "imagen": "",
     "oferta": false,
@@ -20607,7 +20607,8 @@
   {
     "id": "miller-lata-710cc-unidad-2172",
     "nombre": "Miller Lata 710Cc Unidad",
-    "categoria": "Otros",
+    "categoria": "Cerveza
+",
     "precio": 132.0,
     "imagen": "",
     "oferta": false,
@@ -20619,7 +20620,7 @@
   {
     "id": "curcuma-delier-20g-2173",
     "nombre": "Curcuma Delier 20G",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 30.0,
     "imagen": "",
     "oferta": false,
@@ -35295,14 +35296,15 @@
   {
     "id": "vinagre-gamberoni-de-manzana-500ml-3419",
     "nombre": "Vinagre Gamberoni De Manzana 500Ml",
-    "categoria": "Alcohol",
+    "categoria": "Aderezos
+",
     "precio": 74.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Ron"
+    "subcategoria": "Vinagre"
   },
   {
     "id": "faisan-1lt-surtido-3420",
@@ -35338,7 +35340,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otras Cervezas"
+    "subcategoria": "Pilsen"
   },
   {
     "id": "espiral-clinch-10u-3423",
