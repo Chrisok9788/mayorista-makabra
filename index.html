@@ -1,15 +1,23 @@
-
 <!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <meta property="og:title" content="Mayorista Makabra - Catálogo para revendedores" />
-    <meta property="og:description" content="Catálogo online mayorista con pedido por WhatsApp." />
+    <meta
+      property="og:title"
+      content="Mayorista Makabra - Catálogo para revendedores"
+    />
+    <meta
+      property="og:description"
+      content="Catálogo online mayorista con pedido por WhatsApp."
+    />
     <meta property="og:image" content="./logo.png" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://chrisok9788.github.io/mayorista-makabra/" />
+    <meta
+      property="og:url"
+      content="https://chrisok9788.github.io/mayorista-makabra/"
+    />
 
     <meta
       name="description"
@@ -24,10 +32,16 @@
     <header class="site-header">
       <div class="container header-row">
         <div class="brand">
-          <img src="./logo.png" class="brand-logo" alt="Mayorista Makabra logo" />
+          <img
+            src="./logo.png"
+            class="brand-logo"
+            alt="Mayorista Makabra logo"
+          />
           <div class="brand-text">
             <div class="brand-title">Mayorista Makabra</div>
-            <div class="brand-subtitle">Catálogo mayorista • Pedidos por WhatsApp</div>
+            <div class="brand-subtitle">
+              Catálogo mayorista • Pedidos por WhatsApp
+            </div>
           </div>
         </div>
 
@@ -36,7 +50,10 @@
           <a href="#catalogue">Catálogo</a>
           <a href="#how">Cómo comprar</a>
           <a href="#contact">Contacto</a>
-          <a class="nav-cart" href="#cart">Carrito <span class="pill">(<span id="cart-count">0</span>)</span></a>
+          <a class="nav-cart" href="#cart"
+            >Carrito
+            <span class="pill">(<span id="cart-count">0</span>)</span></a
+          >
         </nav>
       </div>
     </header>
@@ -47,7 +64,10 @@
         <div class="container">
           <div class="hero-card">
             <h1>Bienvenido a Mayorista Makabra</h1>
-            <p>Somos un mayorista uruguayo para revendedores. Mirá el catálogo, armá tu carrito y enviá tu pedido por WhatsApp.</p>
+            <p>
+              Somos un mayorista uruguayo para revendedores. Mirá el catálogo,
+              armá tu carrito y enviá tu pedido por WhatsApp.
+            </p>
 
             <div class="hero-actions">
               <a
@@ -62,7 +82,8 @@
             </div>
 
             <div class="hint">
-              Tip: podés <strong>arrastrar una imagen</strong> encima de la foto de un producto para asignarla (queda guardada en este dispositivo).
+              Tip: podés <strong>arrastrar una imagen</strong> encima de la foto
+              de un producto para asignarla (queda guardada en este dispositivo).
             </div>
           </div>
         </div>
@@ -93,7 +114,11 @@
           </div>
 
           <div class="filters">
-            <input type="text" id="search-input" placeholder="Buscar por nombre, categoría..." />
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Buscar por nombre, categoría..."
+            />
             <select id="category-filter">
               <option value="">Todas las categorías</option>
             </select>
@@ -125,8 +150,16 @@
               <strong id="cart-total">$ 0</strong>
             </div>
             <div class="cart-actions">
-              <button id="clear-cart-btn" class="btn" type="button">Vaciar carrito</button>
-              <button id="send-whatsapp-btn" class="btn btn-primary" type="button">Enviar pedido por WhatsApp</button>
+              <button id="clear-cart-btn" class="btn" type="button">
+                Vaciar carrito
+              </button>
+              <button
+                id="send-whatsapp-btn"
+                class="btn btn-primary"
+                type="button"
+              >
+                Enviar pedido por WhatsApp
+              </button>
             </div>
             <div class="muted small">
               Nota: si un producto tiene precio 0, se enviará como “Consultar”.
@@ -146,7 +179,10 @@
             <li>Explorá el catálogo y buscá los productos que necesitás.</li>
             <li>Agregá al carrito la cantidad deseada de cada producto.</li>
             <li>Revisá tu carrito y hacé clic en “Enviar pedido por WhatsApp”.</li>
-            <li>Si sos cliente nuevo, completás tu dirección y te contactamos por WhatsApp para coordinar.</li>
+            <li>
+              Si sos cliente nuevo, completás tu dirección y te contactamos por
+              WhatsApp para coordinar.
+            </li>
           </ol>
         </div>
       </section>
@@ -162,12 +198,19 @@
           <div class="contact-card">
             <div class="contact-item">
               <strong>WhatsApp</strong>
-              <a href="https://wa.me/59896405927" target="_blank" rel="noopener">+598 096 405 927</a>
+              <a href="https://wa.me/59896405927" target="_blank" rel="noopener"
+                >+598 096 405 927</a
+              >
             </div>
 
             <div class="contact-item">
               <strong>Instagram</strong>
-              <a href="https://instagram.com/distribuidoramakabra" target="_blank" rel="noopener">@distribuidoramakabra</a>
+              <a
+                href="https://instagram.com/distribuidoramakabra"
+                target="_blank"
+                rel="noopener"
+                >@distribuidoramakabra</a
+              >
             </div>
 
             <div class="contact-item">
@@ -196,7 +239,10 @@
 
       <footer class="site-footer" role="contentinfo">
         <div class="container">
-          <p>&copy; <span id="year"></span> Mayorista Makabra. Todos los derechos reservados.</p>
+          <p>
+            &copy; <span id="year"></span> Mayorista Makabra. Todos los derechos
+            reservados.
+          </p>
         </div>
       </footer>
     </main>
@@ -205,42 +251,7 @@
       document.getElementById("year").textContent = new Date().getFullYear();
     </script>
 
-    <!-- Inicializador de categorías y subcategorías -->
-    <script type="module">
-      import { renderCategoryAccordion, renderProducts, filterProducts } from './ui.js';
-
-      async function initCategories() {
-        try {
-          const res = await fetch('./products.json.txt');
-          const products = await res.json();
-          const productsContainer = document.getElementById('products-container');
-          const searchInput = document.getElementById('search-input');
-
-          // Función que renderiza según la selección y el buscador
-          const updateList = (list) => {
-            const term = searchInput.value.toLowerCase().trim();
-            let result = list;
-            if (term) {
-              result = filterProducts(list, '', term);
-            }
-            renderProducts(result, productsContainer, () => {});
-          };
-
-          // Render inicial y acordeón
-          renderCategoryAccordion(products, updateList);
-          updateList(products);
-
-          // Actualiza al escribir en el buscador
-          searchInput.addEventListener('input', () => {
-            // cuando se escribe, volvemos a filtrar sobre toda la lista
-            updateList(products);
-          });
-        } catch (err) {
-          console.error('Error cargando productos:', err);
-        }
-      }
-
-      initCategories();
-    </script>
+    <!-- ÚNICO inicializador: app.js -->
+    <script type="module" src="./app.js"></script>
   </body>
 </html>
