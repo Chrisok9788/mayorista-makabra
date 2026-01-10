@@ -559,3 +559,13 @@ a { color: inherit; text-decoration: none; }
 .subcat:hover {
   background: rgba(17,24,39,0.04);
 }
+/* Subcategoría: mismo look que los filtros */
+#subcategory-filter {
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  color: var(--text);
+  outline: none;
+}
