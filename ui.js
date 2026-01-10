@@ -7,10 +7,6 @@
 
 /**
  * Renderiza la lista de productos en un contenedor.
- *
- * @param {Array} list Lista de productos a mostrar.
- * @param {HTMLElement} container Elemento donde se insertan las tarjetas.
- * @param {Function} addHandler Función llamada con el ID del producto al hacer clic en “Agregar”.
  */
 export function renderProducts(list, container, addHandler) {
   container.innerHTML = '';
@@ -24,7 +20,7 @@ export function renderProducts(list, container, addHandler) {
     const card = document.createElement('div');
     card.className = 'product-card';
 
-    /* ===== BADGE ===== */
+    // BADGE
     let badgeLabel = '';
     let badgeClass = '';
 
@@ -46,7 +42,7 @@ export function renderProducts(list, container, addHandler) {
       card.appendChild(badge);
     }
 
-    /* ===== IMAGEN ===== */
+    // IMAGEN
     const img = document.createElement('img');
     img.className = 'product-image';
 
@@ -61,7 +57,7 @@ export function renderProducts(list, container, addHandler) {
     img.alt = product.nombre;
     card.appendChild(img);
 
-    /* ===== CONTENIDO ===== */
+    // CONTENIDO
     const content = document.createElement('div');
     content.className = 'product-content';
 
@@ -72,9 +68,7 @@ export function renderProducts(list, container, addHandler) {
     const meta = document.createElement('div');
     meta.className = 'meta';
 
-    if (product.marca) {
-      meta.appendChild(document.createTextNode(product.marca));
-    }
+    if (product.marca) meta.appendChild(document.createTextNode(product.marca));
 
     if (product.presentacion) {
       if (meta.childNodes.length) meta.appendChild(document.createTextNode(' · '));
@@ -87,7 +81,7 @@ export function renderProducts(list, container, addHandler) {
 
     if (meta.childNodes.length) content.appendChild(meta);
 
-    /* ===== PRECIO ===== */
+    // PRECIO
     const price = document.createElement('p');
     price.className = 'price';
 
@@ -101,12 +95,11 @@ export function renderProducts(list, container, addHandler) {
 
     content.appendChild(price);
 
-    /* ===== BOTÓN ===== */
+    // BOTÓN
     const btn = document.createElement('button');
     btn.className = 'btn btn-primary';
     btn.textContent = 'Agregar al carrito';
     btn.addEventListener('click', () => addHandler(product.id));
-
     content.appendChild(btn);
 
     card.appendChild(content);
@@ -116,21 +109,10 @@ export function renderProducts(list, container, addHandler) {
 
 /**
  * Renderiza el carrusel de OFERTAS.
- *
- * Reglas:
- * - Oferta = product.oferta === true
- * - Si stock existe y <=0, no se muestra en ofertas
- * - Si no hay ofertas, muestra mensaje en el frame
- *
- * @param {Array} products Lista completa de productos
- * @param {HTMLElement} frameEl Contenedor .offers-frame (para mensaje vacío)
- * @param {HTMLElement} trackEl Contenedor .offers-track (donde van las tarjetas)
- * @param {Function} onClick Callback opcional al clickear una oferta (recibe product.id)
  */
 export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
   if (!frameEl || !trackEl) return;
 
-  // Limpia track y mensaje previo
   trackEl.innerHTML = '';
   const prevEmpty = frameEl.querySelector('.offers-empty');
   if (prevEmpty) prevEmpty.remove();
@@ -149,13 +131,11 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
     return;
   }
 
-  // Armado de tarjetas compatibles con tu CSS actual (.offer-card, .offer-img, etc.)
   const cardsHtml = offers
     .map((p) => {
       const name = p.nombre || 'Producto';
       const img = p.imagen || '';
-      const price =
-        p.precio != null && p.precio > 0 ? `$ ${p.precio}` : 'Consultar';
+      const price = p.precio != null && p.precio > 0 ? `$ ${p.precio}` : 'Consultar';
 
       return `
         <div class="offer-card" data-id="${p.id ?? ''}">
@@ -173,10 +153,8 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
     })
     .join('');
 
-  // Inserta 1 vez y duplica para que la animación -50% no deje el track vacío
   trackEl.innerHTML = cardsHtml + cardsHtml;
 
-  // Click handler opcional
   if (typeof onClick === 'function') {
     trackEl.querySelectorAll('.offer-card').forEach((el) => {
       el.addEventListener('click', () => {
@@ -188,13 +166,7 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
 }
 
 /**
- * Renderiza el carrito de compras.
- *
- * @param {Array} products Lista completa de productos.
- * @param {Object} cart Objeto carrito {id: cantidad}.
- * @param {HTMLElement} container Contenedor del carrito.
- * @param {Function} updateHandler Función (id, qty).
- * @param {Function} removeHandler Función (id).
+ * Renderiza el carrito.
  */
 export function renderCart(products, cart, container, updateHandler, removeHandler) {
   container.innerHTML = '';
@@ -248,9 +220,10 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
 }
 
 /**
- * Actualiza el contador del carrito.
+ * Actualiza contador carrito.
  */
 export function updateCartCount(countEl, count) {
+  if (!countEl) return;
   countEl.textContent = count;
 }
 
@@ -258,9 +231,22 @@ export function updateCartCount(countEl, count) {
  * Carga categorías únicas en el select.
  */
 export function populateCategories(products, select) {
+  if (!select) return;
+
+  // Limpia dejando el primero ("Todas...")
+  const keepFirst = select.querySelector('option[value=""]');
+  select.innerHTML = '';
+  if (keepFirst) select.appendChild(keepFirst);
+  else {
+    const opt = document.createElement('option');
+    opt.value = '';
+    opt.textContent = 'Todas las categorías';
+    select.appendChild(opt);
+  }
+
   const categories = Array.from(
-    new Set(products.map((p) => p.categoria).filter(Boolean))
-  ).sort();
+    new Set((products || []).map((p) => p.categoria).filter(Boolean))
+  ).sort((a, b) => a.localeCompare(b, 'es'));
 
   categories.forEach((cat) => {
     const opt = document.createElement('option');
@@ -271,13 +257,13 @@ export function populateCategories(products, select) {
 }
 
 /**
- * Filtra productos por categoría y texto.
+ * Filtra por categoría y texto.
  */
 export function filterProducts(products, category, searchTerm) {
   let result = products;
 
   if (category) {
-    result = result.filter((p) => p.categoria === category);
+    result = result.filter((p) => (p.categoria || '').trim() === category);
   }
 
   if (searchTerm) {
@@ -287,7 +273,8 @@ export function filterProducts(products, category, searchTerm) {
         p.nombre,
         p.marca || '',
         p.categoria || '',
-        (p.tags || []).join(' ')
+        p.subcategoria || '',
+        (p.tags || []).join(' '),
       ]
         .join(' ')
         .toLowerCase();
@@ -299,83 +286,161 @@ export function filterProducts(products, category, searchTerm) {
 }
 
 /**
- * Renderiza un acordeón de categorías y subcategorías.
+ * NUEVO COMPORTAMIENTO:
+ * - Solo muestra LISTA de categorías al inicio.
+ * - Al tocar una categoría => muestra SOLO subcategorías de esa categoría (abrir/cerrar).
+ * - Incluye un buscador dentro del panel para subcategorías.
+ * - Botón "Volver a categorías".
  *
- * Construye la estructura de categorías (p.categoria) y subcategorías (p.subcategoria)
- * y la inserta en el elemento #categoryAccordion. Cada ítem muestra un contador
- * con la cantidad de productos. Al hacer clic en una subcategoría se llama
- * al callback onSelect con la lista filtrada de productos.
- *
- * @param {Array} products Lista completa de productos con subcategoria.
- * @param {Function} onSelect Callback opcional (lista filtrada).
+ * @param {Array} products
+ * @param {Function} onSelect (listaFiltrada) => la app renderiza productos con esa lista
  */
 export function renderCategoryAccordion(products, onSelect) {
   const accordion = document.getElementById('categoryAccordion');
   if (!accordion) return;
   accordion.innerHTML = '';
 
-  // Agrupar categorías → subcategorías → conteo
-  const map = new Map();
-  for (const p of products) {
+  const allProducts = Array.isArray(products) ? products : [];
+
+  // Construye mapa: categoria -> (subcategoria -> productos[])
+  const catMap = new Map();
+  for (const p of allProducts) {
     const cat = (p.categoria || 'Otros').trim();
     const sub = (p.subcategoria || 'Otros').trim();
-    if (!map.has(cat)) map.set(cat, new Map());
-    const subMap = map.get(cat);
-    subMap.set(sub, (subMap.get(sub) || 0) + 1);
+    if (!catMap.has(cat)) catMap.set(cat, new Map());
+    const subMap = catMap.get(cat);
+    if (!subMap.has(sub)) subMap.set(sub, []);
+    subMap.get(sub).push(p);
   }
 
-  // Ordenar categorías alfabéticamente
-  const cats = Array.from(map.keys()).sort((a, b) => a.localeCompare(b));
-  cats.forEach((cat) => {
-    const subMap = map.get(cat);
-    const subs = Array.from(subMap.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+  const categories = Array.from(catMap.keys()).sort((a, b) => a.localeCompare(b, 'es'));
 
-    const item = document.createElement('div');
-    item.className = 'accordion-item';
+  // --- Helpers de UI ---
+  const title = document.createElement('div');
+  title.className = 'cat-panel-head';
+  title.innerHTML = `<strong>Filtrar</strong>`;
+  accordion.appendChild(title);
 
-    const btn = document.createElement('button');
-    btn.className = 'accordion-btn';
-    btn.type = 'button';
-    btn.innerHTML = `<span>${cat}</span><span class="chev">▾</span>`;
+  const renderCategoriesList = () => {
+    accordion.innerHTML = '';
+    accordion.appendChild(title);
 
-    const body = document.createElement('div');
-    body.className = 'accordion-body';
+    const list = document.createElement('div');
+    list.className = 'cat-list';
 
-    // "Ver todo" dentro de la categoría
-    const totalCount = Array.from(subMap.values()).reduce((a, b) => a + b, 0);
-    const all = document.createElement('div');
-    all.className = 'subcat';
-    all.innerHTML = `<span>Ver todo</span><small>${totalCount}</small>`;
-    all.onclick = () => {
-      if (typeof onSelect === 'function') {
-        const filtered = products.filter((p) => (p.categoria || '').trim() === cat);
-        onSelect(filtered);
-      }
-    };
-    body.appendChild(all);
+    // Botón ver todo
+    const allBtn = document.createElement('button');
+    allBtn.type = 'button';
+    allBtn.className = 'cat-pill';
+    allBtn.textContent = 'Ver todo';
+    allBtn.onclick = () => typeof onSelect === 'function' && onSelect(allProducts);
+    list.appendChild(allBtn);
 
-    // Subcategorías
-    subs.forEach(([sub, count]) => {
-      const row = document.createElement('div');
-      row.className = 'subcat';
-      row.innerHTML = `<span>${sub}</span><small>${count}</small>`;
-      row.onclick = () => {
-        if (typeof onSelect === 'function') {
-          const filtered = products.filter(
-            (p) => (p.categoria || '').trim() === cat && (p.subcategoria || '').trim() === sub
-          );
-          onSelect(filtered);
-        }
-      };
-      body.appendChild(row);
+    categories.forEach((cat) => {
+      const subMap = catMap.get(cat);
+      const count = Array.from(subMap.values()).reduce((a, arr) => a + arr.length, 0);
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'accordion-btn';
+      btn.innerHTML = `<span>${cat}</span><span class="chev">▾</span><small style="opacity:.7;margin-left:auto">${count}</small>`;
+      btn.onclick = () => renderSubcategories(cat);
+      list.appendChild(btn);
     });
 
-    btn.onclick = () => {
-      body.classList.toggle('open');
+    accordion.appendChild(list);
+  };
+
+  const renderSubcategories = (cat) => {
+    const subMap = catMap.get(cat) || new Map();
+
+    accordion.innerHTML = '';
+    accordion.appendChild(title);
+
+    // Header con volver
+    const head = document.createElement('div');
+    head.className = 'subcats-head';
+
+    const back = document.createElement('button');
+    back.type = 'button';
+    back.className = 'btn';
+    back.textContent = '← Volver a categorías';
+    back.onclick = () => renderCategoriesList();
+
+    const h = document.createElement('div');
+    h.style.fontWeight = '800';
+    h.style.marginTop = '10px';
+    h.textContent = cat;
+
+    head.appendChild(back);
+    head.appendChild(h);
+
+    // Buscador de subcategorías (solo dentro de esta categoría)
+    const subSearch = document.createElement('input');
+    subSearch.type = 'text';
+    subSearch.placeholder = 'Buscar subcategoría...';
+    subSearch.className = 'subcat-search';
+
+    accordion.appendChild(head);
+    accordion.appendChild(subSearch);
+
+    // Contenedor subcats
+    const body = document.createElement('div');
+    body.className = 'accordion-body open';
+
+    // Ver toda la categoría
+    const allCat = document.createElement('div');
+    allCat.className = 'subcat';
+    const totalCount = Array.from(subMap.values()).reduce((a, arr) => a + arr.length, 0);
+    allCat.innerHTML = `<span>Ver toda la categoría</span><small>${totalCount}</small>`;
+    allCat.onclick = () => {
+      const list = [];
+      for (const arr of subMap.values()) list.push(...arr);
+      typeof onSelect === 'function' && onSelect(list);
+    };
+    body.appendChild(allCat);
+
+    const renderSubList = (term = '') => {
+      // borra subcats menos el "ver toda"
+      body.querySelectorAll('.subcat.row').forEach((n) => n.remove());
+
+      const t = term.trim().toLowerCase();
+      const subs = Array.from(subMap.entries())
+        .sort((a, b) => a[0].localeCompare(b[0], 'es'))
+        .filter(([sub]) => !t || sub.toLowerCase().includes(t));
+
+      subs.forEach(([sub, arr]) => {
+        const row = document.createElement('div');
+        row.className = 'subcat row';
+        row.innerHTML = `<span>${sub}</span><small>${arr.length}</small>`;
+        row.onclick = () => typeof onSelect === 'function' && onSelect(arr);
+        body.appendChild(row);
+      });
+
+      // Si no hay subcats
+      if (subs.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'offers-empty';
+        empty.textContent = 'No hay subcategorías que coincidan.';
+        empty.style.marginTop = '8px';
+        // evitar duplicados
+        body.querySelectorAll('.sub-empty').forEach((n) => n.remove());
+        empty.classList.add('sub-empty');
+        body.appendChild(empty);
+      } else {
+        body.querySelectorAll('.sub-empty').forEach((n) => n.remove());
+      }
     };
 
-    item.appendChild(btn);
-    item.appendChild(body);
-    accordion.appendChild(item);
-  });
+    renderSubList('');
+
+    subSearch.addEventListener('input', () => {
+      renderSubList(subSearch.value);
+    });
+
+    accordion.appendChild(body);
+  };
+
+  // Render inicial: categorías
+  renderCategoriesList();
 }
