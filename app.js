@@ -26,7 +26,8 @@ let products = [];
 let baseProducts = []; // lista “base” (se va ajustando por categoría/subcategoría)
 
 function handleAdd(productId) {
-  addItem(productId, 1);
+  // ✅ tu addItem recibe solo productId (según tu cart.js)
+  addItem(productId);
   rerenderCartUI();
 }
 
@@ -42,11 +43,19 @@ function handleRemove(productId) {
 
 function rerenderCartUI() {
   const cartContainer = document.getElementById("cart-container");
-  renderCart(products, getCart(), cartContainer, handleUpdate, handleRemove);
+  const cartObj = getCart();
 
+  // Render del carrito
+  renderCart(products, cartObj, cartContainer, handleUpdate, handleRemove);
+
+  // ✅ TOTAL CORRECTO: totalAmount(cartObj, products)
   const totalEl = document.getElementById("cart-total");
-  if (totalEl) totalEl.textContent = `$ ${totalAmount(products)}`;
+  if (totalEl) {
+    const total = totalAmount(cartObj, products);
+    totalEl.textContent = `$ ${total}`;
+  }
 
+  // Contador
   updateCartCount(document.getElementById("cart-count"), totalItems());
 }
 
@@ -59,10 +68,8 @@ function applySearchAndFilter() {
   const cat = categoryEl ? categoryEl.value : "";
   const sub = subcatEl ? subcatEl.value : "";
 
-  // baseProducts ya está filtrado por categoría/subcategoría; el buscador filtra sobre eso
   let filtered = baseProducts;
 
-  // seguridad extra (si baseProducts no estaba actualizado)
   if (cat) filtered = filtered.filter((p) => (p.categoria || "").trim() === cat);
   if (sub) filtered = filtered.filter((p) => (p.subcategoria || "").trim() === sub);
 
@@ -80,10 +87,8 @@ function goToCatalogAndShowProduct(productId) {
   const prod = products.find((p) => p.id === productId);
   if (!prod) return;
 
-  // renderiza solo el producto
   renderProducts([prod], document.getElementById("products-container"), handleAdd);
 
-  // limpia buscador y selects para evitar confusión
   const searchEl = document.getElementById("search-input");
   if (searchEl) searchEl.value = "";
 
@@ -96,7 +101,6 @@ function goToCatalogAndShowProduct(productId) {
     subcatEl.style.display = "none";
   }
 
-  // base vuelve a todo
   baseProducts = products;
 }
 
@@ -108,11 +112,9 @@ async function init() {
     products = await fetchProducts();
     baseProducts = products;
 
-    // ----- CATEGORÍAS (select nativo, se cierra solo) -----
     const categoryEl = document.getElementById("category-filter");
     if (categoryEl) populateCategories(products, categoryEl);
 
-    // ----- SUBCATEGORÍAS (select nativo, aparece solo si hay categoría) -----
     const subcatEl = document.getElementById("subcategory-filter");
 
     const refreshSubcats = () => {
@@ -128,20 +130,16 @@ async function init() {
         return;
       }
 
-      // muestra select subcategoría y lo carga
       subcatEl.style.display = "block";
       populateSubcategories(products, cat, subcatEl);
 
-      // al cambiar categoría, resetea subcategoría
       subcatEl.value = "";
 
       baseProducts = products.filter((p) => (p.categoria || "").trim() === cat);
       applySearchAndFilter();
     };
 
-    if (categoryEl) {
-      categoryEl.addEventListener("change", refreshSubcats);
-    }
+    if (categoryEl) categoryEl.addEventListener("change", refreshSubcats);
 
     if (subcatEl) {
       subcatEl.addEventListener("change", () => {
@@ -157,15 +155,12 @@ async function init() {
       });
     }
 
-    // Render inicial catálogo
     applySearchAndFilter();
 
-    // ----- OFERTAS -----
     const frameEl = document.querySelector(".offers-frame");
     const trackEl = document.getElementById("offers-track");
     renderOffersCarousel(products, frameEl, trackEl, goToCatalogAndShowProduct);
 
-    // Carrito inicial
     rerenderCartUI();
   } catch (err) {
     console.error(err);
@@ -173,22 +168,24 @@ async function init() {
     if (pc) pc.innerHTML = `<p>Ocurrió un error al cargar los productos.</p>`;
   }
 
-  // buscador
   const searchEl = document.getElementById("search-input");
   if (searchEl) searchEl.addEventListener("input", applySearchAndFilter);
 
-  // botones carrito
   const clearBtn = document.getElementById("clear-cart-btn");
-  if (clearBtn) clearBtn.addEventListener("click", () => {
-    clearCart();
-    rerenderCartUI();
-  });
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      clearCart();
+      rerenderCartUI();
+    });
+  }
 
   const sendBtn = document.getElementById("send-whatsapp-btn");
-  if (sendBtn) sendBtn.addEventListener("click", () => {
-    const cart = getCart();
-    sendOrder(products, cart);
-  });
+  if (sendBtn) {
+    sendBtn.addEventListener("click", () => {
+      const cart = getCart();
+      sendOrder(products, cart);
+    });
+  }
 }
 
 init();
