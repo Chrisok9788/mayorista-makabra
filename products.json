@@ -12770,14 +12770,14 @@
   {
     "id": "maples-30-1445",
     "nombre": "Maples*30",
-    "categoria": "Otros",
+    "categoria": "Almacén",
     "precio": 245.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Maples*30"
+    "subcategoria": "Huevos"
   },
   {
     "id": "agua-limol-500-12-1446",
@@ -26978,7 +26978,7 @@
   {
     "id": "huevos-frescos-15-2726",
     "nombre": "Huevos Frescos*15",
-    "categoria": "Almacen",
+    "categoria": "Almacén",
     "precio": 145.0,
     "imagen": "",
     "oferta": false,
@@ -34858,18 +34858,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Tenedores"
-  },
-  {
-    "id": "maples-30-grande-3400",
-    "nombre": "Maples*30 Grande",
-    "categoria": "Otros",
-    "precio": 265.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Maples*30"
   },
   {
     "id": "frutilla-pizz-pedrense-3401",
