@@ -13790,7 +13790,7 @@
   {
     "id": "hamburguesas-burgy-3-1553",
     "nombre": "Hamburguesas Burgy*3",
-    "categoria": "Otros",
+    "categoria": "Congelados",
     "precio": 31.0,
     "imagen": "",
     "oferta": false,
@@ -25142,7 +25142,7 @@
   {
     "id": "nachos-salsa-dips-70g-2566",
     "nombre": "Nachos +Salsa Dips 70G",
-    "categoria": "Salsas",
+    "categoria": "Snacks",
     "precio": 78.0,
     "imagen": "",
     "oferta": false,
@@ -25154,7 +25154,7 @@
   {
     "id": "tacos-cornitos-155g-2567",
     "nombre": "Tacos Cornitos 155G",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 165.0,
     "imagen": "",
     "oferta": false,
@@ -25166,7 +25166,7 @@
   {
     "id": "mix-frutos-secos-150g-2568",
     "nombre": "Mix Frutos Secos 150G",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 92.0,
     "imagen": "",
     "oferta": false,
@@ -25178,7 +25178,7 @@
   {
     "id": "lata-zillertal-473-6-2569",
     "nombre": "Lata Zillertal 473 *6",
-    "categoria": "Otros",
+    "categoria": "Cerveza",
     "precio": 560.0,
     "imagen": "",
     "oferta": false,
@@ -25190,7 +25190,7 @@
   {
     "id": "beldent-frutilla-2570",
     "nombre": "Beldent Frutilla",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 390.0,
     "imagen": "",
     "oferta": false,
@@ -25238,7 +25238,7 @@
   {
     "id": "crush-1-2574",
     "nombre": "Crush *1",
-    "categoria": "Cuidados Personales",
+    "categoria": "Coca Cola",
     "precio": 100.0,
     "imagen": "",
     "oferta": false,
@@ -25250,7 +25250,7 @@
   {
     "id": "cuernitos-c-luz-2575",
     "nombre": "Cuernitos C Luz",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 70.0,
     "imagen": "",
     "oferta": false,
@@ -25262,7 +25262,7 @@
   {
     "id": "sangre-28g-2576",
     "nombre": "Sangre 28G",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 59.0,
     "imagen": "",
     "oferta": false,
@@ -25274,7 +25274,7 @@
   {
     "id": "murcielago-2577",
     "nombre": "Murcielago",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 189.0,
     "imagen": "",
     "oferta": false,
@@ -25286,7 +25286,7 @@
   {
     "id": "telarana-2578",
     "nombre": "Telaraña",
-    "categoria": "Desayuno",
+    "categoria": "Juguetes",
     "precio": 35.0,
     "imagen": "",
     "oferta": false,
@@ -25298,7 +25298,7 @@
   {
     "id": "broche-calavera-2579",
     "nombre": "Broche Calavera",
-    "categoria": "Otros",
+    "categoria": "Cuidado femenino",
     "precio": 165.0,
     "imagen": "",
     "oferta": false,
@@ -25310,7 +25310,7 @@
   {
     "id": "cabezas-esqueleto-1-2580",
     "nombre": "Cabezas Esqueleto *1",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 40.0,
     "imagen": "",
     "oferta": false,
@@ -25322,7 +25322,7 @@
   {
     "id": "tela-arana-1-5metros-2581",
     "nombre": "Tela Araña *1.5Metros",
-    "categoria": "Desayuno",
+    "categoria": "Juguetes",
     "precio": 130.0,
     "imagen": "",
     "oferta": false,
@@ -25334,7 +25334,7 @@
   {
     "id": "globo-calabaza-con-luz-5-2582",
     "nombre": "Globo Calabaza Con Luz*5",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 169.0,
     "imagen": "",
     "oferta": false,
@@ -25346,7 +25346,7 @@
   {
     "id": "escoba-de-brujas-2583",
     "nombre": "Escoba De Brujas",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 115.0,
     "imagen": "",
     "oferta": false,
@@ -25365,12 +25365,12 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Yerba"
+    "subcategoria": "La selva"
   },
   {
     "id": "collar-craneo-y-mano-halloween-2585",
     "nombre": "Collar Craneo Y Mano Halloween",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 179.0,
     "imagen": "",
     "oferta": false,
@@ -25382,7 +25382,7 @@
   {
     "id": "tela-de-arana-4800-164-165-163-2586",
     "nombre": "Tela De Araña 4800 164 165 163",
-    "categoria": "Desayuno",
+    "categoria": "Juguetes",
     "precio": 37.0,
     "imagen": "",
     "oferta": false,
@@ -25454,7 +25454,7 @@
   {
     "id": "ph-unico-16-rollos-30mts-2592",
     "nombre": "Ph Unico *16 Rollos 30Mts",
-    "categoria": "Otros",
+    "categoria": "Higiene y Belleza",
     "precio": 120.0,
     "imagen": "",
     "oferta": false,
@@ -25466,7 +25466,7 @@
   {
     "id": "espinaca-2-5k-2593",
     "nombre": "Espinaca 2.5K",
-    "categoria": "Otros",
+    "categoria": "Congelados",
     "precio": 255.0,
     "imagen": "",
     "oferta": false,
@@ -25502,7 +25502,7 @@
   {
     "id": "superpel-12-rollos-doble-h-x30m-2596",
     "nombre": "Superpel 12 Rollos Doble H X30M",
-    "categoria": "Otros",
+    "categoria": "Higiene y Belleza",
     "precio": 155.0,
     "imagen": "",
     "oferta": false,
@@ -25550,7 +25550,7 @@
   {
     "id": "cucarachas-halloween-x12-2600",
     "nombre": "Cucarachas Halloween X12",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 73.0,
     "imagen": "",
     "oferta": false,
@@ -25562,266 +25562,266 @@
   {
     "id": "bolsa-de-ratas-halloween-2601",
     "nombre": "Bolsa De Ratas Halloween",
-    "categoria": "Ferretería y Hogar",
+    "categoria": "Juguetes",
     "precio": 149.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "bolsas"
+    "subcategoria": "halloween"
   },
   {
     "id": "craneo-calaveea-con-luz-2602",
     "nombre": "Craneo Calaveea Con Luz",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 89.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Craneo"
+    "subcategoria": "halloween"
   },
   {
     "id": "capa-y-sombrero-bruja-2603",
     "nombre": "Capa Y Sombrero Bruja",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 165.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Capa"
+    "subcategoria": "halloween"
   },
   {
     "id": "calabaza-caramelera-2604",
     "nombre": "Calabaza Caramelera",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 89.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Calabaza"
+    "subcategoria": "halloween"
   },
   {
     "id": "set-aranas-medianas-x6-2605",
     "nombre": "Set Aranas Medianas X6",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 69.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Set"
+    "subcategoria": "halloween"
   },
   {
     "id": "pinturas-halloween-2606",
     "nombre": "Pinturas Halloween",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 139.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Pinturas"
+    "subcategoria": "halloween"
   },
   {
     "id": "gargantilla-sangrienta-2607",
     "nombre": "Gargantilla Sangrienta",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 89.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Gargantilla"
+    "subcategoria": "halloween"
   },
   {
     "id": "globo-momia-halloween-2608",
     "nombre": "Globo Momia Halloween",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 220.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Globo"
+    "subcategoria": "halloween"
   },
   {
     "id": "mascara-craneo-2609",
     "nombre": "Mascara Craneo",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 130.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Mascara"
+    "subcategoria": "halloween"
   },
   {
     "id": "dentadura-de-silicona-halloween-2610",
     "nombre": "Dentadura De Silicona Halloween",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 62.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Dentadura"
+    "subcategoria": "halloween"
   },
   {
     "id": "globo-esqueleto-2611",
     "nombre": "Globo Esqueleto",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 220.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Globo"
+    "subcategoria": "halloween"
   },
   {
     "id": "mascara-de-terror-halloween-2612",
     "nombre": "Mascara De Terror Halloween",
-    "categoria": "Desayuno",
+    "categoria": "Juguetes",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Mascara"
+    "subcategoria": "halloween"
   },
   {
     "id": "capa-conde-nino-80cm-2613",
     "nombre": "Capa Conde Nino 80Cm",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Capa"
+    "subcategoria": "halloween"
   },
   {
     "id": "disfraz-zombie-80cm-2614",
     "nombre": "Disfraz Zombie 80Cm",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 215.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Disfraz"
+    "subcategoria": "halloween"
   },
   {
     "id": "set-murcielagos-x4-2615",
     "nombre": "Set Murcielagos X4",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 110.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Set"
+    "subcategoria": "halloween"
   },
   {
     "id": "set-4-aranas-neon-brillan-2616",
     "nombre": "Set 4 Aranas Neon Brillan",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 89.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Set"
+    "subcategoria": "halloween"
   },
   {
     "id": "maquillaje-individual-hallo-2617",
     "nombre": "Maquillaje Individual Hallo",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 49.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Maquillaje"
+    "subcategoria": "halloween"
   },
   {
     "id": "mascara-payaso-terror-2618",
     "nombre": "Mascara Payaso Terror",
-    "categoria": "Desayuno",
+    "categoria": "Juguetes",
     "precio": 95.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Mascara"
+    "subcategoria": "halloween"
   },
   {
     "id": "mascara-led-con-control-2619",
     "nombre": "Mascara Led Con Control",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 275.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Mascara"
+    "subcategoria": "halloween"
   },
   {
     "id": "globos-liso-r12-x10-2620",
     "nombre": "Globos Liso R12 X10",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 49.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Globos"
+    "subcategoria": "halloween"
   },
   {
     "id": "cortinas-cotillon-metalizadas-2621",
     "nombre": "Cortinas Cotillon Metalizadas",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 55.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Cortinas"
+    "subcategoria": "halloween"
   },
   {
     "id": "stickers-rostro-2622",
     "nombre": "Stickers Rostro",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 63.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Stickers"
+    "subcategoria": "halloween"
   },
   {
     "id": "gelatina-hornex-sin-sabor-6-2623",
@@ -34238,14 +34238,14 @@
   {
     "id": "hamburguesa-sarubi-2-3337",
     "nombre": "Hamburguesa Sarubi*2",
-    "categoria": "Carnes",
+    "categoria": "Congelados",
     "precio": 81.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Hamburguesa"
+    "subcategoria": "Hamburguesas"
   },
   {
     "id": "jabon-liquido-prisma-3l-suavizante-3338",
