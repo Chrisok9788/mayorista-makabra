@@ -6,22 +6,9 @@
  */
 
 // Estructura interna del carrito.
-// Clave: productId | Valor: cantidad
+// Clave: productId (o nombre viejo) | Valor: cantidad
 let cart = {};
-
-// Clave de localStorage (por si querés cambiarla en el futuro)
 const CART_KEY = "cart";
-
-/**
- * Borra completamente el carrito guardado (útil para "carrito viejo").
- */
-export function resetCartStorage() {
-  try {
-    localStorage.removeItem(CART_KEY);
-  } finally {
-    cart = {};
-  }
-}
 
 /**
  * Carga el carrito desde localStorage.
@@ -34,17 +21,17 @@ export function loadCart() {
     cart = {};
   }
 
-  // Limpieza básica: elimina entradas inválidas (NaN, <=0, keys vacías)
+  // Limpieza mínima
   for (const k of Object.keys(cart)) {
-    const id = String(k ?? "").trim();
     const qty = Number(cart[k]);
+    const key = String(k ?? "").trim();
 
-    if (!id || !Number.isFinite(qty) || qty < 1) {
+    if (!key || !Number.isFinite(qty) || qty < 1) {
       delete cart[k];
-    } else if (id !== k) {
-      // normaliza key (quita espacios)
+    } else if (key !== k) {
+      // normaliza espacios
       delete cart[k];
-      cart[id] = qty;
+      cart[key] = qty;
     }
   }
 
@@ -75,11 +62,11 @@ export function totalItems() {
 /**
  * Agrega una unidad de un producto al carrito.
  */
-export function addItem(productId) {
-  const id = String(productId ?? "").trim();
-  if (!id) return;
+export function addItem(productKey) {
+  const key = String(productKey ?? "").trim();
+  if (!key) return;
 
-  cart[id] = (cart[id] || 0) + 1;
+  cart[key] = (cart[key] || 0) + 1;
   saveCart();
 }
 
@@ -87,16 +74,16 @@ export function addItem(productId) {
  * Actualiza la cantidad de un producto.
  * - Si qty < 1 elimina el producto.
  */
-export function updateItem(productId, qty) {
-  const id = String(productId ?? "").trim();
+export function updateItem(productKey, qty) {
+  const key = String(productKey ?? "").trim();
   const n = Number(qty);
 
-  if (!id) return;
+  if (!key) return;
 
   if (!Number.isFinite(n) || n < 1) {
-    delete cart[id];
+    delete cart[key];
   } else {
-    cart[id] = n;
+    cart[key] = n;
   }
   saveCart();
 }
@@ -104,11 +91,11 @@ export function updateItem(productId, qty) {
 /**
  * Elimina un producto del carrito.
  */
-export function removeItem(productId) {
-  const id = String(productId ?? "").trim();
-  if (!id) return;
+export function removeItem(productKey) {
+  const key = String(productKey ?? "").trim();
+  if (!key) return;
 
-  delete cart[id];
+  delete cart[key];
   saveCart();
 }
 
@@ -121,49 +108,26 @@ export function clearCart() {
 }
 
 /**
- * Normaliza un precio (por si viene como string).
+ * Convierte precio a número (defensivo).
  */
 function toNumberPrice(v) {
   if (typeof v === "number") return Number.isFinite(v) ? v : 0;
   if (v == null) return 0;
 
   let s = String(v).trim();
-  // quita $ y espacios
   s = s.replace(/\$/g, "").trim();
-  // quita separadores de miles "." y convierte coma a punto
   s = s.replace(/\./g, "").replace(/,/g, ".");
   const n = Number(s);
   return Number.isFinite(n) ? n : 0;
 }
 
 /**
- * Limpia automáticamente el "carrito viejo":
- * si hay IDs en el carrito que no existen en products, los elimina.
- *
- * Llamalo una vez cuando ya tengas products cargado.
- */
-export function reconcileCartWithProducts(products) {
-  if (!Array.isArray(products) || products.length === 0) return;
-
-  const ids = new Set(products.map((p) => String(p.id ?? "").trim()).filter(Boolean));
-  let changed = false;
-
-  for (const k of Object.keys(cart)) {
-    const id = String(k ?? "").trim();
-    if (!ids.has(id)) {
-      delete cart[k];
-      changed = true;
-    }
-  }
-
-  if (changed) saveCart();
-}
-
-/**
  * Calcula el MONTO TOTAL del carrito en base a los productos.
  * - Ignora productos con precio 0 (Consultar)
+ * - COMPATIBLE con carritos viejos: si la key no matchea con p.id,
+ *   intenta matchear contra p.nombre.
  *
- * @param {Object} cartObj Carrito (id -> cantidad)
+ * @param {Object} cartObj Carrito (key -> cantidad)
  * @param {Array} products Lista de productos
  * @returns {number} Total en pesos
  */
@@ -171,22 +135,31 @@ export function totalAmount(cartObj, products) {
   if (!cartObj || typeof cartObj !== "object") return 0;
   if (!Array.isArray(products) || products.length === 0) return 0;
 
-  // Map para buscar por id rápido y sin depender de find()
-  const byId = new Map(
-    products.map((p) => [String(p.id ?? "").trim(), p])
-  );
+  // Índices para encontrar por id o por nombre
+  const byId = new Map();
+  const byNombre = new Map();
+
+  for (const p of products) {
+    const id = String(p.id ?? "").trim();
+    const nombre = String(p.nombre ?? "").trim();
+
+    if (id) byId.set(id, p);
+    if (nombre) byNombre.set(nombre, p);
+  }
 
   let total = 0;
 
-  for (const rawId in cartObj) {
-    const productId = String(rawId ?? "").trim();
-    const qty = Number(cartObj[rawId]) || 0;
-    if (!productId || qty < 1) continue;
+  for (const rawKey in cartObj) {
+    const key = String(rawKey ?? "").trim();
+    const qty = Number(cartObj[rawKey]) || 0;
+    if (!key || qty < 1) continue;
 
-    const product = byId.get(productId);
+    // 1) Buscar por id (correcto)
+    // 2) Si no existe, buscar por nombre (carrito viejo)
+    const product = byId.get(key) || byNombre.get(key);
     if (!product) continue;
 
-    const price = toNumberPrice(product.precio);
+    const price = toNumberPrice(product.precio); // tu JSON usa "precio" [oai_citation:1‡products.json.txt](sediment://file_000000007708720e9c7c5eaea4226aac)
     if (price > 0) total += price * qty;
   }
 
