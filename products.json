@@ -7022,7 +7022,7 @@
   {
     "id": "trofeo-20-salame-736",
     "nombre": "Trofeo *20 Salame",
-    "categoria": "Frescos",
+    "categoria": "Snacks",
     "precio": 270.0,
     "imagen": "",
     "oferta": false,
@@ -10646,7 +10646,7 @@
   {
     "id": "flodigrip-descongestivo-5-1213",
     "nombre": "Flodigrip Descongestivo *5",
-    "categoria": "Otros",
+    "categoria": "Médico a domicilio",
     "precio": 129.0,
     "imagen": "",
     "oferta": false,
@@ -12648,18 +12648,6 @@
     "subcategoria": "Otros Alcoholes"
   },
   {
-    "id": "trofeo-20-1427",
-    "nombre": "Trofeo *20",
-    "categoria": "Snacks",
-    "precio": 270.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Trofeo *20"
-  },
-  {
     "id": "fideos-adria-500g-1430",
     "nombre": "Fideos Adria 500G",
     "categoria": "Pasta",
@@ -13694,7 +13682,7 @@
   {
     "id": "milanesas-pollo-2kg-1539",
     "nombre": "Milanesas Pollo*2Kg",
-    "categoria": "Carnes",
+    "categoria": "Congelados",
     "precio": 510.0,
     "imagen": "",
     "oferta": false,
@@ -13706,7 +13694,7 @@
   {
     "id": "milanesas-de-carne-2kg-1540",
     "nombre": "Milanesas De Carne *2Kg",
-    "categoria": "Carnes",
+    "categoria": "Congelados",
     "precio": 620.0,
     "imagen": "",
     "oferta": false,
@@ -14174,7 +14162,7 @@
   {
     "id": "trofeo-20-churrasco-1599",
     "nombre": "Trofeo *20 Churrasco",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 270.0,
     "imagen": "",
     "oferta": false,
@@ -15194,7 +15182,7 @@
   {
     "id": "trofeo-20-asado-1697",
     "nombre": "Trofeo *20 Asado",
-    "categoria": "Carnes",
+    "categoria": "Snacks",
     "precio": 270.0,
     "imagen": "",
     "oferta": false,
@@ -15446,7 +15434,7 @@
   {
     "id": "trofeo-20-pimienta-1720",
     "nombre": "Trofeo *20 Pimienta",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 270.0,
     "imagen": "",
     "oferta": false,
@@ -17474,7 +17462,7 @@
   {
     "id": "trofeo-20-queso-1903",
     "nombre": "Trofeo *20 Queso",
-    "categoria": "Lácteos",
+    "categoria": "Snacks",
     "precio": 270.0,
     "imagen": "",
     "oferta": false,
@@ -18074,7 +18062,7 @@
   {
     "id": "trofeo-20-cebolla-1954",
     "nombre": "Trofeo *20 Cebolla",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 270.0,
     "imagen": "",
     "oferta": false,
@@ -18086,7 +18074,7 @@
   {
     "id": "trofeo-20-panceta-1955",
     "nombre": "Trofeo *20 Panceta",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 270.0,
     "imagen": "",
     "oferta": false,
@@ -18418,18 +18406,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Jugos"
-  },
-  {
-    "id": "trofeo-1-1984",
-    "nombre": "Trofeo *1",
-    "categoria": "Snacks",
-    "precio": 20.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Trofeo *1"
   },
   {
     "id": "tarro-envasar-400ml-tapa-50-1985",
@@ -29604,18 +29580,6 @@
     "subcategoria": "Tonica"
   },
   {
-    "id": "trofeo-surtidos-20-2940",
-    "nombre": "Trofeo Surtidos *20",
-    "categoria": "Otros",
-    "precio": 270.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Trofeo"
-  },
-  {
     "id": "coca-cola-1-5-1-2941",
     "nombre": "Coca Cola 1.5*1",
     "categoria": "Coca Cola",
@@ -29654,7 +29618,7 @@
   {
     "id": "grated-american-food-170gr-2944",
     "nombre": "Grated American Food 170Gr",
-    "categoria": "Desayuno",
+    "categoria": "Enlatados",
     "precio": 35.0,
     "imagen": "",
     "oferta": false,
@@ -29666,7 +29630,7 @@
   {
     "id": "lata-dueto-arveja-y-zanahoria-2945",
     "nombre": "Lata Dueto Arveja Y Zanahoria",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Enlatados",
     "precio": 30.0,
     "imagen": "",
     "oferta": false,
@@ -30334,18 +30298,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Puritas"
-  },
-  {
-    "id": "trofeo-20-surtido-3001",
-    "nombre": "Trofeo *20 Surtido",
-    "categoria": "Otros",
-    "precio": 270.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Trofeo"
   },
   {
     "id": "pack-mayonesa-hellmans-1k-atun-3002",
