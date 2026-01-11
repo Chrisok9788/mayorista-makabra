@@ -1706,7 +1706,7 @@
   {
     "id": "buby-ed-45gr-10-160",
     "nombre": "Buby Ed+ 45Gr *10",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 153.0,
     "imagen": "",
     "oferta": false,
@@ -1802,7 +1802,7 @@
   {
     "id": "grasa-uruguay-500gr-180",
     "nombre": "Grasa Uruguay 500Gr",
-    "categoria": "Otros",
+    "categoria": "Harina",
     "precio": 37.0,
     "imagen": "",
     "oferta": false,
@@ -1850,7 +1850,7 @@
   {
     "id": "levadura-leva-chef-186",
     "nombre": "Levadura Leva Chef",
-    "categoria": "Otros",
+    "categoria": "Harina",
     "precio": 12.0,
     "imagen": "",
     "oferta": false,
@@ -2078,7 +2078,7 @@
   {
     "id": "pure-puritas-125g-206",
     "nombre": "Pure Puritas 125G",
-    "categoria": "Otros",
+    "categoria": "Almacén",
     "precio": 31.0,
     "imagen": "",
     "oferta": false,
@@ -2090,14 +2090,14 @@
   {
     "id": "polvo-de-hornear-royal-30g-16-207",
     "nombre": "Polvo De Hornear Royal 30G*16",
-    "categoria": "Otros",
+    "categoria": "Harina",
     "precio": 290.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Polvo"
+    "subcategoria": "Royal"
   },
   {
     "id": "saint-cafe-100-sobres-208",
@@ -2114,7 +2114,7 @@
   {
     "id": "sal-fina-209",
     "nombre": "Sal Fina",
-    "categoria": "Otros",
+    "categoria": "Almacén",
     "precio": 34.0,
     "imagen": "",
     "oferta": false,
