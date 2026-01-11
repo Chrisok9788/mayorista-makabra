@@ -10250,7 +10250,7 @@
   {
     "id": "coca-lata-marvel-6-473cc-1169",
     "nombre": "Coca Lata Marvel*6 473Cc",
-    "categoria": "Limol y Nix",
+    "categoria": "Coca Cola",
     "precio": 420.0,
     "imagen": "",
     "oferta": false,
@@ -15060,18 +15060,6 @@
     "subcategoria": "Patricia"
   },
   {
-    "id": "coca-1-5-1686",
-    "nombre": "Coca 1.5",
-    "categoria": "Limol y Nix",
-    "precio": 140.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Coca"
-  },
-  {
     "id": "harina-harinel-1kg-0-1687",
     "nombre": "Harina Harinel 1Kg 0",
     "categoria": "Harina",
@@ -17990,7 +17978,7 @@
   {
     "id": "lata-pepsi-twist-354cc-1948",
     "nombre": "Lata Pepsi Twist 354Cc",
-    "categoria": "Limol y Nix",
+    "categoria": "Paso de los Toros",
     "precio": 40.0,
     "imagen": "",
     "oferta": false,
