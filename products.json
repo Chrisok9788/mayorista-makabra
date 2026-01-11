@@ -18902,7 +18902,7 @@
   {
     "id": "delicious-chips-pollo-20g-2031",
     "nombre": "Delicious Chips Pollo 20G",
-    "categoria": "Carnes",
+    "categoria": "Snacks",
     "precio": 8.0,
     "imagen": "",
     "oferta": false,
@@ -27638,7 +27638,7 @@
   {
     "id": "salkim-asado-90gr-2774",
     "nombre": "Salkim Asado 90Gr",
-    "categoria": "Carnes",
+    "categoria": "Galletas",
     "precio": 15.9,
     "imagen": "",
     "oferta": false,
@@ -27650,7 +27650,7 @@
   {
     "id": "salkim-pizza-90gr-2775",
     "nombre": "Salkim Pizza 90Gr",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 15.9,
     "imagen": "",
     "oferta": false,
@@ -27662,7 +27662,7 @@
   {
     "id": "salkim-tradicional-90gr-2776",
     "nombre": "Salkim Tradicional 90Gr",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 15.9,
     "imagen": "",
     "oferta": false,
@@ -27674,7 +27674,7 @@
   {
     "id": "salkim-bacon-90gr-2777",
     "nombre": "Salkim Bacon 90Gr",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 15.9,
     "imagen": "",
     "oferta": false,
