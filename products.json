@@ -25118,14 +25118,14 @@
   {
     "id": "mix-fiesta-300g-2564",
     "nombre": "Mix Fiesta 300G",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 40.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Mix"
+    "subcategoria": "Caramelos"
   },
   {
     "id": "malvavisco-hamburguesas-60g-2565",
@@ -25173,7 +25173,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Mix"
+    "subcategoria": "Frutos Secos"
   },
   {
     "id": "lata-zillertal-473-6-2569",
@@ -25185,7 +25185,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Lata"
+    "subcategoria": "Zillertal"
   },
   {
     "id": "beldent-frutilla-2570",
@@ -25236,18 +25236,6 @@
     "subcategoria": "Gelatina"
   },
   {
-    "id": "crush-1-2574",
-    "nombre": "Crush *1",
-    "categoria": "Coca Cola",
-    "precio": 100.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Crush"
-  },
-  {
     "id": "cuernitos-c-luz-2575",
     "nombre": "Cuernitos C Luz",
     "categoria": "Juguetes",
@@ -25257,7 +25245,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Cuernitos"
+    "subcategoria": "halloween"
   },
   {
     "id": "sangre-28g-2576",
@@ -25269,7 +25257,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Sangre"
+    "subcategoria": "halloween"
   },
   {
     "id": "murcielago-2577",
@@ -25281,7 +25269,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Murcielago"
+    "subcategoria": "halloween"
   },
   {
     "id": "telarana-2578",
@@ -25293,19 +25281,19 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Telaraña"
+    "subcategoria": "halloween"
   },
   {
     "id": "broche-calavera-2579",
     "nombre": "Broche Calavera",
-    "categoria": "Cuidado femenino",
+    "categoria": "Juguetes",
     "precio": 165.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Broche"
+    "subcategoria": "halloween"
   },
   {
     "id": "cabezas-esqueleto-1-2580",
@@ -25317,7 +25305,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Cabezas"
+    "subcategoria": "halloween"
   },
   {
     "id": "tela-arana-1-5metros-2581",
@@ -25329,7 +25317,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Tela"
+    "subcategoria": "halloween"
   },
   {
     "id": "globo-calabaza-con-luz-5-2582",
@@ -25341,7 +25329,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Globo"
+    "subcategoria": "halloween"
   },
   {
     "id": "escoba-de-brujas-2583",
@@ -25353,7 +25341,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Escoba"
+    "subcategoria": "halloween"
   },
   {
     "id": "yerba-la-selva-naranja-1k-2584",
@@ -25377,7 +25365,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Collar"
+    "subcategoria": "halloween"
   },
   {
     "id": "tela-de-arana-4800-164-165-163-2586",
@@ -25389,7 +25377,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Tela"
+    "subcategoria": "halloween"
   },
   {
     "id": "pilas-alcalinas-10-aa-2587",
@@ -25461,7 +25449,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Ph"
+    "subcategoria": "Papel Higiénico"
   },
   {
     "id": "espinaca-2-5k-2593",
@@ -25509,7 +25497,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Superpel"
+    "subcategoria": "Papel Higiénico"
   },
   {
     "id": "jabon-en-polvo-pluma-400g-2597",
@@ -25538,14 +25526,14 @@
   {
     "id": "fantasma-halloween-c-luz-2599",
     "nombre": "Fantasma Halloween C Luz",
-    "categoria": "Coca Cola",
+    "categoria": "Juguetes",
     "precio": 99.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Fanta"
+    "subcategoria": "halloween"
   },
   {
     "id": "cucarachas-halloween-x12-2600",
@@ -25557,7 +25545,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Cucarachas"
+    "subcategoria": "halloween"
   },
   {
     "id": "bolsa-de-ratas-halloween-2601",
@@ -25838,7 +25826,7 @@
   {
     "id": "fosforos-x222-2624",
     "nombre": "Fosforos X222",
-    "categoria": "Otros",
+    "categoria": "Cigarros y Tabaco",
     "precio": 45.0,
     "imagen": "",
     "oferta": false,
@@ -25848,21 +25836,9 @@
     "subcategoria": "Fosforos"
   },
   {
-    "id": "limpia-tapizado-sapolio-360ml-2625",
-    "nombre": "Limpia Tapizado Sapolio 360Ml",
-    "categoria": "Otros",
-    "precio": 169.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Limpia"
-  },
-  {
     "id": "silicona-jupiter-para-auto-360ml-2626",
     "nombre": "Silicona Jupiter Para Auto 360Ml",
-    "categoria": "Desayuno",
+    "categoria": "Ferretería y Hogar",
     "precio": 145.0,
     "imagen": "",
     "oferta": false,
@@ -25874,26 +25850,26 @@
   {
     "id": "tridente-2627",
     "nombre": "Tridente",
-    "categoria": "Desayuno",
+    "categoria": "Juguetes",
     "precio": 99.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Tridente"
+    "subcategoria": "halloween"
   },
   {
     "id": "set-globo-capibara-2628",
     "nombre": "Set Globo Capibara",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 179.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Set"
+    "subcategoria": "Globo"
   },
   {
     "id": "cereal-frutado-900gr-2629",
@@ -25910,19 +25886,19 @@
   {
     "id": "cerrucho-halloween-2630",
     "nombre": "Cerrucho Halloween",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 99.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Cerrucho"
+    "subcategoria": "halloween"
   },
   {
     "id": "chicles-happy-bol-2631",
     "nombre": "Chicles Happy Bol",
-    "categoria": "Otros",
+    "categoria": "Golosina",
     "precio": 58.0,
     "imagen": "",
     "oferta": false,
@@ -25946,7 +25922,7 @@
   {
     "id": "canaria-te-verde-y-jengibre-500gr-2633",
     "nombre": "Canaria Te Verde Y Jengibre 500Gr",
-    "categoria": "Desayuno",
+    "categoria": "Yerba Mate",
     "precio": 119.0,
     "imagen": "",
     "oferta": false,
@@ -25958,223 +25934,223 @@
   {
     "id": "merm-durazno-los-nietitos-250g-2634",
     "nombre": "Merm Durazno Los Nietitos 250G",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "merm-frutilla-los-nietitos-250g-2635",
     "nombre": "Merm Frutilla Los Nietitos 250G",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 85.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "merm-de-higo-los-nietitos-250g-2636",
     "nombre": "Merm De Higo Los Nietitos 250G",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 88.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "merm-de-higo-los-nietitos-250g-2637",
     "nombre": "Merm De Higo Los Nietitos 250G",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 88.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "merm-zapallo-los-nietitos-250g-2638",
     "nombre": "Merm Zapallo Los Nietitos 250G",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 72.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "merm-naranja-los-nietitos-250g-2639",
     "nombre": "Merm Naranja Los Nietitos 250G",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Dulces",
     "precio": 65.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "merm-ciruela-los-nietitos-250g-2640",
     "nombre": "Merm Ciruela Los Nietitos 250G",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 88.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "merm-arandanos-los-nietitos-250g-2641",
     "nombre": "Merm Arandanos Los Nietitos 250G",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 89.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "merm-arandanos-los-nietitos-250g-2642",
     "nombre": "Merm Arandanos Los Nietitos 250G",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 89.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "merm-frutilla-los-nietitos-500g-2643",
     "nombre": "Merm Frutilla Los Nietitos 500G",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 165.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "merm-durazno-los-nietitos-500g-2644",
     "nombre": "Merm Durazno Los Nietitos 500G",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 130.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "merm-higo-los-nietitos-500g-2645",
     "nombre": "Merm Higo Los Nietitos 500G",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 135.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "merm-zapallo-los-nietitos-500g-2646",
     "nombre": "Merm Zapallo Los Nietitos 500G",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 128.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "merm-3-frutas-los-nietitos-500g-2647",
     "nombre": "Merm 3 Frutas Los Nietitos 500G",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 169.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "merm-diet-dur-los-nietitos-340g-2648",
     "nombre": "Merm Diet  Dur Los Nietitos 340G",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 179.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "merm-diet-frutilla-los-nietitos-340g-2649",
     "nombre": "Merm Diet  Frutilla Los Nietitos 340G",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 179.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "mperial-roja-6-2650",
-    "nombre": "Mperial Roja *6",
-    "categoria": "Otros",
+    "nombre": "Imperial Roja *6",
+    "categoria": "Cerveza",
     "precio": 550.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Mperial"
+    "subcategoria": "Imperial"
   },
   {
     "id": "merm-diet-frutilla-los-nietitos-340g-2651",
     "nombre": "Merm Diet  Frutilla  Los Nietitos 340G",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 179.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "avena-puritas-3k-2652",
     "nombre": "Avena Puritas 3K",
-    "categoria": "Otros",
+    "categoria": "Desayuno",
     "precio": 259.0,
     "imagen": "",
     "oferta": false,
@@ -26186,7 +26162,7 @@
   {
     "id": "pack-pantene-400sh-175ac-2653",
     "nombre": "Pack Pantene 400Sh+175Ac",
-    "categoria": "Desayuno",
+    "categoria": "Cuidados Personales",
     "precio": 365.0,
     "imagen": "",
     "oferta": false,
@@ -26198,7 +26174,7 @@
   {
     "id": "pack-pantene-300sh-150ac-2654",
     "nombre": "Pack Pantene 300Sh+150Ac",
-    "categoria": "Desayuno",
+    "categoria": "Cuidados Personales",
     "precio": 365.0,
     "imagen": "",
     "oferta": false,
@@ -26210,7 +26186,7 @@
   {
     "id": "vasos-transp-x100-300ml-2655",
     "nombre": "Vasos Transp X100 300Ml",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 120.0,
     "imagen": "",
     "oferta": false,
@@ -26222,7 +26198,7 @@
   {
     "id": "palitos-brochette-100u-x25cm-2656",
     "nombre": "Palitos Brochette 100U X25Cm",
-    "categoria": "Desayuno",
+    "categoria": "Bazar",
     "precio": 72.0,
     "imagen": "",
     "oferta": false,
@@ -26234,7 +26210,7 @@
   {
     "id": "panuelo-airsun-10-2657",
     "nombre": "Pañuelo Airsun*10",
-    "categoria": "Otros",
+    "categoria": "Médico a domicilio",
     "precio": 89.0,
     "imagen": "",
     "oferta": false,
@@ -26246,7 +26222,7 @@
   {
     "id": "clinch-aparato-8-tabletas-2658",
     "nombre": "Clinch Aparato +8 Tabletas",
-    "categoria": "Otros",
+    "categoria": "Control de Plagas",
     "precio": 165.0,
     "imagen": "",
     "oferta": false,
@@ -26258,7 +26234,7 @@
   {
     "id": "cerma-nivea-400ml-125ml-2659",
     "nombre": "Cerma Nivea 400Ml+125Ml",
-    "categoria": "Otros",
+    "categoria": "Cuidados Personales",
     "precio": 349.0,
     "imagen": "",
     "oferta": false,
@@ -26266,18 +26242,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Cerma"
-  },
-  {
-    "id": "mac-pay-2660",
-    "nombre": "Mac Pay",
-    "categoria": "Cuidados Personales",
-    "precio": 1.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Mac"
   },
   {
     "id": "atun-lomito-peq-granja-al-agua-2661",
@@ -26306,7 +26270,7 @@
   {
     "id": "palitos-brochet-80-2663",
     "nombre": "Palitos Brochet *80",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 49.0,
     "imagen": "",
     "oferta": false,
@@ -26318,7 +26282,7 @@
   {
     "id": "set-10-moldes-galletitas-2664",
     "nombre": "Set 10 Moldes Galletitas",
-    "categoria": "Panadería",
+    "categoria": "Bazar",
     "precio": 65.0,
     "imagen": "",
     "oferta": false,
@@ -26330,7 +26294,7 @@
   {
     "id": "vaso-con-sorbito-450ml-2665",
     "nombre": "Vaso Con Sorbito 450Ml",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 210.0,
     "imagen": "",
     "oferta": false,
@@ -26342,7 +26306,7 @@
   {
     "id": "porta-celular-con-ventosa-2666",
     "nombre": "Porta Celular Con Ventosa",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 175.0,
     "imagen": "",
     "oferta": false,
@@ -26354,7 +26318,7 @@
   {
     "id": "bombitas-de-agua-100-2667",
     "nombre": "Bombitas De Agua *100",
-    "categoria": "Agua",
+    "categoria": "Juguetes",
     "precio": 39.0,
     "imagen": "",
     "oferta": false,
@@ -26378,7 +26342,7 @@
   {
     "id": "cintero-para-cinta-2-5-grande-2669",
     "nombre": "Cintero Para Cinta 2.5 Grande",
-    "categoria": "Desayuno",
+    "categoria": "Bazar",
     "precio": 189.0,
     "imagen": "",
     "oferta": false,
@@ -26390,7 +26354,7 @@
   {
     "id": "cintero-deluxe-cinta-12mm-chico-2670",
     "nombre": "Cintero Deluxe Cinta 12Mm Chico",
-    "categoria": "Desayuno",
+    "categoria": "Bazar",
     "precio": 85.0,
     "imagen": "",
     "oferta": false,
@@ -26414,7 +26378,7 @@
   {
     "id": "alfombra-welcome-38-58-2672",
     "nombre": "Alfombra Welcome 38*58",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 189.0,
     "imagen": "",
     "oferta": false,
@@ -26426,7 +26390,7 @@
   {
     "id": "bombitas-de-agua-37-con-llenador-2673",
     "nombre": "Bombitas De Agua *37 Con Llenador",
-    "categoria": "Agua",
+    "categoria": "Juguetes",
     "precio": 65.0,
     "imagen": "",
     "oferta": false,
@@ -26438,19 +26402,19 @@
   {
     "id": "botella-50-bombitas-de-agua-2674",
     "nombre": "Botella *50 Bombitas De Agua",
-    "categoria": "Desayuno",
+    "categoria": "Juguetes",
     "precio": 119.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Botella"
+    "subcategoria": "Bombitas"
   },
   {
     "id": "balde-playa-huevo-dino-set-2675",
     "nombre": "Balde Playa Huevo Dino Set",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 279.0,
     "imagen": "",
     "oferta": false,
@@ -26462,7 +26426,7 @@
   {
     "id": "guante-hombre-arana-c-lanzador-2676",
     "nombre": "Guante Hombre Araña C/Lanzador",
-    "categoria": "Desayuno",
+    "categoria": "Juguetes",
     "precio": 179.0,
     "imagen": "",
     "oferta": false,
@@ -26474,7 +26438,7 @@
   {
     "id": "lampara-astronauta-led-2677",
     "nombre": "Lampara Astronauta Led",
-    "categoria": "Alcohol",
+    "categoria": "Juguetes",
     "precio": 239.0,
     "imagen": "",
     "oferta": false,
@@ -26486,7 +26450,7 @@
   {
     "id": "set-balde-pirata-2678",
     "nombre": "Set Balde Pirata",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
@@ -26498,7 +26462,7 @@
   {
     "id": "lancha-con-palas-y-rastrillo-2679",
     "nombre": "Lancha Con Palas Y Rastrillo",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 89.0,
     "imagen": "",
     "oferta": false,
@@ -26510,7 +26474,7 @@
   {
     "id": "set-molino-mas-accesorios-playa-2680",
     "nombre": "Set Molino Mas Accesorios Playa",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 299.0,
     "imagen": "",
     "oferta": false,
@@ -26522,7 +26486,7 @@
   {
     "id": "set-pala-y-accesorios-2681",
     "nombre": "Set Pala Y Accesorios",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 110.0,
     "imagen": "",
     "oferta": false,
@@ -26534,7 +26498,7 @@
   {
     "id": "arma-metralleta-c-hidrogel-2682",
     "nombre": "Arma Metralleta C Hidrogel",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 930.0,
     "imagen": "",
     "oferta": false,
@@ -26546,7 +26510,7 @@
   {
     "id": "set-playa-molino-8-pcs-2683",
     "nombre": "Set Playa Molino 8 Pcs",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 229.0,
     "imagen": "",
     "oferta": false,
@@ -26558,7 +26522,7 @@
   {
     "id": "juego-de-bolos-2684",
     "nombre": "Juego De Bolos",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 289.0,
     "imagen": "",
     "oferta": false,
@@ -26582,7 +26546,7 @@
   {
     "id": "juego-de-bolos-2686",
     "nombre": "Juego De Bolos",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 289.0,
     "imagen": "",
     "oferta": false,
@@ -26618,7 +26582,7 @@
   {
     "id": "globo-calabaza-con-luz-2689",
     "nombre": "Globo Calabaza Con Luz",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 55.0,
     "imagen": "",
     "oferta": false,
@@ -26690,7 +26654,7 @@
   {
     "id": "nuez-moscada-8g-2695",
     "nombre": "Nuez Moscada 8G",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 62.0,
     "imagen": "",
     "oferta": false,
@@ -26702,7 +26666,7 @@
   {
     "id": "super-picada-620gr-2696",
     "nombre": "Super Picada 620Gr",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 220.0,
     "imagen": "",
     "oferta": false,
@@ -26714,7 +26678,7 @@
   {
     "id": "sara-coco-500gr-2697",
     "nombre": "Sara Coco 500Gr",
-    "categoria": "Otros",
+    "categoria": "Yerba Mate",
     "precio": 105.0,
     "imagen": "",
     "oferta": false,
@@ -26726,7 +26690,7 @@
   {
     "id": "desodorante-desire-150ml-2698",
     "nombre": "Desodorante Desire 150Ml",
-    "categoria": "Desayuno",
+    "categoria": "Desodorantes",
     "precio": 200.0,
     "imagen": "",
     "oferta": false,
@@ -26738,7 +26702,7 @@
   {
     "id": "novia-hallowen-2699",
     "nombre": "Novia Hallowen",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 299.0,
     "imagen": "",
     "oferta": false,
@@ -26750,7 +26714,7 @@
   {
     "id": "chedar-aleman-110gr-2700",
     "nombre": "Chedar Aleman 110Gr",
-    "categoria": "Otros",
+    "categoria": "Aderezos",
     "precio": 49.0,
     "imagen": "",
     "oferta": false,
@@ -26760,21 +26724,9 @@
     "subcategoria": "Chedar"
   },
   {
-    "id": "pack-cracker-2701",
-    "nombre": "Pack Cracker",
-    "categoria": "Galletas",
-    "precio": 25.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Pack"
-  },
-  {
     "id": "hongos-al-escabeche-2702",
     "nombre": "Hongos Al Escabeche",
-    "categoria": "Otros",
+    "categoria": "Enlatados",
     "precio": 290.0,
     "imagen": "",
     "oferta": false,
@@ -26786,7 +26738,7 @@
   {
     "id": "refresco-rinde-2-x4-naranja-2703",
     "nombre": "Refresco Rinde 2 X4 Naranja",
-    "categoria": "Limol y Nix",
+    "categoria": "Jugos",
     "precio": 315.0,
     "imagen": "",
     "oferta": false,
@@ -26798,7 +26750,7 @@
   {
     "id": "refresco-rinde-2-x4-mix-frutal-2704",
     "nombre": "Refresco Rinde 2 X4 Mix Frutal",
-    "categoria": "Limol y Nix",
+    "categoria": "Jugos",
     "precio": 315.0,
     "imagen": "",
     "oferta": false,
@@ -26834,7 +26786,7 @@
   {
     "id": "deter-en-gel-concentrado-ype-415ml-2707",
     "nombre": "Deter En Gel Concentrado Ype 415Ml",
-    "categoria": "Desayuno",
+    "categoria": "Limpieza e Higiene",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
@@ -26870,19 +26822,19 @@
   {
     "id": "cond-para-carnes-aves-y-pesc-delier-2710",
     "nombre": "Cond Para Carnes Aves Y Pesc Delier",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 30.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Cond"
+    "subcategoria": "Para Carnes"
   },
   {
     "id": "esencia-de-menta-60ml-delier-2711",
     "nombre": "Esencia De Menta 60Ml Delier",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 68.0,
     "imagen": "",
     "oferta": false,
@@ -26894,7 +26846,7 @@
   {
     "id": "sales-cond-delier-250-y-330g-2712",
     "nombre": "Sales Cond. Delier 250 Y 330G",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 159.0,
     "imagen": "",
     "oferta": false,
@@ -26906,7 +26858,7 @@
   {
     "id": "semillas-chia-2713",
     "nombre": "Semillas Chia",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 89.0,
     "imagen": "",
     "oferta": false,
@@ -26930,7 +26882,7 @@
   {
     "id": "esencia-de-anis-delier-2715",
     "nombre": "Esencia De Anis Delier",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 68.0,
     "imagen": "",
     "oferta": false,
@@ -26938,18 +26890,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Esencia"
-  },
-  {
-    "id": "arrolladitos-primavera-2716",
-    "nombre": "Arrolladitos Primavera",
-    "categoria": "Otros",
-    "precio": 285.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Arrolladitos"
   },
   {
     "id": "hamburguesa-la-dolfina-2717",
@@ -26973,7 +26913,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otras Cervezas"
+    "subcategoria": "Conti"
   },
   {
     "id": "gelatina-claldy-120g-2719",
@@ -26985,7 +26925,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Gelatina 120G"
+    "subcategoria": "Gelatina"
   },
   {
     "id": "botella-yogurt-claldy-180-2720",
@@ -26998,18 +26938,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Botella Yogurt 180"
-  },
-  {
-    "id": "balde-gelatinas-vivoritas-120-2721",
-    "nombre": "Balde Gelatinas Vivoritas 120",
-    "categoria": "Almacén",
-    "precio": 860.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Gelatina"
   },
   {
     "id": "tintas-de-cabello-317-negro-azulado-2722",
@@ -27026,7 +26954,7 @@
   {
     "id": "tintas-de-cabello-317-rojo-intenso-2723",
     "nombre": "Tintas De Cabello 317 Rojo Intenso",
-    "categoria": "Desayuno",
+    "categoria": "Cuidado Femenino",
     "precio": 88.0,
     "imagen": "",
     "oferta": false,
@@ -27036,21 +26964,9 @@
     "subcategoria": "Tintas"
   },
   {
-    "id": "promo-galleta-lamen-2724",
-    "nombre": "Promo Galleta + Lamen",
-    "categoria": "Panadería",
-    "precio": 25.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Pan"
-  },
-  {
     "id": "papas-lays-ketchup-86gr-2725",
     "nombre": "Papas Lays Ketchup 86Gr",
-    "categoria": "Aderezos",
+    "categoria": "Snacks",
     "precio": 117.0,
     "imagen": "",
     "oferta": false,
@@ -27062,7 +26978,7 @@
   {
     "id": "huevos-frescos-15-2726",
     "nombre": "Huevos Frescos*15",
-    "categoria": "Otros",
+    "categoria": "Almacen",
     "precio": 145.0,
     "imagen": "",
     "oferta": false,
@@ -27070,18 +26986,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Huevos"
-  },
-  {
-    "id": "animalitos-gelatina-2727",
-    "nombre": "Animalitos Gelatina",
-    "categoria": "Almacén",
-    "precio": 15.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Gelatina"
   },
   {
     "id": "bracafe-recarga-50gr-2728",
@@ -27098,7 +27002,7 @@
   {
     "id": "gel-en-pomo-sabrina-200ml-2729",
     "nombre": "Gel En Pomo Sabrina 200Ml",
-    "categoria": "Otros",
+    "categoria": "Cuidados Personales",
     "precio": 79.0,
     "imagen": "",
     "oferta": false,
@@ -27146,17 +27050,17 @@
   {
     "id": "prisma-16-30-2733",
     "nombre": "Prisma 16*30",
-    "categoria": "Otros",
+    "categoria": "Higiene y Belleza",
     "precio": 120.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Prisma"
+    "subcategoria": "Pape Higiénico"
   },
   {
-    "id": "permanente-negro-2734",
+    id": "permanente-negro-2734",
     "nombre": "Permanente Negro",
     "categoria": "Desayuno",
     "precio": 45.0,
