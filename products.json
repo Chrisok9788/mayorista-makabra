@@ -2194,7 +2194,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Alf.portezuelo"
+    "subcategoria": "Portezuelo"
   },
   {
     "id": "alf-portezuelo-nieve-triple-12-217",
@@ -2206,7 +2206,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Alf.portezuelo"
+    "subcategoria": "Portezuelo"
   },
   {
     "id": "alf-triple-punta-ballena-12-218",
@@ -2218,7 +2218,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Alf.triple"
+    "subcategoria": "Punta Ballena"
   },
   {
     "id": "barritas-croc-choc-24-219",
@@ -3370,7 +3370,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Alfajor"
+    "subcategoria": "Punta Ballena"
   },
   {
     "id": "fideos-instantaneo-surt-337",
@@ -4203,14 +4203,14 @@
   {
     "id": "alf-portezuelo-triple-blanco-12-420",
     "nombre": "Alf. Portezuelo Triple Blanco*12",
-    "categoria": "Desayuno",
+    "categoria": "Alfajores",
     "precio": 339.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Alf."
+    "subcategoria": "Portezuelo"
   },
   {
     "id": "alf-portezuelo-choco-18-421",
@@ -6946,7 +6946,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Alfajor"
+    "subcategoria": "Punta Ballena"
   },
   {
     "id": "tabletas-milka-155grs-oreo-728",
@@ -7213,18 +7213,6 @@
     "subcategoria": "Pastilleros"
   },
   {
-    "id": "alfajor-black-761",
-    "nombre": "Alfajor Black",
-    "categoria": "Alfajores",
-    "precio": 399.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Alfajor"
-  },
-  {
     "id": "pastilleros-30-lentes-762",
     "nombre": "Pastilleros *30 Lentes",
     "categoria": "Golosinas",
@@ -7330,7 +7318,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Alfajor"
+    "subcategoria": "Punta Ballena"
   },
   {
     "id": "avena-puritas-800gr-774",
@@ -8650,7 +8638,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Alfajor"
+    "subcategoria": "Punta Ballena"
   },
   {
     "id": "alfajor-impacto-16-936",
@@ -8662,7 +8650,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Alfajor"
+    "subcategoria": "Punta Ballena"
   },
   {
     "id": "chicles-blong-939",
@@ -9023,18 +9011,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Servilletas"
-  },
-  {
-    "id": "alfajor-soul-12-1009",
-    "nombre": "Alfajor Soul *12",
-    "categoria": "Alfajores",
-    "precio": 305.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Alfajor"
   },
   {
     "id": "vainilla-de-1lts-1010",
@@ -17101,30 +17077,6 @@
     "subcategoria": "Ph"
   },
   {
-    "id": "alfajor-nacional-18-1874",
-    "nombre": "Alfajor Nacional*18",
-    "categoria": "Alfajores",
-    "precio": 335.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Alfajor"
-  },
-  {
-    "id": "alfajor-penarol-18-1875",
-    "nombre": "Alfajor Peñarol*18",
-    "categoria": "Alfajores",
-    "precio": 335.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Alfajor"
-  },
-  {
     "id": "jabon-conejo-para-diluir-3l-1876",
     "nombre": "Jabon Conejo Para Diluir 3L",
     "categoria": "Cuidados Personales",
@@ -23122,19 +23074,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Alfajor"
-  },
-  {
-    "id": "alf-arrolate-12-2398",
-    "nombre": "Alf Arrolate*12",
-    "categoria": "Desayuno",
-    "precio": 465.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Alf"
+    "subcategoria": "Punta Ballena"
   },
   {
     "id": "panecillos-punta-ball-160g-2399",
@@ -24203,18 +24143,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Tintas"
-  },
-  {
-    "id": "alfajores-maicena-2488",
-    "nombre": "Alfajores Maicena",
-    "categoria": "Alfajores",
-    "precio": 185.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Alfajores"
   },
   {
     "id": "jabon-en-polvo-pluma-3k-2489",
@@ -31330,7 +31258,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Alfajor"
+    "subcategoria": "Punta Ballena"
   },
   {
     "id": "salus-frutte-surtida-0-500ml-x6-3099",
@@ -36262,7 +36190,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Alf."
+    "subcategoria": "Portezuelo"
   },
   {
     "id": "pure-de-papas-dona-marta-100g-3520",
