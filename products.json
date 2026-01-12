@@ -5139,7 +5139,7 @@
   {
     "id": "aceite-optimo-canola-900ml-514",
     "nombre": "Aceite Optimo Canola 900Ml",
-    "categoria": "Desayuno",
+    "categoria": "Aceite",
     "precio": 78.0,
     "imagen": "",
     "oferta": false,
@@ -14558,8 +14558,8 @@
   },
   {
     "id": "aceit-optimo-altoleico-900ml-1647",
-    "nombre": "Aceit. Optimo Altoleico 900Ml",
-    "categoria": "Otros",
+    "nombre": "Aceite Optimo Altoleico 900Ml",
+    "categoria": "Aceite",
     "precio": 115.0,
     "imagen": "",
     "oferta": false,
@@ -14619,7 +14619,7 @@
   {
     "id": "plusbelle-1lt-1653",
     "nombre": "Plusbelle 1Lt",
-    "categoria": "Otros",
+    "categoria": "Cuidados Personales",
     "precio": 139.0,
     "imagen": "",
     "oferta": false,
@@ -14643,7 +14643,7 @@
   {
     "id": "polvo-de-hornear-hornex-1k-1655",
     "nombre": "Polvo De Hornear Hornex 1K",
-    "categoria": "Otros",
+    "categoria": "Frescos",
     "precio": 189.0,
     "imagen": "",
     "oferta": false,
@@ -14703,7 +14703,7 @@
   {
     "id": "sprite-1-5lt-1-1661",
     "nombre": "Sprite 1.5Lt*1",
-    "categoria": "Desayuno",
+    "categoria": "Refrescos",
     "precio": 155.0,
     "imagen": "",
     "oferta": false,
@@ -14775,7 +14775,7 @@
   {
     "id": "sprite-3lt-1-1667",
     "nombre": "Sprite 3Lt *1",
-    "categoria": "Desayuno",
+    "categoria": "Refrescos",
     "precio": 220.0,
     "imagen": "",
     "oferta": false,
@@ -34623,7 +34623,7 @@
   {
     "id": "sprite-600-1-3392",
     "nombre": "Sprite 600 *1",
-    "categoria": "Desayuno",
+    "categoria": "Refrescos",
     "precio": 70.0,
     "imagen": "",
     "oferta": false,
