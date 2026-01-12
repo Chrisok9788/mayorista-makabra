@@ -12550,7 +12550,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Ron"
+    "subcategoria": "Petacas"
   },
   {
     "id": "pack-esponjas-10-1417",
@@ -12574,7 +12574,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Vodka"
+    "subcategoria": "Petacas"
   },
   {
     "id": "jabon-razzo-1-180gr-1419",
@@ -12598,7 +12598,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Whisky"
   },
   {
     "id": "promo-jager-750-3-speed-1425",
@@ -12610,7 +12610,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Jagger"
   },
   {
     "id": "promo-jhonnie-rojo-4-speed-1426",
@@ -12622,7 +12622,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Whisky"
   },
   {
     "id": "fideos-adria-500g-1430",
@@ -17187,7 +17187,7 @@
   {
     "id": "gatorade-500ml-6-1889",
     "nombre": "Gatorade 500Ml *6",
-    "categoria": "Mascotas",
+    "categoria": "Energizante",
     "precio": 275.0,
     "imagen": "",
     "oferta": false,
@@ -27562,7 +27562,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Ron"
+    "subcategoria": "Petacas"
   },
   {
     "id": "ron-carabelas-blanco-750ml-2788",
@@ -27579,38 +27579,38 @@
   {
     "id": "vodka-siberia-750ml-baly-1l-2789",
     "nombre": "Vodka Siberia 750Ml + Baly 1L",
-    "categoria": "Energizante",
+    "categoria": "Alcohol",
     "precio": 425.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Energizantes"
+    "subcategoria": "Vodka"
   },
   {
     "id": "ballantines-finest-750cc-2790",
     "nombre": "Ballantines Finest 750Cc",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 756.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Ballantines"
+    "subcategoria": "Whisky"
   },
   {
     "id": "chivas-12-anos-2791",
     "nombre": "Chivas 12 Años",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 1999.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Chivas"
+    "subcategoria": "Whisky"
   },
   {
     "id": "ron-havana-3-anos-2792",
@@ -27639,14 +27639,14 @@
   {
     "id": "jameson-750ml-2794",
     "nombre": "Jameson 750Ml",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 860.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Jameson"
+    "subcategoria": "Whisky"
   },
   {
     "id": "gin-brighton-700ml-2795",
@@ -33075,14 +33075,14 @@
   {
     "id": "ballantines-finest-1l-3259",
     "nombre": "Ballantines Finest 1L",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 920.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Ballantines"
+    "subcategoria": "Whisky"
   },
   {
     "id": "desire-sexy-black-edt-desodorante-3261",
@@ -33159,26 +33159,26 @@
   {
     "id": "merm-diet-tres-frutos-los-nietitos-340g-3267",
     "nombre": "Merm Diet  Tres Frutos Los Nietitos 340G",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "merm-arandanos-los-nietitos-diet-350g-3268",
     "nombre": "Merm Arandanos Los Nietitos Diet 350G",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 189.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merm"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "mermelada-naranja-los-nietitos-500gr-3269",
@@ -33190,7 +33190,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Mermelada"
+    "subcategoria": "Mermeladas"
   },
   {
     "id": "bollon-500g-claldy-durazno-3270",
@@ -33423,7 +33423,7 @@
   {
     "id": "margarina-soya-500g-3289",
     "nombre": "Margarina Soya 500G",
-    "categoria": "Otros",
+    "categoria": "Frescos",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
@@ -33435,19 +33435,19 @@
   {
     "id": "crema-para-peinar-skala-250g-3290",
     "nombre": "Crema Para Peinar Skala 250G",
-    "categoria": "Lácteos",
+    "categoria": "Cuidados Personales",
     "precio": 95.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Crema"
+    "subcategoria": "Skala"
   },
   {
     "id": "spatem-335-24-3291",
     "nombre": "Spatem 335*24",
-    "categoria": "Desayuno",
+    "categoria": "Cerveza",
     "precio": 980.0,
     "imagen": "",
     "oferta": false,
@@ -33459,7 +33459,7 @@
   {
     "id": "vinilady-clinical-50ml-dama-3292",
     "nombre": "Vinilady Clinical 50Ml Dama",
-    "categoria": "Otros",
+    "categoria": "Desodorantes",
     "precio": 59.0,
     "imagen": "",
     "oferta": false,
@@ -33471,7 +33471,7 @@
   {
     "id": "vinilady-clinical-50ml-3293",
     "nombre": "Vinilady Clinical 50Ml",
-    "categoria": "Otros",
+    "categoria": "Desodorantes",
     "precio": 59.0,
     "imagen": "",
     "oferta": false,
@@ -33507,7 +33507,7 @@
   {
     "id": "gall-cracker-portezuelo-400g-3296",
     "nombre": "Gall Cracker Portezuelo 400G",
-    "categoria": "Desayuno",
+    "categoria": "Galletas",
     "precio": 85.0,
     "imagen": "",
     "oferta": false,
@@ -33519,14 +33519,14 @@
   {
     "id": "salsa-golf-250g-3297",
     "nombre": "Salsa Golf 250G",
-    "categoria": "Almacén",
+    "categoria": "Aderezos",
     "precio": 82.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Salsas"
+    "subcategoria": "Salsa Golf"
   },
   {
     "id": "mostaza-natura-250g-3298",
@@ -33579,7 +33579,7 @@
   {
     "id": "mani-tostado-s-sal-rio-500g-3302",
     "nombre": "Mani Tostado S/Sal Rio 500G",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 185.0,
     "imagen": "",
     "oferta": false,
@@ -33591,7 +33591,7 @@
   {
     "id": "pasas-de-uva-rio-500g-jumbo-3303",
     "nombre": "Pasas De Uva Rio 500G Jumbo",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Snacks",
     "precio": 222.0,
     "imagen": "",
     "oferta": false,
@@ -33603,7 +33603,7 @@
   {
     "id": "pasas-de-uva-rio-150g-3304",
     "nombre": "Pasas De Uva Rio 150G",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Snacks",
     "precio": 67.0,
     "imagen": "",
     "oferta": false,
@@ -33663,7 +33663,7 @@
   {
     "id": "manteca-conaprole-100g-sin-sal-3310",
     "nombre": "Manteca Conaprole 100G Sin Sal",
-    "categoria": "Desayuno",
+    "categoria": "Frescos",
     "precio": 55.0,
     "imagen": "",
     "oferta": false,
@@ -33747,7 +33747,7 @@
   {
     "id": "gatorade-500ml-6-azul-3317",
     "nombre": "Gatorade 500Ml *6 Azul",
-    "categoria": "Mascotas",
+    "categoria": "Energizante",
     "precio": 275.0,
     "imagen": "",
     "oferta": false,
