@@ -2189,7 +2189,7 @@
     "nombre": "Alf.Portezuelo Triple Choco*12",
     "categoria": "Alfajores",
     "precio": 339.0,
-    "imagen": "",
+    "imagen": "images/Alfajores/Alfajor-x3-Choco-porte.JPG.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -2201,7 +2201,7 @@
     "nombre": "Alf.Portezuelo Nieve Triple *12",
     "categoria": "Alfajores",
     "precio": 339.0,
-    "imagen": "",
+    "imagen": "images/Alfajores/Alfajor-x3-nieve-porte.JPG.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -2213,7 +2213,7 @@
     "nombre": "Alf.Triple Punta Ballena *12",
     "categoria": "Alfajores",
     "precio": 349.0,
-    "imagen": "",
+    "imagen": "images/Alfajores/Alfajor-x3-puntaballena .JPG.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -2453,7 +2453,7 @@
     "nombre": "Agua Vitale 1.750 *4 Con Gas",
     "categoria": "Agua",
     "precio": 135.0,
-    "imagen": "",
+    "imagen": "images/Agua/Vitale-175-con.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -2465,7 +2465,7 @@
     "nombre": "Agua Vitale 1.750*4 Sin Gas",
     "categoria": "Agua",
     "precio": 135.0,
-    "imagen": "",
+    "imagen": "images/Agua/Vitale-175-sin.JPG.PNG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -2705,7 +2705,7 @@
     "nombre": "Portezuelo *18 Nieve",
     "categoria": "Alfajores",
     "precio": 365.0,
-    "imagen": "",
+    "imagen": "images/Alfajores/Alfajor-nieve-clásico-porte.JPG.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -3029,7 +3029,7 @@
     "nombre": "Yerba Baldo 1Kg",
     "categoria": "Yerba Mate",
     "precio": 181.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-baldo-1Kg.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -3041,24 +3041,24 @@
     "nombre": "Yerba Serena 250G",
     "categoria": "Yerba Mate",
     "precio": 60.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-serena-250.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Yerba"
+    "subcategoria": "Canarias"
   },
   {
     "id": "yerba-serena-500g-304",
     "nombre": "Yerba Serena 500G",
     "categoria": "Yerba Mate",
     "precio": 110.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-serena-500gr.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Yerba"
+    "subcategoria": "Canarias"
   },
   {
     "id": "coco-rallado-70g-306",
@@ -3113,7 +3113,7 @@
     "nombre": "Refresco Limol Lima 2Lt",
     "categoria": "Refrescos",
     "precio": 465.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Limol-lima-2L.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -3125,7 +3125,7 @@
     "nombre": "Refresco Limol Mandarina 2Lt",
     "categoria": "Refrescos",
     "precio": 465.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Limol-naranja-2L.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -3137,7 +3137,7 @@
     "nombre": "Refresco Limol Pomelo 2Lt",
     "categoria": "Refrescos",
     "precio": 465.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Limol-pomelo-2L.JPG.PNG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -3149,7 +3149,7 @@
     "nombre": "Refresco Limol Cola 2Lt",
     "categoria": "Refrescos",
     "precio": 465.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Limol-cola-2L.JPG.PNG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -3161,24 +3161,12 @@
     "nombre": "Refresco Limol Guarana 2Lt",
     "categoria": "Refrescos",
     "precio": 465.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Limol-guarana-2L.JPG.PNG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
     "subcategoria": "Refresco"
-  },
-  {
-    "id": "cerveza-colonia-473cc-12-316",
-    "nombre": "Cerveza Colonia 473Cc*12",
-    "categoria": "Cerveza",
-    "precio": 479.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Otras Cervezas"
   },
   {
     "id": "petacas-mac-pay-317",
@@ -3197,7 +3185,7 @@
     "nombre": "Matutina Con Gas 2.5*6",
     "categoria": "Agua",
     "precio": 299.0,
-    "imagen": "",
+    "imagen": "images/Agua/Matutina-con-225.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -3209,7 +3197,7 @@
     "nombre": "Matutina Sin Gas 2.5*6",
     "categoria": "Agua",
     "precio": 299.0,
-    "imagen": "",
+    "imagen": "images/Agua/Matutina-sin-225.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -3227,18 +3215,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Bidon"
-  },
-  {
-    "id": "pack-matu-4-2-25-sin-gas-321",
-    "nombre": "Pack Matu *4 2.25 Sin Gas",
-    "categoria": "Agua",
-    "precio": 155.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Pack"
   },
   {
     "id": "cerveza-brahma-473cc-12-322",
@@ -3365,7 +3341,7 @@
     "nombre": "Alfajor Top *12",
     "categoria": "Alfajores",
     "precio": 345.0,
-    "imagen": "",
+    "imagen": "images/Alfajores/Alfajor-top-blanco-porte.JPG.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -3413,12 +3389,12 @@
     "nombre": "Yerba Silueta Ideal 500Gr",
     "categoria": "Yerba Mate",
     "precio": 116.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-silueta-ideal-500gr.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Yerba"
+    "subcategoria": "Silueta Ideal"
   },
   {
     "id": "gall-surtidas-dos-en-uno-400gr-341",
@@ -3473,12 +3449,12 @@
     "nombre": "Yerba Serena 1Kg",
     "categoria": "Yerba Mate",
     "precio": 199.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-serena-1Kg.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Yerba"
+    "subcategoria": "Canarias"
   },
   {
     "id": "harina-canuelas-verde-0000-1kg-350",
@@ -3629,7 +3605,7 @@
     "nombre": "Agua Vitale 625 Con Gas*6",
     "categoria": "Agua",
     "precio": 289.0,
-    "imagen": "",
+    "imagen": "images/Agua/Vitale-625-con.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -3641,7 +3617,7 @@
     "nombre": "Agua Vitale 625 Sin Gas *6",
     "categoria": "Agua",
     "precio": 289.0,
-    "imagen": "",
+    "imagen": "images/Agua/Vitale-625-sin.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -3689,19 +3665,19 @@
     "nombre": "Yerba Armiño Clasica 500Gr",
     "categoria": "Yerba Mate",
     "precio": 99.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-armiño-azul-500gr.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Yerba"
+    "subcategoria": "Armiño"
   },
   {
     "id": "nix-cola-2lt-6-372",
     "nombre": "Nix Cola 2Lt*6",
     "categoria": "Refrescos",
     "precio": 555.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-Coca-2L.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -4061,12 +4037,12 @@
     "nombre": "Yerba Armiño Compuesta 500Grs",
     "categoria": "Yerba Mate",
     "precio": 99.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-armiño-verde-500gr.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Yerba"
+    "subcategoria": "Armiño"
   },
   {
     "id": "yerba-canarias-5k-408",
@@ -4085,24 +4061,24 @@
     "nombre": "Yerba La Selva Naranja 500Grs",
     "categoria": "Yerba Mate",
     "precio": 112.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-la-selva-naranja.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Yerba"
+    "subcategoria": "La Selva"
   },
   {
     "id": "yerba-serena-100grs-410",
     "nombre": "Yerba Serena 100Grs",
     "categoria": "Yerba Mate",
     "precio": 25.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-serena-100gr.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Yerba"
+    "subcategoria": "Canarias"
   },
   {
     "id": "medallones-de-chocolate-rellenos-165grs-411",
@@ -4133,12 +4109,12 @@
     "nombre": "Yerba Armiño Suave 500Grs",
     "categoria": "Yerba Mate",
     "precio": 99.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-armiño-celeste-500gr.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Yerba"
+    "subcategoria": "Armiño"
   },
   {
     "id": "bracafe-120sobres-415",
@@ -4205,7 +4181,7 @@
     "nombre": "Alf. Portezuelo Triple Blanco*12",
     "categoria": "Alfajores",
     "precio": 339.0,
-    "imagen": "",
+    "imagen": "images/Alfajores/Alfajor-x3-blanco-porte.JPG.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -4215,26 +4191,26 @@
   {
     "id": "alf-portezuelo-choco-18-421",
     "nombre": "Alf. Portezuelo Choco*18",
-    "categoria": "Desayuno",
+    "categoria": "Alfajores",
     "precio": 365.0,
-    "imagen": "",
+    "imagen": "images/Alfajores/Alfajor-choco-clásico-porte.JPG.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Alf."
+    "subcategoria": "Portezuelo"
   },
   {
     "id": "alf-portezuelo-blanco-18-423",
     "nombre": "Alf. Portezuelo Blanco *18",
-    "categoria": "Desayuno",
+    "categoria": "Alfajores",
     "precio": 365.0,
-    "imagen": "",
+    "imagen": "images/Alfajores/Alfajor-blanco-clásico-porte.JPG.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Alf."
+    "subcategoria": "Portezuelo"
   },
   {
     "id": "vinagre-gamberoni-500ml-424",
@@ -4781,7 +4757,7 @@
     "nombre": "Nix Cola 500 *12",
     "categoria": "Refrescos",
     "precio": 399.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-Coca-500.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -4793,7 +4769,7 @@
     "nombre": "Nix Lima 500*12",
     "categoria": "Refrescos",
     "precio": 399.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-lima-500.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -4805,7 +4781,7 @@
     "nombre": "Nix Lima 2L*6",
     "categoria": "Refrescos",
     "precio": 555.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-lima-2L.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -4817,7 +4793,7 @@
     "nombre": "Nix Lima 2.5*6",
     "categoria": "Refrescos",
     "precio": 665.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-lima-25.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -4829,7 +4805,7 @@
     "nombre": "Nix Mandarina 500*12",
     "categoria": "Refrescos",
     "precio": 399.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-naranja-500.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -4841,7 +4817,7 @@
     "nombre": "Nix Mandarina 1L*6",
     "categoria": "Refrescos",
     "precio": 370.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-naranja-1L.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -4853,7 +4829,7 @@
     "nombre": "Nix Mandarina 2L*6",
     "categoria": "Refrescos",
     "precio": 555.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-naranja-2L.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -4865,7 +4841,7 @@
     "nombre": "Nix Mandarina 2.5*6",
     "categoria": "Refrescos",
     "precio": 665.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-naranja-25.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -4877,7 +4853,7 @@
     "nombre": "Nix Pomelo 500*12",
     "categoria": "Refrescos",
     "precio": 399.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-pomelo-500.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -4889,7 +4865,7 @@
     "nombre": "Nix Pomelo 1L*6",
     "categoria": "Refrescos",
     "precio": 370.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-pomelo-1L.jpg.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -4901,7 +4877,7 @@
     "nombre": "Nix Pomelo 2L*6",
     "categoria": "Refrescos",
     "precio": 555.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-pomelo-2L.jpg.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -4913,7 +4889,7 @@
     "nombre": "Nix Pomelo 2.5 *6",
     "categoria": "Refrescos",
     "precio": 665.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-pomelo-25.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -4925,7 +4901,7 @@
     "nombre": "Nix Guarana 500 *12",
     "categoria": "Refrescos",
     "precio": 399.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-guarana-500.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -4949,7 +4925,7 @@
     "nombre": "Nix Guarana 2.5 *6",
     "categoria": "Refrescos",
     "precio": 665.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-guarana-25.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -5033,7 +5009,7 @@
     "nombre": "Nix Cola 1Lt*6",
     "categoria": "Refrescos",
     "precio": 370.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-Coca-1L.jpg.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -5045,7 +5021,7 @@
     "nombre": "Nix Lima 1Lt*6",
     "categoria": "Refrescos",
     "precio": 370.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-lima-1L.jpg.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -5057,7 +5033,7 @@
     "nombre": "Nix Cola 2.5Lt*6",
     "categoria": "Refrescos",
     "precio": 665.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-Coca-25.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -5945,12 +5921,12 @@
     "nombre": "Yerba La Selva Nerviosos 500Gr",
     "categoria": "Yerba Mate",
     "precio": 114.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-la-selva-nerviosos-500gr.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Yerba"
+    "subcategoria": "La Selva"
   },
   {
     "id": "beldent-620",
@@ -6082,7 +6058,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Pomelo"
+    "subcategoria": "Paso De Los Toros"
   },
   {
     "id": "cereal-frutado-1kg-633",
@@ -6293,12 +6269,12 @@
     "nombre": "Cebadura El Cebador Funda*20",
     "categoria": "Yerba Mate",
     "precio": 265.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-cebador-70gr.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Yerba"
+    "subcategoria": "El Cebador"
   },
   {
     "id": "chupetin-acido-656",
@@ -6401,12 +6377,12 @@
     "nombre": "Pomelo Paso D Toros 1.5*6",
     "categoria": "Refrescos",
     "precio": 810.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Pepsi/Pomelo-15.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Pomelo"
+    "subcategoria": "Paso De Los Toros"
   },
   {
     "id": "toallitas-sym-8-suave-667",
@@ -6545,7 +6521,7 @@
     "nombre": "Nix Cola 2Lt*6 Zero",
     "categoria": "Refrescos",
     "precio": 555.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-Coca-25-SA.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -6611,18 +6587,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Palitos"
-  },
-  {
-    "id": "miirinda-1-5-691",
-    "nombre": "Miirinda 1.5",
-    "categoria": "Refrescos",
-    "precio": 635.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Miirinda"
   },
   {
     "id": "mirinda-1-5lt-6-692",
@@ -6917,7 +6881,7 @@
     "nombre": "Sara Roja 500Gr",
     "categoria": "Yerba Mate",
     "precio": 86.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-Sara-roja-500gr.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -6941,7 +6905,7 @@
     "nombre": "Alfajor Surprise *8 Rojo",
     "categoria": "Alfajores",
     "precio": 290.0,
-    "imagen": "",
+    "imagen": "images/Alfajores/Alfajor-surprice-rojo-puntaballena .JPG.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -7313,7 +7277,7 @@
     "nombre": "Alfajor Surprise *8 Negro",
     "categoria": "Alfajores",
     "precio": 290.0,
-    "imagen": "",
+    "imagen": "images/Alfajores/Alfajor-suprice-negro-puntaballena .JPG.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -7342,7 +7306,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Yerba"
+    "subcategoria": "El Cebador"
   },
   {
     "id": "vainilla-30ml-779",
@@ -7481,7 +7445,7 @@
     "nombre": "Refresco Limol Uva",
     "categoria": "Refrescos",
     "precio": 465.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Limol-uva-2L.JPG.PNG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -7853,12 +7817,12 @@
     "nombre": "Yerba La Selva Hepatico 500",
     "categoria": "Yerba Mate",
     "precio": 105.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-la-selva-hepatico.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Yerba"
+    "subcategoria": "La Selva"
   },
   {
     "id": "budines-portezuelo-relleno-839",
@@ -8630,10 +8594,10 @@
   },
   {
     "id": "alfajor-play-935",
-    "nombre": "Alfajor Play",
+    "nombre": "Alfajor Play Chocolate",
     "categoria": "Alfajores",
     "precio": 242.0,
-    "imagen": "",
+    "imagen": "images/Alfajores/Alfajor-play-choco-punta.JPG.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -8645,7 +8609,7 @@
     "nombre": "Alfajor Impacto*16",
     "categoria": "Alfajores",
     "precio": 219.0,
-    "imagen": "",
+    "imagen": "images/Alfajores/Alfajor-impacto-punta.JPG.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -9317,12 +9281,12 @@
     "nombre": "Yerba Cebador 500Gr",
     "categoria": "Yerba Mate",
     "precio": 89.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-cebador-500gr.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Yerba"
+    "subcategoria": "El Cebador"
   },
   {
     "id": "prestobarba-gris-12-1053",
@@ -10009,30 +9973,6 @@
     "subcategoria": "Whisky"
   },
   {
-    "id": "vitale-manzana-4-1137",
-    "nombre": "Vitale Manzana *4",
-    "categoria": "Agua",
-    "precio": 328.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Vitale"
-  },
-  {
-    "id": "vitale-4-pera-1140",
-    "nombre": "Vitale *4 Pera",
-    "categoria": "Agua",
-    "precio": 328.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Vitale"
-  },
-  {
     "id": "pastillas-freegels-12-frutilla-choco-1141",
     "nombre": "Pastillas Freegels *12 Frutilla Choco",
     "categoria": "Golosinas",
@@ -10541,12 +10481,12 @@
     "nombre": "Pomelo Paso D Toros 2.5Lt",
     "categoria": "Refrescos",
     "precio": 1049.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Pepsi/Pomelo-25.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Pomelo"
+    "subcategoria": "Paso De Los Toros"
   },
   {
     "id": "desodorante-rexona-hombre-1207",
@@ -11501,7 +11441,7 @@
     "nombre": "Agua Limol 2Lt",
     "categoria": "Agua",
     "precio": 220.0,
-    "imagen": "",
+    "imagen": "images/Agua/Agua-Limol-con-2L.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -12149,12 +12089,12 @@
     "nombre": "Paso D Toros 1.5*6 Tonica",
     "categoria": "Refrescos",
     "precio": 810.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Pepsi/Tónica-15.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Paso"
+    "subcategoria": "Paso De Los Toros"
   },
   {
     "id": "tirabuzon-al-huevo-500gr-1380",
@@ -14535,14 +14475,14 @@
   {
     "id": "alf-portezuelo-triple-merengue-12-1645",
     "nombre": "Alf.Portezuelo Triple Merengue*12",
-    "categoria": "Desayuno",
+    "categoria": "Alfajores",
     "precio": 339.0,
-    "imagen": "",
+    "imagen": "images/Alfajores/Alfajor-x3-merengue-porte.JPG.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Alf.portezuelo"
+    "subcategoria": "portezuelo"
   },
   {
     "id": "tallarin-punto-y-coma-500grs-1646",
@@ -14813,7 +14753,7 @@
     "nombre": "Yerba Sara Azul 1K Suave",
     "categoria": "Yerba Mate",
     "precio": 160.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-Sara-azul-1Kg.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -15915,86 +15855,74 @@
   {
     "id": "la-selva-activa-500-1774",
     "nombre": "La Selva Activa 500",
-    "categoria": "Otros",
+    "categoria": "Yerba Mate",
     "precio": 112.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-la-selva-enforma.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Selva"
+    "subcategoria": "La Selva"
   },
   {
     "id": "la-selva-gengibre-500-1775",
     "nombre": "La Selva Gengibre 500",
-    "categoria": "Otros",
+    "categoria": "Yerba Mate",
     "precio": 102.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Selva"
+    "subcategoria": "La Selva"
   },
   {
     "id": "la-selva-pomelo-500-1776",
     "nombre": "La Selva Pomelo 500",
-    "categoria": "Otros",
+    "categoria": "Yerba Mate",
     "precio": 112.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Selva"
+    "subcategoria": "La Selva"
   },
   {
     "id": "la-selva-colestel-500-1777",
     "nombre": "La Selva Colestel 500",
-    "categoria": "Desayuno",
+    "categoria": "Yerba Mate",
     "precio": 102.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Selva"
+    "subcategoria": "La Selva"
   },
   {
     "id": "la-selva-limon-500-1778",
     "nombre": "La Selva Limon 500",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Yerba Mate",
     "precio": 112.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-la-selva-limon.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Selva"
+    "subcategoria": "La Selva"
   },
   {
     "id": "la-selva-compuesta-500-1779",
     "nombre": "La Selva Compuesta 500",
-    "categoria": "Otros",
+    "categoria": "Yerba Mate",
     "precio": 102.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-la-selva-compuesta.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Selva"
-  },
-  {
-    "id": "energizante-speed-473cc-1780",
-    "nombre": "Energizante Speed 473Cc",
-    "categoria": "Desayuno",
-    "precio": 100.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Energizante"
+    "subcategoria": "La Selva"
   },
   {
     "id": "arroz-medio-grano-1kg-1781",
@@ -16385,12 +16313,12 @@
     "nombre": "Yerba Contigo 500 Gr",
     "categoria": "Yerba Mate",
     "precio": 95.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-contigo-500gr.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Yerba"
+    "subcategoria": "Contigo"
   },
   {
     "id": "jabon-gramby-3k-1821",
@@ -16971,14 +16899,14 @@
   {
     "id": "cebadura-contigo-70g-1869",
     "nombre": "Cebadura Contigo 70G",
-    "categoria": "Otros",
+    "categoria": "Yerba Mate",
     "precio": 19.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-contigo-500gr.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Cebadura"
+    "subcategoria": "Contigo"
   },
   {
     "id": "cerveza-stella-lata-473-6-1870",
@@ -17861,7 +17789,7 @@
     "nombre": "Nix Pomelo 2L*6 Zero",
     "categoria": "Refrescos",
     "precio": 555.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Nix/Nix-pomelo-25-SA.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -19047,14 +18975,14 @@
   {
     "id": "aceite-sarandi-5lt-2052",
     "nombre": "Aceite Sarandi 5Lt",
-    "categoria": "Desayuno",
+    "categoria": "Aceite",
     "precio": 465.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Aceite"
+    "subcategoria": "Sarandi 5L"
   },
   {
     "id": "dulce-de-leche-con-choco-350g-2053",
@@ -21157,18 +21085,6 @@
     "subcategoria": "Ph"
   },
   {
-    "id": "vitale-1750-unidad-2229",
-    "nombre": "Vitale 1750 Unidad",
-    "categoria": "Agua",
-    "precio": 35.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Vitale"
-  },
-  {
     "id": "cuerda-para-saltar-hw1046-2231",
     "nombre": "Cuerda Para Saltar Hw1046",
     "categoria": "Juguetes",
@@ -21983,18 +21899,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Otras Cervezas"
-  },
-  {
-    "id": "vitale-2305",
-    "nombre": "Vitale",
-    "categoria": "Agua",
-    "precio": 1.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Vitale"
   },
   {
     "id": "perfmador-textil-latini-250cc-2306",
@@ -22877,12 +22781,12 @@
     "nombre": "Yerba La Selva Nervioso 1K",
     "categoria": "Yerba Mate",
     "precio": 230.0,
-    "imagen": "",
+    "imagen": "images/Yerba/Yerba-la-selva-nervioso-1Kg.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Yerba"
+    "subcategoria": "La Selva"
   },
   {
     "id": "paraguitas-50-2386",
@@ -24505,18 +24409,6 @@
     "subcategoria": "Afeita"
   },
   {
-    "id": "pomelo-paso-d-toros-1-5-1-2523",
-    "nombre": "Pomelo Paso D Toros 1.5*1",
-    "categoria": "Refrescos",
-    "precio": 145.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Pomelo"
-  },
-  {
     "id": "repuesto-gillete-match-3-2-2524",
     "nombre": "Repuesto Gillete Match 3 *2",
     "categoria": "Desayuno",
@@ -24615,9 +24507,9 @@
   {
     "id": "mirinda-2-5-2532",
     "nombre": "Mirinda 2.5",
-    "categoria": "Otros",
+    "categoria": "Refrescos",
     "precio": 747.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Pepsi/Mirinda-25.jpg.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -28239,7 +28131,7 @@
   {
     "id": "portezuelo-oro-x18-granizado-2846",
     "nombre": "Portezuelo Oro X18 Granizado",
-    "categoria": "Desayuno",
+    "categoria": "Alfajores",
     "precio": 365.0,
     "imagen": "",
     "oferta": false,
@@ -28263,7 +28155,7 @@
   {
     "id": "portezuelo-mousse-x18-2848",
     "nombre": "Portezuelo Mousse X18",
-    "categoria": "Desayuno",
+    "categoria": "Alfajores",
     "precio": 365.0,
     "imagen": "",
     "oferta": false,
@@ -28275,7 +28167,7 @@
   {
     "id": "portezuelo-black-choco-x18-2849",
     "nombre": "Portezuelo Black Choco X18",
-    "categoria": "Desayuno",
+    "categoria": "Alfajores",
     "precio": 479.0,
     "imagen": "",
     "oferta": false,
@@ -28287,7 +28179,7 @@
   {
     "id": "portezuelo-black-blanco-x18-2850",
     "nombre": "Portezuelo Black Blanco X18",
-    "categoria": "Desayuno",
+    "categoria": "Alfajores",
     "precio": 440.0,
     "imagen": "",
     "oferta": false,
@@ -28493,7 +28385,7 @@
     "nombre": "7 Up Sin Azucar 1.5 X6",
     "categoria": "Refrescos",
     "precio": 720.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Pepsi/7up-15.jpg.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -28505,7 +28397,7 @@
     "nombre": "7 Up Sin Azucar 2.5L X6",
     "categoria": "Refrescos",
     "precio": 770.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Pepsi/7up-25.jpg.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -28529,7 +28421,7 @@
     "nombre": "Pepsi Lata X6 354Cc",
     "categoria": "Refrescos",
     "precio": 225.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Pepsi/Pepsi-lata.jpg.PNG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -28553,7 +28445,7 @@
     "nombre": "Pepsi Lata Black X6 354Cc",
     "categoria": "Refrescos",
     "precio": 225.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Pepsi/Pepsi-lata-black.jpg.PNG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -29321,7 +29213,7 @@
     "nombre": "Pomelo Paso 500Ml *12",
     "categoria": "Refrescos",
     "precio": 770.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Pepsi/Pomelo-500.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -29333,12 +29225,12 @@
     "nombre": "Tonica Paso 500Ml *12",
     "categoria": "Refrescos",
     "precio": 770.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Pepsi/Tónica-500.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Tonica"
+    "subcategoria": "Paso De Los Toros"
   },
   {
     "id": "coca-cola-1-5-1-2941",
@@ -29857,76 +29749,40 @@
     "subcategoria": "Mayonesa"
   },
   {
-    "id": "h20-citrus-1l-x6-2984",
+    "id": "h2O-citrus-1l-x6-2984",
     "nombre": "H20 Citrus 1L X6",
-    "categoria": "Otros",
+    "categoria": "Refrescos",
     "precio": 535.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Pepsi/H2O-cutrus-15.jpg.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "H20"
+    "subcategoria": "H2O"
   },
   {
     "id": "h20-naranchelo-1l-x6-2985",
-    "nombre": "H20 Naranchelo 1L X6",
-    "categoria": "Otros",
+    "nombre": "H2O Naranchelo 1L X6",
+    "categoria": "Refrescos",
     "precio": 525.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Pepsi/H2O-naranchelo-15.jpg.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "H20"
+    "subcategoria": "H2O"
   },
   {
     "id": "h20-limoneto-1l-x6-2986",
-    "nombre": "H20 Limoneto 1L X6",
-    "categoria": "Otros",
+    "nombre": "H2O Limoneto 1L X6",
+    "categoria": "Refrescos",
     "precio": 525.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Pepsi/H2O-limoneto-15.jpg.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "H20"
-  },
-  {
-    "id": "h2o-naranchelo-1l-x1-2987",
-    "nombre": "H2O Naranchelo 1L X1",
-    "categoria": "Otros",
-    "precio": 95.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "H2o"
-  },
-  {
-    "id": "h2o-citrus-1l-x1-2988",
-    "nombre": "H2O Citrus 1L X1",
-    "categoria": "Otros",
-    "precio": 95.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "H2o"
-  },
-  {
-    "id": "h2o-limoneto-1l-x1-2989",
-    "nombre": "H2O Limoneto 1L X1",
-    "categoria": "Otros",
-    "precio": 95.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "H2o"
+    "subcategoria": "H2O"
   },
   {
     "id": "petaca-vodka-history-2990",
@@ -31190,10 +31046,10 @@
   },
   {
     "id": "alfajor-play-chocolate-3098",
-    "nombre": "Alfajor Play Chocolate",
+    "nombre": "Alfajor Play Nieve",
     "categoria": "Alfajores",
     "precio": 242.0,
-    "imagen": "",
+    "imagen": "images/Alfajores/Alfajor-play-nieve-punta.JPG.jpg",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -33051,14 +32907,14 @@
   {
     "id": "alf-portezuelo-triple-mousse-3257",
     "nombre": "Alf. Portezuelo Triple Mousse",
-    "categoria": "Desayuno",
+    "categoria": "Alfajores",
     "precio": 339.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Alf."
+    "subcategoria": "Portezuelo"
   },
   {
     "id": "salus-2-25-sin-gas-3258",
@@ -33965,19 +33821,7 @@
     "nombre": "Pepsi 2L *6",
     "categoria": "Refrescos",
     "precio": 699.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Pepsi"
-  },
-  {
-    "id": "pepsi-2l-1-3336",
-    "nombre": "Pepsi 2L *1",
-    "categoria": "Refrescos",
-    "precio": 120.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Pepsi/Pepsi-2.jpg.PNG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -34235,18 +34079,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Dulce"
-  },
-  {
-    "id": "pepsi-lata-black-x1-354cc-3359",
-    "nombre": "Pepsi Lata Black X1 354Cc",
-    "categoria": "Refrescos",
-    "precio": 40.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Pepsi"
   },
   {
     "id": "flan-hornex-50gr-chocolate-3360",
@@ -35449,18 +35281,6 @@
     "subcategoria": "Detergente"
   },
   {
-    "id": "agua-vitale-625-con-gas-1-3463",
-    "nombre": "Agua Vitale 625 Con Gas*1",
-    "categoria": "Agua",
-    "precio": 50.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Agua"
-  },
-  {
     "id": "jagger-750cc-1-bally-1l-3464",
     "nombre": "Jagger 750Cc + 1 Bally 1L",
     "categoria": "Alcohol",
@@ -35470,7 +35290,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Jagger"
   },
   {
     "id": "coca-cola-zero-1-5-1-3465",
