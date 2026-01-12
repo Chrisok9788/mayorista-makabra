@@ -7393,18 +7393,6 @@
     "subcategoria": "Jabon"
   },
   {
-    "id": "saman-10kg-789",
-    "nombre": "Saman 10Kg",
-    "categoria": "Otros",
-    "precio": 500.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Saman"
-  },
-  {
     "id": "espirales-tax-10-791",
     "nombre": "Espirales Tax *10",
     "categoria": "Control de Plagas",
@@ -8235,7 +8223,7 @@
   {
     "id": "aceitunas-100g-c-carozo-888",
     "nombre": "Aceitunas 100G  C/Carozo",
-    "categoria": "Otros",
+    "categoria": "Almacén",
     "precio": 59.0,
     "imagen": "",
     "oferta": false,
@@ -12651,7 +12639,7 @@
   {
     "id": "aceitunas-1kg-1448",
     "nombre": "Aceitunas 1Kg",
-    "categoria": "Otros",
+    "categoria": "Almacén",
     "precio": 275.0,
     "imagen": "",
     "oferta": false,
@@ -14607,7 +14595,7 @@
   {
     "id": "aceitunas-s-carozo-180g-1664",
     "nombre": "Aceitunas S/Carozo 180G",
-    "categoria": "Otros",
+    "categoria": "Almacén",
     "precio": 59.0,
     "imagen": "",
     "oferta": false,
@@ -14619,43 +14607,31 @@
   {
     "id": "gall-maizena-350g-1665",
     "nombre": "Gall Maizena 350G",
-    "categoria": "Otros",
+    "categoria": "Galletas",
     "precio": 42.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Gall"
+    "subcategoria": "Galletas Maizena"
   },
   {
     "id": "merenguitos-100g-1666",
     "nombre": "Merenguitos 100G",
-    "categoria": "Otros",
+    "categoria": "Almacén",
     "precio": 43.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Merenguitos"
-  },
-  {
-    "id": "sprite-3lt-1-1667",
-    "nombre": "Sprite 3Lt *1",
-    "categoria": "Refrescos",
-    "precio": 220.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Sprite"
+    "subcategoria": "Merengues"
   },
   {
     "id": "guantes-magic-gloves-1669",
     "nombre": "Guantes Magic Gloves",
-    "categoria": "Desayuno",
+    "categoria": "Limpieza e Higiene",
     "precio": 45.0,
     "imagen": "",
     "oferta": false,
@@ -14689,78 +14665,6 @@
     "subcategoria": "Sara"
   },
   {
-    "id": "nix-500-unidad-1672",
-    "nombre": "Nix 500 Unidad",
-    "categoria": "Refrescos",
-    "precio": 39.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Nix"
-  },
-  {
-    "id": "nix-1lt-unidad-1673",
-    "nombre": "Nix 1Lt Unidad",
-    "categoria": "Refrescos",
-    "precio": 70.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Nix"
-  },
-  {
-    "id": "nix-2l-unidad-1674",
-    "nombre": "Nix 2L Unidad",
-    "categoria": "Refrescos",
-    "precio": 105.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Nix"
-  },
-  {
-    "id": "nix-2-5-unidad-1675",
-    "nombre": "Nix 2.5 Unidad",
-    "categoria": "Refrescos",
-    "precio": 128.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Nix"
-  },
-  {
-    "id": "agua-nix-unidad-2-litros-1676",
-    "nombre": "Agua Nix Unidad 2 Litros",
-    "categoria": "Agua",
-    "precio": 49.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Agua"
-  },
-  {
-    "id": "agua-nix-500-unidad-1677",
-    "nombre": "Agua Nix 500 Unidad",
-    "categoria": "Agua",
-    "precio": 39.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Agua"
-  },
-  {
     "id": "watts-200ml-unidad-1678",
     "nombre": "Watts 200Ml Unidad",
     "categoria": "Jugos",
@@ -14783,54 +14687,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Watts"
-  },
-  {
-    "id": "watts-1lt-unidad-1680",
-    "nombre": "Watts 1Lt Unidad",
-    "categoria": "Jugos",
-    "precio": 115.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Watts"
-  },
-  {
-    "id": "watts-1-5-lt-unidad-1681",
-    "nombre": "Watts 1.5 Lt Unidad",
-    "categoria": "Jugos",
-    "precio": 155.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Watts"
-  },
-  {
-    "id": "encendedor-1682",
-    "nombre": "Encendedor",
-    "categoria": "Otros",
-    "precio": 20.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Encendedor"
-  },
-  {
-    "id": "jugo-tang-1-1683",
-    "nombre": "Jugo Tang *1",
-    "categoria": "Jugos",
-    "precio": 20.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Jugo"
   },
   {
     "id": "jabon-bull-dog-2-pack-1684",
@@ -14857,30 +14713,6 @@
     "subcategoria": "Patricia"
   },
   {
-    "id": "harina-harinel-1kg-0-1687",
-    "nombre": "Harina Harinel 1Kg 0",
-    "categoria": "Harina",
-    "precio": 35.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Harina"
-  },
-  {
-    "id": "saint-germain-750cc-1688",
-    "nombre": "Saint Germain 750Cc",
-    "categoria": "Desayuno",
-    "precio": 145.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Saint"
-  },
-  {
     "id": "vino-10lts-promo-1689",
     "nombre": "Vino 10Lts Promo",
     "categoria": "Alcohol",
@@ -14895,7 +14727,7 @@
   {
     "id": "cartas-espanolas-50-1690",
     "nombre": "Cartas Españolas *50",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 26.0,
     "imagen": "",
     "oferta": false,
@@ -14931,26 +14763,26 @@
   {
     "id": "hurra-1-250-2-pack-1693",
     "nombre": "Hurra 1.250 *2 Pack",
-    "categoria": "Otros",
+    "categoria": "Limpieza e Higiene",
     "precio": 240.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Hurra"
+    "subcategoria": "Deterguente"
   },
   {
     "id": "pack-x-6-esponjas-acero-1694",
     "nombre": "Pack X 6 Esponjas Acero",
-    "categoria": "Otros",
+    "categoria": "Limpieza e Higiene",
     "precio": 60.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Pack"
+    "subcategoria": "Esponjas"
   },
   {
     "id": "helados-light-hornex-1696",
@@ -14977,52 +14809,16 @@
     "subcategoria": "Trofeo"
   },
   {
-    "id": "bolsa-pollo-20k-1698",
-    "nombre": "Bolsa Pollo 20K",
-    "categoria": "Ferretería y Hogar",
-    "precio": 2300.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "bolsas"
-  },
-  {
     "id": "mac-pay-950ml-1699",
     "nombre": "Mac Pay 950Ml",
-    "categoria": "Cuidados Personales",
+    "categoria": "Alcohol",
     "precio": 365.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Mac"
-  },
-  {
-    "id": "prestobarba-azul-1700",
-    "nombre": "Prestobarba Azul",
-    "categoria": "Otros",
-    "precio": 40.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Prestobarba"
-  },
-  {
-    "id": "barra-de-cereal-portezuelo-1701",
-    "nombre": "Barra De Cereal Portezuelo",
-    "categoria": "Desayuno",
-    "precio": 20.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Barra"
+    "subcategoria": "Whisky"
   },
   {
     "id": "roll-on-65g-garnier-1702",
@@ -15037,52 +14833,16 @@
     "subcategoria": "Roll"
   },
   {
-    "id": "bel-by-coco-24-1703",
-    "nombre": "Bel By Coco *24",
-    "categoria": "Otros",
-    "precio": 220.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Bel"
-  },
-  {
-    "id": "surtidas-solitas-400gr-1704",
-    "nombre": "Surtidas Solitas 400Gr",
-    "categoria": "Otros",
-    "precio": 78.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Surtidas"
-  },
-  {
-    "id": "moranguete-24-1705",
-    "nombre": "Moranguete *24",
-    "categoria": "Desayuno",
-    "precio": 220.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Moranguete"
-  },
-  {
     "id": "des-ambiente-jupiter-360ml-5-en-1-1707",
     "nombre": "Des Ambiente Jupiter  360Ml 5 En 1",
-    "categoria": "Desayuno",
+    "categoria": "Limpieza e Higiene",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Des"
+    "subcategoria": "Ambientador"
   },
   {
     "id": "tax-mata-cucarachas-y-aran-1708",
@@ -15099,7 +14859,7 @@
   {
     "id": "membrillo-4kg-retono-1710",
     "nombre": "Membrillo 4Kg Retoño",
-    "categoria": "Otros",
+    "categoria": "Dulces",
     "precio": 315.0,
     "imagen": "",
     "oferta": false,
@@ -15107,18 +14867,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Membrillo"
-  },
-  {
-    "id": "dulce-batata-350g-1711",
-    "nombre": "Dulce Batata 350G",
-    "categoria": "Golosinas",
-    "precio": 65.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Dulce"
   },
   {
     "id": "dulce-membrillo-350g-1712",
@@ -15130,7 +14878,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Dulce"
+    "subcategoria": "Membrillo"
   },
   {
     "id": "mermelada-durazno-250g-1713",
@@ -15169,30 +14917,6 @@
     "subcategoria": "Pepas"
   },
   {
-    "id": "mochi-frutillas-y-moji-30-1716",
-    "nombre": "Mochi Frutillas Y  Moji *30",
-    "categoria": "Otros",
-    "precio": 210.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Mochi"
-  },
-  {
-    "id": "mochi-hombre-arana-30-1717",
-    "nombre": "Mochi Hombre Araña*30",
-    "categoria": "Otros",
-    "precio": 210.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Mochi"
-  },
-  {
     "id": "cerveza-chopito-pilsen-12-1718",
     "nombre": "Cerveza Chopito Pilsen *12",
     "categoria": "Cerveza",
@@ -15203,18 +14927,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Pilsen"
-  },
-  {
-    "id": "huevitos-sorpresa-1719",
-    "nombre": "Huevitos  Sorpresa",
-    "categoria": "Otros",
-    "precio": 25.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Huevitos"
   },
   {
     "id": "trofeo-20-pimienta-1720",
@@ -15231,7 +14943,7 @@
   {
     "id": "pimba-10-jamon-1721",
     "nombre": "Pimba *10 Jamon",
-    "categoria": "Frescos",
+    "categoria": "Snacks",
     "precio": 130.0,
     "imagen": "",
     "oferta": false,
@@ -15243,7 +14955,7 @@
   {
     "id": "eucaliptus-60g-1722",
     "nombre": "Eucaliptus*60G",
-    "categoria": "Otros",
+    "categoria": "Golosinas",
     "precio": 16.0,
     "imagen": "",
     "oferta": false,
@@ -15263,30 +14975,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Mostaza"
-  },
-  {
-    "id": "gift-10-1724",
-    "nombre": "Gift *10",
-    "categoria": "Otros",
-    "precio": 620.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Gift"
-  },
-  {
-    "id": "deter-cristal-640ml-1725",
-    "nombre": "Deter Cristal 640Ml",
-    "categoria": "Desayuno",
-    "precio": 59.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Deter"
   },
   {
     "id": "dulce-de-leche-1k-1726",
@@ -15315,14 +15003,14 @@
   {
     "id": "ph-soul-16-rollos-1728",
     "nombre": "Ph Soul *16 Rollos",
-    "categoria": "Otros",
+    "categoria": "Higiene y Belleza",
     "precio": 110.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Ph"
+    "subcategoria": "Papel Higienico"
   },
   {
     "id": "mermelada-aurea-350g-1729",
@@ -15351,7 +15039,7 @@
   {
     "id": "dulce-de-leche-350g-aurea-1731",
     "nombre": "Dulce De Leche 350G Aurea",
-    "categoria": "Frescos",
+    "categoria": "Dulces",
     "precio": 73.0,
     "imagen": "",
     "oferta": false,
@@ -15363,7 +15051,7 @@
   {
     "id": "dulce-de-leche-aurea-250g-1732",
     "nombre": "Dulce De Leche Aurea 250G",
-    "categoria": "Frescos",
+    "categoria": "Dulces",
     "precio": 42.0,
     "imagen": "",
     "oferta": false,
@@ -15409,18 +15097,6 @@
     "subcategoria": "Surtidas"
   },
   {
-    "id": "salus-frute-1-5-1736",
-    "nombre": "Salus Frute 1.5",
-    "categoria": "Jugos",
-    "precio": 105.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Salus"
-  },
-  {
     "id": "limol-500ml-12-surtidas-1737",
     "nombre": "Limol 500Ml*12 Surtidas",
     "categoria": "Refrescos",
@@ -15433,21 +15109,9 @@
     "subcategoria": "Limol"
   },
   {
-    "id": "doritos-sweet-chili-82g-1738",
-    "nombre": "Doritos Sweet Chili 82G",
-    "categoria": "Snacks",
-    "precio": 121.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Doritos"
-  },
-  {
     "id": "porotos-garbanzos-340g-1739",
     "nombre": "Porotos Garbanzos 340G",
-    "categoria": "Otros",
+    "categoria": "Legumbres",
     "precio": 33.0,
     "imagen": "",
     "oferta": false,
@@ -15459,7 +15123,7 @@
   {
     "id": "lentejas-pontevedra-340g-1740",
     "nombre": "Lentejas Pontevedra 340G",
-    "categoria": "Desayuno",
+    "categoria": "Legumbres",
     "precio": 33.0,
     "imagen": "",
     "oferta": false,
@@ -15471,7 +15135,7 @@
   {
     "id": "porotos-alubia-pontev-340g-1741",
     "nombre": "Porotos Alubia Pontev 340G",
-    "categoria": "Desayuno",
+    "categoria": "Legumbres",
     "precio": 33.0,
     "imagen": "",
     "oferta": false,
@@ -15505,33 +15169,9 @@
     "subcategoria": "Toky"
   },
   {
-    "id": "conejo-38gr-1746",
-    "nombre": "Conejo 38Gr",
-    "categoria": "Otros",
-    "precio": 55.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Conejo"
-  },
-  {
-    "id": "conejos-95gr-1747",
-    "nombre": "Conejos 95Gr",
-    "categoria": "Otros",
-    "precio": 135.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Conejos"
-  },
-  {
     "id": "aguipel-16-60mt-1748",
     "nombre": "Aguipel 16*60Mt",
-    "categoria": "Otros",
+    "categoria": "Higiene y Belleza",
     "precio": 189.0,
     "imagen": "",
     "oferta": false,
@@ -15627,7 +15267,7 @@
   {
     "id": "talco-para-pies-amatista-80-gr-1758",
     "nombre": "Talco Para Pies Amatista 80 Gr",
-    "categoria": "Otros",
+    "categoria": "Cuidados Personales",
     "precio": 42.0,
     "imagen": "",
     "oferta": false,
@@ -15639,7 +15279,7 @@
   {
     "id": "garrapinada-delier-150-gr-1759",
     "nombre": "Garrapiñada Delier 150 Gr",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
@@ -15651,7 +15291,7 @@
   {
     "id": "maiz-pisingallo-delier-250-gr-1760",
     "nombre": "Maiz Pisingallo Delier 250 Gr",
-    "categoria": "Otros",
+    "categoria": "Legumbres",
     "precio": 40.0,
     "imagen": "",
     "oferta": false,
@@ -15687,7 +15327,7 @@
   {
     "id": "chimichurri-20g-delier-1767",
     "nombre": "Chimichurri 20G Delier",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 30.0,
     "imagen": "",
     "oferta": false,
@@ -15695,18 +15335,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Chimichurri"
-  },
-  {
-    "id": "renata-1768",
-    "nombre": "Renata",
-    "categoria": "Otros",
-    "precio": 1.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Renata"
   },
   {
     "id": "megarepa-harina-de-maiz-amarillo-1-kilo-1772",
@@ -15719,18 +15347,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Megarepa"
-  },
-  {
-    "id": "cerveza-china-330-6-1773",
-    "nombre": "Cerveza China 330*6",
-    "categoria": "Cerveza",
-    "precio": 250.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Otras Cervezas"
   },
   {
     "id": "la-selva-activa-500-1774",
@@ -15817,21 +15433,9 @@
     "subcategoria": "Arroz"
   },
   {
-    "id": "huevitos-sorpresa-disney-1784",
-    "nombre": "Huevitos  Sorpresa Disney",
-    "categoria": "Otros",
-    "precio": 30.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Huevitos"
-  },
-  {
     "id": "velas-blancas-50-1785",
     "nombre": "Velas Blancas *50",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 270.0,
     "imagen": "",
     "oferta": false,
@@ -15839,30 +15443,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Velas"
-  },
-  {
-    "id": "prestobarba-gris-1786",
-    "nombre": "Prestobarba Gris",
-    "categoria": "Otros",
-    "precio": 65.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Prestobarba"
-  },
-  {
-    "id": "rinde-dos-unidad-1787",
-    "nombre": "Rinde Dos * Unidad",
-    "categoria": "Otros",
-    "precio": 20.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Rinde"
   },
   {
     "id": "sopa-en-vaso-cheddar-1788",
@@ -15891,7 +15471,7 @@
   {
     "id": "bizochuelo-chocolate-delier-1790",
     "nombre": "Bizochuelo Chocolate Delier",
-    "categoria": "Desayuno",
+    "categoria": "Panadería",
     "precio": 165.0,
     "imagen": "",
     "oferta": false,
@@ -15939,7 +15519,7 @@
   {
     "id": "faina-puritas-250g-1796",
     "nombre": "Faina Puritas 250G",
-    "categoria": "Otros",
+    "categoria": "Harina",
     "precio": 55.0,
     "imagen": "",
     "oferta": false,
@@ -15963,7 +15543,7 @@
   {
     "id": "velas-rojas-50-1799",
     "nombre": "Velas Rojas *50",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 270.0,
     "imagen": "",
     "oferta": false,
@@ -15973,33 +15553,9 @@
     "subcategoria": "Velas"
   },
   {
-    "id": "error-factura-1800",
-    "nombre": "Error Factura",
-    "categoria": "Otros",
-    "precio": -995.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Error"
-  },
-  {
-    "id": "extra-centenario-2-1803",
-    "nombre": "Extra-Centenario*2",
-    "categoria": "Desayuno",
-    "precio": 55.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Extra-centenario*2"
-  },
-  {
     "id": "velas-10-1804",
     "nombre": "Velas *10",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 120.0,
     "imagen": "",
     "oferta": false,
@@ -16007,30 +15563,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Velas"
-  },
-  {
-    "id": "medio-gift-10-1805",
-    "nombre": "Medio Gift*10",
-    "categoria": "Otros",
-    "precio": 320.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Medio"
-  },
-  {
-    "id": "huggies-1806",
-    "nombre": "Huggies",
-    "categoria": "Otros",
-    "precio": 699.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Huggies"
   },
   {
     "id": "pan-tortuga-6-1807",
@@ -16042,7 +15574,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Pan"
+    "subcategoria": "Pan Tortuga"
   },
   {
     "id": "bolsas-camisetas-1808",
@@ -16055,30 +15587,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "bolsas"
-  },
-  {
-    "id": "cerv-cool-12-1809",
-    "nombre": "Cerv Cool *12",
-    "categoria": "Otros",
-    "precio": 440.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Cerv"
-  },
-  {
-    "id": "pantene-promo-shampoo-270ml-1810",
-    "nombre": "Pantene Promo Shampoo 270Ml",
-    "categoria": "Cuidados Personales",
-    "precio": 100.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Pantene"
   },
   {
     "id": "harina-0-kg-1811",
@@ -16143,7 +15651,7 @@
   {
     "id": "cereal-azucarado-200g-puritas-1816",
     "nombre": "Cereal Azucarado 200G Puritas",
-    "categoria": "Dulces",
+    "categoria": "Desayuno",
     "precio": 52.0,
     "imagen": "",
     "oferta": false,
@@ -16153,21 +15661,9 @@
     "subcategoria": "Cereal"
   },
   {
-    "id": "vizzio-mani-165-grs-1817",
-    "nombre": "Vizzio Mani 165 Grs",
-    "categoria": "Otros",
-    "precio": 95.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Vizzio"
-  },
-  {
     "id": "pate-lengua-1818",
     "nombre": "Pate Lengua",
-    "categoria": "Desayuno",
+    "categoria": "Frescos",
     "precio": 119.0,
     "imagen": "",
     "oferta": false,
@@ -16213,33 +15709,9 @@
     "subcategoria": "Jabon"
   },
   {
-    "id": "maquinita-rosa-triple-hoja-1822",
-    "nombre": "Maquinita Rosa Triple Hoja",
-    "categoria": "Otros",
-    "precio": 35.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Maquinita"
-  },
-  {
-    "id": "spaguetti-germani-500g-1823",
-    "nombre": "Spaguetti Germani 500G",
-    "categoria": "Otros",
-    "precio": 31.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Spaguetti"
-  },
-  {
     "id": "ph-clarys-12rollos-30m-1824",
     "nombre": "Ph Clarys  12Rollos*30M",
-    "categoria": "Otros",
+    "categoria": "Higiene y Belleza",
     "precio": 99.0,
     "imagen": "",
     "oferta": false,
@@ -16251,14 +15723,14 @@
   {
     "id": "pack-sedal-300-190-1825",
     "nombre": "Pack Sedal 300+190",
-    "categoria": "Otros",
+    "categoria": "Cuidados Personales",
     "precio": 250.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Pack"
+    "subcategoria": "Sedal"
   },
   {
     "id": "desodorante-dove-roll-on-50-ml-1826",
@@ -16275,7 +15747,7 @@
   {
     "id": "mani-japones-mendozitos-70g-1827",
     "nombre": "Mani Japones Mendozitos 70G",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 19.0,
     "imagen": "",
     "oferta": false,
@@ -16285,21 +15757,9 @@
     "subcategoria": "Mani"
   },
   {
-    "id": "palitos-buby-60g-1-1828",
-    "nombre": "Palitos Buby 60G *1",
-    "categoria": "Otros",
-    "precio": 13.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Palitos"
-  },
-  {
     "id": "inamora-chico-carton-1829",
     "nombre": "Inamora Chico Carton",
-    "categoria": "Otros",
+    "categoria": "Cigarros y Tabaco",
     "precio": 1050.0,
     "imagen": "",
     "oferta": false,
@@ -16311,7 +15771,7 @@
   {
     "id": "inamora-grande-carton-1830",
     "nombre": "Inamora Grande Carton",
-    "categoria": "Otros",
+    "categoria": "Cigarros y Tabaco",
     "precio": 2100.0,
     "imagen": "",
     "oferta": false,
@@ -16321,33 +15781,9 @@
     "subcategoria": "Inamora"
   },
   {
-    "id": "cepita-manzana-995ml-1831",
-    "nombre": "Cepita Manzana 995Ml",
-    "categoria": "Frutas y Verduras",
-    "precio": 70.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Cepita"
-  },
-  {
-    "id": "stella-lata-473-12-1832",
-    "nombre": "Stella Lata 473*12",
-    "categoria": "Desayuno",
-    "precio": 750.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Stella"
-  },
-  {
     "id": "pate-oderich-100gr-1833",
     "nombre": "Pate Oderich 100Gr",
-    "categoria": "Desayuno",
+    "categoria": "Enlatados",
     "precio": 43.0,
     "imagen": "",
     "oferta": false,
@@ -16369,21 +15805,9 @@
     "subcategoria": "Dulce"
   },
   {
-    "id": "harina-0000-florida-1835",
-    "nombre": "Harina 0000 Florida",
-    "categoria": "Harina",
-    "precio": 38.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Harina"
-  },
-  {
     "id": "pastillero-brazalete-24-1836",
     "nombre": "Pastillero Brazalete*24",
-    "categoria": "Desayuno",
+    "categoria": "Golosinas",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
@@ -16395,7 +15819,7 @@
   {
     "id": "chicle-en-latas-30-1837",
     "nombre": "Chicle En Latas *30",
-    "categoria": "Otros",
+    "categoria": "Golosinas",
     "precio": 259.0,
     "imagen": "",
     "oferta": false,
@@ -16407,7 +15831,7 @@
   {
     "id": "paleta-con-explosivo-30-1838",
     "nombre": "Paleta Con Explosivo*30",
-    "categoria": "Otros",
+    "categoria": "Golosinas",
     "precio": 242.0,
     "imagen": "",
     "oferta": false,
@@ -16443,7 +15867,7 @@
   {
     "id": "ph-sulino-16-30mts-1841",
     "nombre": "Ph Sulino 16*30Mts",
-    "categoria": "Otros",
+    "categoria": "Higiene y Belleza",
     "precio": 120.0,
     "imagen": "",
     "oferta": false,
@@ -16455,7 +15879,7 @@
   {
     "id": "ph-sulino-12-30-mt-1842",
     "nombre": "Ph Sulino 12*30 Mt",
-    "categoria": "Otros",
+    "categoria": "Higiene y Belleza",
     "precio": 88.0,
     "imagen": "",
     "oferta": false,
@@ -16479,7 +15903,7 @@
   {
     "id": "molino-frutilla-50-1844",
     "nombre": "Molino Frutilla *50",
-    "categoria": "Otros",
+    "categoria": "Golosinas",
     "precio": 339.0,
     "imagen": "",
     "oferta": false,
@@ -16503,7 +15927,7 @@
   {
     "id": "velas-verdes-50-1846",
     "nombre": "Velas Verdes *50",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 270.0,
     "imagen": "",
     "oferta": false,
@@ -16551,14 +15975,14 @@
   {
     "id": "mix-pickles-400g-1850",
     "nombre": "Mix Pickles 400G",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 66.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Mix"
+    "subcategoria": "Pickles"
   },
   {
     "id": "morron-al-vinagre-400g-1851",
@@ -16623,7 +16047,7 @@
   {
     "id": "nota-de-pedido-1856",
     "nombre": "Nota De Pedido",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 17.0,
     "imagen": "",
     "oferta": false,
@@ -16671,7 +16095,7 @@
   {
     "id": "bomboneras-walkers-120g-1860",
     "nombre": "Bomboneras Walkers 120G",
-    "categoria": "Otros",
+    "categoria": "Golosinas",
     "precio": 99.0,
     "imagen": "",
     "oferta": false,
@@ -16683,7 +16107,7 @@
   {
     "id": "galleta-malteada-redonda-1861",
     "nombre": "Galleta Malteada Redonda",
-    "categoria": "Desayuno",
+    "categoria": "Galletas",
     "precio": 55.0,
     "imagen": "",
     "oferta": false,
@@ -16691,18 +16115,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Galleta"
-  },
-  {
-    "id": "copos-maiz-150-gr-tostex-1862",
-    "nombre": "Copos Maiz 150 Gr Tostex",
-    "categoria": "Desayuno",
-    "precio": 30.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Copos"
   },
   {
     "id": "felpita-maxi-rollo-servilleta-200-1863",
@@ -16803,7 +16215,7 @@
   {
     "id": "galleta-malteada-cuadrada-1871",
     "nombre": "Galleta Malteada Cuadrada",
-    "categoria": "Desayuno",
+    "categoria": "Galletas",
     "precio": 55.0,
     "imagen": "",
     "oferta": false,
@@ -16815,7 +16227,7 @@
   {
     "id": "galleta-malteada-infladitas-1872",
     "nombre": "Galleta Malteada Infladitas",
-    "categoria": "Desayuno",
+    "categoria": "Galletas",
     "precio": 55.0,
     "imagen": "",
     "oferta": false,
@@ -16827,7 +16239,7 @@
   {
     "id": "ph-economico-4-funda-1873",
     "nombre": "Ph Economico*4 Funda",
-    "categoria": "Otros",
+    "categoria": "Higiene y Belleza",
     "precio": 480.0,
     "imagen": "",
     "oferta": false,
@@ -16851,7 +16263,7 @@
   {
     "id": "ojito-mixto-x15-1877",
     "nombre": "Ojito Mixto X15",
-    "categoria": "Otros",
+    "categoria": "Panadería",
     "precio": 110.0,
     "imagen": "",
     "oferta": false,
@@ -16875,7 +16287,7 @@
   {
     "id": "suavizante-conejo-90ml-1879",
     "nombre": "Suavizante Conejo 90Ml",
-    "categoria": "Desayuno",
+    "categoria": "Cuidados Personales",
     "precio": 26.0,
     "imagen": "",
     "oferta": false,
@@ -16899,7 +16311,7 @@
   {
     "id": "film-28-15m-1881",
     "nombre": "Film 28*15M",
-    "categoria": "Otros",
+    "categoria": "Almacén",
     "precio": 48.0,
     "imagen": "",
     "oferta": false,
@@ -16923,7 +16335,7 @@
   {
     "id": "aceitunas-gibur-rodajas-250g-1883",
     "nombre": "Aceitunas Gibur Rodajas 250G",
-    "categoria": "Otros",
+    "categoria": "Almacén",
     "precio": 59.0,
     "imagen": "",
     "oferta": false,
@@ -16935,7 +16347,7 @@
   {
     "id": "lentejon-1k-1884",
     "nombre": "Lentejon 1K",
-    "categoria": "Desayuno",
+    "categoria": "Legumbres",
     "precio": 129.0,
     "imagen": "",
     "oferta": false,
@@ -16959,7 +16371,7 @@
   {
     "id": "palillo-plastico-12-1886",
     "nombre": "Palillo Plastico *12",
-    "categoria": "Otros",
+    "categoria": "Almacén",
     "precio": 45.0,
     "imagen": "",
     "oferta": false,
@@ -17019,7 +16431,7 @@
   {
     "id": "vainilla-delier-60ml-1891",
     "nombre": "Vainilla Delier 60Ml",
-    "categoria": "Otros",
+    "categoria": "Almacén",
     "precio": 68.0,
     "imagen": "",
     "oferta": false,
@@ -17043,7 +16455,7 @@
   {
     "id": "velas-de-color-50-1893",
     "nombre": "Velas De Color *50",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 279.0,
     "imagen": "",
     "oferta": false,
@@ -17055,7 +16467,7 @@
   {
     "id": "lustra-muebles-premio-1894",
     "nombre": "Lustra Muebles Premio",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 169.0,
     "imagen": "",
     "oferta": false,
@@ -17067,7 +16479,7 @@
   {
     "id": "odex-crema-900ml-1895",
     "nombre": "Odex Crema 900Ml",
-    "categoria": "Lácteos",
+    "categoria": "Ferretería y Hogar",
     "precio": 93.0,
     "imagen": "",
     "oferta": false,
@@ -17099,18 +16511,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Papel Higiénico"
-  },
-  {
-    "id": "buby-24grs-x1-1898",
-    "nombre": "Buby 24Grs X1",
-    "categoria": "Otros",
-    "precio": 11.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Buby"
   },
   {
     "id": "maxine-perro-adulto-21k-1899",
@@ -18914,15 +18314,15 @@
   },
   {
     "id": "saman-parboiled-500g-2057",
-    "nombre": "Saman Parboiled 500G",
-    "categoria": "Otros",
+    "nombre": "Arroz Saman Parboiled 500G",
+    "categoria": "Almacén",
     "precio": 37.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Saman"
+    "subcategoria": "Arroz"
   },
   {
     "id": "arroz-chef-5k-2058",
@@ -21447,7 +20847,7 @@
   {
     "id": "aceitunas-vanoli-80g-2275",
     "nombre": "Aceitunas Vanoli 80G",
-    "categoria": "Otros",
+    "categoria": "Almacén",
     "precio": 40.0,
     "imagen": "",
     "oferta": false,
@@ -21879,7 +21279,7 @@
   {
     "id": "aceite-fritador-saman-5-litros-2320",
     "nombre": "Aceite Fritador Saman 5 Litros",
-    "categoria": "Desayuno",
+    "categoria": "Aceite",
     "precio": 605.0,
     "imagen": "",
     "oferta": false,
@@ -21899,30 +21299,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Sal"
-  },
-  {
-    "id": "coca-cola-2322",
-    "nombre": "Coca Cola",
-    "categoria": "Refrescos",
-    "precio": 1129.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Coca Cola"
-  },
-  {
-    "id": "lmol-lima-2323",
-    "nombre": "Lmol Lima",
-    "categoria": "Otros",
-    "precio": 465.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Lmol"
   },
   {
     "id": "ecole-unidad-2324",
@@ -21949,21 +21325,9 @@
     "subcategoria": "Globo"
   },
   {
-    "id": "lanza-cohetes-2326",
-    "nombre": "Lanza Cohetes",
-    "categoria": "Desayuno",
-    "precio": 119.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Lanza"
-  },
-  {
     "id": "lanzador-de-cohetes-2327",
     "nombre": "Lanzador De Cohetes",
-    "categoria": "Desayuno",
+    "categoria": "Juguetes",
     "precio": 119.0,
     "imagen": "",
     "oferta": false,
@@ -21975,14 +21339,14 @@
   {
     "id": "hot-dog-malvaviscos-2328",
     "nombre": "Hot Dog Malvaviscos",
-    "categoria": "Otros",
+    "categoria": "Golosinas",
     "precio": 13.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Hot"
+    "subcategoria": "Malvaviscos"
   },
   {
     "id": "caramelo-spray-2329",
@@ -21999,7 +21363,7 @@
   {
     "id": "finger-pop-2330",
     "nombre": "Finger Pop",
-    "categoria": "Otros",
+    "categoria": "Golosinas",
     "precio": 12.0,
     "imagen": "",
     "oferta": false,
@@ -22011,7 +21375,7 @@
   {
     "id": "manteca-con-sal-conaprole-200g-2331",
     "nombre": "Manteca Con Sal Conaprole 200G",
-    "categoria": "Desayuno",
+    "categoria": "Frescos",
     "precio": 92.0,
     "imagen": "",
     "oferta": false,
@@ -22023,7 +21387,7 @@
   {
     "id": "manteca-sin-sal-200g-conaprole-2332",
     "nombre": "Manteca Sin Sal 200G Conaprole",
-    "categoria": "Desayuno",
+    "categoria": "Frescos",
     "precio": 92.0,
     "imagen": "",
     "oferta": false,
@@ -22031,18 +21395,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Manteca"
-  },
-  {
-    "id": "nix-unidad-2-litros-2333",
-    "nombre": "Nix Unidad 2 Litros",
-    "categoria": "Refrescos",
-    "precio": 95.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Nix"
   },
   {
     "id": "te-saint-1kg-2334",
@@ -22071,31 +21423,31 @@
   {
     "id": "set-2-tablas-cuchilla-regalo-2336",
     "nombre": "Set *2 Tablas +Cuchilla Regalo",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 125.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Set"
+    "subcategoria": "Kit Asador"
   },
   {
     "id": "tapon-compatible-stanley-1l-2337",
     "nombre": "Tapon Compatible Stanley 1L",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 99.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Tapon"
+    "subcategoria": "Termo"
   },
   {
     "id": "termo-doble-acero-con-tapon-y-agarre-2338",
     "nombre": "Termo Doble Acero Con Tapon Y Agarre",
-    "categoria": "Desayuno",
+    "categoria": "Ferretería y Hogar",
     "precio": 415.0,
     "imagen": "",
     "oferta": false,
@@ -22107,7 +21459,7 @@
   {
     "id": "termo-doble-acero-1l-con-tapon-2339",
     "nombre": "Termo Doble Acero 1L Con Tapon",
-    "categoria": "Desayuno",
+    "categoria": "Ferretería y Hogar",
     "precio": 399.0,
     "imagen": "",
     "oferta": false,
@@ -22119,19 +21471,19 @@
   {
     "id": "kit-asador-3pcs-2340",
     "nombre": "Kit Asador 3Pcs",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 279.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Kit"
+    "subcategoria": "Kit Asador"
   },
   {
     "id": "set-4-vasos-plasticos-colores-18cm-2341",
     "nombre": "Set 4 Vasos Plasticos Colores 18Cm",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 59.0,
     "imagen": "",
     "oferta": false,
@@ -22143,7 +21495,7 @@
   {
     "id": "set-2-condimenteros-22cm-2342",
     "nombre": "Set *2 Condimenteros 22Cm",
-    "categoria": "Desayuno",
+    "categoria": "Ferretería y Hogar",
     "precio": 69.0,
     "imagen": "",
     "oferta": false,
@@ -22155,19 +21507,19 @@
   {
     "id": "pala-para-torta-en-acero-2343",
     "nombre": "Pala Para Torta En Acero",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 69.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Pala"
+    "subcategoria": "Pala Para Torta"
   },
   {
     "id": "jarras-tumbler-1-2l-2344",
     "nombre": "Jarras Tumbler 1.2L",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 499.0,
     "imagen": "",
     "oferta": false,
@@ -22179,7 +21531,7 @@
   {
     "id": "escurreplatos-de-colores-2345",
     "nombre": "Escurreplatos De Colores",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 229.0,
     "imagen": "",
     "oferta": false,
@@ -22191,31 +21543,31 @@
   {
     "id": "set-3-tapers-0-6-1-1-5l-2346",
     "nombre": "Set *3 Tapers 0.6+1+1.5L",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 145.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Set"
+    "subcategoria": "Tapers"
   },
   {
     "id": "arbol-navidad-60cm-50-ramas-2347",
     "nombre": "Arbol Navidad 60Cm 50 Ramas",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 94.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Arbol"
+    "subcategoria": "Navidad"
   },
   {
     "id": "bombilla-acero-inox-2348",
     "nombre": "Bombilla Acero Inox",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 270.0,
     "imagen": "",
     "oferta": false,
@@ -22239,7 +21591,7 @@
   {
     "id": "twistos-155g-2350",
     "nombre": "Twistos 155G",
-    "categoria": "Otros",
+    "categoria": "Snacks",
     "precio": 119.0,
     "imagen": "",
     "oferta": false,
@@ -22347,7 +21699,7 @@
   {
     "id": "velas-blancas-y-rojas-50-2360",
     "nombre": "Velas Blancas  Y Rojas *50",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 279.0,
     "imagen": "",
     "oferta": false,
@@ -22431,7 +21783,7 @@
   {
     "id": "manteca-sal-conaprole-2368",
     "nombre": "Manteca Sal Conaprole",
-    "categoria": "Desayuno",
+    "categoria": "Frescos",
     "precio": 92.0,
     "imagen": "",
     "oferta": false,
@@ -22443,7 +21795,7 @@
   {
     "id": "manteca-200g-conaprole-2369",
     "nombre": "Manteca 200G Conaprole",
-    "categoria": "Desayuno",
+    "categoria": "Frescos",
     "precio": 92.0,
     "imagen": "",
     "oferta": false,
@@ -22455,7 +21807,7 @@
   {
     "id": "skala-tratamiento-1k-2370",
     "nombre": "Skala Tratamiento 1K",
-    "categoria": "Otros",
+    "categoria": "Cuidados Personales",
     "precio": 159.0,
     "imagen": "",
     "oferta": false,
@@ -22491,14 +21843,14 @@
   {
     "id": "deter-sapolio-5l-2373",
     "nombre": "Deter Sapolio 5L",
-    "categoria": "Desayuno",
+    "categoria": "Higiene y Belleza",
     "precio": 155.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Deter"
+    "subcategoria": "Deterguente"
   },
   {
     "id": "jabon-liquido-prisma-3l-2374",
@@ -22515,31 +21867,31 @@
   {
     "id": "deter-sapolio-1-250-2375",
     "nombre": "Deter Sapolio 1.250",
-    "categoria": "Desayuno",
+    "categoria": "Higiene y Belleza",
     "precio": 79.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Deter"
+    "subcategoria": "Deterguente"
   },
   {
     "id": "deter-sapolio-500ml-concentrado-2376",
     "nombre": "Deter Sapolio 500Ml Concentrado",
-    "categoria": "Desayuno",
+    "categoria": "Higiene y Belleza",
     "precio": 53.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Deter"
+    "subcategoria": "Deterguente"
   },
   {
     "id": "pack-des-ambiente-glade-2-2377",
     "nombre": "Pack Des Ambiente Glade *2",
-    "categoria": "Desayuno",
+    "categoria": "Higiene y Belleza",
     "precio": 299.0,
     "imagen": "",
     "oferta": false,
@@ -22551,20 +21903,8 @@
   {
     "id": "huevos-de-futbol-cristal-12-2378",
     "nombre": "Huevos De Futbol Cristal *12",
-    "categoria": "Otros",
+    "categoria": "Golosinas",
     "precio": 530.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Huevos"
-  },
-  {
-    "id": "huevos-cristal-futbol-1-2379",
-    "nombre": "Huevos Cristal Futbol *1",
-    "categoria": "Otros",
-    "precio": 52.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
@@ -22575,20 +21915,8 @@
   {
     "id": "huevo-cristal-pony-12-2380",
     "nombre": "Huevo Cristal Pony *12",
-    "categoria": "Otros",
+    "categoria": "Golosinas",
     "precio": 530.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Huevo"
-  },
-  {
-    "id": "huevos-cristal-pony-1-2381",
-    "nombre": "Huevos Cristal Pony *1",
-    "categoria": "Otros",
-    "precio": 52.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
@@ -22647,7 +21975,7 @@
   {
     "id": "paraguitas-50-2386",
     "nombre": "Paraguitas *50",
-    "categoria": "Otros",
+    "categoria": "Golosinas",
     "precio": 180.0,
     "imagen": "",
     "oferta": false,
@@ -22659,7 +21987,7 @@
   {
     "id": "aceitunas-las-abundancia-300g-s-c-2387",
     "nombre": "Aceitunas Las Abundancia 300G S/C",
-    "categoria": "Otros",
+    "categoria": "Almacén",
     "precio": 87.0,
     "imagen": "",
     "oferta": false,
@@ -23415,7 +22743,7 @@
   {
     "id": "merengues-300g-2451",
     "nombre": "Merengues 300G",
-    "categoria": "Otros",
+    "categoria": "Almacén",
     "precio": 189.0,
     "imagen": "",
     "oferta": false,
@@ -34455,7 +33783,7 @@
   {
     "id": "aceitunas-verdes-rio-200g-3410",
     "nombre": "Aceitunas Verdes Rio 200G",
-    "categoria": "Otros",
+    "categoria": "Almacén",
     "precio": 49.0,
     "imagen": "",
     "oferta": false,
