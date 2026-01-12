@@ -5845,18 +5845,6 @@
     "subcategoria": "Jugo"
   },
   {
-    "id": "pepsi-1-5-6-610",
-    "nombre": "Pepsi 1.5 *6",
-    "categoria": "Refrescos",
-    "precio": 690.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Pepsi"
-  },
-  {
     "id": "rinde-dos-20-mandarina-612",
     "nombre": "Rinde Dos *20 Mandarina",
     "categoria": "Jugos",
@@ -6053,7 +6041,7 @@
     "nombre": "Pomelo Paso De Los Toros 500*12",
     "categoria": "Refrescos",
     "precio": 810.0,
-    "imagen": "",
+    "imagen": "images/Refresco/Limol/Pepsi/Pomelo-500.jpg.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -6167,18 +6155,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Rinde 2"
-  },
-  {
-    "id": "schweppwes-pomelo-3lt-4-645",
-    "nombre": "Schweppwes Pomelo 3Lt*4",
-    "categoria": "Refrescos",
-    "precio": 780.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Otras Gaseosas"
   },
   {
     "id": "nevada-chico-carton-646",
@@ -10165,18 +10141,6 @@
     "subcategoria": "Lampara"
   },
   {
-    "id": "coca-lata-marvel-6-473cc-1169",
-    "nombre": "Coca Lata Marvel*6 473Cc",
-    "categoria": "Refrescos",
-    "precio": 420.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Coca"
-  },
-  {
     "id": "queso-rallado-fino-1kg-1171",
     "nombre": "Queso Rallado Fino 1Kg",
     "categoria": "Lácteos",
@@ -10403,18 +10367,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Buonapasta"
-  },
-  {
-    "id": "pepsi-2lt-6-1197",
-    "nombre": "Pepsi 2Lt *6",
-    "categoria": "Refrescos",
-    "precio": 695.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Pepsi"
   },
   {
     "id": "whisky-jameson-1198",
@@ -11317,18 +11269,6 @@
     "subcategoria": "Monster"
   },
   {
-    "id": "coca-lata-oreo-6-1303",
-    "nombre": "Coca Lata Oreo *6",
-    "categoria": "Refrescos",
-    "precio": 420.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Otras Gaseosas"
-  },
-  {
     "id": "helados-hornex-vainilla-1304",
     "nombre": "Helados Hornex Vainilla",
     "categoria": "Congelados",
@@ -11687,18 +11627,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Fanta"
-  },
-  {
-    "id": "coca-cola-zero-2lt-9-combinado-1340",
-    "nombre": "Coca Cola Zero 2Lt  *9 Combinado",
-    "categoria": "Refrescos",
-    "precio": 1099.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Coca Cola"
   },
   {
     "id": "insuperable-400ml-liquido-1341",
@@ -15733,54 +15661,6 @@
     "subcategoria": "Maiz"
   },
   {
-    "id": "refrescos-nix-500-unidad-1761",
-    "nombre": "Refrescos Nix 500 Unidad",
-    "categoria": "Refrescos",
-    "precio": 39.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Refrescos"
-  },
-  {
-    "id": "refrescos-nix-1lt-1762",
-    "nombre": "Refrescos Nix 1Lt",
-    "categoria": "Refrescos",
-    "precio": 72.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Refrescos"
-  },
-  {
-    "id": "refrescos-nix-2l-1763",
-    "nombre": "Refrescos Nix 2L",
-    "categoria": "Refrescos",
-    "precio": 108.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Refrescos"
-  },
-  {
-    "id": "refrescos-nix-2-5-1764",
-    "nombre": "Refrescos Nix 2.5",
-    "categoria": "Refrescos",
-    "precio": 130.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Refrescos"
-  },
-  {
     "id": "azucar-impalpable-250g-delier-1765",
     "nombre": "Azucar Impalpable 250G Delier",
     "categoria": "Dulces",
@@ -17818,7 +17698,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Lata"
+    "subcategoria": "Pepsi"
   },
   {
     "id": "cafetera-sonifer-1-250ml-1949",
@@ -19189,18 +19069,6 @@
     "subcategoria": "Colorante"
   },
   {
-    "id": "pomelo-paso-d-toros-2lt-2070",
-    "nombre": "Pomelo Paso D Toros 2Lt",
-    "categoria": "Refrescos",
-    "precio": 1049.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Pomelo"
-  },
-  {
     "id": "colet-250ml-conaprole-2071",
     "nombre": "Colet 250Ml Conaprole",
     "categoria": "Frescos",
@@ -19403,18 +19271,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Cepita"
-  },
-  {
-    "id": "pomelo-paso-d-toros-2-5lt-1-2089",
-    "nombre": "Pomelo Paso D Toros 2.5Lt*1",
-    "categoria": "Refrescos",
-    "precio": 180.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Pomelo"
   },
   {
     "id": "sidra-el-aguante-1-5-2090",
@@ -29089,18 +28945,6 @@
     "subcategoria": "Cocardas"
   },
   {
-    "id": "paso-d-toros-1-5-1-tonica-2926",
-    "nombre": "Paso D Toros 1.5*1 Tonica",
-    "categoria": "Refrescos",
-    "precio": 175.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Paso"
-  },
-  {
     "id": "chirimbolos-12-disenos-2927",
     "nombre": "Chirimbolos *12 Diseños",
     "categoria": "Otros",
@@ -29207,18 +29051,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Limpiador"
-  },
-  {
-    "id": "pomelo-paso-500ml-12-2938",
-    "nombre": "Pomelo Paso 500Ml *12",
-    "categoria": "Refrescos",
-    "precio": 770.0,
-    "imagen": "images/Refresco/Limol/Pepsi/Pomelo-500.jpg.WEBP",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Pomelo"
   },
   {
     "id": "tonica-paso-500ml-12-2939",
@@ -31007,18 +30839,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Patricia"
-  },
-  {
-    "id": "crush-mandarina-2-25-1-3095",
-    "nombre": "Crush Mandarina 2.25*1",
-    "categoria": "Refrescos",
-    "precio": 105.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Crush"
   },
   {
     "id": "crema-de-leche-farming-1l-3096",
@@ -33853,18 +33673,6 @@
     "subcategoria": "Jabon"
   },
   {
-    "id": "refresco-limol-surtido-2lt-3339",
-    "nombre": "Refresco Limol Surtido 2Lt",
-    "categoria": "Refrescos",
-    "precio": 465.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Refresco"
-  },
-  {
     "id": "arbejas-3340",
     "nombre": "Arbejas",
     "categoria": "Enlatados",
@@ -35663,18 +35471,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Chedar"
-  },
-  {
-    "id": "coca-cola-2l-no-ret-1-3496",
-    "nombre": "Coca Cola 2L No Ret *1",
-    "categoria": "Refrescos",
-    "precio": 150.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Coca Cola"
   },
   {
     "id": "pimienta-blanca-molida-3497",
