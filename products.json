@@ -18939,38 +18939,38 @@
   {
     "id": "helados-batuk-5lt-vainilla-salsa-d-d-leche-2116",
     "nombre": "Helados Batuk 5Lt Vainilla Salsa D D Leche",
-    "categoria": "Almacén",
+    "categoria": "Congelados",
     "precio": 570.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Salsas"
+    "subcategoria": "Helados"
   },
   {
     "id": "helado-batuk-5l-d-d-leche-gran-2117",
     "nombre": "Helado Batuk 5L D D Leche Gran",
-    "categoria": "Frescos",
+    "categoria": "Congelados",
     "precio": 570.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Helado"
+    "subcategoria": "Helados"
   },
   {
     "id": "helado-batuk-5l-vainilla-salsa-frut-2118",
     "nombre": "Helado Batuk 5L Vainilla Salsa Frut",
-    "categoria": "Almacén",
+    "categoria": "Congelados",
     "precio": 570.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Salsas"
+    "subcategoria": "Helados"
   },
   {
     "id": "fernet-branca-450ml-2119",
