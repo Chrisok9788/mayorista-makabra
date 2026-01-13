@@ -26211,7 +26211,7 @@
   {
     "id": "vaso-bristol-410-cc-2761",
     "nombre": "Vaso Bristol 410 Cc",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 48.0,
     "imagen": "",
     "oferta": false,
@@ -26223,7 +26223,7 @@
   {
     "id": "vaso-dubai-460-ml-2762",
     "nombre": "Vaso Dubai 460 Ml",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
@@ -26235,31 +26235,31 @@
   {
     "id": "vaso-whisky-290ml-2763",
     "nombre": "Vaso Whisky 290Ml",
-    "categoria": "Alcohol",
+    "categoria": "Bazar",
     "precio": 40.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Whisky"
+    "subcategoria": "Vaso"
   },
   {
     "id": "set-24-cubiertos-tramontina-2764",
     "nombre": "Set 24 Cubiertos Tramontina",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 549.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Set"
+    "subcategoria": "Cubiertos"
   },
   {
     "id": "bowl-o-frutera-cristal-2l-2765",
     "nombre": "Bowl O Frutera Cristal 2L",
-    "categoria": "Desayuno",
+    "categoria": "Bazar",
     "precio": 240.0,
     "imagen": "",
     "oferta": false,
@@ -26271,7 +26271,7 @@
   {
     "id": "vaso-vegas-240ml-2766",
     "nombre": "Vaso Vegas 240Ml",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 40.0,
     "imagen": "",
     "oferta": false,
@@ -26283,7 +26283,7 @@
   {
     "id": "vaso-cilindrico-300ml-2767",
     "nombre": "Vaso Cilindrico 300Ml",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 35.0,
     "imagen": "",
     "oferta": false,
@@ -26295,7 +26295,7 @@
   {
     "id": "bombon-surt-x20-2768",
     "nombre": "Bombón Surt X20",
-    "categoria": "Otros",
+    "categoria": "Golosinas",
     "precio": 65.0,
     "imagen": "",
     "oferta": false,
@@ -26307,7 +26307,7 @@
   {
     "id": "chicle-buzzycroc-frambuesa-x40-2769",
     "nombre": "Chicle Buzzycroc Frambuesa X40",
-    "categoria": "Otros",
+    "categoria": "Golosinas",
     "precio": 58.0,
     "imagen": "",
     "oferta": false,
@@ -26319,7 +26319,7 @@
   {
     "id": "chicle-buzzycroc-menta-x40-2770",
     "nombre": "Chicle Buzzycroc Menta X40",
-    "categoria": "Otros",
+    "categoria": "Golosinas",
     "precio": 58.0,
     "imagen": "",
     "oferta": false,
@@ -26331,7 +26331,7 @@
   {
     "id": "chicle-buzzycroc-tuti-fruti-x40-2771",
     "nombre": "Chicle Buzzycroc Tuti-Fruti X40",
-    "categoria": "Otros",
+    "categoria": "Golosinas",
     "precio": 58.0,
     "imagen": "",
     "oferta": false,
@@ -26343,7 +26343,7 @@
   {
     "id": "chicle-buzzycroc-morango-x40-2772",
     "nombre": "Chicle Buzzycroc Morango X40",
-    "categoria": "Otros",
+    "categoria": "Golosinas",
     "precio": 58.0,
     "imagen": "",
     "oferta": false,
@@ -26427,7 +26427,7 @@
   {
     "id": "pano-micro-fibra-x5-2779",
     "nombre": "Paño Micro Fibra X5",
-    "categoria": "Otros",
+    "categoria": "Limpieza e Higiene",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
@@ -26439,7 +26439,7 @@
   {
     "id": "embudo-chico-2780",
     "nombre": "Embudo Chico",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 29.0,
     "imagen": "",
     "oferta": false,
@@ -26487,7 +26487,7 @@
   {
     "id": "cortina-de-bano-c-argolla-2784",
     "nombre": "Cortina De Baño C/Argolla",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 249.0,
     "imagen": "",
     "oferta": false,
@@ -26499,14 +26499,14 @@
   {
     "id": "lapiceras-astronauta-2785",
     "nombre": "Lapiceras Astronauta",
-    "categoria": "Alcohol",
+    "categoria": "Bazar",
     "precio": 59.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Ron"
+    "subcategoria": "Lapiceras"
   },
   {
     "id": "ron-carabelas-dorado-750ml-2787",
@@ -26643,7 +26643,7 @@
   {
     "id": "pack-head-shoulder-375-y-180ml-2798",
     "nombre": "Pack Head Shoulder 375 Y 180Ml",
-    "categoria": "Otros",
+    "categoria": "Cuidados Personales",
     "precio": 465.0,
     "imagen": "",
     "oferta": false,
@@ -26691,7 +26691,7 @@
   {
     "id": "vaso-munich-300ml-2802",
     "nombre": "Vaso Munich 300Ml",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 60.0,
     "imagen": "",
     "oferta": false,
@@ -26703,7 +26703,7 @@
   {
     "id": "esencias-perfumadores-2803",
     "nombre": "Esencias Perfumadores",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 99.0,
     "imagen": "",
     "oferta": false,
@@ -26711,18 +26711,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Esencias"
-  },
-  {
-    "id": "beldent-unidad-2804",
-    "nombre": "Beldent Unidad",
-    "categoria": "Otros",
-    "precio": 30.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Beldent"
   },
   {
     "id": "cracker-175g-2805",
@@ -26746,19 +26734,19 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Salame"
+    "subcategoria": "Fiambres"
   },
   {
     "id": "mortadela-feteada-guiller-2807",
     "nombre": "Mortadela Feteada Guiller",
-    "categoria": "Desayuno",
+    "categoria": "Frescos",
     "precio": 65.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Mortadela"
+    "subcategoria": "Fiambres"
   },
   {
     "id": "fiambre-de-cerdo-guill-2808",
@@ -26770,12 +26758,12 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Fiambre"
+    "subcategoria": "Fiambres"
   },
   {
     "id": "servilletas-maxipel-x2-2809",
     "nombre": "Servilletas Maxipel X2",
-    "categoria": "Otros",
+    "categoria": "Higiene y Belleza",
     "precio": 45.0,
     "imagen": "",
     "oferta": false,
@@ -26799,7 +26787,7 @@
   {
     "id": "mantecol-clasico-111gr-2811",
     "nombre": "Mantecol Clásico 111Gr",
-    "categoria": "Desayuno",
+    "categoria": "Golosinas",
     "precio": 69.0,
     "imagen": "",
     "oferta": false,
@@ -26811,7 +26799,7 @@
   {
     "id": "mantecol-marmolado-111gr-2812",
     "nombre": "Mantecol Marmolado 111Gr",
-    "categoria": "Desayuno",
+    "categoria": "Golosinas",
     "precio": 69.0,
     "imagen": "",
     "oferta": false,
@@ -26823,7 +26811,7 @@
   {
     "id": "mantecol-clasico-41gr-1-2813",
     "nombre": "Mantecol Clasico 41Gr *1",
-    "categoria": "Desayuno",
+    "categoria": "Golosinas",
     "precio": 38.0,
     "imagen": "",
     "oferta": false,
@@ -26835,7 +26823,7 @@
   {
     "id": "mantecol-clasico-41gr-12-2814",
     "nombre": "Mantecol Clasico 41Gr *12",
-    "categoria": "Desayuno",
+    "categoria": "Golosinas",
     "precio": 415.0,
     "imagen": "",
     "oferta": false,
@@ -26871,7 +26859,7 @@
   {
     "id": "gomas-simo-corazon-150gr-2817",
     "nombre": "Gomas Simo Corazon 150Gr",
-    "categoria": "Otros",
+    "categoria": "Golosinas",
     "precio": 25.0,
     "imagen": "",
     "oferta": false,
@@ -26883,7 +26871,7 @@
   {
     "id": "gomas-simo-frutas-150gr-2818",
     "nombre": "Gomas Simo Frutas 150Gr",
-    "categoria": "Otros",
+    "categoria": "Golosinas",
     "precio": 25.0,
     "imagen": "",
     "oferta": false,
@@ -26895,7 +26883,7 @@
   {
     "id": "gomas-simo-tubinho-150gr-2821",
     "nombre": "Gomas Simo Tubinho 150Gr",
-    "categoria": "Otros",
+    "categoria": "Golosinas",
     "precio": 25.0,
     "imagen": "",
     "oferta": false,
@@ -26907,7 +26895,7 @@
   {
     "id": "palmitos-premium-entero-300gr-2822",
     "nombre": "Palmitos Premium Entero 300Gr",
-    "categoria": "Desayuno",
+    "categoria": "Enlatados",
     "precio": 205.0,
     "imagen": "",
     "oferta": false,
@@ -26919,7 +26907,7 @@
   {
     "id": "palmitos-premium-rodajs-300gr-2823",
     "nombre": "Palmitos Premium Rodajs 300Gr",
-    "categoria": "Otros",
+    "categoria": "Enlatados",
     "precio": 152.0,
     "imagen": "",
     "oferta": false,
@@ -26943,7 +26931,7 @@
   {
     "id": "pan-de-viena-los-sorchantes-x8-2825",
     "nombre": "Pan De Viena Los Sorchantes X8",
-    "categoria": "Desayuno",
+    "categoria": "Panadería",
     "precio": 99.0,
     "imagen": "",
     "oferta": false,
@@ -26955,31 +26943,19 @@
   {
     "id": "set-cubiertos-6-mabel-2826",
     "nombre": "Set Cubiertos *6 Mabel",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 130.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Set"
-  },
-  {
-    "id": "amplificador-parlante-celu-2827",
-    "nombre": "Amplificador Parlante Celu",
-    "categoria": "Desayuno",
-    "precio": 599.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Amplificador"
+    "subcategoria": "Cubiertos"
   },
   {
     "id": "pan-tortuga-x6-los-sorchantes-2828",
     "nombre": "Pan Tortuga X6 Los Sorchantes",
-    "categoria": "Desayuno",
+    "categoria": "Panadería",
     "precio": 99.0,
     "imagen": "",
     "oferta": false,
@@ -26991,7 +26967,7 @@
   {
     "id": "budweiser-lata-710-x4-2829",
     "nombre": "Budweiser Lata 710 X4",
-    "categoria": "Otros",
+    "categoria": "Cerveza",
     "precio": 399.0,
     "imagen": "",
     "oferta": false,
@@ -27003,7 +26979,7 @@
   {
     "id": "ajo-y-escamas-25gr-2830",
     "nombre": "Ajo Y Escamas 25Gr",
-    "categoria": "Otros",
+    "categoria": "Condimentos",
     "precio": 55.0,
     "imagen": "",
     "oferta": false,
@@ -27075,7 +27051,7 @@
   {
     "id": "pinza-cabello-xjy03-2836",
     "nombre": "Pinza Cabello Xjy03",
-    "categoria": "Otros",
+    "categoria": "Cuidado Femenino",
     "precio": 41.0,
     "imagen": "",
     "oferta": false,
@@ -27087,7 +27063,7 @@
   {
     "id": "letras-led-a-pila-2837",
     "nombre": "Letras Led A Pila",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 120.0,
     "imagen": "",
     "oferta": false,
@@ -27099,7 +27075,7 @@
   {
     "id": "bolsitas-sorpresitas-x10-cxg76-2838",
     "nombre": "Bolsitas Sorpresitas X10 Cxg76",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 45.0,
     "imagen": "",
     "oferta": false,
@@ -27111,7 +27087,7 @@
   {
     "id": "pack-120-pirotines-cupcake-cxg97-2839",
     "nombre": "Pack 120 Pirotines Cupcake Cxg97",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 68.0,
     "imagen": "",
     "oferta": false,
@@ -27123,74 +27099,74 @@
   {
     "id": "pinata-unicornio-con-enganche-2840",
     "nombre": "Pinata Unicornio Con Enganche",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 579.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Pinata"
+    "subcategoria": "Cumpleanos"
   },
   {
     "id": "set-12-banderines-y-pirotines-2841",
     "nombre": "Set 12 Banderines Y Pirotines",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 45.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Set"
+    "subcategoria": "Cumpleanos"
   },
   {
     "id": "pack-50-espaditas-copetin-6-7cm-2842",
     "nombre": "Pack 50 Espaditas Copetin 6.7Cm",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 29.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Pack"
+    "subcategoria": "Cumpleanos"
   },
   {
     "id": "set-12-topper-para-torta-futbol-2843",
     "nombre": "Set 12 Topper Para Torta Futbol",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 55.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Set"
+    "subcategoria": "Cumpleanos"
   },
   {
     "id": "set-12-velas-metalizadas-feliz-cumpleanos-2844",
     "nombre": "Set 12 Velas Metalizadas Feliz Cumpleanos",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 59.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Set"
+    "subcategoria": "Cumpleanos"
   },
   {
     "id": "vela-doble-feliz-cumpleanos-2845",
     "nombre": "Vela Doble Feliz Cumpleanos",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 39.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Vela"
+    "subcategoria": "Cumpleanos"
   },
   {
     "id": "portezuelo-oro-x18-granizado-2846",
@@ -27207,7 +27183,7 @@
   {
     "id": "pulseras-neon-glow-x10-2847",
     "nombre": "Pulseras Neon Glow X10",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 65.0,
     "imagen": "",
     "oferta": false,
@@ -27255,38 +27231,38 @@
   {
     "id": "mono-para-regalo-chico-2851",
     "nombre": "Mono Para Regalo Chico",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 5.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Mono"
+    "subcategoria": "Cumpleanos"
   },
   {
     "id": "yerbera-negra-350g-2852",
     "nombre": "Yerbera Negra 350G",
-    "categoria": "Otros",
+    "categoria": "Yerba Mate",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Yerbera"
+    "subcategoria": "Kit"
   },
   {
     "id": "cucharas-desc-x20-g052-2853",
     "nombre": "Cucharas Desc X20 G052",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 39.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Cucharas"
+    "subcategoria": "Cumpleanos"
   },
   {
     "id": "pan-dulce-principe-azul-frutas-300gr-2854",
@@ -27303,7 +27279,7 @@
   {
     "id": "kit-termo-mate-y-yerbera-2855",
     "nombre": "Kit Termo Mate Y Yerbera",
-    "categoria": "Desayuno",
+    "categoria": "Yerba Mate",
     "precio": 1050.0,
     "imagen": "",
     "oferta": false,
@@ -27327,7 +27303,7 @@
   {
     "id": "snorkel-4pcs-2857",
     "nombre": "Snorkel 4Pcs",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 349.0,
     "imagen": "",
     "oferta": false,
@@ -27339,7 +27315,7 @@
   {
     "id": "excavadora-hw3014-2858",
     "nombre": "Excavadora Hw3014",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 120.0,
     "imagen": "",
     "oferta": false,
@@ -27351,7 +27327,7 @@
   {
     "id": "escoba-donna-2859",
     "nombre": "Escoba Donna",
-    "categoria": "Otros",
+    "categoria": "Limpieza e Higiene",
     "precio": 85.0,
     "imagen": "",
     "oferta": false,
@@ -27363,7 +27339,7 @@
   {
     "id": "aplanadora-hw8478-2860",
     "nombre": "Aplanadora Hw8478",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 120.0,
     "imagen": "",
     "oferta": false,
@@ -27375,7 +27351,7 @@
   {
     "id": "maquina-bulldozer-hw3013-2861",
     "nombre": "Maquina Bulldozer Hw3013",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 120.0,
     "imagen": "",
     "oferta": false,
@@ -27387,7 +27363,7 @@
   {
     "id": "maquina-bulldozer-hw0774-2862",
     "nombre": "Maquina Bulldozer Hw0774",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 199.0,
     "imagen": "",
     "oferta": false,
@@ -27399,19 +27375,19 @@
   {
     "id": "pack-colitas-para-cabello-x10-2863",
     "nombre": "Pack Colitas Para Cabello X10",
-    "categoria": "Otros",
+    "categoria": "Cuidado Femenino",
     "precio": 39.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Pack"
+    "subcategoria": "Colitas"
   },
   {
     "id": "kit-pandereta-con-maracas-2864",
     "nombre": "Kit Pandereta Con Maracas",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 189.0,
     "imagen": "",
     "oferta": false,
@@ -27423,7 +27399,7 @@
   {
     "id": "casa-de-munecas-hw4830-2865",
     "nombre": "Casa De Munecas Hw4830",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 589.0,
     "imagen": "",
     "oferta": false,
@@ -27435,7 +27411,7 @@
   {
     "id": "juego-gusano-loco-hw0269-2866",
     "nombre": "Juego Gusano Loco Hw0269",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 499.0,
     "imagen": "",
     "oferta": false,
@@ -27471,7 +27447,7 @@
   {
     "id": "camion-con-volcadora-hw3012-2869",
     "nombre": "Camion Con Volcadora Hw3012",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 120.0,
     "imagen": "",
     "oferta": false,
@@ -27495,7 +27471,7 @@
   {
     "id": "organo-musical-32-teclas-2871",
     "nombre": "Organo Musical 32 Teclas",
-    "categoria": "Desayuno",
+    "categoria": "Juguetes",
     "precio": 299.0,
     "imagen": "",
     "oferta": false,
@@ -27519,7 +27495,7 @@
   {
     "id": "tateti-juego-de-mesa-hw98719-2873",
     "nombre": "Tateti Juego De Mesa Hw98719",
-    "categoria": "Desayuno",
+    "categoria": "Juguetes",
     "precio": 250.0,
     "imagen": "",
     "oferta": false,
@@ -27531,7 +27507,7 @@
   {
     "id": "camionetas-con-lanzador-hw2860-2874",
     "nombre": "Camionetas Con Lanzador Hw2860",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 385.0,
     "imagen": "",
     "oferta": false,
@@ -27541,21 +27517,9 @@
     "subcategoria": "Camionetas"
   },
   {
-    "id": "muneca-morocha-c-vestido-2875",
-    "nombre": "Muneca Morocha C Vestido",
-    "categoria": "Otros",
-    "precio": 249.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Muneca"
-  },
-  {
     "id": "pistola-de-agua-espuma-40cm-2876",
     "nombre": "Pistola De Agua Espuma 40Cm",
-    "categoria": "Agua",
+    "categoria": "Juguetes",
     "precio": 109.0,
     "imagen": "",
     "oferta": false,
@@ -27567,7 +27531,7 @@
   {
     "id": "arma-de-policia-hw8328-2877",
     "nombre": "Arma De Policia Hw8328",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 79.0,
     "imagen": "",
     "oferta": false,
@@ -27579,7 +27543,7 @@
   {
     "id": "caja-registradora-c-accesorios-2878",
     "nombre": "Caja Registradora C Accesorios",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 699.0,
     "imagen": "",
     "oferta": false,
@@ -27591,7 +27555,7 @@
   {
     "id": "aro-basquet-c-pelota-e-inflador-2879",
     "nombre": "Aro Basquet C Pelota E Inflador",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 1299.0,
     "imagen": "",
     "oferta": false,
@@ -27603,7 +27567,7 @@
   {
     "id": "metralleta-c-balas-luz-y-sonido-2880",
     "nombre": "Metralleta C Balas Luz Y Sonido",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 499.0,
     "imagen": "",
     "oferta": false,
@@ -27615,7 +27579,7 @@
   {
     "id": "set-4-trompos-dinosaurio-2881",
     "nombre": "Set 4 Trompos Dinosaurio",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 499.0,
     "imagen": "",
     "oferta": false,
@@ -27627,7 +27591,7 @@
   {
     "id": "cubo-rubick-3x3x5-2882",
     "nombre": "Cubo Rubick 3X3X5",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 99.0,
     "imagen": "",
     "oferta": false,
@@ -27639,7 +27603,7 @@
   {
     "id": "guitarra-electrica-2883",
     "nombre": "Guitarra Electrica",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 589.0,
     "imagen": "",
     "oferta": false,
@@ -27651,7 +27615,7 @@
   {
     "id": "sirena-mini-hw2910-2884",
     "nombre": "Sirena Mini Hw2910",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 89.0,
     "imagen": "",
     "oferta": false,
@@ -27663,7 +27627,7 @@
   {
     "id": "juego-de-herramientas-2885",
     "nombre": "Juego De Herramientas",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 110.0,
     "imagen": "",
     "oferta": false,
@@ -27675,7 +27639,7 @@
   {
     "id": "kit-ping-pong-y-pelota-2886",
     "nombre": "Kit Ping Pong Y Pelota",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 250.0,
     "imagen": "",
     "oferta": false,
@@ -27687,7 +27651,7 @@
   {
     "id": "casa-de-munecas-3d-58pcs-2887",
     "nombre": "Casa De Munecas 3D 58Pcs",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 399.0,
     "imagen": "",
     "oferta": false,
@@ -27699,7 +27663,7 @@
   {
     "id": "ajedrez-y-damas-magneticas-2888",
     "nombre": "Ajedrez Y Damas Magneticas",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 319.0,
     "imagen": "",
     "oferta": false,
@@ -27711,7 +27675,7 @@
   {
     "id": "pista-de-rieles-espacial-c-luz-2889",
     "nombre": "Pista De Rieles Espacial C Luz",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 589.0,
     "imagen": "",
     "oferta": false,
@@ -27723,7 +27687,7 @@
   {
     "id": "sable-laser-c-luz-2890",
     "nombre": "Sable Laser C Luz",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 299.0,
     "imagen": "",
     "oferta": false,
@@ -27735,7 +27699,7 @@
   {
     "id": "radio-con-auriculares-2891",
     "nombre": "Radio Con Auriculares",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 550.0,
     "imagen": "",
     "oferta": false,
@@ -27747,7 +27711,7 @@
   {
     "id": "casa-de-munecas-3d-111-pcs-2892",
     "nombre": "Casa De Munecas 3D 111 Pcs",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 839.0,
     "imagen": "",
     "oferta": false,
@@ -27759,7 +27723,7 @@
   {
     "id": "aro-basquet-con-pelota-2893",
     "nombre": "Aro Basquet Con Pelota",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 299.0,
     "imagen": "",
     "oferta": false,
@@ -27771,7 +27735,7 @@
   {
     "id": "maquillaje-glitter-y-unas-2894",
     "nombre": "Maquillaje Glitter Y Unas",
-    "categoria": "Desayuno",
+    "categoria": "Juguetes",
     "precio": 299.0,
     "imagen": "",
     "oferta": false,
@@ -27783,7 +27747,7 @@
   {
     "id": "maquillaje-glitter-y-unas-2895",
     "nombre": "Maquillaje Glitter Y Unas",
-    "categoria": "Desayuno",
+    "categoria": "Juguetes",
     "precio": 299.0,
     "imagen": "",
     "oferta": false,
@@ -27795,7 +27759,7 @@
   {
     "id": "puzzle-goma-eva-2896",
     "nombre": "Puzzle Goma Eva",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 129.0,
     "imagen": "",
     "oferta": false,
@@ -27807,7 +27771,7 @@
   {
     "id": "bebote-con-banera-y-accesorios-2897",
     "nombre": "Bebote Con Banera Y Accesorios",
-    "categoria": "Desayuno",
+    "categoria": "Juguetes",
     "precio": 570.0,
     "imagen": "",
     "oferta": false,
@@ -27819,19 +27783,19 @@
   {
     "id": "aromatizador-fragancia-2898",
     "nombre": "Aromatizador + Fragancia",
-    "categoria": "Otros",
+    "categoria": "Limpieza e Higiene",
     "precio": 699.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Aromatizador"
+    "subcategoria": "Ambientador"
   },
   {
     "id": "juego-de-bateria-15pcs-2899",
     "nombre": "Juego De Bateria 15Pcs",
-    "categoria": "Desayuno",
+    "categoria": "Juguetes",
     "precio": 599.0,
     "imagen": "",
     "oferta": false,
@@ -27843,7 +27807,7 @@
   {
     "id": "camion-con-hormigonera-2900",
     "nombre": "Camion Con Hormigonera",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 120.0,
     "imagen": "",
     "oferta": false,
@@ -27855,7 +27819,7 @@
   {
     "id": "walkie-talkie-2pcs-2901",
     "nombre": "Walkie Talkie 2Pcs",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 275.0,
     "imagen": "",
     "oferta": false,
@@ -27867,7 +27831,7 @@
   {
     "id": "set-bloques-60pcs-2902",
     "nombre": "Set Bloques 60Pcs",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 159.0,
     "imagen": "",
     "oferta": false,
@@ -27879,7 +27843,7 @@
   {
     "id": "alicate-para-unas-2903",
     "nombre": "Alicate Para Unas",
-    "categoria": "Desayuno",
+    "categoria": "Juguetes",
     "precio": 110.0,
     "imagen": "",
     "oferta": false,
@@ -27891,7 +27855,7 @@
   {
     "id": "juego-simon-de-memoria-2904",
     "nombre": "Juego Simon De Memoria",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 699.0,
     "imagen": "",
     "oferta": false,
@@ -27903,7 +27867,7 @@
   {
     "id": "set-6-patos-banera-c-chifle-2905",
     "nombre": "Set 6 Patos Banera C Chifle",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 189.0,
     "imagen": "",
     "oferta": false,
@@ -27915,7 +27879,7 @@
   {
     "id": "burrito-saltarin-2906",
     "nombre": "Burrito Saltarin",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 349.0,
     "imagen": "",
     "oferta": false,
@@ -27927,7 +27891,7 @@
   {
     "id": "abaco-ositos-2907",
     "nombre": "Abaco Ositos",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 110.0,
     "imagen": "",
     "oferta": false,
@@ -27939,103 +27903,91 @@
   {
     "id": "papel-de-regalo-2908",
     "nombre": "Papel De Regalo",
-    "categoria": "Higiene y Belleza",
+    "categoria": "Bazar",
     "precio": 18.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Papel Higiénico"
+    "subcategoria": "Papel Regalo"
   },
   {
     "id": "arbol-de-navidad-120cm-2909",
     "nombre": "Arbol De Navidad 120Cm",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 399.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Arbol"
+    "subcategoria": "Navidad"
   },
   {
     "id": "pack-chirim-c-diseno-x6-pcs-2910",
     "nombre": "Pack Chirim C Diseno X6 Pcs",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 99.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Pack"
+    "subcategoria": "Navidad"
   },
   {
     "id": "tubo-12-chirimbolos-2911",
     "nombre": "Tubo 12 Chirimbolos",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 189.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Tubo"
+    "subcategoria": "Navidad"
   },
   {
     "id": "puntero-estrella-navidad-2912",
     "nombre": "Puntero Estrella Navidad",
-    "categoria": "Desayuno",
+    "categoria": "Bazar",
     "precio": 63.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Puntero"
+    "subcategoria": "Navidad"
   },
   {
     "id": "pack-12-chirimbolos-mate-y-brillo-2913",
     "nombre": "Pack 12 Chirimbolos Mate Y Brillo",
-    "categoria": "Desayuno",
+    "categoria": "Bazar",
     "precio": 189.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Pack"
+    "subcategoria": "Navidad"
   },
   {
     "id": "boa-navidena-verde-2m-2914",
     "nombre": "Boa Navidena Verde 2M",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 32.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Boa"
-  },
-  {
-    "id": "grampas-2915",
-    "nombre": "Grampas",
-    "categoria": "Otros",
-    "precio": 23.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Grampas"
+    "subcategoria": "Navidad"
   },
   {
     "id": "boomerang-3-puntas-2916",
     "nombre": "Boomerang 3 Puntas",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 99.0,
     "imagen": "",
     "oferta": false,
@@ -28047,7 +27999,7 @@
   {
     "id": "coche-con-bebote-y-coche-2917",
     "nombre": "Coche Con Bebote Y Coche",
-    "categoria": "Desayuno",
+    "categoria": "Juguetes",
     "precio": 699.0,
     "imagen": "",
     "oferta": false,
@@ -28083,7 +28035,7 @@
   {
     "id": "set-25-banderines-cupcake-de-papel-2920",
     "nombre": "Set 25 Banderines Cupcake De Papel",
-    "categoria": "Higiene y Belleza",
+    "categoria": "Bazar",
     "precio": 45.0,
     "imagen": "",
     "oferta": false,
@@ -28095,7 +28047,7 @@
   {
     "id": "pack-4-colitas-con-conejitos-2921",
     "nombre": "Pack 4 Colitas Con Conejitos",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 25.0,
     "imagen": "",
     "oferta": false,
@@ -28107,14 +28059,14 @@
   {
     "id": "tira-100-luces-led-multicolor-2922",
     "nombre": "Tira 100 Luces Led Multicolor",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 189.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Tira"
+    "subcategoria": "Navidad"
   },
   {
     "id": "cocardas-72-ch143-2923",
@@ -28155,26 +28107,14 @@
   {
     "id": "chirimbolos-12-disenos-2927",
     "nombre": "Chirimbolos *12 Diseños",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 99.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Chirimbolos"
-  },
-  {
-    "id": "red-bull-1-2928",
-    "nombre": "Red Bull *1",
-    "categoria": "Energizante",
-    "precio": 110.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Red Bull"
+    "subcategoria": "Navidad"
   },
   {
     "id": "fideos-instantaneo-oferta-x10-2929",
@@ -28191,7 +28131,7 @@
   {
     "id": "muneca-con-vestido-hs668-2930",
     "nombre": "Muñeca Con Vestido Hs668",
-    "categoria": "Otros",
+    "categoria": "Juguetes",
     "precio": 249.0,
     "imagen": "",
     "oferta": false,
@@ -29523,7 +29463,7 @@
   {
     "id": "tableta-jupiter-24-6-3049",
     "nombre": "Tableta Júpiter 24/6",
-    "categoria": "Desayuno",
+    "categoria": "Control de Plagas",
     "precio": 120.0,
     "imagen": "",
     "oferta": false,
@@ -29571,7 +29511,7 @@
   {
     "id": "velas-de-san-jorge-50-3053",
     "nombre": "Velas De San Jorge *50",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 279.0,
     "imagen": "",
     "oferta": false,
@@ -29583,7 +29523,7 @@
   {
     "id": "velas-de-san-expedito-50-3054",
     "nombre": "Velas De San Expedito *50",
-    "categoria": "Otros",
+    "categoria": "Ferretería y Hogar",
     "precio": 279.0,
     "imagen": "",
     "oferta": false,
@@ -29607,26 +29547,26 @@
   {
     "id": "des-ambiente-sapolio-lavanda-3056",
     "nombre": "Des. Ambiente Sapolio Lavanda",
-    "categoria": "Desayuno",
+    "categoria": "Limpieza e Higiene",
     "precio": 89.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Des."
+    "subcategoria": "Ambientador"
   },
   {
     "id": "des-ambiente-sapolio-melon-3057",
     "nombre": "Des. Ambiente Sapolio Melon",
-    "categoria": "Desayuno",
+    "categoria": "Limpieza e Higiene",
     "precio": 89.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Des."
+    "subcategoria": "Ambientador"
   },
   {
     "id": "delicious-surtidos-20g-3058",
@@ -29678,8 +29618,8 @@
   },
   {
     "id": "sakala-rollon-caballero-3063",
-    "nombre": "Sakala Rollon Caballero",
-    "categoria": "Otros",
+    "nombre": "Skala Rollon Caballero",
+    "categoria": "Desodorantes",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
@@ -29690,8 +29630,8 @@
   },
   {
     "id": "sakala-rollon-dama-3064",
-    "nombre": "Sakala Rollon Dama",
-    "categoria": "Otros",
+    "nombre": "Skala Rollon Dama",
+    "categoria": "Desodorantes",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
@@ -29703,38 +29643,26 @@
   {
     "id": "podium-repuesto-floral-270ml-3065",
     "nombre": "Podium Repuesto Floral 270Ml",
-    "categoria": "Otros",
+    "categoria": "Limpieza e Higiene",
     "precio": 130.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Podium"
-  },
-  {
-    "id": "nix-cola-500-1-3066",
-    "nombre": "Nix Cola 500 *1",
-    "categoria": "Refrescos",
-    "precio": 45.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Nix"
+    "subcategoria": "Ambientador"
   },
   {
     "id": "podium-repuesto-lavanda-270ml-3067",
     "nombre": "Podium Repuesto Lavanda 270Ml",
-    "categoria": "Otros",
+    "categoria": "Limpieza e Higiene",
     "precio": 130.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Podium"
+    "subcategoria": "Ambientador"
   },
   {
     "id": "pan-dulce-chips-hermandad-330gr-3068",
@@ -29751,7 +29679,7 @@
   {
     "id": "perfumol-sapolio-900ml-pino-3070",
     "nombre": "Perfumol Sapolio 900Ml Pino",
-    "categoria": "Otros",
+    "categoria": "Limpieza e Higiene",
     "precio": 55.0,
     "imagen": "",
     "oferta": false,
@@ -29821,94 +29749,10 @@
     "subcategoria": "Vermouth"
   },
   {
-    "id": "nix-mandarina-500-1-3076",
-    "nombre": "Nix Mandarina 500*1",
-    "categoria": "Refrescos",
-    "precio": 50.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Nix"
-  },
-  {
-    "id": "limol-pomelo-2lt-x1-3077",
-    "nombre": "Limol Pomelo 2Lt X1",
-    "categoria": "Refrescos",
-    "precio": 95.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Limol"
-  },
-  {
-    "id": "limol-lima-2lt-3078",
-    "nombre": "Limol Lima 2Lt",
-    "categoria": "Refrescos",
-    "precio": 95.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Limol"
-  },
-  {
-    "id": "limol-mandarina-2lt-x1-3079",
-    "nombre": "Limol Mandarina 2Lt X1",
-    "categoria": "Refrescos",
-    "precio": 95.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Limol"
-  },
-  {
-    "id": "limol-cola-2lt-x1-3080",
-    "nombre": "Limol Cola 2Lt X1",
-    "categoria": "Refrescos",
-    "precio": 95.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Limol"
-  },
-  {
-    "id": "limol-guarana-2lt-x1-3081",
-    "nombre": "Limol Guarana 2Lt X1",
-    "categoria": "Refrescos",
-    "precio": 95.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Limol"
-  },
-  {
     "id": "fernet-1882-lata-x6-3082",
     "nombre": "Fernet 1882 Lata X6",
     "categoria": "Alcohol",
     "precio": 789.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Fernet"
-  },
-  {
-    "id": "fernet-1882-lata-x1-3083",
-    "nombre": "Fernet 1882 Lata X1",
-    "categoria": "Alcohol",
-    "precio": 150.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
@@ -29943,7 +29787,7 @@
   {
     "id": "tintas-de-cabello-317-rojo-ciruela-3086",
     "nombre": "Tintas De Cabello 317 Rojo Ciruela",
-    "categoria": "Otros",
+    "categoria": "Cuidado Femenino",
     "precio": 88.0,
     "imagen": "",
     "oferta": false,
@@ -29955,7 +29799,7 @@
   {
     "id": "balsamo-labial-3087",
     "nombre": "Balsamo Labial",
-    "categoria": "Otros",
+    "categoria": "Médico a domicilio",
     "precio": 120.0,
     "imagen": "",
     "oferta": false,
@@ -29965,21 +29809,9 @@
     "subcategoria": "Balsamo"
   },
   {
-    "id": "fanta-mini-1-3088",
-    "nombre": "Fanta Mini*1",
-    "categoria": "Refrescos",
-    "precio": 35.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Fanta"
-  },
-  {
     "id": "nativa-sport-600-sin-gas-3089",
     "nombre": "Nativa Sport 600 Sin Gas",
-    "categoria": "Otros",
+    "categoria": "Agua",
     "precio": 635.0,
     "imagen": "",
     "oferta": false,
@@ -30023,30 +29855,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Takis"
-  },
-  {
-    "id": "beldent-1-3093",
-    "nombre": "Beldent *1",
-    "categoria": "Otros",
-    "precio": 30.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Beldent"
-  },
-  {
-    "id": "patricia-lata-1-3094",
-    "nombre": "Patricia Lata*1",
-    "categoria": "Cerveza",
-    "precio": 55.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Patricia"
   },
   {
     "id": "crema-de-leche-farming-1l-3096",
@@ -30147,7 +29955,7 @@
   {
     "id": "criolina-3105",
     "nombre": "Criolina",
-    "categoria": "Otros",
+    "categoria": "Limpieza e Higiene",
     "precio": 155.0,
     "imagen": "",
     "oferta": false,
@@ -30159,7 +29967,7 @@
   {
     "id": "tallarin-punto-y-coma-500grs-cinta-3106",
     "nombre": "Tallarin Punto Y Coma 500Grs Cinta",
-    "categoria": "Otros",
+    "categoria": "Pasta",
     "precio": 55.0,
     "imagen": "",
     "oferta": false,
@@ -30167,18 +29975,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Tallarin"
-  },
-  {
-    "id": "sprite-1lt-6-3107",
-    "nombre": "Sprite 1Lt *6",
-    "categoria": "Refrescos",
-    "precio": 500.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Sprite"
   },
   {
     "id": "yogurt-c-cereal-claldy-150g-3108",
@@ -30203,18 +29999,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Martini"
-  },
-  {
-    "id": "grated-nidemar-170gr-3110",
-    "nombre": "Grated Nidemar 170Gr",
-    "categoria": "Desayuno",
-    "precio": 29.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Grated"
   },
   {
     "id": "chorizos-sarubi-c-cheddar-3-3111",
@@ -30243,7 +30027,7 @@
   {
     "id": "copa-de-brindis-x1-3114",
     "nombre": "Copa De Brindis X1",
-    "categoria": "Otros",
+    "categoria": "Bazar",
     "precio": 65.0,
     "imagen": "",
     "oferta": false,
@@ -30255,7 +30039,7 @@
   {
     "id": "shampoo-mascotas-500ml-3115",
     "nombre": "Shampoo Mascotas 500Ml",
-    "categoria": "Cuidados Personales",
+    "categoria": "Mascotas",
     "precio": 169.0,
     "imagen": "",
     "oferta": false,
