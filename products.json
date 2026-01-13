@@ -1539,9 +1539,9 @@
   {
     "id": "aceite-condesa-900cc-143",
     "nombre": "Aceite Condesa 900Cc",
-    "categoria": "Aceite",
+    "categoria": "Almacén",
     "precio": 69.0,
-    "imagen": "",
+    "imagen": "images/Aceite/Aceite-condesa.JPG.WEBP,
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -1551,9 +1551,9 @@
   {
     "id": "aceite-optimo-900cc-144",
     "nombre": "Aceite Optimo 900Cc",
-    "categoria": "Aceite",
+    "categoria": "Almacén",
     "precio": 94.0,
-    "imagen": "",
+    "imagen": "images/Aceite/Aceite-óptimo.JPG.WEBP,
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -1563,9 +1563,9 @@
   {
     "id": "aceite-uruguay-900cc-145",
     "nombre": "Aceite Uruguay 900Cc",
-    "categoria": "Aceite",
+    "categoria": "Almacén",
     "precio": 83.0,
-    "imagen": "",
+    "imagen": "images/Aceite/Aceite-uruguay.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -2667,9 +2667,9 @@
   {
     "id": "aceite-de-diez-900cc-262",
     "nombre": "Aceite De Diez 900Cc",
-    "categoria": "Aceite",
+    "categoria": "Almacén",
     "precio": 72.0,
-    "imagen": "",
+    "imagen": "images/Aceite/Aceite-de10.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -5115,9 +5115,9 @@
   {
     "id": "aceite-optimo-canola-900ml-514",
     "nombre": "Aceite Optimo Canola 900Ml",
-    "categoria": "Aceite",
+    "categoria": "Almacén",
     "precio": 78.0,
-    "imagen": "",
+    "imagen": "images/Aceite/Aceite-canola.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -10227,9 +10227,9 @@
   {
     "id": "aceite-de-oliva-500ml-1183",
     "nombre": "Aceite De Oliva 500Ml",
-    "categoria": "Aceite",
+    "categoria": "Almacén",
     "precio": 299.0,
-    "imagen": "",
+    "imagen": "images/Aceite/Aceite-oliva-500ml.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -14415,14 +14415,14 @@
   {
     "id": "aceit-optimo-altoleico-900ml-1647",
     "nombre": "Aceite Optimo Altoleico 900Ml",
-    "categoria": "Aceite",
+    "categoria": "Almacén",
     "precio": 115.0,
-    "imagen": "",
+    "imagen": "images/Aceite/Aceite-altoleico.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Aceit."
+    "subcategoria": "Aceite"
   },
   {
     "id": "cerveza-nortena-lata-473cc-1648",
@@ -18255,14 +18255,14 @@
   {
     "id": "aceite-sarandi-5lt-2052",
     "nombre": "Aceite Sarandi 5Lt",
-    "categoria": "Aceite",
+    "categoria": "Almacén",
     "precio": 465.0,
-    "imagen": "",
+    "imagen": "images/Aceite/Aceite-sarandi.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Sarandi 5L"
+    "subcategoria": "Aceite"
   },
   {
     "id": "dulce-de-leche-con-choco-350g-2053",
@@ -21279,9 +21279,9 @@
   {
     "id": "aceite-fritador-saman-5-litros-2320",
     "nombre": "Aceite Fritador Saman 5 Litros",
-    "categoria": "Aceite",
+    "categoria": "Almacén",
     "precio": 605.0,
-    "imagen": "",
+    "imagen": "images/Aceite/Aceite-Saman.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -21291,7 +21291,7 @@
   {
     "id": "sal-fina-25-kilos-2321",
     "nombre": "Sal Fina 25 Kilos",
-    "categoria": "Otros",
+    "categoria": "Almacén",
     "precio": 765.0,
     "imagen": "",
     "oferta": false,
@@ -23519,18 +23519,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Licor"
-  },
-  {
-    "id": "aceite-de-oliva-y-soja-vittoria-500ml-2517",
-    "nombre": "Aceite De Oliva Y Soja  Vittoria 500Ml",
-    "categoria": "Desayuno",
-    "precio": 265.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Aceite"
   },
   {
     "id": "whisky-olden-wack-900ml-c-vaso-2518",
@@ -26617,18 +26605,6 @@
     "subcategoria": "Ron"
   },
   {
-    "id": "aceite-bacartti-900ml-2786",
-    "nombre": "Aceite Bacartti 900Ml",
-    "categoria": "Desayuno",
-    "precio": 69.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Aceite"
-  },
-  {
     "id": "ron-carabelas-dorado-750ml-2787",
     "nombre": "Ron Carabelas Dorado 750Ml",
     "categoria": "Alcohol",
@@ -26638,7 +26614,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Petacas"
+    "subcategoria": "Ron"
   },
   {
     "id": "ron-carabelas-blanco-750ml-2788",
