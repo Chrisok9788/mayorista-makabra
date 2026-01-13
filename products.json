@@ -12650,7 +12650,7 @@
   },
   {
     "id": "promo-jager-750-4-speed-1451",
-    "nombre": "Promo Jager 750+ 4 Speed",
+    "nombre": "Promo Jagger 750+ 4 Speed",
     "categoria": "Alcohol",
     "precio": 1200.0,
     "imagen": "",
@@ -12658,7 +12658,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Jagger"
   },
   {
     "id": "perfumol-sapolio-900ml-bebe-1453",
@@ -23410,7 +23410,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Caña"
   },
   {
     "id": "licor-de-frutas-890ml-2516",
@@ -29806,7 +29806,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Vermouth"
   },
   {
     "id": "oyama-vermouth-blanco-3075",
@@ -29818,7 +29818,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Vermouth"
   },
   {
     "id": "nix-mandarina-500-1-3076",
@@ -30142,19 +30142,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
-  },
-  {
-    "id": "cerv-skol-1-3104",
-    "nombre": "Cerv Skol *1",
-    "categoria": "Cerveza",
-    "precio": 50.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Otras Cervezas"
+    "subcategoria": "Vodka"
   },
   {
     "id": "criolina-3105",
@@ -30214,7 +30202,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Martini"
   },
   {
     "id": "grated-nidemar-170gr-3110",
@@ -33334,7 +33322,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Vodka"
   },
   {
     "id": "dr-lemon-tropical-gin-3382",
@@ -33375,14 +33363,14 @@
   {
     "id": "dr-lemon-473ml-6-3385",
     "nombre": "Dr. Lemon 473Ml*6",
-    "categoria": "Otros",
+    "categoria": "Alcohol",
     "precio": 839.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Dr."
+    "subcategoria": "Vodka"
   },
   {
     "id": "wisky-hallmark-1l-3386",
@@ -33394,7 +33382,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Whisky"
   },
   {
     "id": "queso-horma-3387",
@@ -34342,7 +34330,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Vodka"
   },
   {
     "id": "smirnof-tropical-700ml-3469",
@@ -34354,7 +34342,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Vodka"
   },
   {
     "id": "escoba-3470",
