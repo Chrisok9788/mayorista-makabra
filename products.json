@@ -14163,7 +14163,7 @@
   {
     "id": "noquis-gnocheria-400g-de-papa-1616",
     "nombre": "Ñoquis Gnocheria 400G De Papa",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Pasta",
     "precio": 75.0,
     "imagen": "",
     "oferta": false,
@@ -14351,18 +14351,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Miller"
-  },
-  {
-    "id": "chicles-blong-uva-1640",
-    "nombre": "Chicles Blong Uva",
-    "categoria": "Frutas y Verduras",
-    "precio": 58.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Chicles"
   },
   {
     "id": "arroz-blanco-puritas-1k-1641",
@@ -18649,18 +18637,6 @@
     "subcategoria": "Panchos"
   },
   {
-    "id": "cepita-naranja-1-5-2088",
-    "nombre": "Cepita Naranja 1.5",
-    "categoria": "Frutas y Verduras",
-    "precio": 90.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Cepita"
-  },
-  {
     "id": "sidra-el-aguante-1-5-2090",
     "nombre": "Sidra El Aguante 1.5",
     "categoria": "Desayuno",
@@ -18826,12 +18802,12 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Alimentos Congelados"
+    "subcategoria": "Ravioles"
   },
   {
     "id": "ravioles-j-y-q-batuk-750g-2107",
     "nombre": "Ravioles J Y Q Batuk 750G",
-    "categoria": "Otros",
+    "categoria": "Congelados",
     "precio": 109.0,
     "imagen": "",
     "oferta": false,
@@ -18843,7 +18819,7 @@
   {
     "id": "ravioles-verdura-batuk-750g-2108",
     "nombre": "Ravioles Verdura Batuk 750G",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Congelados",
     "precio": 109.0,
     "imagen": "",
     "oferta": false,
@@ -19883,30 +19859,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Corta"
-  },
-  {
-    "id": "manzana-kit-manicura-8pcs-2195",
-    "nombre": "Manzana Kit Manicura 8Pcs",
-    "categoria": "Frutas y Verduras",
-    "precio": 92.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Manzana"
-  },
-  {
-    "id": "chifles-10-2196",
-    "nombre": "Chifles *10",
-    "categoria": "Otros",
-    "precio": 35.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Chifles"
   },
   {
     "id": "cable-iphone-1mt-2197",
@@ -26403,7 +26355,7 @@
   {
     "id": "chicle-buzzycroc-uva-x40-2773",
     "nombre": "Chicle Buzzycroc Uva X40",
-    "categoria": "Frutas y Verduras",
+    "categoria": "Golosinas",
     "precio": 58.0,
     "imagen": "",
     "oferta": false,
@@ -31955,18 +31907,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Mani"
-  },
-  {
-    "id": "fruta-abrillantada-1kg-3255",
-    "nombre": "Fruta Abrillantada 1Kg",
-    "categoria": "Frutas y Verduras",
-    "precio": 1.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Fruta"
   },
   {
     "id": "red-bull-6-3256",
