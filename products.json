@@ -1613,7 +1613,7 @@
     "nombre": "Arroz Aruba 1Kg",
     "categoria": "Almacén",
     "precio": 39.0,
-    "imagen": "",
+    "imagen": "images/Arroz,azúcar,puré/Arroz-Aruba-1Kg.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -1625,7 +1625,7 @@
     "nombre": "Arroz Chef 1Kg",
     "categoria": "Almacén",
     "precio": 54.0,
-    "imagen": "",
+    "imagen": "images/Arroz,azúcar,puré/Arroz-chef-1Kg.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -1637,7 +1637,7 @@
     "nombre": "Arroz Chef 500Gr",
     "categoria": "Almacén",
     "precio": 33.0,
-    "imagen": "",
+    "imagen": "images/Arroz,azúcar,puré/Arroz-chef-500gr.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -1649,7 +1649,7 @@
     "nombre": "Arroz Saman Blanco 1Kg",
     "categoria": "Almacén",
     "precio": 56.0,
-    "imagen": "",
+    "imagen": "images/Arroz,azúcar,puré/Arroz-Saman-1Kg.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -1661,7 +1661,7 @@
     "nombre": "Arroz Saman Blanco 500Gr",
     "categoria": "Almacén",
     "precio": 32.0,
-    "imagen": "",
+    "imagen": "images/Arroz,azúcar,puré/Arroz-Saman-500gr.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -1673,7 +1673,7 @@
     "nombre": "Arroz Saman Blanco 5Kg",
     "categoria": "Almacén",
     "precio": 245.0,
-    "imagen": "",
+    "imagen": "images/Arroz,azúcar,puré/Arroz-Saman-5kg.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -1685,7 +1685,7 @@
     "nombre": "Arroz Saman Parboiled 1Kg",
     "categoria": "Almacén",
     "precio": 66.0,
-    "imagen": "",
+    "imagen": "images/Arroz,azúcar,puré/Arroz-Saman-negro-1Kg.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -2081,7 +2081,7 @@
     "nombre": "Pure Puritas 125G",
     "categoria": "Almacén",
     "precio": 31.0,
-    "imagen": "",
+    "imagen": "images/Arroz,azúcar,puré/Puré-Puritas-125gr.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -3687,9 +3687,9 @@
   {
     "id": "pure-puritas-1kg-373",
     "nombre": "Pure Puritas 1Kg",
-    "categoria": "Otros",
+    "categoria": "Almacén",
     "precio": 199.0,
-    "imagen": "",
+    "imagen": "images/Arroz,azúcar,puré/Puré-Puritas-1Kg.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -14175,9 +14175,9 @@
   {
     "id": "azucar-puritas-1kg-1618",
     "nombre": "Azucar Puritas 1Kg",
-    "categoria": "Dulces",
+    "categoria": "Almacén",
     "precio": 46.0,
-    "imagen": "",
+    "imagen": "images/Arroz,azúcar,puré/Azúcar-Puritas-1Kg.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -14369,7 +14369,7 @@
     "nombre": "Arroz Blanco Puritas 1K",
     "categoria": "Almacén",
     "precio": 51.0,
-    "imagen": "",
+    "imagen": "images/Arroz,azúcar,puré/Arroz-Puritas-1Kg.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -15425,7 +15425,7 @@
     "nombre": "Arroz Medio Grano 1Kg",
     "categoria": "Almacén",
     "precio": 36.0,
-    "imagen": "",
+    "imagen": "images/Arroz,azúcar,puré/Arroz-mediograno-1Kg.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -15658,7 +15658,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Cereal"
+    "subcategoria": "Cereales"
   },
   {
     "id": "pate-lengua-1818",
@@ -17137,18 +17137,6 @@
     "subcategoria": "Caramelo"
   },
   {
-    "id": "arroz-para-perros-1kg-1952",
-    "nombre": "Arroz Para Perros 1Kg",
-    "categoria": "Almacén",
-    "precio": 34.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Arroz"
-  },
-  {
     "id": "tico-tico-1-1953",
     "nombre": "Tico Tico *1",
     "categoria": "Otros",
@@ -18317,7 +18305,7 @@
     "nombre": "Arroz Saman Parboiled 500G",
     "categoria": "Almacén",
     "precio": 37.0,
-    "imagen": "",
+    "imagen": "images/Arroz,azúcar,puré/Arroz-Saman-negro-500gr.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -18329,7 +18317,7 @@
     "nombre": "Arroz Chef 5K",
     "categoria": "Almacén",
     "precio": 239.0,
-    "imagen": "",
+    "imagen": "images/Arroz,azúcar,puré/Arroz-chef-5kg.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -18603,14 +18591,14 @@
   {
     "id": "azucarlito-25k-2082",
     "nombre": "Azucarlito 25K",
-    "categoria": "Dulces",
+    "categoria": "Almacén",
     "precio": 1150.0,
-    "imagen": "",
+    "imagen": "images/Arroz,azúcar,puré/Azucarlito-25Kg.JPG.JPG",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Azucarlito"
+    "subcategoria": "Azucar"
   },
   {
     "id": "tostadora-sonifer-1ano-garant-2083",
@@ -18719,42 +18707,6 @@
     "presentacion": "",
     "tags": [],
     "subcategoria": "Vinos"
-  },
-  {
-    "id": "pure-delier-saborizado-queso-5p-2094",
-    "nombre": "Pure Delier Saborizado Queso 5P",
-    "categoria": "Lácteos",
-    "precio": 59.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Pure"
-  },
-  {
-    "id": "pure-saborizado-ajo-5p-delier-2095",
-    "nombre": "Pure Saborizado Ajo 5P Delier",
-    "categoria": "Otros",
-    "precio": 59.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Pure"
-  },
-  {
-    "id": "pure-de-papas-y-nuez-mosc-5p-2096",
-    "nombre": "Pure De Papas Y Nuez Mosc. 5P",
-    "categoria": "Snacks",
-    "precio": 59.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Papas"
   },
   {
     "id": "perfumador-ropa-2097",
@@ -19707,14 +19659,14 @@
   {
     "id": "promo-cereal-bols-500g-choco-azucarado-2176",
     "nombre": "Promo Cereal +Bols 500G Choco+ Azucarado",
-    "categoria": "Dulces",
+    "categoria": "Desayuno",
     "precio": 159.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Promo"
+    "subcategoria": "Cereales"
   },
   {
     "id": "chocolatada-alcafood-400g-2177",
@@ -22155,14 +22107,14 @@
   {
     "id": "cereal-saboy-azucarado-de-9-2402",
     "nombre": "Cereal Saboy Azucarado De 9",
-    "categoria": "Dulces",
+    "categoria": "Desayuno",
     "precio": 195.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Cereal"
+    "subcategoria": "Cereales"
   },
   {
     "id": "jugos-clight-2403",
@@ -24401,7 +24353,7 @@
     "nombre": "Arroz Saman Parboiled 5K",
     "categoria": "Almacén",
     "precio": 299.0,
-    "imagen": "",
+    "imagen": "images/Arroz,azúcar,puré/Arroz-Saman-negro-5kg.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
@@ -26571,14 +26523,14 @@
   {
     "id": "cereal-azucarado-puritas-100gr-2783",
     "nombre": "Cereal Azucarado Puritas 100Gr",
-    "categoria": "Dulces",
+    "categoria": "Desayuno",
     "precio": 30.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Cereal"
+    "subcategoria": "Cereales"
   },
   {
     "id": "cortina-de-bano-c-argolla-2784",
@@ -31323,14 +31275,14 @@
   {
     "id": "azucarlito-1kg-3196",
     "nombre": "Azucarlito 1Kg",
-    "categoria": "Dulces",
+    "categoria": "Almacén",
     "precio": 46.0,
-    "imagen": "",
+    "imagen": "images/Arroz,azúcar,puré/Azucarlito-1Kg.JPG.WEBP",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Azucarlito"
+    "subcategoria": "Azucar"
   },
   {
     "id": "jardinera-lata-oderich-300gr-3197",
@@ -35055,26 +35007,14 @@
   {
     "id": "pure-de-papas-dona-marta-100g-3520",
     "nombre": "Pure De Papas Doña Marta 100G",
-    "categoria": "Snacks",
+    "categoria": "Almacén",
     "precio": 31.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Papas"
-  },
-  {
-    "id": "pure-de-papas-dona-marta-100g-30-3521",
-    "nombre": "Pure De Papas Doña Marta 100G*30",
-    "categoria": "Snacks",
-    "precio": 870.0,
-    "imagen": "",
-    "oferta": false,
-    "marca": "",
-    "presentacion": "",
-    "tags": [],
-    "subcategoria": "Papas"
+    "subcategoria": "Pure"
   },
   {
     "id": "malta-1lt-6-3522",
