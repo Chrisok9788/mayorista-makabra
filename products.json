@@ -2,7 +2,7 @@
 [
   {
     "id": "jagger-750cc-2",
-    "nombre": "jagger 750Cc",
+    "nombre": "Jagger 750Cc",
     "categoria": "Alcohol",
     "precio": 750.0,
     "imagen": "images/images:jagger-750-ml.webp.JPG",
@@ -10,7 +10,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "jagger"
+    "subcategoria": "Jagger"
   },
   {
     "id": "johnnie-rojo-1lt-3",
@@ -12386,7 +12386,7 @@
   },
   {
     "id": "jager-1lt-1414",
-    "nombre": "Jager 1Lt",
+    "nombre": "Jagger 1Lt",
     "categoria": "Alcohol",
     "precio": 830.0,
     "imagen": "",
@@ -12394,7 +12394,7 @@
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Otros Alcoholes"
+    "subcategoria": "Jagger"
   },
   {
     "id": "petaca-ron-carabelas-dorado-1415",
@@ -34371,14 +34371,14 @@
   {
     "id": "jagger-750cc-4-monster-3471",
     "nombre": "Jagger 750Cc + 4 Monster",
-    "categoria": "Energizante",
+    "categoria": "Alcohol",
     "precio": 1200.0,
     "imagen": "",
     "oferta": false,
     "marca": "",
     "presentacion": "",
     "tags": [],
-    "subcategoria": "Monster"
+    "subcategoria": "Jagger"
   },
   {
     "id": "cerveza-brahma-473cc-6-3472",
