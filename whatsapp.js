@@ -33,6 +33,12 @@ function getOrCreateCustomerId() {
  * @param {Array} products Lista completa de productos
  */
 export function sendOrder(cart, products) {
+  const entries = Object.entries(cart || {});
+  if (!entries.length) {
+    alert("Tu carrito está vacío.");
+    return;
+  }
+
   const customerId = getOrCreateCustomerId();
   const orderId = makeOrderId();
 
@@ -55,10 +61,17 @@ export function sendOrder(cart, products) {
 
   let total = 0;
   let hasConsult = false;
+  let foundAny = false;
 
-  Object.entries(cart || {}).forEach(([productId, qty]) => {
-    const product = (products || []).find((p) => p.id === productId);
+  entries.forEach(([productId, qtyRaw]) => {
+    const qty = Number(qtyRaw) || 0;
+    if (qty < 1) return;
+
+    // ✅ comparación segura (string vs number)
+    const product = (products || []).find((p) => String(p.id) === String(productId));
     if (!product) return;
+
+    foundAny = true;
 
     const price = Number(product.precio) || 0;
 
@@ -75,6 +88,11 @@ export function sendOrder(cart, products) {
       `${qty} x ${product.nombre} — ${formatUYU(price)} c/u — Subtotal: ${formatUYU(subtotal)}`
     );
   });
+
+  if (!foundAny) {
+    alert("No se pudieron leer los productos del carrito (IDs no coinciden).");
+    return;
+  }
 
   lines.push("");
 
@@ -93,9 +111,11 @@ export function sendOrder(cart, products) {
   lines.push("A la brevedad nos comunicaremos vía WhatsApp para coordinar.");
 
   const message = lines.join("\n");
+
+  // ✅ número en formato internacional (sin +, sin espacios)
   const whatsappURL =
     "https://wa.me/59896405927?text=" + encodeURIComponent(message);
 
-  // ✅ iPhone/Safari: mejor que window.open
+  // ✅ iPhone/Safari: evita bloqueo de popups
   window.location.href = whatsappURL;
 }
