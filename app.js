@@ -23,10 +23,13 @@ import {
 import { sendOrder } from "./whatsapp.js";
 
 let products = [];
-let baseProducts = []; // lista “base” (se va ajustando por categoría/subcategoría)
+let baseProducts = [];
+
+// =======================
+// HANDLERS CARRITO
+// =======================
 
 function handleAdd(productId) {
-  // ✅ tu addItem recibe solo productId (según tu cart.js)
   addItem(productId);
   rerenderCartUI();
 }
@@ -41,23 +44,31 @@ function handleRemove(productId) {
   rerenderCartUI();
 }
 
+// =======================
+// RENDER CARRITO
+// =======================
+
 function rerenderCartUI() {
   const cartContainer = document.getElementById("cart-container");
   const cartObj = getCart();
 
-  // Render del carrito
   renderCart(products, cartObj, cartContainer, handleUpdate, handleRemove);
 
-  // ✅ TOTAL CORRECTO: totalAmount(cartObj, products)
   const totalEl = document.getElementById("cart-total");
   if (totalEl) {
     const total = totalAmount(cartObj, products);
     totalEl.textContent = `$ ${total}`;
   }
 
-  // Contador
-  updateCartCount(document.getElementById("cart-count"), totalItems());
+  updateCartCount(
+    document.getElementById("cart-count"),
+    totalItems()
+  );
 }
+
+// =======================
+// FILTROS / BUSCADOR
+// =======================
 
 function applySearchAndFilter() {
   const searchEl = document.getElementById("search-input");
@@ -77,8 +88,16 @@ function applySearchAndFilter() {
     filtered = filterProducts(filtered, "", term);
   }
 
-  renderProducts(filtered, document.getElementById("products-container"), handleAdd);
+  renderProducts(
+    filtered,
+    document.getElementById("products-container"),
+    handleAdd
+  );
 }
+
+// =======================
+// OFERTAS → SALTO A CATÁLOGO
+// =======================
 
 function goToCatalogAndShowProduct(productId) {
   const section = document.getElementById("catalogue");
@@ -87,7 +106,11 @@ function goToCatalogAndShowProduct(productId) {
   const prod = products.find((p) => p.id === productId);
   if (!prod) return;
 
-  renderProducts([prod], document.getElementById("products-container"), handleAdd);
+  renderProducts(
+    [prod],
+    document.getElementById("products-container"),
+    handleAdd
+  );
 
   const searchEl = document.getElementById("search-input");
   if (searchEl) searchEl.value = "";
@@ -104,14 +127,22 @@ function goToCatalogAndShowProduct(productId) {
   baseProducts = products;
 }
 
+// =======================
+// INIT
+// =======================
+
 async function init() {
   loadCart();
-  updateCartCount(document.getElementById("cart-count"), totalItems());
+  updateCartCount(
+    document.getElementById("cart-count"),
+    totalItems()
+  );
 
   try {
     products = await fetchProducts();
     baseProducts = products;
 
+    // Categorías
     const categoryEl = document.getElementById("category-filter");
     if (categoryEl) populateCategories(products, categoryEl);
 
@@ -134,43 +165,65 @@ async function init() {
       populateSubcategories(products, cat, subcatEl);
 
       subcatEl.value = "";
+      baseProducts = products.filter(
+        (p) => (p.categoria || "").trim() === cat
+      );
 
-      baseProducts = products.filter((p) => (p.categoria || "").trim() === cat);
       applySearchAndFilter();
     };
 
-    if (categoryEl) categoryEl.addEventListener("change", refreshSubcats);
+    if (categoryEl) {
+      categoryEl.addEventListener("change", refreshSubcats);
+    }
 
     if (subcatEl) {
       subcatEl.addEventListener("change", () => {
         if (!categoryEl) return;
+
         const cat = categoryEl.value;
         const sub = subcatEl.value;
 
-        baseProducts = products.filter((p) => (p.categoria || "").trim() === cat);
+        baseProducts = products.filter(
+          (p) => (p.categoria || "").trim() === cat
+        );
+
         if (sub) {
-          baseProducts = baseProducts.filter((p) => (p.subcategoria || "").trim() === sub);
+          baseProducts = baseProducts.filter(
+            (p) => (p.subcategoria || "").trim() === sub
+          );
         }
+
         applySearchAndFilter();
       });
     }
 
+    // Render inicial
     applySearchAndFilter();
 
+    // Ofertas
     const frameEl = document.querySelector(".offers-frame");
     const trackEl = document.getElementById("offers-track");
-    renderOffersCarousel(products, frameEl, trackEl, goToCatalogAndShowProduct);
+    renderOffersCarousel(
+      products,
+      frameEl,
+      trackEl,
+      goToCatalogAndShowProduct
+    );
 
     rerenderCartUI();
   } catch (err) {
     console.error(err);
     const pc = document.getElementById("products-container");
-    if (pc) pc.innerHTML = `<p>Ocurrió un error al cargar los productos.</p>`;
+    if (pc) pc.innerHTML = "<p>Error al cargar productos.</p>";
   }
 
+  // Buscador
   const searchEl = document.getElementById("search-input");
-  if (searchEl) searchEl.addEventListener("input", applySearchAndFilter);
+  if (searchEl) {
+    searchEl.addEventListener("input", applySearchAndFilter);
+  }
 
+  // Vaciar carrito
   const clearBtn = document.getElementById("clear-cart-btn");
   if (clearBtn) {
     clearBtn.addEventListener("click", () => {
@@ -179,11 +232,16 @@ async function init() {
     });
   }
 
+  // =======================
+  // ENVIAR POR WHATSAPP (FIX DEFINITIVO)
+  // =======================
+
   const sendBtn = document.getElementById("send-whatsapp-btn");
   if (sendBtn) {
-    sendBtn.addEventListener("click", () => {
+    sendBtn.addEventListener("click", (e) => {
+      e.preventDefault(); // evita submit / reload
       const cart = getCart();
-      sendOrder(products, cart);
+      sendOrder(cart, products); // ✅ ORDEN CORRECTO
     });
   }
 }
