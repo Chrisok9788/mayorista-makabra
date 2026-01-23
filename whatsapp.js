@@ -14,7 +14,6 @@ function formatUYU(n) {
 }
 
 function makeOrderId() {
-  // ID interno de pedido (ej: MK-LS8F2Q)
   return "MK-" + Date.now().toString(36).toUpperCase();
 }
 
@@ -37,15 +36,12 @@ export function sendOrder(cart, products) {
   const customerId = getOrCreateCustomerId();
   const orderId = makeOrderId();
 
-  // Dirección (solo se pide una vez)
   let address = localStorage.getItem("customerAddress") || "";
   const isNewCustomer = !address;
 
   if (isNewCustomer) {
     address =
-      prompt(
-        "Cliente nuevo:\nIngresá tu dirección para coordinar la entrega."
-      ) || "";
+      prompt("Cliente nuevo:\nIngresá tu dirección para coordinar la entrega.") || "";
 
     if (address.trim()) {
       localStorage.setItem("customerAddress", address.trim());
@@ -60,8 +56,8 @@ export function sendOrder(cart, products) {
   let total = 0;
   let hasConsult = false;
 
-  Object.entries(cart).forEach(([productId, qty]) => {
-    const product = products.find((p) => p.id === productId);
+  Object.entries(cart || {}).forEach(([productId, qty]) => {
+    const product = (products || []).find((p) => p.id === productId);
     if (!product) return;
 
     const price = Number(product.precio) || 0;
@@ -94,13 +90,12 @@ export function sendOrder(cart, products) {
   }
 
   lines.push("");
-  lines.push(
-    "A la brevedad nos comunicaremos vía WhatsApp para coordinar."
-  );
+  lines.push("A la brevedad nos comunicaremos vía WhatsApp para coordinar.");
 
   const message = lines.join("\n");
   const whatsappURL =
     "https://wa.me/59896405927?text=" + encodeURIComponent(message);
 
-  window.open(whatsappURL, "_blank");
+  // ✅ iPhone/Safari: mejor que window.open
+  window.location.href = whatsappURL;
 }
