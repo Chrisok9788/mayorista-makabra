@@ -24,6 +24,7 @@ import { sendOrder } from "./whatsapp.js";
 
 let products = [];
 let baseProducts = [];
+let sending = false; // ✅ evita doble click/doble envío
 
 // =======================
 // HANDLERS CARRITO
@@ -60,10 +61,7 @@ function rerenderCartUI() {
     totalEl.textContent = `$ ${total}`;
   }
 
-  updateCartCount(
-    document.getElementById("cart-count"),
-    totalItems()
-  );
+  updateCartCount(document.getElementById("cart-count"), totalItems());
 }
 
 // =======================
@@ -88,11 +86,7 @@ function applySearchAndFilter() {
     filtered = filterProducts(filtered, "", term);
   }
 
-  renderProducts(
-    filtered,
-    document.getElementById("products-container"),
-    handleAdd
-  );
+  renderProducts(filtered, document.getElementById("products-container"), handleAdd);
 }
 
 // =======================
@@ -106,11 +100,7 @@ function goToCatalogAndShowProduct(productId) {
   const prod = products.find((p) => p.id === productId);
   if (!prod) return;
 
-  renderProducts(
-    [prod],
-    document.getElementById("products-container"),
-    handleAdd
-  );
+  renderProducts([prod], document.getElementById("products-container"), handleAdd);
 
   const searchEl = document.getElementById("search-input");
   if (searchEl) searchEl.value = "";
@@ -128,15 +118,51 @@ function goToCatalogAndShowProduct(productId) {
 }
 
 // =======================
+// ENVÍO ROBUSTO WHATSAPP
+// =======================
+
+function sendWhatsAppOrderSafe() {
+  if (sending) return;
+  sending = true;
+
+  try {
+    const cart = getCart();
+
+    if (!products || products.length === 0) {
+      alert("Todavía no cargó el catálogo. Recargá la página y probá de nuevo.");
+      return;
+    }
+
+    if (!cart || Object.keys(cart).length === 0) {
+      alert("Tu carrito está vacío.");
+      return;
+    }
+
+    // 1) Intento normal: usar whatsapp.js
+    sendOrder(cart, products);
+  } catch (err) {
+    console.error("Error al enviar pedido:", err);
+
+    // 2) Fallback: disparar link oculto si existe
+    const fallback = document.getElementById("send-whatsapp-link");
+    if (fallback && fallback.href) {
+      window.location.href = fallback.href;
+    } else {
+      alert("No se pudo abrir WhatsApp. Revisá tu conexión y probá de nuevo.");
+    }
+  } finally {
+    // liberamos un poco después por si el usuario toca muchas veces
+    setTimeout(() => (sending = false), 800);
+  }
+}
+
+// =======================
 // INIT
 // =======================
 
 async function init() {
   loadCart();
-  updateCartCount(
-    document.getElementById("cart-count"),
-    totalItems()
-  );
+  updateCartCount(document.getElementById("cart-count"), totalItems());
 
   try {
     products = await fetchProducts();
@@ -165,16 +191,12 @@ async function init() {
       populateSubcategories(products, cat, subcatEl);
 
       subcatEl.value = "";
-      baseProducts = products.filter(
-        (p) => (p.categoria || "").trim() === cat
-      );
+      baseProducts = products.filter((p) => (p.categoria || "").trim() === cat);
 
       applySearchAndFilter();
     };
 
-    if (categoryEl) {
-      categoryEl.addEventListener("change", refreshSubcats);
-    }
+    if (categoryEl) categoryEl.addEventListener("change", refreshSubcats);
 
     if (subcatEl) {
       subcatEl.addEventListener("change", () => {
@@ -183,15 +205,8 @@ async function init() {
         const cat = categoryEl.value;
         const sub = subcatEl.value;
 
-        baseProducts = products.filter(
-          (p) => (p.categoria || "").trim() === cat
-        );
-
-        if (sub) {
-          baseProducts = baseProducts.filter(
-            (p) => (p.subcategoria || "").trim() === sub
-          );
-        }
+        baseProducts = products.filter((p) => (p.categoria || "").trim() === cat);
+        if (sub) baseProducts = baseProducts.filter((p) => (p.subcategoria || "").trim() === sub);
 
         applySearchAndFilter();
       });
@@ -203,12 +218,7 @@ async function init() {
     // Ofertas
     const frameEl = document.querySelector(".offers-frame");
     const trackEl = document.getElementById("offers-track");
-    renderOffersCarousel(
-      products,
-      frameEl,
-      trackEl,
-      goToCatalogAndShowProduct
-    );
+    renderOffersCarousel(products, frameEl, trackEl, goToCatalogAndShowProduct);
 
     rerenderCartUI();
   } catch (err) {
@@ -219,9 +229,7 @@ async function init() {
 
   // Buscador
   const searchEl = document.getElementById("search-input");
-  if (searchEl) {
-    searchEl.addEventListener("input", applySearchAndFilter);
-  }
+  if (searchEl) searchEl.addEventListener("input", applySearchAndFilter);
 
   // Vaciar carrito
   const clearBtn = document.getElementById("clear-cart-btn");
@@ -232,18 +240,29 @@ async function init() {
     });
   }
 
-  // =======================
-  // ENVIAR POR WHATSAPP (FIX DEFINITIVO)
-  // =======================
-
+  // ✅ Listener directo (por si todo está ok)
   const sendBtn = document.getElementById("send-whatsapp-btn");
   if (sendBtn) {
     sendBtn.addEventListener("click", (e) => {
-      e.preventDefault(); // evita submit / reload
-      const cart = getCart();
-      sendOrder(cart, products); // ✅ ORDEN CORRECTO
+      e.preventDefault();
+      e.stopPropagation();
+      sendWhatsAppOrderSafe();
     });
   }
+
+  // ✅ Listener por delegación (captura aunque el botón esté tapado/re-renderizado)
+  document.addEventListener(
+    "click",
+    (e) => {
+      const btn = e.target?.closest?.("#send-whatsapp-btn");
+      if (!btn) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+      sendWhatsAppOrderSafe();
+    },
+    true // capture: se ejecuta antes que otros handlers
+  );
 }
 
 init();
