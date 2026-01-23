@@ -1,0 +1,252 @@
+#!/usr/bin/env python3
+"""
+update_products.py
+===================
+
+Este script se encarga de actualizar el archivo `products.json` de un sitio
+estático en GitHub Pages a partir de un servicio externo de productos. Está
+pensado para ejecutarse desde un workflow de GitHub Actions con una
+programación periódica (ej. cada hora).
+
+Características principales:
+
+* Si el producto ya existe en `products.json` (el campo `id` coincide con
+  `codigoInterno` del servicio externo), actualiza su precio (`precio`) y
+  el indicador de oferta (`oferta`) solamente cuando hayan cambiado.
+* Si el producto no existe en `products.json`, lo agrega al final del
+  listado, asignándole un `id` igual a `codigoInterno` y copiando el
+  nombre (`descripcion`). Para las categorías y otros campos que no estén
+  disponibles en el servicio externo se utilizan valores por defecto. De
+  ser necesario, estos pueden ajustarse manualmente una vez agregado.
+* No elimina productos que ya existen en `products.json` aunque no
+  aparezcan en la lista de cambios del servicio externo.
+
+Variables de entorno necesarias (configuradas en el workflow o como
+secrets de GitHub):
+
+* `API_BASE_URL`:  URL base del servicio (sin barra final).  Ejemplo:
+  `https://mobile.scanntech.com/products.api.servicios.backend.rest.server`.
+* `API_ID_EMPRESA`:  Identificador de la empresa (minorista) en el sistema.
+* `API_ID_LOCAL`:    Identificador del local o sucursal.
+* `API_USER` y `API_PASS`:  Credenciales para autenticación básica.
+
+El script calcula automáticamente el rango de tiempo de la última hora
+(fecha y hora de inicio) para solicitar únicamente los artículos con
+cambios en ese período.  Ajusta el parámetro `take` para traer hasta
+1 000 artículos por ejecución.  Si la cantidad de cambios fuese mayor se
+podría iterar paginando con `skip` y `take`, pero para la mayoría de los
+casos este tamaño es suficiente.
+
+Uso:
+  python scripts/update_products.py
+
+El script no muestra salida salvo en caso de error.  Si se ejecuta
+correctamente y genera cambios en `products.json`, éstos quedarán
+reflejados en el repositorio y podrán ser confirmados por el workflow.
+
+"""
+
+import base64
+import datetime
+import json
+import os
+import ssl
+import sys
+from typing import Dict, List, Any
+from urllib.request import Request, urlopen
+
+
+def fetch_updates() -> List[Dict[str, Any]]:
+    """Obtiene los artículos con cambios en la última hora desde la API externa.
+
+    Devuelve una lista de diccionarios con la estructura definida en la
+    especificación del servicio.  En caso de error de red o respuesta
+    inesperada se aborta con excepción.
+    """
+    base_url = os.environ.get("API_BASE_URL")
+    id_empresa = os.environ.get("API_ID_EMPRESA")
+    id_local = os.environ.get("API_ID_LOCAL")
+    user = os.environ.get("API_USER")
+    password = os.environ.get("API_PASS")
+
+    if not all([base_url, id_empresa, id_local, user, password]):
+        raise RuntimeError(
+            "Faltan variables de entorno requeridas: API_BASE_URL, API_ID_EMPRESA, "
+            "API_ID_LOCAL, API_USER y/o API_PASS"
+        )
+
+    # Calcula el momento de inicio del intervalo (1 hora atrás) en UTC.
+    now = datetime.datetime.utcnow()
+    one_hour_ago = now - datetime.timedelta(hours=1)
+    fecha_desde = one_hour_ago.strftime("%Y-%m-%d")
+    hora_desde = one_hour_ago.strftime("%H:%M:%S")
+
+    # Arma la URL de consulta: skip=0, take=1000 trae hasta 1000 ítems.
+    endpoint = (
+        f"{base_url}/api/minoristas/{id_empresa}/locales/{id_local}/precios"
+        f"?fechaDesde={fecha_desde}&horaDesde={hora_desde}&skip=0&take=1000"
+    )
+
+    # Configura autenticación básica.
+    credentials = f"{user}:{password}"
+    encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("ascii")
+    headers = {"Authorization": f"Basic {encoded_credentials}"}
+
+    req = Request(endpoint, headers=headers)
+    context = ssl.create_default_context()
+
+    with urlopen(req, context=context) as response:
+        content_type = response.getheader("Content-Type", "application/json")
+        data = response.read().decode("utf-8")
+        try:
+            payload = json.loads(data)
+        except json.JSONDecodeError:
+            raise RuntimeError(
+                f"Respuesta de la API no es JSON válido (Content-Type: {content_type})."
+            )
+
+    # Dependiendo de la API, los artículos pueden venir en un campo 'content' o ser
+    # el propio array de respuesta.  Ajustamos soportando ambos casos.
+    if isinstance(payload, list):
+        return payload
+    elif isinstance(payload, dict):
+        # Algunos servicios devuelven los datos bajo claves como 'lista' o 'items'.
+        for key in ("content", "items", "results", "lista"):
+            if key in payload and isinstance(payload[key], list):
+                return payload[key]
+        # Si no hay lista, asumimos que es vacía.
+        return []
+    else:
+        return []
+
+
+def load_local_products(filename: str) -> List[Dict[str, Any]]:
+    """Lee los productos locales desde un archivo JSON y devuelve la lista."""
+    with open(filename, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def save_local_products(filename: str, products: List[Dict[str, Any]]) -> None:
+    """Escribe la lista de productos en un archivo JSON conservando formato."""
+    with open(filename, "w", encoding="utf-8") as f:
+        json.dump(products, f, ensure_ascii=False, indent=2)
+
+
+def update_products(
+    local_products: List[Dict[str, Any]],
+    updates: List[Dict[str, Any]],
+) -> List[Dict[str, Any]]:
+    """Aplica las actualizaciones sobre la lista local.
+
+    Para cada artículo del listado `updates` se realiza la siguiente lógica:
+
+    * Si `codigoInterno` ya existe como `id` en un producto local, se actualiza
+      el precio y el indicador de oferta solo si cambió.
+    * Si el artículo no existe, se agrega con valores por defecto para campos
+      faltantes.
+
+    No se eliminan productos locales que no aparezcan en `updates`.
+    """
+    # Índice por ID de los productos locales.
+    local_index: Dict[str, Dict[str, Any]] = {p["id"]: p for p in local_products}
+
+    for item in updates:
+        # Campos que esperamos según la documentación.
+        codigo = str(item.get("codigoInterno", "")).strip()
+        if not codigo:
+            # Si no hay código interno, ignoramos el registro.
+            continue
+
+        descripcion = item.get("descripcion", "").strip() or codigo
+        descripcion_corta = item.get("descripcionCorta", "General").strip() or "General"
+        es_oferta = bool(item.get("esPrecioOferta", False))
+
+        # Determina el precio según corresponda.
+        precio_oferta = item.get("precioOferta")
+        precio_regular = item.get("precioRegular")
+        try:
+            # Convierte a float manejando cadenas y números decimales.
+            precio_oferta_val = float(precio_oferta) if precio_oferta is not None else None
+        except Exception:
+            precio_oferta_val = None
+        try:
+            precio_regular_val = float(precio_regular) if precio_regular is not None else None
+        except Exception:
+            precio_regular_val = None
+
+        # Toma el precio vigente según si es oferta o no.
+        precio_vigente = (
+            precio_oferta_val if es_oferta and precio_oferta_val is not None else precio_regular_val
+        )
+
+        # Si no hay precios válidos, ignora el artículo.
+        if precio_vigente is None:
+            continue
+
+        if codigo in local_index:
+            producto = local_index[codigo]
+            # Actualiza precio y oferta si cambiaron.
+            if (
+                float(producto.get("precio", precio_vigente)) != precio_vigente
+                or bool(producto.get("oferta", es_oferta)) != es_oferta
+            ):
+                producto["precio"] = precio_vigente
+                producto["oferta"] = es_oferta
+        else:
+            # Inserta nuevo producto con valores por defecto para campos no provistos.
+            local_index[codigo] = {
+                "id": codigo,
+                "nombre": descripcion,
+                # Asigna descripción corta como categoría y subcategoría por defecto.
+                "categoria": descripcion_corta,
+                "subcategoria": descripcion_corta,
+                "precio": precio_vigente,
+                "oferta": es_oferta,
+                "imagen": None,
+                "marca": None,
+                "presentacion": None,
+                "tags": None,
+            }
+
+    # Mantiene el orden original de los productos locales y agrega nuevos al final.
+    updated_list: List[Dict[str, Any]] = []
+    seen_ids = set()
+    for prod in local_products:
+        pid = prod["id"]
+        updated_list.append(local_index[pid])
+        seen_ids.add(pid)
+    # Agrega productos nuevos que no estaban en la lista original.
+    for pid, prod in local_index.items():
+        if pid not in seen_ids:
+            updated_list.append(prod)
+    return updated_list
+
+
+def main():
+    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    products_path = os.path.join(repo_root, "products.json")
+
+    # Lee productos locales.
+    try:
+        local_products = load_local_products(products_path)
+    except Exception as e:
+        print(f"Error al leer {products_path}: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    # Obtiene actualizaciones.
+    try:
+        updates = fetch_updates()
+    except Exception as e:
+        print(f"Error al obtener actualizaciones: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    # Aplica actualizaciones.
+    updated = update_products(local_products, updates)
+
+    # Guarda solo si hay cambios reales (comparación simplificada por orden y datos).
+    if json.dumps(local_products, sort_keys=True) != json.dumps(updated, sort_keys=True):
+        save_local_products(products_path, updated)
+
+
+if __name__ == "__main__":
+    main()
