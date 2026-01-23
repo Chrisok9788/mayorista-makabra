@@ -70,10 +70,10 @@
             </p>
 
             <div class="hero-actions">
+              <!-- ✅ Recomendado en iPhone: sin target _blank -->
               <a
                 href="https://wa.me/59896405927?text=Hola%20Makabra,%20quiero%20hacer%20un%20pedido"
                 class="btn btn-primary"
-                target="_blank"
                 rel="noopener"
               >
                 Hacer pedido por WhatsApp
@@ -120,18 +120,15 @@
               placeholder="Buscar por nombre, categoría..."
             />
 
-            <!-- ✅ Categoría (nativo iPhone: abre/cierra y se cierra solo al elegir) -->
             <select id="category-filter">
               <option value="">Todas las categorías</option>
             </select>
 
-            <!-- ✅ Subcategoría (aparece solo cuando elegís una categoría) -->
             <select id="subcategory-filter" style="display: none;">
               <option value="">Todas las subcategorías</option>
             </select>
           </div>
 
-          <!-- ✅ Panel tipo acordeón (categorías → subcategorías con “volver”) -->
           <aside class="cat-panel">
             <h3 class="cat-title">Categorías</h3>
             <div id="categoryAccordion" class="accordion"></div>
@@ -152,14 +149,17 @@
           <div id="cart-container" class="cart-items"></div>
 
           <div class="cart-summary">
-            <div classtf class="total-line">
+            <!-- ✅ FIX: class (antes decía "classtf") -->
+            <div class="total-line">
               <span>Total:</span>
               <strong id="cart-total">$ 0</strong>
             </div>
+
             <div class="cart-actions">
               <button id="clear-cart-btn" class="btn" type="button">
                 Vaciar carrito
               </button>
+
               <button
                 id="send-whatsapp-btn"
                 class="btn btn-primary"
@@ -167,7 +167,18 @@
               >
                 Enviar pedido por WhatsApp
               </button>
+
+              <!-- ✅ Fallback oculto (por si el JS necesita disparar un link directo) -->
+              <a
+                id="send-whatsapp-link"
+                href="https://wa.me/59896405927?text=Hola%20Makabra"
+                style="display:none"
+                rel="noopener"
+              >
+                enviar
+              </a>
             </div>
+
             <div class="muted small">
               Nota: si un producto tiene precio 0, se enviará como “Consultar”.
             </div>
@@ -205,7 +216,7 @@
           <div class="contact-card">
             <div class="contact-item">
               <strong>WhatsApp</strong>
-              <a href="https://wa.me/59896405927" target="_blank" rel="noopener"
+              <a href="https://wa.me/59896405927" rel="noopener"
                 >+598 096 405 927</a
               >
             </div>
@@ -258,7 +269,6 @@
       document.getElementById("year").textContent = new Date().getFullYear();
     </script>
 
-    <!-- ✅ ÚNICO inicializador -->
     <script type="module" src="./app.js"></script>
   </body>
 </html>
