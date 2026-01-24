@@ -612,3 +612,8 @@ a { color: inherit; text-decoration: none; }
 .float-actions .whatsapp-float {
   position: static;
 }
+/* Feedback visual tipo tap (compatible iPhone) */
+.btn-tap {
+  transform: scale(0.96);
+  transition: transform 0.1s ease;
+}
