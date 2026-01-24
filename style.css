@@ -32,7 +32,6 @@ a { color: inherit; text-decoration: none; }
   position: sticky;
   top: 0;
   z-index: 50;
-  /* ✅ Antes: rgba(11,15,20,0.9) */
   background: rgba(255,255,255,0.92);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
@@ -86,7 +85,6 @@ a { color: inherit; text-decoration: none; }
   gap: 6px;
   padding: 2px 8px;
   border-radius: 999px;
-  /* ✅ Antes: rgba(255,255,255,0.08) */
   background: rgba(17,24,39,0.06);
   margin-left: 6px;
   font-size: 12px;
@@ -95,7 +93,6 @@ a { color: inherit; text-decoration: none; }
 .hero { padding-top: 20px; }
 
 .hero-card {
-  /* ✅ Fondo claro con acento verde */
   background: linear-gradient(135deg, rgba(26,163,107,0.14), rgba(11,18,32,0.02));
   border: 1px solid rgba(26,163,107,0.22);
   border-radius: var(--radius);
@@ -108,18 +105,47 @@ a { color: inherit; text-decoration: none; }
 
 .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
-.btn {
+/* =========================
+   ✅ BOTONES: MISMO EFECTO VISUAL EN TODOS
+   (igual sensación que Agregar al carrito)
+   ========================= */
+
+button,
+.btn,
+.product-actions button {
   appearance: none;
-  border: 1px solid var(--border);
-  /* ✅ Antes: rgba(255,255,255,0.06) */
-  background: rgba(11,18,32,0.04);
-  color: var(--text);
+  border: 1px solid rgba(26,163,107,0.6);
+  background: var(--brand);
+  color: #ffffff;
   padding: 12px 14px;
   border-radius: 12px;
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 800;
+  box-shadow: 0 6px 14px rgba(16,24,40,0.18);
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease,
+    background 0.15s ease;
 }
-.btn:hover { background: rgba(11,18,32,0.06); }
+
+button:hover,
+.btn:hover {
+  background: var(--brand-2);
+  box-shadow: 0 8px 18px rgba(16,24,40,0.22);
+}
+
+button:active,
+.btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 4px 10px rgba(16,24,40,0.18);
+}
+
+button:disabled,
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
 
 .btn-primary {
   background: var(--brand);
@@ -127,13 +153,19 @@ a { color: inherit; text-decoration: none; }
   color: #fff;
 }
 .btn-primary:hover { background: var(--brand-2); }
-.btn-ghost { background: transparent; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+  box-shadow: none;
+}
+.btn-ghost:hover { background: rgba(11,18,32,0.06); }
 
 .hint {
   margin-top: 12px;
   color: var(--muted);
   font-size: 13px;
-  /* ✅ Antes: dashed rgba(255,255,255,0.12) */
   border-top: 1px dashed rgba(11,18,32,0.14);
   padding-top: 10px;
 }
@@ -162,7 +194,6 @@ a { color: inherit; text-decoration: none; }
   padding: 12px 12px;
   border-radius: 12px;
   border: 1px solid var(--border);
-  /* ✅ Antes: rgba(255,255,255,0.04) (sobre oscuro) */
   background: #ffffff;
   color: var(--text);
   outline: none;
@@ -171,7 +202,7 @@ a { color: inherit; text-decoration: none; }
 .filters input::placeholder { color: rgba(91,103,119,0.75); }
 
 /* =========================
-   ✅ GRID DE CATEGORÍAS (NUEVO)
+   ✅ GRID DE CATEGORÍAS
    ========================= */
 .categories-grid{
   display: grid;
@@ -223,7 +254,6 @@ a { color: inherit; text-decoration: none; }
 }
 
 .product-card {
-  /* ✅ Antes: rgba(255,255,255,0.04) (oscuro) */
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -239,7 +269,6 @@ a { color: inherit; text-decoration: none; }
   height: 74px;
   border-radius: 14px;
   object-fit: cover;
-  /* ✅ Antes: rgba(255,255,255,0.08) */
   background: rgba(11,18,32,0.04);
   border: 1px solid rgba(11,18,32,0.10);
   flex: 0 0 auto;
@@ -288,11 +317,10 @@ a { color: inherit; text-decoration: none; }
   overflow: hidden;
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  /* ✅ Antes: rgba(255,255,255,0.03) */
   background: #ffffff;
   box-shadow: var(--shadow);
   padding: 10px;
-  min-height: 150px; /* evita que parezca que “no existe” */
+  min-height: 150px;
 }
 
 .offers-track {
@@ -302,9 +330,6 @@ a { color: inherit; text-decoration: none; }
   animation: offers-scroll 28s linear infinite;
 }
 
-/* =========================
-   FIX IMÁGENES OFERTAS
-   ========================= */
 .offer-card {
   width: 180px;
   flex: 0 0 auto;
@@ -314,8 +339,6 @@ a { color: inherit; text-decoration: none; }
   overflow: hidden;
   cursor: pointer;
   box-shadow: 0 8px 18px rgba(16,24,40,0.10);
-
-  /* Estructura estable */
   display: flex;
   flex-direction: column;
 }
@@ -323,8 +346,8 @@ a { color: inherit; text-decoration: none; }
 
 .offer-img {
   width: 100%;
-  height: 160px;           /* Más alto para botellas */
-  object-fit: contain;     /* NO recorta */
+  height: 160px;
+  object-fit: contain;
   object-position: center;
   display: block;
   background: rgba(11,18,32,0.04);
@@ -346,18 +369,11 @@ a { color: inherit; text-decoration: none; }
   font-size: 13px;
 }
 
-/* Ajuste SOLO en celular (ofertas) */
 @media (max-width: 560px) {
   .offer-card { width: 200px; }
   .offer-img { height: 190px; }
 }
 
-/* =========================
-   FIX GENERAL DE IMÁGENES EN CARDS
-   (evita imágenes gigantes y recortes)
-   ========================= */
-
-/* Cualquier imagen dentro de una tarjeta */
 .product-card img,
 .offer-card img {
   display: block;
@@ -366,15 +382,13 @@ a { color: inherit; text-decoration: none; }
   height: auto;
 }
 
-/* Si la imagen es la “grande” (como la de oferta) */
 .offer-card img {
-  height: 180px;          /* controla el alto visible */
-  object-fit: contain;    /* NO recorta */
+  height: 180px;
+  object-fit: contain;
   object-position: center;
   background: rgba(11,18,32,0.04);
 }
 
-/* En celular, un poco más alta para botellas */
 @media (max-width: 560px) {
   .offer-card img { height: 220px; }
 }
@@ -509,9 +523,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .cat-panel-head { margin-bottom: 10px; }
-
 .cat-list { display: grid; gap: 8px; }
-
 .subcats-head { display: grid; gap: 8px; }
 
 .subcat-search {
@@ -538,7 +550,6 @@ a { color: inherit; text-decoration: none; }
 
 .subcat:hover { background: rgba(17,24,39,0.04); }
 
-/* Subcategoría: mismo look que los filtros */
 #subcategory-filter {
   width: 100%;
   padding: 12px 12px;
@@ -591,7 +602,7 @@ a { color: inherit; text-decoration: none; }
   line-height: 1;
 }
 
-/* WhatsApp dentro del contenedor flotante */
+/* Base WhatsApp dentro del contenedor flotante */
 .whatsapp-float {
   background: var(--brand);
   color: #fff;
@@ -605,6 +616,41 @@ a { color: inherit; text-decoration: none; }
 /* Importante: si whatsapp-float estaba fixed, lo anulamos para que lo maneje el contenedor */
 .float-actions .whatsapp-float { position: static; }
 
+/* ✅ WhatsApp icon-only (más chico, redondo, solo logo) */
+.whatsapp-float.whatsapp-icon {
+  width: 54px;
+  height: 54px;
+  padding: 0;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #25D366; /* verde WhatsApp */
+  border: 2px solid #ffffff; /* borde blanco tipo sticker */
+  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+
+.whatsapp-float.whatsapp-icon img {
+  width: 30px;
+  height: 30px;
+  display: block;
+}
+
+.whatsapp-float.whatsapp-icon:active {
+  transform: scale(0.96);
+}
+
+@media (max-width: 560px) {
+  .whatsapp-float.whatsapp-icon {
+    width: 50px;
+    height: 50px;
+  }
+  .whatsapp-float.whatsapp-icon img {
+    width: 28px;
+    height: 28px;
+  }
+}
+
 /* Feedback visual tipo tap (compatible iPhone) */
 .btn-tap {
   transform: scale(0.96);
@@ -616,7 +662,6 @@ a { color: inherit; text-decoration: none; }
   padding: 16px 0;
   color: var(--muted);
   text-align: center;
-  /* ✅ Antes: rgba(0,0,0,0.12) */
   background: #ffffff;
 }
 
