@@ -169,11 +169,15 @@ export function renderProducts(list, container, addHandler) {
     btn.className = "btn btn-primary";
     btn.textContent = "Agregar al carrito";
 
-    // ✅ Vibración 60ms SOLO al agregar desde catálogo
     btn.addEventListener("click", () => {
-      addHandler && addHandler(product.id);
-      vibrate60ms();
-    });
+  addHandler && addHandler(product.id);
+
+  // Feedback visual tipo "tap" (iPhone friendly)
+  btn.classList.add("btn-tap");
+  setTimeout(() => {
+    btn.classList.remove("btn-tap");
+  }, 100);
+});
 
     content.appendChild(btn);
 
