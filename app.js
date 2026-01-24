@@ -27,6 +27,64 @@ let baseProducts = [];
 let sending = false; // ✅ evita doble click/doble envío
 
 // =======================
+// UI: MODO CATEGORÍAS / MODO PRODUCTOS
+// =======================
+
+function showCategoriesMode() {
+  const grid = document.getElementById("categoriesGrid");
+  const pc = document.getElementById("products-container");
+  if (grid) grid.style.display = "grid";
+  if (pc) pc.style.display = "none";
+}
+
+function showProductsMode() {
+  const grid = document.getElementById("categoriesGrid");
+  const pc = document.getElementById("products-container");
+  if (grid) grid.style.display = "none";
+  if (pc) pc.style.display = "grid";
+}
+
+function clearProductsUI() {
+  const pc = document.getElementById("products-container");
+  if (pc) pc.innerHTML = "";
+}
+
+function buildCategoryCounts(items) {
+  const map = new Map(); // categoria -> count
+  for (const p of items) {
+    const cat = (p.categoria || "Otros").trim();
+    map.set(cat, (map.get(cat) || 0) + 1);
+  }
+
+  return [...map.entries()]
+    .sort((a, b) => a[0].localeCompare(b[0], "es"))
+    .map(([name, count]) => ({ name, count }));
+}
+
+function renderCategoryGrid(categories, onClick) {
+  const grid = document.getElementById("categoriesGrid");
+  if (!grid) return;
+
+  grid.innerHTML = categories
+    .map(
+      (c) => `
+      <div class="category-card" data-cat="${encodeURIComponent(c.name)}">
+        <h3>${c.name}</h3>
+        <p>${c.count} artículos</p>
+      </div>
+    `
+    )
+    .join("");
+
+  grid.querySelectorAll(".category-card").forEach((card) => {
+    card.addEventListener("click", () => {
+      const cat = decodeURIComponent(card.dataset.cat);
+      onClick(cat);
+    });
+  });
+}
+
+// =======================
 // HANDLERS CARRITO
 // =======================
 
@@ -73,9 +131,19 @@ function applySearchAndFilter() {
   const categoryEl = document.getElementById("category-filter");
   const subcatEl = document.getElementById("subcategory-filter");
 
-  const term = searchEl ? searchEl.value : "";
+  const term = searchEl ? searchEl.value.trim() : "";
   const cat = categoryEl ? categoryEl.value : "";
   const sub = subcatEl ? subcatEl.value : "";
+
+  // ✅ Si no hay filtros ni búsqueda: mostrar categorías y no listar productos
+  if (!term && !cat && !sub) {
+    showCategoriesMode();
+    clearProductsUI();
+    baseProducts = products;
+    return;
+  }
+
+  showProductsMode();
 
   let filtered = baseProducts;
 
@@ -99,6 +167,9 @@ function goToCatalogAndShowProduct(productId) {
 
   const prod = products.find((p) => p.id === productId);
   if (!prod) return;
+
+  // ✅ Al venir desde ofertas: mostrar productos (no categorías)
+  showProductsMode();
 
   renderProducts([prod], document.getElementById("products-container"), handleAdd);
 
@@ -151,7 +222,6 @@ function sendWhatsAppOrderSafe() {
       alert("No se pudo abrir WhatsApp. Revisá tu conexión y probá de nuevo.");
     }
   } finally {
-    // liberamos un poco después por si el usuario toca muchas veces
     setTimeout(() => (sending = false), 800);
   }
 }
@@ -168,7 +238,22 @@ async function init() {
     products = await fetchProducts();
     baseProducts = products;
 
-    // Categorías
+    // ✅ Render inicial del GRID de categorías
+    const categories = buildCategoryCounts(products);
+    renderCategoryGrid(categories, (selectedCategory) => {
+      const categoryEl = document.getElementById("category-filter");
+      if (categoryEl) {
+        categoryEl.value = selectedCategory;
+        categoryEl.dispatchEvent(new Event("change"));
+      }
+
+      showProductsMode();
+
+      const section = document.getElementById("catalogue");
+      if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    // Categorías (select)
     const categoryEl = document.getElementById("category-filter");
     if (categoryEl) populateCategories(products, categoryEl);
 
@@ -179,13 +264,19 @@ async function init() {
 
       const cat = categoryEl.value;
 
+      // ✅ Si el usuario vuelve a "Todas las categorías"
       if (!cat) {
         subcatEl.value = "";
         subcatEl.style.display = "none";
         baseProducts = products;
+
+        // si no hay búsqueda -> volvemos al grid
         applySearchAndFilter();
         return;
       }
+
+      // ✅ Al elegir categoría: mostramos productos
+      showProductsMode();
 
       subcatEl.style.display = "block";
       populateSubcategories(products, cat, subcatEl);
@@ -208,12 +299,15 @@ async function init() {
         baseProducts = products.filter((p) => (p.categoria || "").trim() === cat);
         if (sub) baseProducts = baseProducts.filter((p) => (p.subcategoria || "").trim() === sub);
 
+        // ✅ Con subcategoría ya estamos en modo productos
+        showProductsMode();
         applySearchAndFilter();
       });
     }
 
-    // Render inicial
-    applySearchAndFilter();
+    // ✅ En vez de listar todo al entrar, dejamos el modo categorías
+    showCategoriesMode();
+    clearProductsUI();
 
     // Ofertas
     const frameEl = document.querySelector(".offers-frame");
@@ -229,7 +323,13 @@ async function init() {
 
   // Buscador
   const searchEl = document.getElementById("search-input");
-  if (searchEl) searchEl.addEventListener("input", applySearchAndFilter);
+  if (searchEl) {
+    searchEl.addEventListener("input", () => {
+      // ✅ Si el usuario escribe, mostramos productos
+      if (searchEl.value.trim()) showProductsMode();
+      applySearchAndFilter();
+    });
+  }
 
   // Vaciar carrito
   const clearBtn = document.getElementById("clear-cart-btn");
@@ -240,7 +340,7 @@ async function init() {
     });
   }
 
-  // ✅ Listener directo (por si todo está ok)
+  // Listener directo
   const sendBtn = document.getElementById("send-whatsapp-btn");
   if (sendBtn) {
     sendBtn.addEventListener("click", (e) => {
@@ -250,7 +350,7 @@ async function init() {
     });
   }
 
-  // ✅ Listener por delegación (captura aunque el botón esté tapado/re-renderizado)
+  // Listener por delegación
   document.addEventListener(
     "click",
     (e) => {
@@ -261,7 +361,7 @@ async function init() {
       e.stopPropagation();
       sendWhatsAppOrderSafe();
     },
-    true // capture: se ejecuta antes que otros handlers
+    true
   );
 }
 
