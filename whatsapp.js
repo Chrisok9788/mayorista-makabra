@@ -6,6 +6,8 @@
  * - Dirección para clientes nuevos
  * - Detalle de productos
  * - Total del pedido
+ * - ✅ Precio por cantidad (dpc.tramos) si existe
+ * - ✅ Compatibilidad con catálogos viejos/nuevos (nombre/name, precio/price)
  */
 
 function formatUYU(n) {
@@ -24,6 +26,47 @@ function getOrCreateCustomerId() {
     localStorage.setItem("customerId", id);
   }
   return id;
+}
+
+function toNumberPrice(v) {
+  if (typeof v === "number") return Number.isFinite(v) ? v : 0;
+  if (v == null) return 0;
+
+  let s = String(v).trim();
+  s = s.replace(/\$/g, "").trim();
+  s = s.replace(/\./g, "").replace(/,/g, ".");
+  const n = Number(s);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function getProductName(p) {
+  return String(p?.nombre ?? p?.name ?? "").trim();
+}
+
+/**
+ * Devuelve el precio unitario aplicando promo por cantidad si existe.
+ * dpc esperado:
+ *  dpc: { tramos: [ {min, max, precio}, ... ] }
+ */
+function getUnitPriceByQty(product, qty) {
+  const base = toNumberPrice(product?.precio ?? product?.price);
+
+  const tramos = product?.dpc?.tramos;
+  if (!Array.isArray(tramos) || tramos.length === 0) return base;
+
+  for (const t of tramos) {
+    const min = Number(t?.min);
+    const max = Number(t?.max);
+    const precio = toNumberPrice(t?.precio);
+
+    if (!Number.isFinite(min) || !Number.isFinite(max)) continue;
+
+    if (qty >= min && qty <= max) {
+      return precio > 0 ? precio : base;
+    }
+  }
+
+  return base;
 }
 
 /**
@@ -54,6 +97,17 @@ export function sendOrder(cart, products) {
     }
   }
 
+  // Índices para compatibilidad con carritos viejos
+  const byId = new Map();
+  const byNombre = new Map();
+
+  for (const p of products || []) {
+    const id = String(p?.id ?? "").trim();
+    const nombre = getProductName(p);
+    if (id) byId.set(id, p);
+    if (nombre) byNombre.set(nombre, p);
+  }
+
   const lines = [];
   lines.push(`Pedido: ${orderId}`);
   lines.push(`Cliente: ${customerId}`);
@@ -67,25 +121,33 @@ export function sendOrder(cart, products) {
     const qty = Number(qtyRaw) || 0;
     if (qty < 1) return;
 
-    // ✅ comparación segura (string vs number)
-    const product = (products || []).find((p) => String(p.id) === String(productId));
+    const key = String(productId ?? "").trim();
+
+    // 1) Buscar por id
+    // 2) Si no existe, buscar por nombre (carritos viejos)
+    const product = byId.get(key) || byNombre.get(key);
     if (!product) return;
 
     foundAny = true;
 
-    const price = Number(product.precio) || 0;
+    const nombre = getProductName(product);
 
-    if (price <= 0) {
+    // ✅ Precio por cantidad si existe (si no, precio base)
+    const unit = getUnitPriceByQty(product, qty);
+
+    if (unit <= 0) {
       hasConsult = true;
-      lines.push(`${qty} x ${product.nombre} — Consultar precio`);
+      lines.push(`${qty} x ${nombre} — Consultar precio`);
       return;
     }
 
-    const subtotal = price * qty;
+    const subtotal = unit * qty;
     total += subtotal;
 
+    // Si el precio unitario por cantidad difiere del base, lo dejamos implícito
+    // (el cliente ve "c/u" ya con el valor aplicado)
     lines.push(
-      `${qty} x ${product.nombre} — ${formatUYU(price)} c/u — Subtotal: ${formatUYU(subtotal)}`
+      `${qty} x ${nombre} — ${formatUYU(unit)} c/u — Subtotal: ${formatUYU(subtotal)}`
     );
   });
 
