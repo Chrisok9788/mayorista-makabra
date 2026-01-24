@@ -1,8 +1,15 @@
 /*
- * Módulo de interfaz de usuario para el sitio del mayorista.
- * Contiene funciones para renderizar productos, el carrito,
- * actualizar contadores y filtrar resultados.
- * Totalmente compatible con GitHub Pages.
+ * ui.js — versión corregida y defensiva (formato viejo + formato API)
+ * Soporta:
+ * - nombre / name
+ * - categoria / category
+ * - subcategoria / subcategory
+ * - precio / price
+ * - oferta / offer
+ * - imagen / img
+ * - promos por cantidad: dpc.tramos [{min,max,precio}]
+ *
+ * Compatible con GitHub Pages (sin dependencias).
  */
 
 /** Convierte precio a número (por si viene como string) */
@@ -15,6 +22,69 @@ function toNumberPrice(v) {
   s = s.replace(/\./g, "").replace(/,/g, ".");
   const n = Number(s);
   return Number.isFinite(n) ? n : 0;
+}
+
+/** Normaliza string */
+function s(v) {
+  return String(v ?? "").trim();
+}
+
+/** Compat: nombre */
+function getProductName(p) {
+  return s(p?.nombre ?? p?.name);
+}
+
+/** Compat: categoria */
+function getProductCategory(p) {
+  return s(p?.categoria ?? p?.category);
+}
+
+/** Compat: subcategoria */
+function getProductSubcategory(p) {
+  return s(p?.subcategoria ?? p?.subcategory);
+}
+
+/** Compat: oferta */
+function isOffer(p) {
+  return Boolean(p?.oferta ?? p?.offer);
+}
+
+/** Compat: stock (si existiera) */
+function getStock(p) {
+  const v = p?.stock ?? p?.stockOnline ?? p?.stock_online;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : undefined; // undefined = sin info
+}
+
+/** Compat: imagen */
+function getProductImage(p) {
+  return s(p?.imagen ?? p?.img);
+}
+
+/** Precio base (sin promo por cantidad) */
+function getBasePrice(p) {
+  return toNumberPrice(p?.precio ?? p?.price);
+}
+
+/**
+ * Precio unitario por cantidad (promo por cantidad si existe)
+ * dpc: { tramos: [ {min, max, precio}, ... ] }
+ */
+function getUnitPriceByQty(product, qty) {
+  const base = getBasePrice(product);
+  const tramos = product?.dpc?.tramos;
+
+  if (!Array.isArray(tramos) || tramos.length === 0) return base;
+
+  for (const t of tramos) {
+    const min = Number(t?.min);
+    const max = Number(t?.max);
+    const precio = toNumberPrice(t?.precio);
+
+    if (!Number.isFinite(min) || !Number.isFinite(max)) continue;
+    if (qty >= min && qty <= max) return precio > 0 ? precio : base;
+  }
+  return base;
 }
 
 /**
@@ -32,7 +102,7 @@ function vibrate60ms() {
 }
 
 /**
- * NUEVO: Calcula total del carrito usando products (campo: precio)
+ * Calcula total del carrito usando products (precio/price) + promos por cantidad (dpc).
  * @param {Array} products
  * @param {Object} cart  (id -> qty)
  * @returns {number}
@@ -42,26 +112,36 @@ export function computeCartTotal(products, cart) {
   if (!cart || typeof cart !== "object") return 0;
 
   // Map por id para buscar rápido
-  const byId = new Map(products.map((p) => [String(p.id ?? "").trim(), p]));
+  const byId = new Map(
+    products.map((p) => [s(p?.id), p]).filter(([id]) => Boolean(id))
+  );
+
+  // Map por nombre (compat carrito viejo)
+  const byName = new Map();
+  for (const p of products) {
+    const name = getProductName(p);
+    if (name) byName.set(name, p);
+  }
 
   let total = 0;
-  for (const [rawId, rawQty] of Object.entries(cart)) {
-    const id = String(rawId ?? "").trim();
-    const qty = Number(rawQty) || 0;
-    if (!id || qty < 1) continue;
 
-    const p = byId.get(id);
+  for (const [rawKey, rawQty] of Object.entries(cart)) {
+    const key = s(rawKey);
+    const qty = Number(rawQty) || 0;
+    if (!key || qty < 1) continue;
+
+    const p = byId.get(key) || byName.get(key);
     if (!p) continue;
 
-    const price = toNumberPrice(p.precio);
-    if (price > 0) total += price * qty;
+    const unit = getUnitPriceByQty(p, qty);
+    if (unit > 0) total += unit * qty;
   }
 
   return total;
 }
 
 /**
- * NUEVO: Actualiza el elemento del total en pantalla.
+ * Actualiza el elemento del total en pantalla.
  * @param {HTMLElement} totalEl
  * @param {Array} products
  * @param {Object} cart
@@ -79,7 +159,7 @@ export function renderProducts(list, container, addHandler) {
   if (!container) return;
   container.innerHTML = "";
 
-  if (!list || !list.length) {
+  if (!Array.isArray(list) || list.length === 0) {
     container.innerHTML = "<p>No se encontraron productos.</p>";
     return;
   }
@@ -88,17 +168,28 @@ export function renderProducts(list, container, addHandler) {
     const card = document.createElement("div");
     card.className = "product-card";
 
+    const name = getProductName(product) || "Producto";
+    const category = getProductCategory(product);
+    const subcategory = getProductSubcategory(product);
+    const imgPath = getProductImage(product);
+
+    const stock = getStock(product);
+    const hasStockInfo = typeof stock !== "undefined";
+    const inStock = !hasStockInfo || stock > 0;
+
+    const basePrice = getBasePrice(product);
+
     // BADGE
     let badgeLabel = "";
     let badgeClass = "";
 
-    if (typeof product.stock !== "undefined" && product.stock <= 0) {
+    if (hasStockInfo && stock <= 0) {
       badgeLabel = "SIN STOCK";
       badgeClass = "sin-stock";
-    } else if (product.oferta === true) {
+    } else if (isOffer(product)) {
       badgeLabel = "OFERTA";
       badgeClass = "oferta";
-    } else if (product.precio == null || product.precio <= 0) {
+    } else if (!basePrice || basePrice <= 0) {
       badgeLabel = "CONSULTAR";
       badgeClass = "consultar";
     }
@@ -114,6 +205,7 @@ export function renderProducts(list, container, addHandler) {
     const img = document.createElement("img");
     img.className = "product-image";
 
+    // GitHub Pages: BASE "./"
     const BASE =
       typeof import.meta !== "undefined" &&
       import.meta.env &&
@@ -121,8 +213,13 @@ export function renderProducts(list, container, addHandler) {
         ? import.meta.env.BASE_URL
         : "./";
 
-    img.src = product.imagen || `${BASE}placeholder.png`;
-    img.alt = product.nombre || "Producto";
+    img.src = imgPath || `${BASE}placeholder.png`;
+    img.alt = name;
+    // fallback si la imagen no existe
+    img.onerror = () => {
+      img.onerror = null;
+      img.src = `${BASE}placeholder.png`;
+    };
     card.appendChild(img);
 
     // CONTENIDO
@@ -130,54 +227,61 @@ export function renderProducts(list, container, addHandler) {
     content.className = "product-content";
 
     const title = document.createElement("h3");
-    title.textContent = product.nombre || "Producto";
+    title.textContent = name;
     content.appendChild(title);
 
     const meta = document.createElement("div");
     meta.className = "meta";
 
-    if (product.marca) meta.appendChild(document.createTextNode(product.marca));
+    // marca/presentacion (viejo)
+    if (product?.marca) meta.appendChild(document.createTextNode(s(product.marca)));
 
-    if (product.presentacion) {
-      if (meta.childNodes.length)
-        meta.appendChild(document.createTextNode(" · "));
-      meta.appendChild(document.createTextNode(product.presentacion));
+    if (product?.presentacion) {
+      if (meta.childNodes.length) meta.appendChild(document.createTextNode(" · "));
+      meta.appendChild(document.createTextNode(s(product.presentacion)));
     }
 
-    if (!meta.childNodes.length && product.categoria) {
-      meta.appendChild(document.createTextNode(product.categoria));
+    // si no hay meta, ponemos categoría/subcategoría
+    if (!meta.childNodes.length) {
+      const catText = [category, subcategory].filter(Boolean).join(" · ");
+      if (catText) meta.appendChild(document.createTextNode(catText));
+      else if (category) meta.appendChild(document.createTextNode(category));
     }
 
     if (meta.childNodes.length) content.appendChild(meta);
 
-    // PRECIO
-    const price = document.createElement("p");
-    price.className = "price";
+    // PRECIO (base)
+    const priceEl = document.createElement("p");
+    priceEl.className = "price";
 
-    if (product.stock !== undefined && product.stock <= 0) {
-      price.textContent = "Sin stock";
-    } else if (product.precio != null && product.precio > 0) {
-      price.textContent = `$ ${product.precio}`;
+    if (!inStock) {
+      priceEl.textContent = "Sin stock";
+    } else if (basePrice > 0) {
+      priceEl.textContent = `$ ${basePrice}`;
     } else {
-      price.textContent = "Consultar";
+      priceEl.textContent = "Consultar";
     }
 
-    content.appendChild(price);
+    content.appendChild(priceEl);
 
     // BOTÓN
     const btn = document.createElement("button");
     btn.className = "btn btn-primary";
     btn.textContent = "Agregar al carrito";
+    btn.disabled = !inStock;
 
     btn.addEventListener("click", () => {
-  addHandler && addHandler(product.id);
+      if (!inStock) return;
 
-  // Feedback visual tipo "tap" (iPhone friendly)
-  btn.classList.add("btn-tap");
-  setTimeout(() => {
-    btn.classList.remove("btn-tap");
-  }, 100);
-});
+      addHandler && addHandler(product.id);
+
+      // Feedback háptico
+      vibrate60ms();
+
+      // Feedback visual tipo "tap" (iPhone friendly)
+      btn.classList.add("btn-tap");
+      setTimeout(() => btn.classList.remove("btn-tap"), 100);
+    });
 
     content.appendChild(btn);
 
@@ -197,9 +301,10 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
   if (prevEmpty) prevEmpty.remove();
 
   const offers = (products || []).filter((p) => {
-    const hasStockInfo = typeof p.stock !== "undefined";
-    const inStock = !hasStockInfo || p.stock > 0;
-    return p.oferta === true && inStock;
+    const stock = getStock(p);
+    const hasStockInfo = typeof stock !== "undefined";
+    const inStock = !hasStockInfo || stock > 0;
+    return isOffer(p) && inStock;
   });
 
   if (offers.length === 0) {
@@ -212,16 +317,17 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
 
   const cardsHtml = offers
     .map((p) => {
-      const name = p.nombre || "Producto";
-      const img = p.imagen || "";
-      const price =
-        p.precio != null && p.precio > 0 ? `$ ${p.precio}` : "Consultar";
+      const id = s(p?.id);
+      const name = getProductName(p) || "Producto";
+      const img = getProductImage(p);
+      const priceNum = getBasePrice(p);
+      const price = priceNum > 0 ? `$ ${priceNum}` : "Consultar";
 
       return `
-        <div class="offer-card" data-id="${p.id ?? ""}">
+        <div class="offer-card" data-id="${id}">
           ${
             img
-              ? `<img class="offer-img" src="${img}" alt="${name}">`
+              ? `<img class="offer-img" src="${img}" alt="${name}" onerror="this.onerror=null;this.style.display='none';">`
               : `<div class="offer-img"></div>`
           }
           <div class="offer-body">
@@ -233,6 +339,7 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
     })
     .join("");
 
+  // loop si hay varias
   trackEl.innerHTML = offers.length >= 2 ? cardsHtml + cardsHtml : cardsHtml;
 
   if (typeof onClick === "function") {
@@ -240,8 +347,6 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
       el.addEventListener("click", () => {
         const id = el.getAttribute("data-id");
         if (id) onClick(id);
-        // Nota: acá NO vibramos porque no sabemos si onClick agrega al carrito o solo filtra/scroll.
-        // Si querés vibración también en ofertas cuando agrega, decime cómo estás usando onClick.
       });
     });
   }
@@ -261,55 +366,66 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
     return 0;
   }
 
-  // Map por id para render rápido y seguro
   const byId = new Map(
-    (products || []).map((p) => [String(p.id ?? "").trim(), p])
+    (products || []).map((p) => [s(p?.id), p]).filter(([id]) => Boolean(id))
   );
 
-  entries.forEach(([productId, qty]) => {
-    const id = String(productId ?? "").trim();
-    const product = byId.get(id);
+  // compat carrito viejo por nombre
+  const byName = new Map();
+  for (const p of products || []) {
+    const name = getProductName(p);
+    if (name) byName.set(name, p);
+  }
+
+  entries.forEach(([productKey, qtyRaw]) => {
+    const key = s(productKey);
+    const qty = Number(qtyRaw) || 0;
+    if (!key || qty < 1) return;
+
+    const product = byId.get(key) || byName.get(key);
     if (!product) return;
 
     const item = document.createElement("div");
     item.className = "cart-item";
 
-    const name = document.createElement("div");
-    name.className = "cart-item-name";
-    name.textContent = product.nombre || "Producto";
-    item.appendChild(name);
+    const nameEl = document.createElement("div");
+    nameEl.className = "cart-item-name";
+    nameEl.textContent = getProductName(product) || "Producto";
+    item.appendChild(nameEl);
 
     const controls = document.createElement("div");
     controls.className = "cart-item-controls";
 
     const minus = document.createElement("button");
     minus.textContent = "−";
-    minus.onclick = () => updateHandler && updateHandler(id, Number(qty) - 1);
+    minus.type = "button";
+    minus.onclick = () => updateHandler && updateHandler(product.id, qty - 1);
 
     const input = document.createElement("input");
     input.type = "number";
     input.min = "1";
-    input.value = qty;
+    input.value = String(qty);
     input.onchange = (e) => {
       const v = parseInt(e.target.value, 10);
       const safe = isNaN(v) ? 1 : Math.max(1, v);
-      updateHandler && updateHandler(id, safe);
+      updateHandler && updateHandler(product.id, safe);
     };
 
     const plus = document.createElement("button");
     plus.textContent = "+";
-    plus.onclick = () => updateHandler && updateHandler(id, Number(qty) + 1);
+    plus.type = "button";
+    plus.onclick = () => updateHandler && updateHandler(product.id, qty + 1);
 
     const remove = document.createElement("button");
     remove.textContent = "✖";
-    remove.onclick = () => removeHandler && removeHandler(id);
+    remove.type = "button";
+    remove.onclick = () => removeHandler && removeHandler(product.id);
 
     controls.append(minus, input, plus, remove);
     item.appendChild(controls);
     container.appendChild(item);
   });
 
-  // Devuelve total para que lo uses si querés
   return computeCartTotal(products, cart);
 }
 
@@ -338,7 +454,11 @@ export function populateCategories(products, select) {
   }
 
   const categories = Array.from(
-    new Set((products || []).map((p) => (p.categoria || "").trim()).filter(Boolean))
+    new Set(
+      (products || [])
+        .map((p) => getProductCategory(p))
+        .filter(Boolean)
+    )
   ).sort((a, b) => a.localeCompare(b, "es"));
 
   categories.forEach((cat) => {
@@ -350,7 +470,7 @@ export function populateCategories(products, select) {
 }
 
 /**
- * NUEVO: Carga subcategorías en el select, según categoría elegida.
+ * Carga subcategorías en el select, según categoría elegida.
  */
 export function populateSubcategories(products, category, select) {
   if (!select) return;
@@ -364,8 +484,8 @@ export function populateSubcategories(products, category, select) {
   const subs = Array.from(
     new Set(
       (products || [])
-        .filter((p) => (p.categoria || "").trim() === category)
-        .map((p) => (p.subcategoria || "").trim())
+        .filter((p) => getProductCategory(p) === s(category))
+        .map((p) => getProductSubcategory(p))
         .filter(Boolean)
     )
   ).sort((a, b) => a.localeCompare(b, "es"));
@@ -380,26 +500,37 @@ export function populateSubcategories(products, category, select) {
 
 /**
  * Filtra por categoría y texto.
+ * Nota: tags puede venir null / string / array.
  */
 export function filterProducts(products, category, searchTerm) {
-  let result = products || [];
+  let result = Array.isArray(products) ? products : [];
 
   if (category) {
-    result = result.filter((p) => (p.categoria || "").trim() === category);
+    const cat = s(category);
+    result = result.filter((p) => getProductCategory(p) === cat);
   }
 
   if (searchTerm) {
-    const term = searchTerm.toLowerCase().trim();
+    const term = s(searchTerm).toLowerCase();
+
     result = result.filter((p) => {
+      const tags = p?.tags;
+      const tagsStr = Array.isArray(tags)
+        ? tags.join(" ")
+        : typeof tags === "string"
+        ? tags
+        : "";
+
       const text = [
-        p.nombre,
-        p.marca || "",
-        p.categoria || "",
-        p.subcategoria || "",
-        (p.tags || []).join(" "),
+        getProductName(p),
+        s(p?.marca),
+        getProductCategory(p),
+        getProductSubcategory(p),
+        tagsStr,
       ]
         .join(" ")
         .toLowerCase();
+
       return text.includes(term);
     });
   }
@@ -408,7 +539,7 @@ export function filterProducts(products, category, searchTerm) {
 }
 
 /**
- * Panel tipo acordeón
+ * Panel tipo acordeón (categorías -> subcategorías)
  */
 export function renderCategoryAccordion(products, onSelect) {
   const accordion = document.getElementById("categoryAccordion");
@@ -419,15 +550,18 @@ export function renderCategoryAccordion(products, onSelect) {
 
   const catMap = new Map();
   for (const p of allProducts) {
-    const cat = (p.categoria || "Otros").trim();
-    const sub = (p.subcategoria || "Otros").trim();
+    const cat = getProductCategory(p) || "Otros";
+    const sub = getProductSubcategory(p) || "Otros";
+
     if (!catMap.has(cat)) catMap.set(cat, new Map());
     const subMap = catMap.get(cat);
     if (!subMap.has(sub)) subMap.set(sub, []);
     subMap.get(sub).push(p);
   }
 
-  const categories = Array.from(catMap.keys()).sort((a, b) => a.localeCompare(b, "es"));
+  const categories = Array.from(catMap.keys()).sort((a, b) =>
+    a.localeCompare(b, "es")
+  );
 
   const title = document.createElement("div");
   title.className = "cat-panel-head";
@@ -445,7 +579,8 @@ export function renderCategoryAccordion(products, onSelect) {
     allBtn.type = "button";
     allBtn.className = "cat-pill";
     allBtn.textContent = "Ver todo";
-    allBtn.onclick = () => typeof onSelect === "function" && onSelect(allProducts);
+    allBtn.onclick = () =>
+      typeof onSelect === "function" && onSelect(allProducts);
     list.appendChild(allBtn);
 
     categories.forEach((cat) => {
@@ -511,7 +646,7 @@ export function renderCategoryAccordion(products, onSelect) {
     const renderSubList = (term = "") => {
       body.querySelectorAll(".subcat.row").forEach((n) => n.remove());
 
-      const t = term.trim().toLowerCase();
+      const t = s(term).toLowerCase();
       const subs = Array.from(subMap.entries())
         .sort((a, b) => a[0].localeCompare(b[0], "es"))
         .filter(([sub]) => !t || sub.toLowerCase().includes(t));
