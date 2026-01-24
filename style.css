@@ -1,4 +1,3 @@
-
 :root {
   /* ✅ Cambios: paleta clara (fondo blanco) manteniendo la identidad verde */
   --bg: #ffffff;
@@ -14,6 +13,7 @@
 }
 
 * { box-sizing: border-box; }
+
 html, body {
   margin: 0;
   padding: 0;
@@ -46,7 +46,18 @@ a { color: inherit; text-decoration: none; }
   padding: 12px 0;
 }
 
-.brand { display: flex; align-items: center; gap: 12px; }
+/* ✅ BRAND clickeable (logo + nombre) */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.brand:visited { color: inherit; }
+.brand:hover { opacity: 0.96; }
+
 .brand-logo {
   width: 46px;
   height: 46px;
@@ -55,12 +66,14 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid var(--border);
   background: #fff;
 }
+
 .brand-title { font-weight: 800; letter-spacing: 0.2px; }
 .brand-subtitle { color: var(--muted); font-size: 12px; margin-top: 2px; }
 
 .main-nav { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .main-nav a { padding: 10px 10px; border-radius: 10px; color: var(--muted); }
 .main-nav a:hover { background: rgba(17,24,39,0.06); color: var(--text); }
+
 .nav-cart {
   background: rgba(26,163,107,0.10);
   color: var(--text) !important;
@@ -80,6 +93,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .hero { padding-top: 20px; }
+
 .hero-card {
   /* ✅ Fondo claro con acento verde */
   background: linear-gradient(135deg, rgba(26,163,107,0.14), rgba(11,18,32,0.02));
@@ -93,6 +107,7 @@ a { color: inherit; text-decoration: none; }
 .hero-card p { margin: 0 0 14px; color: var(--muted); line-height: 1.45; }
 
 .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
 .btn {
   appearance: none;
   border: 1px solid var(--border);
@@ -105,6 +120,7 @@ a { color: inherit; text-decoration: none; }
   font-weight: 700;
 }
 .btn:hover { background: rgba(11,18,32,0.06); }
+
 .btn-primary {
   background: var(--brand);
   border-color: rgba(26,163,107,0.7);
@@ -139,7 +155,9 @@ a { color: inherit; text-decoration: none; }
   gap: 10px;
   margin: 14px 0;
 }
-.filters input, .filters select {
+
+.filters input,
+.filters select {
   width: 100%;
   padding: 12px 12px;
   border-radius: 12px;
@@ -149,7 +167,54 @@ a { color: inherit; text-decoration: none; }
   color: var(--text);
   outline: none;
 }
+
 .filters input::placeholder { color: rgba(91,103,119,0.75); }
+
+/* =========================
+   ✅ GRID DE CATEGORÍAS (NUEVO)
+   ========================= */
+.categories-grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+@media (min-width: 768px){
+  .categories-grid{
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.category-card{
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  background: #fff;
+  box-shadow: 0 8px 18px rgba(16,24,40,0.08);
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.category-card:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 12px 22px rgba(16,24,40,0.12);
+}
+
+.category-card h3{
+  margin: 0;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+}
+
+.category-card p{
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 700;
+}
 
 .products-grid {
   display: grid;
@@ -168,6 +233,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .product-top { display: flex; gap: 12px; align-items: center; }
+
 .product-img {
   width: 74px;
   height: 74px;
@@ -189,7 +255,15 @@ a { color: inherit; text-decoration: none; }
 .product-meta { min-width: 0; }
 .product-name { margin: 0; font-size: 16px; }
 .product-cat { color: var(--muted); font-size: 12px; margin-top: 4px; }
-.price-row { margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+
+.price-row {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 .price { font-weight: 900; }
 .price.muted { font-weight: 700; }
 
@@ -209,6 +283,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .offers-section { padding-top: 10px; }
+
 .offers-frame {
   overflow: hidden;
   border-radius: var(--radius);
@@ -217,6 +292,7 @@ a { color: inherit; text-decoration: none; }
   background: #ffffff;
   box-shadow: var(--shadow);
   padding: 10px;
+  min-height: 150px; /* evita que parezca que “no existe” */
 }
 
 .offers-track {
@@ -226,26 +302,34 @@ a { color: inherit; text-decoration: none; }
   animation: offers-scroll 28s linear infinite;
 }
 
+/* =========================
+   FIX IMÁGENES OFERTAS
+   ========================= */
 .offer-card {
   width: 180px;
   flex: 0 0 auto;
   border-radius: 14px;
   border: 1px solid rgba(11,18,32,0.10);
-  /* ✅ Antes: rgba(255,255,255,0.04) */
   background: #ffffff;
   overflow: hidden;
   cursor: pointer;
   box-shadow: 0 8px 18px rgba(16,24,40,0.10);
+
+  /* Estructura estable */
+  display: flex;
+  flex-direction: column;
 }
 .offer-card:hover { transform: translateY(-1px); }
 
 .offer-img {
   width: 100%;
-  height: 110px;
-  object-fit: cover;
+  height: 160px;           /* Más alto para botellas */
+  object-fit: contain;     /* NO recorta */
+  object-position: center;
   display: block;
   background: rgba(11,18,32,0.04);
 }
+
 .offer-body { padding: 10px; }
 .offer-title { font-weight: 800; font-size: 13px; margin: 0; }
 .offer-price { margin-top: 6px; font-weight: 900; }
@@ -256,7 +340,47 @@ a { color: inherit; text-decoration: none; }
   to { transform: translateX(-50%); }
 }
 
+.offers-empty {
+  padding: 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Ajuste SOLO en celular (ofertas) */
+@media (max-width: 560px) {
+  .offer-card { width: 200px; }
+  .offer-img { height: 190px; }
+}
+
+/* =========================
+   FIX GENERAL DE IMÁGENES EN CARDS
+   (evita imágenes gigantes y recortes)
+   ========================= */
+
+/* Cualquier imagen dentro de una tarjeta */
+.product-card img,
+.offer-card img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Si la imagen es la “grande” (como la de oferta) */
+.offer-card img {
+  height: 180px;          /* controla el alto visible */
+  object-fit: contain;    /* NO recorta */
+  object-position: center;
+  background: rgba(11,18,32,0.04);
+}
+
+/* En celular, un poco más alta para botellas */
+@media (max-width: 560px) {
+  .offer-card img { height: 220px; }
+}
+
 .cart-items { display: grid; gap: 10px; }
+
 .cart-item {
   background: #ffffff;
   border: 1px solid var(--border);
@@ -268,10 +392,12 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
   box-shadow: var(--shadow);
 }
+
 .cart-item h4 { margin: 0; font-size: 14px; }
 .cart-item .muted { font-size: 12px; }
 
 .qty-controls { display: flex; align-items: center; gap: 8px; }
+
 .qty-controls input {
   width: 64px;
   padding: 10px;
@@ -298,6 +424,7 @@ a { color: inherit; text-decoration: none; }
   gap: 10px;
   font-size: 16px;
 }
+
 .cart-actions { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
 
 .how-to-list { margin: 0; padding-left: 18px; color: var(--muted); line-height: 1.6; }
@@ -311,141 +438,8 @@ a { color: inherit; text-decoration: none; }
   gap: 10px;
   box-shadow: var(--shadow);
 }
+
 .contact-item { display: grid; gap: 4px; }
-
-.whatsapp-float {
-  position: fixed;
-  bottom: 18px;
-  right: 18px;
-  background: var(--brand);
-  color: #fff;
-  padding: 12px 14px;
-  border-radius: 999px;
-  font-weight: 900;
-  box-shadow: var(--shadow);
-  border: 1px solid rgba(26,163,107,0.6);
-}
-
-.site-footer {
-  border-top: 1px solid var(--border);
-  padding: 16px 0;
-  color: var(--muted);
-  text-align: center;
-  /* ✅ Antes: rgba(0,0,0,0.12) */
-  background: #ffffff;
-}
-
-/* Responsive */
-@media (max-width: 920px) {
-  .products-grid { grid-template-columns: repeat(2, 1fr); }
-  .filters { grid-template-columns: 1fr; }
-  .main-nav { justify-content: flex-end; }
-}
-
-@media (max-width: 560px) {
-  .products-grid { grid-template-columns: 1fr; }
-  .brand-subtitle { display: none; }
-}
-/* Header más compacto SOLO en celular */
-@media (max-width: 560px) {
-  .header-row {
-    padding: 4px 0;
-  }
-
-  .brand-logo {
-    width: 32px;
-    height: 32px;
-  }
-
-  .main-nav a {
-    padding: 5px 6px;
-    font-size: 13px;
-  }
-
-  .nav-cart {
-    padding: 5px 8px;
-    font-size: 13px;
-  }
-}
-.offers-frame { 
-  min-height: 150px;   /* evita que parezca que “no existe” */
-}
-
-.offers-empty {
-  padding: 12px;
-  color: var(--muted);
-  font-size: 13px;
-}@media (max-width: 560px) {
-  .offer-card { width: 200px; }
-  .offer-img { height: 190px; }
-}
-/* =========================
-   FIX IMÁGENES OFERTAS
-   ========================= */
-
-.offer-card {
-  width: 180px;
-  flex: 0 0 auto;
-  border-radius: 14px;
-  border: 1px solid rgba(11,18,32,0.10);
-  background: #ffffff;
-  overflow: hidden;
-  cursor: pointer;
-  box-shadow: 0 8px 18px rgba(16,24,40,0.10);
-
-  /* Estructura estable */
-  display: flex;
-  flex-direction: column;
-}
-
-.offer-img {
-  width: 100%;
-  height: 160px;           /* Más alto para botellas */
-  object-fit: contain;     /* NO recorta */
-  object-position: center;
-  display: block;
-  background: rgba(11,18,32,0.04);
-}
-
-/* =========================
-   AJUSTE SOLO EN CELULAR
-   ========================= */
-@media (max-width: 560px) {
-  .offer-card {
-    width: 200px;
-  }
-
-  .offer-img {
-    height: 190px;
-  }
-}/* =========================
-   FIX GENERAL DE IMÁGENES EN CARDS
-   (evita imágenes gigantes y recortes)
-   ========================= */
-
-/* Cualquier imagen dentro de una tarjeta */
-.product-card img,
-.offer-card img {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-}
-
-/* Si la imagen es la “grande” (como la de oferta) */
-.offer-card img {
-  height: 180px;          /* controla el alto visible */
-  object-fit: contain;    /* NO recorta */
-  object-position: center;
-  background: rgba(11,18,32,0.04);
-}
-
-/* En celular, un poco más alta para botellas */
-@media (max-width: 560px) {
-  .offer-card img {
-    height: 220px;
-  }
-}
 
 /* =========================
    PANEL DE CATEGORÍAS / SUBCATEGORÍAS
@@ -487,23 +481,11 @@ a { color: inherit; text-decoration: none; }
   cursor: pointer;
 }
 
-.accordion-btn span {
-  color: var(--text);
-}
+.accordion-btn span { color: var(--text); }
+.accordion-btn .chev { font-weight: 900; color: var(--muted); }
 
-.accordion-btn .chev {
-  font-weight: 900;
-  color: var(--muted);
-}
-
-.accordion-body {
-  display: none;
-  padding: 8px;
-}
-
-.accordion-body.open {
-  display: block;
-}
+.accordion-body { display: none; padding: 8px; }
+.accordion-body.open { display: block; }
 
 .subcat {
   display: flex;
@@ -515,9 +497,7 @@ a { color: inherit; text-decoration: none; }
   color: var(--text);
 }
 
-.subcat:hover {
-  background: rgba(26, 163, 107, 0.10);
-}
+.subcat:hover { background: rgba(26, 163, 107, 0.10); }
 
 .subcat small {
   color: var(--muted);
@@ -525,10 +505,10 @@ a { color: inherit; text-decoration: none; }
 }
 
 @media (max-width: 920px) {
-  .cat-panel {
-    margin-bottom: 12px;
-  }
-}.cat-panel-head { margin-bottom: 10px; }
+  .cat-panel { margin-bottom: 12px; }
+}
+
+.cat-panel-head { margin-bottom: 10px; }
 
 .cat-list { display: grid; gap: 8px; }
 
@@ -556,9 +536,8 @@ a { color: inherit; text-decoration: none; }
   cursor: pointer;
 }
 
-.subcat:hover {
-  background: rgba(17,24,39,0.04);
-}
+.subcat:hover { background: rgba(17,24,39,0.04); }
+
 /* Subcategoría: mismo look que los filtros */
 #subcategory-filter {
   width: 100%;
@@ -569,6 +548,10 @@ a { color: inherit; text-decoration: none; }
   color: var(--text);
   outline: none;
 }
+
+/* =========================
+   BOTONES FLOTANTES (CARRITO + WHATSAPP)
+   ========================= */
 .float-actions {
   position: fixed;
   right: 18px;
@@ -608,12 +591,63 @@ a { color: inherit; text-decoration: none; }
   line-height: 1;
 }
 
-/* Importante: si whatsapp-float estaba fixed, lo anulamos para que lo maneje el contenedor */
-.float-actions .whatsapp-float {
-  position: static;
+/* WhatsApp dentro del contenedor flotante */
+.whatsapp-float {
+  background: var(--brand);
+  color: #fff;
+  padding: 12px 14px;
+  border-radius: 999px;
+  font-weight: 900;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(26,163,107,0.6);
 }
+
+/* Importante: si whatsapp-float estaba fixed, lo anulamos para que lo maneje el contenedor */
+.float-actions .whatsapp-float { position: static; }
+
 /* Feedback visual tipo tap (compatible iPhone) */
 .btn-tap {
   transform: scale(0.96);
   transition: transform 0.1s ease;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 16px 0;
+  color: var(--muted);
+  text-align: center;
+  /* ✅ Antes: rgba(0,0,0,0.12) */
+  background: #ffffff;
+}
+
+/* Responsive */
+@media (max-width: 920px) {
+  .products-grid { grid-template-columns: repeat(2, 1fr); }
+  .filters { grid-template-columns: 1fr; }
+  .main-nav { justify-content: flex-end; }
+}
+
+@media (max-width: 560px) {
+  .products-grid { grid-template-columns: 1fr; }
+  .brand-subtitle { display: none; }
+}
+
+/* Header más compacto SOLO en celular */
+@media (max-width: 560px) {
+  .header-row { padding: 4px 0; }
+
+  .brand-logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  .main-nav a {
+    padding: 5px 6px;
+    font-size: 13px;
+  }
+
+  .nav-cart {
+    padding: 5px 8px;
+    font-size: 13px;
+  }
 }
