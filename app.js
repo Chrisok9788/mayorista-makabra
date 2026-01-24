@@ -19,7 +19,7 @@ import {
   populateSubcategories,
   filterProducts,
   renderOffersCarousel,
-  computeCartTotal, // ✅ NUEVO: total coherente con promos + redondeo
+  computeCartTotal, // ✅ total coherente con promos + (si ui.js redondea, queda perfecto)
 } from "./ui.js";
 
 import { sendOrder } from "./whatsapp.js";
@@ -124,12 +124,13 @@ function renderCategoryGrid(categories, onClick) {
   const grid = document.getElementById("categoriesGrid");
   if (!grid) return;
 
+  // ✅ FIX: usar "c" (lo que viene del .map) en vez de "Rca"
   grid.innerHTML = categories
     .map(
       (c) => `
-      <div class="category-card" data-cat="${encodeURIComponent(Rca.name)}">
-        <h3>${Rca.name}</h3>
-        <p>${Rca.count} artículos</p>
+      <div class="category-card" data-cat="${encodeURIComponent(c.name)}">
+        <h3>${c.name}</h3>
+        <p>${c.count} artículos</p>
       </div>
     `
     )
@@ -166,13 +167,12 @@ function rerenderCartUI() {
   const cartContainer = document.getElementById("cart-container");
   const cartObj = getCart();
 
-  // renderCart ya calcula con promo por cantidad para mostrar cada ítem
   renderCart(products, cartObj, cartContainer, handleUpdate, handleRemove);
 
-  // ✅ Total coherente (promo + redondeo) usando computeCartTotal()
+  // ✅ Total coherente (promo + redondeo)
   const totalEl = document.getElementById("cart-total");
   if (totalEl) {
-    const total = computeCartTotal(products, cartObj); // ya viene redondeado
+    const total = computeCartTotal(products, cartObj);
     totalEl.textContent = `$ ${total}`;
   }
 
@@ -208,7 +208,11 @@ function applySearchAndFilter() {
 
   if (term) filtered = filterProducts(filtered, "", term);
 
-  renderProducts(filtered, document.getElementById("products-container"), handleAdd);
+  renderProducts(
+    filtered,
+    document.getElementById("products-container"),
+    handleAdd
+  );
 }
 
 // =======================
