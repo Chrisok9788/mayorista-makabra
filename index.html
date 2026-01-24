@@ -4,20 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <meta
-      property="og:title"
-      content="Mayorista Makabra - Catálogo para revendedores"
-    />
-    <meta
-      property="og:description"
-      content="Catálogo online mayorista con pedido por WhatsApp."
-    />
+    <meta property="og:title" content="Mayorista Makabra - Catálogo para revendedores" />
+    <meta property="og:description" content="Catálogo online mayorista con pedido por WhatsApp." />
     <meta property="og:image" content="./logo.png" />
     <meta property="og:type" content="website" />
-    <meta
-      property="og:url"
-      content="https://chrisok9788.github.io/mayorista-makabra/"
-    />
+    <meta property="og:url" content="https://chrisok9788.github.io/mayorista-makabra/" />
 
     <meta
       name="description"
@@ -31,13 +22,8 @@
   <body>
     <header class="site-header">
       <div class="container header-row">
-        <!-- BRAND CLICKEABLE -->
         <a class="brand" href="#home" aria-label="Ir al inicio">
-          <img
-            src="./logo.png"
-            class="brand-logo"
-            alt="Mayorista Makabra logo"
-          />
+          <img src="./logo.png" class="brand-logo" alt="Mayorista Makabra logo" />
           <div class="brand-text">
             <div class="brand-title">Mayorista Makabra</div>
             <div class="brand-subtitle">
@@ -54,11 +40,10 @@
     </header>
 
     <main role="main">
-      <!-- ANCLA INICIO -->
       <section id="home"></section>
 
       <!-- OFERTAS -->
-      <section class="section offers-section" aria-label="Ofertas">
+      <section class="section offers-section">
         <div class="container">
           <div class="section-title-row">
             <h2>OFERTAS</h2>
@@ -100,10 +85,7 @@
             <div id="categoryAccordion" class="accordion"></div>
           </aside>
 
-          <!-- GRID DE CATEGORÍAS -->
           <div id="categoriesGrid" class="categories-grid"></div>
-
-          <!-- PRODUCTOS -->
           <div id="products-container" class="products-grid"></div>
         </div>
       </section>
@@ -129,11 +111,7 @@
                 Vaciar carrito
               </button>
 
-              <button
-                id="send-whatsapp-btn"
-                class="btn btn-primary"
-                type="button"
-              >
+              <button id="send-whatsapp-btn" class="btn btn-primary" type="button">
                 Enviar pedido por WhatsApp
               </button>
 
@@ -152,25 +130,6 @@
         </div>
       </section>
 
-      <!-- CÓMO COMPRAR -->
-      <section id="how" class="section">
-        <div class="container">
-          <div class="section-title-row">
-            <h2>Cómo comprar</h2>
-            <span class="muted">Rápido y simple</span>
-          </div>
-          <ol class="how-to-list">
-            <li>Explorá el catálogo y buscá los productos que necesitás.</li>
-            <li>Agregá al carrito la cantidad deseada de cada producto.</li>
-            <li>Revisá tu carrito y hacé clic en “Enviar pedido por WhatsApp”.</li>
-            <li>
-              Si sos cliente nuevo, completás tu dirección y te contactamos por
-              WhatsApp para coordinar.
-            </li>
-          </ol>
-        </div>
-      </section>
-
       <!-- CONTACTO -->
       <section id="contact" class="section section-soft">
         <div class="container">
@@ -182,9 +141,9 @@
           <div class="contact-card">
             <div class="contact-item">
               <strong>WhatsApp</strong>
-              <a href="https://wa.me/59896405927" rel="noopener"
-                >+598 096 405 927</a
-              >
+              <a href="https://wa.me/59896405927" rel="noopener">
+                +598 096 405 927
+              </a>
             </div>
 
             <div class="contact-item">
@@ -193,8 +152,9 @@
                 href="https://instagram.com/distribuidoramakabra"
                 target="_blank"
                 rel="noopener"
-                >@distribuidoramakabra</a
               >
+                @distribuidoramakabra
+              </a>
             </div>
 
             <div class="contact-item">
@@ -203,21 +163,22 @@
             </div>
 
             <div class="contact-item">
-  <strong>Dirección</strong>
-  <a
-    href="https://maps.app.goo.gl/vduLYftxkBn8bdVo6?g_st=ic"
-    target="_blank"
-    rel="noopener"
-  >
-    Luis Batlle Berres 5849
-  </a>
-</div>
+              <strong>Dirección</strong>
+              <a
+                href="https://maps.app.goo.gl/vduLYftxkBn8bdVo6?g_st=ic"
+                target="_blank"
+                rel="noopener"
+              >
+                Luis Batlle Berres 5849
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
       <!-- BOTONES FLOTANTES -->
       <div class="float-actions" aria-label="Accesos rápidos">
+        <!-- CARRITO GRANDE -->
         <a href="#cart" class="cart-float" aria-label="Carrito">
           Carrito
           <span class="cart-badge">
@@ -225,13 +186,19 @@
           </span>
         </a>
 
+        <!-- WHATSAPP CHICO SOLO ICONO -->
         <a
           href="https://wa.me/59896405927"
           class="whatsapp-float"
           target="_blank"
           rel="noopener"
+          aria-label="WhatsApp"
         >
-          WhatsApp
+          <img
+            src="./whatsapp.png.PNG"
+            alt="WhatsApp"
+            style="width:26px;height:26px;display:block"
+          />
         </a>
       </div>
 
