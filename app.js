@@ -1,11 +1,7 @@
 // app.js — versión MODIFICADA y COMPLETA
-// Objetivos:
-// 1) Mantener tu UI de “modo categorías / modo productos”.
-// 2) Hacerlo compatible con products.json viejo (nombre/categoria/subcategoria/precio/oferta/imagen)
-//    y con formato nuevo (name/category/subcategory/price/offer/img).
-// 3) Arreglar el “Error al cargar productos” mostrando el motivo real (desde data.js robusto).
-// 4) Mantener carrusel de ofertas funcionando.
-// 5) Evitar que el filtro rompa cuando los campos vienen con nombres distintos.
+// Cambios de esta versión:
+// ✅ Total del carrito SIEMPRE redondeado (Math.round) en la UI
+// ✅ Mantiene todo lo demás igual
 
 import { fetchProducts } from "./data.js";
 import {
@@ -33,7 +29,18 @@ import { sendOrder } from "./whatsapp.js";
 
 let products = [];
 let baseProducts = [];
-let sending = false; // evita doble click/doble envío
+let sending = false;
+
+// =======================
+// ✅ REDONDEO (UYU)
+// =======================
+function roundUYU(n) {
+  const x = Number(n);
+  return Number.isFinite(x) ? Math.round(x) : 0;
+}
+function formatUYU(n) {
+  return `$ ${roundUYU(n)}`;
+}
 
 // =======================
 // NORMALIZACIÓN (compatibilidad JSON viejo/nuevo)
@@ -69,16 +76,11 @@ function getImg(p) {
 }
 
 function getPrice(p) {
-  // precio viejo o price nuevo
   const v = p?.precio ?? p?.price;
   const n = Number(v);
   return Number.isFinite(n) ? n : 0;
 }
 
-/**
- * Devuelve un producto en “formato viejo” para que UI/cart/whatsapp sigan sin romper.
- * (Tu ui.js está hecho para: nombre/categoria/subcategoria/precio/oferta/imagen)
- */
 function normalizeProduct(p) {
   return {
     ...p,
@@ -121,7 +123,7 @@ function clearProductsUI() {
 }
 
 function buildCategoryCounts(items) {
-  const map = new Map(); // categoria -> count
+  const map = new Map();
   for (const p of items) {
     const cat = getCat(p);
     map.set(cat, (map.get(cat) || 0) + 1);
@@ -186,8 +188,8 @@ function rerenderCartUI() {
 
   const totalEl = document.getElementById("cart-total");
   if (totalEl) {
-    const total = totalAmount(cartObj, products);
-    totalEl.textContent = `$ ${total}`;
+    const totalRaw = totalAmount(cartObj, products); // puede venir con decimales
+    totalEl.textContent = formatUYU(totalRaw);       // ✅ redondeo final
   }
 
   updateCartCount(document.getElementById("cart-count"), totalItems());
@@ -206,7 +208,6 @@ function applySearchAndFilter() {
   const cat = categoryEl ? categoryEl.value : "";
   const sub = subcatEl ? subcatEl.value : "";
 
-  // Si no hay filtros ni búsqueda: mostrar categorías y no listar productos
   if (!term && !cat && !sub) {
     showCategoriesMode();
     clearProductsUI();
@@ -221,9 +222,7 @@ function applySearchAndFilter() {
   if (cat) filtered = filtered.filter((p) => getCat(p) === cat);
   if (sub) filtered = filtered.filter((p) => getSub(p) === sub);
 
-  if (term) {
-    filtered = filterProducts(filtered, "", term);
-  }
+  if (term) filtered = filterProducts(filtered, "", term);
 
   renderProducts(filtered, document.getElementById("products-container"), handleAdd);
 }
@@ -239,9 +238,7 @@ function goToCatalogAndShowProduct(productId) {
   const prod = products.find((p) => String(p.id) === String(productId));
   if (!prod) return;
 
-  // Al venir desde ofertas: mostrar productos (no categorías)
   showProductsMode();
-
   renderProducts([prod], document.getElementById("products-container"), handleAdd);
 
   const searchEl = document.getElementById("search-input");
@@ -280,6 +277,7 @@ function sendWhatsAppOrderSafe() {
       return;
     }
 
+    // Nota: el redondeo del mensaje de WhatsApp se corrige en whatsapp.js
     sendOrder(cart, products);
   } catch (err) {
     console.error("Error al enviar pedido:", err);
@@ -306,11 +304,9 @@ async function init() {
   try {
     const raw = await fetchProducts();
 
-    // ✅ normalizamos para que todo el sitio use mismo formato
     products = normalizeList(raw);
     baseProducts = products;
 
-    // ✅ Render inicial del GRID de categorías
     const categories = buildCategoryCounts(products);
     renderCategoryGrid(categories, (selectedCategory) => {
       const categoryEl = document.getElementById("category-filter");
@@ -325,7 +321,6 @@ async function init() {
       if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
-    // Categorías (select)
     const categoryEl = document.getElementById("category-filter");
     if (categoryEl) populateCategories(products, categoryEl);
 
@@ -336,7 +331,6 @@ async function init() {
 
       const cat = categoryEl.value;
 
-      // Si el usuario vuelve a "Todas las categorías"
       if (!cat) {
         subcatEl.value = "";
         subcatEl.style.display = "none";
@@ -345,7 +339,6 @@ async function init() {
         return;
       }
 
-      // Al elegir categoría: mostramos productos
       showProductsMode();
 
       subcatEl.style.display = "block";
@@ -374,11 +367,9 @@ async function init() {
       });
     }
 
-    // No listamos todo al entrar, dejamos modo categorías
     showCategoriesMode();
     clearProductsUI();
 
-    // Ofertas (usa oferta:true)
     const frameEl = document.querySelector(".offers-frame");
     const trackEl = document.getElementById("offers-track");
     renderOffersCarousel(products, frameEl, trackEl, goToCatalogAndShowProduct);
@@ -386,20 +377,15 @@ async function init() {
     rerenderCartUI();
   } catch (err) {
     console.error(err);
-
-    // ✅ Mostrar error real en pantalla
     const pc = document.getElementById("products-container");
     if (pc) {
       pc.innerHTML = `<p style="color:#b00020;font-weight:700">Error al cargar productos: ${String(
         err?.message || err
       )}</p>`;
     }
-
-    // Si falla, igual mostramos “modo productos” para que se vea el mensaje
     showProductsMode();
   }
 
-  // Buscador
   const searchEl = document.getElementById("search-input");
   if (searchEl) {
     searchEl.addEventListener("input", () => {
@@ -408,7 +394,6 @@ async function init() {
     });
   }
 
-  // Vaciar carrito
   const clearBtn = document.getElementById("clear-cart-btn");
   if (clearBtn) {
     clearBtn.addEventListener("click", () => {
@@ -417,7 +402,6 @@ async function init() {
     });
   }
 
-  // Listener directo
   const sendBtn = document.getElementById("send-whatsapp-btn");
   if (sendBtn) {
     sendBtn.addEventListener("click", (e) => {
@@ -427,13 +411,11 @@ async function init() {
     });
   }
 
-  // Listener por delegación
   document.addEventListener(
     "click",
     (e) => {
       const btn = e.target?.closest?.("#send-whatsapp-btn");
       if (!btn) return;
-
       e.preventDefault();
       e.stopPropagation();
       sendWhatsAppOrderSafe();
