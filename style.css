@@ -294,6 +294,27 @@ button:disabled,
 .price { font-weight: 900; }
 .price.muted { font-weight: 700; }
 
+/* =========================
+   ✅ NUEVO: TEXTO PROMO POR CANTIDAD (debajo del precio)
+   ========================= */
+.price-note{
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 800;
+  line-height: 1.25;
+  padding: 6px 8px;
+  border: 1px dashed rgba(26,163,107,0.35);
+  border-radius: 10px;
+  background: rgba(26,163,107,0.06);
+}
+
+/* Tap feedback del botón (lo usa ui.js) */
+.btn-tap{
+  transform: scale(0.98);
+  box-shadow: 0 4px 10px rgba(16,24,40,0.16);
+}
+
 .product-actions { display: flex; gap: 8px; margin-top: 10px; }
 .product-actions button { width: 100%; }
 
@@ -356,6 +377,15 @@ button:disabled,
 .offer-price { margin-top: 6px; font-weight: 900; }
 .offer-price.muted { font-weight: 700; }
 
+/* ✅ NUEVO: nota promo dentro del carrusel */
+.offer-note{
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
 @keyframes offers-scroll {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
@@ -407,6 +437,28 @@ button:disabled,
 
 .cart-item h4 { margin: 0; font-size: 14px; }
 .cart-item .muted { font-size: 12px; }
+
+/* ✅ NUEVO: meta en carrito (precio unitario / subtotal / promo) */
+.cart-item-meta{
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+/* ✅ NUEVO: nota promo en carrito */
+.cart-item-note{
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 800;
+  line-height: 1.25;
+  padding: 6px 8px;
+  border: 1px dashed rgba(26,163,107,0.35);
+  border-radius: 10px;
+  background: rgba(26,163,107,0.06);
+}
 
 .qty-controls { display: flex; align-items: center; gap: 8px; }
 
