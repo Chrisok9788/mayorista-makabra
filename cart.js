@@ -11,6 +11,20 @@ let cart = {};
 const CART_KEY = "cart";
 
 /**
+ * Vibración corta (defensiva).
+ * No hace nada si el dispositivo/navegador no lo soporta.
+ */
+function vibrate60ms() {
+  try {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      navigator.vibrate(60);
+    }
+  } catch {
+    // silencioso: no queremos romper nada por esto
+  }
+}
+
+/**
  * Carga el carrito desde localStorage.
  */
 export function loadCart() {
@@ -61,6 +75,7 @@ export function totalItems() {
 
 /**
  * Agrega una unidad de un producto al carrito.
+ * ✅ Vibración 60ms al agregar.
  */
 export function addItem(productKey) {
   const key = String(productKey ?? "").trim();
@@ -68,6 +83,9 @@ export function addItem(productKey) {
 
   cart[key] = (cart[key] || 0) + 1;
   saveCart();
+
+  // ✅ Feedback háptico
+  vibrate60ms();
 }
 
 /**
