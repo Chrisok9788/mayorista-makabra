@@ -59,35 +59,7 @@
     </header>
 
     <main role="main">
-      <!-- INICIO -->
-      <section id="home" class="section hero">
-        <div class="container">
-          <div class="hero-card">
-            <h1>Bienvenido a Mayorista Makabra</h1>
-            <p>
-              Somos un mayorista uruguayo para revendedores. Mirá el catálogo,
-              armá tu carrito y enviá tu pedido por WhatsApp.
-            </p>
-
-            <div class="hero-actions">
-              <!-- ✅ Recomendado en iPhone: sin target _blank -->
-              <a
-                href="https://wa.me/59896405927?text=Hola%20Makabra,%20quiero%20hacer%20un%20pedido"
-                class="btn btn-primary"
-                rel="noopener"
-              >
-                Hacer pedido por WhatsApp
-              </a>
-              <a href="#catalogue" class="btn btn-ghost">Ver catálogo</a>
-            </div>
-
-            <div class="hint">
-              Tip: podés <strong>arrastrar una imagen</strong> encima de la foto
-              de un producto para asignarla (queda guardada en este dispositivo).
-            </div>
-          </div>
-        </div>
-      </section>
+      <!-- INICIO (se eliminó el bloque HERO/Bienvenida) -->
 
       <!-- OFERTAS -->
       <section class="section offers-section" aria-label="Ofertas">
@@ -149,7 +121,6 @@
           <div id="cart-container" class="cart-items"></div>
 
           <div class="cart-summary">
-            <!-- ✅ FIX: class (antes decía "classtf") -->
             <div class="total-line">
               <span>Total:</span>
               <strong id="cart-total">$ 0</strong>
@@ -168,7 +139,6 @@
                 Enviar pedido por WhatsApp
               </button>
 
-              <!-- ✅ Fallback oculto (por si el JS necesita disparar un link directo) -->
               <a
                 id="send-whatsapp-link"
                 href="https://wa.me/59896405927?text=Hola%20Makabra"
