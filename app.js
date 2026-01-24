@@ -1,6 +1,8 @@
 // app.js — versión MODIFICADA y COMPLETA
 // Cambios de esta versión:
 // ✅ Total del carrito SIEMPRE redondeado (Math.round) en la UI
+// ✅ NO usa totalAmount() (porque no aplica dpc.tramos) → ahora usa computeCartTotal() de ui.js
+// ✅ Corrige el error "Can't find variable: Rca" (estaba en renderCategoryGrid)
 // ✅ Mantiene todo lo demás igual
 
 import { fetchProducts } from "./data.js";
@@ -12,7 +14,6 @@ import {
   removeItem,
   clearCart,
   totalItems,
-  totalAmount,
 } from "./cart.js";
 
 import {
@@ -23,6 +24,7 @@ import {
   populateSubcategories,
   filterProducts,
   renderOffersCarousel,
+  computeCartTotal, // ✅ usa el mismo cálculo que el detalle del carrito (dpc.tramos)
 } from "./ui.js";
 
 import { sendOrder } from "./whatsapp.js";
@@ -138,6 +140,7 @@ function renderCategoryGrid(categories, onClick) {
   const grid = document.getElementById("categoriesGrid");
   if (!grid) return;
 
+  // ✅ FIX: antes decía Rca.name / Rca.count (rompía todo)
   grid.innerHTML = categories
     .map(
       (c) => `
@@ -184,12 +187,15 @@ function rerenderCartUI() {
   const cartContainer = document.getElementById("cart-container");
   const cartObj = getCart();
 
+  // renderCart ya muestra unit/subtotal con dpc.tramos
   renderCart(products, cartObj, cartContainer, handleUpdate, handleRemove);
 
+  // ✅ Total coherente con el detalle: computeCartTotal() (aplica dpc.tramos)
+  // ✅ y redondeo final (Math.round)
   const totalEl = document.getElementById("cart-total");
   if (totalEl) {
-    const totalRaw = totalAmount(cartObj, products); // puede venir con decimales
-    totalEl.textContent = formatUYU(totalRaw);       // ✅ redondeo final
+    const totalRaw = computeCartTotal(products, cartObj); // puede devolver decimal si hay precios con decimales
+    totalEl.textContent = formatUYU(totalRaw); // ✅ redondeo final
   }
 
   updateCartCount(document.getElementById("cart-count"), totalItems());
