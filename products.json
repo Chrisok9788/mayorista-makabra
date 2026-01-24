@@ -1543,12 +1543,9 @@
   "precio": 69,
   "oferta": true,
   "imagen": "images/Aceite/Aceite-condesa.JPG.WEBP",
-  "marca": null,
-  "presentacion": null,
-  "tags": null,
   "dpc": {
     "tramos": [
-      { "min": 5, "max": 999999, "precio": 65 }
+      { "min": 5, "precio": 65 }
     ]
   }
 }
