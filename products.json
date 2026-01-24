@@ -1536,17 +1536,22 @@
     "tags": null
   },
   {
-    "id": "aceite-condesa-900cc-143",
-    "nombre": "Aceite Condesa 900Cc",
-    "categoria": "Almacén",
-    "subcategoria": "Aceite",
-    "precio": 69,
-    "oferta": false,
-    "imagen": "images/Aceite/Aceite-condesa.JPG.WEBP",
-    "marca": null,
-    "presentacion": null,
-    "tags": null
-  },
+  "id": "aceite-condesa-900cc-143",
+  "nombre": "Aceite Condesa 900Cc",
+  "categoria": "Almacén",
+  "subcategoria": "Aceite",
+  "precio": 69,
+  "oferta": false,
+  "imagen": "images/Aceite/Aceite-condesa.JPG.WEBP",
+  "marca": null,
+  "presentacion": null,
+  "tags": null,
+  "dpc": {
+    "tramos": [
+      { "min": 5, "max": 999999, "precio": 65 }
+    ]
+  }
+}
   {
     "id": "aceite-optimo-900cc-144",
     "nombre": "Aceite Optimo 900Cc",
