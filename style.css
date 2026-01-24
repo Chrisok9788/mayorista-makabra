@@ -616,28 +616,37 @@ button:disabled,
 /* Importante: si whatsapp-float estaba fixed, lo anulamos para que lo maneje el contenedor */
 .float-actions .whatsapp-float { position: static; }
 
-/* ✅ WhatsApp icon-only (más chico, redondo, solo logo) */
+/* =========================
+   ✅ FIX DEFINITIVO WHATSAPP ICON-ONLY
+   Logo entero, centrado, sin deformar
+   ========================= */
+
 .whatsapp-float.whatsapp-icon {
-  width: 54px;
-  height: 54px;
+  width: 52px;
+  height: 52px;
   padding: 0;
-  border-radius: 999px;
+  border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #25D366; /* verde WhatsApp */
-  border: 2px solid #ffffff; /* borde blanco tipo sticker */
-  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+
+  background: var(--brand);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(26,163,107,0.6);
 }
 
 .whatsapp-float.whatsapp-icon img {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
+  max-width: 28px;
+  max-height: 28px;
+  object-fit: contain;
+  object-position: center;
   display: block;
 }
 
 .whatsapp-float.whatsapp-icon:active {
-  transform: scale(0.96);
+  transform: scale(0.94);
 }
 
 @media (max-width: 560px) {
@@ -646,8 +655,8 @@ button:disabled,
     height: 50px;
   }
   .whatsapp-float.whatsapp-icon img {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
   }
 }
 
