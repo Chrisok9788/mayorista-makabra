@@ -18,6 +18,20 @@ function toNumberPrice(v) {
 }
 
 /**
+ * Vibración corta (defensiva).
+ * No hace nada si el dispositivo/navegador no lo soporta.
+ */
+function vibrate60ms() {
+  try {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      navigator.vibrate(60);
+    }
+  } catch {
+    // silencioso
+  }
+}
+
+/**
  * NUEVO: Calcula total del carrito usando products (campo: precio)
  * @param {Array} products
  * @param {Object} cart  (id -> qty)
@@ -28,9 +42,7 @@ export function computeCartTotal(products, cart) {
   if (!cart || typeof cart !== "object") return 0;
 
   // Map por id para buscar rápido
-  const byId = new Map(
-    products.map((p) => [String(p.id ?? "").trim(), p])
-  );
+  const byId = new Map(products.map((p) => [String(p.id ?? "").trim(), p]));
 
   let total = 0;
   for (const [rawId, rawQty] of Object.entries(cart)) {
@@ -127,7 +139,8 @@ export function renderProducts(list, container, addHandler) {
     if (product.marca) meta.appendChild(document.createTextNode(product.marca));
 
     if (product.presentacion) {
-      if (meta.childNodes.length) meta.appendChild(document.createTextNode(" · "));
+      if (meta.childNodes.length)
+        meta.appendChild(document.createTextNode(" · "));
       meta.appendChild(document.createTextNode(product.presentacion));
     }
 
@@ -155,7 +168,13 @@ export function renderProducts(list, container, addHandler) {
     const btn = document.createElement("button");
     btn.className = "btn btn-primary";
     btn.textContent = "Agregar al carrito";
-    btn.addEventListener("click", () => addHandler && addHandler(product.id));
+
+    // ✅ Vibración 60ms SOLO al agregar desde catálogo
+    btn.addEventListener("click", () => {
+      addHandler && addHandler(product.id);
+      vibrate60ms();
+    });
+
     content.appendChild(btn);
 
     card.appendChild(content);
@@ -191,7 +210,8 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
     .map((p) => {
       const name = p.nombre || "Producto";
       const img = p.imagen || "";
-      const price = p.precio != null && p.precio > 0 ? `$ ${p.precio}` : "Consultar";
+      const price =
+        p.precio != null && p.precio > 0 ? `$ ${p.precio}` : "Consultar";
 
       return `
         <div class="offer-card" data-id="${p.id ?? ""}">
@@ -216,6 +236,8 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
       el.addEventListener("click", () => {
         const id = el.getAttribute("data-id");
         if (id) onClick(id);
+        // Nota: acá NO vibramos porque no sabemos si onClick agrega al carrito o solo filtra/scroll.
+        // Si querés vibración también en ofertas cuando agrega, decime cómo estás usando onClick.
       });
     });
   }
