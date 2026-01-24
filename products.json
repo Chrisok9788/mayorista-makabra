@@ -1541,7 +1541,7 @@
   "categoria": "Almacén",
   "subcategoria": "Aceite",
   "precio": 69,
-  "oferta": false,
+  "oferta": true,
   "imagen": "images/Aceite/Aceite-condesa.JPG.WEBP",
   "marca": null,
   "presentacion": null,
