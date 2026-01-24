@@ -37,7 +37,6 @@ function getUnitPriceByQty(product, qty) {
   const tramos = product?.dpc?.tramos;
   if (!Array.isArray(tramos) || tramos.length === 0) return base;
 
-  // Elegimos el tramo que matchee (qty dentro del rango)
   for (const t of tramos) {
     const min = Number(t?.min);
     const max = Number(t?.max);
@@ -45,7 +44,7 @@ function getUnitPriceByQty(product, qty) {
 
     if (!Number.isFinite(min) || min <= 0) continue;
 
-    // max puede venir vacío, null, 0 o 999999 (lo tratamos como "sin tope")
+    // max puede venir null / 0 / 999999 -> lo tratamos como "sin tope"
     const maxOk = Number.isFinite(max) && max > 0 ? max : Number.POSITIVE_INFINITY;
 
     if (qty >= min && qty <= maxOk) {
@@ -59,9 +58,7 @@ function getUnitPriceByQty(product, qty) {
 /**
  * Arma el texto de promo por cantidad:
  * "Llevando 5 rebaja a $65 c/u"
- *
- * IMPORTANTE: NO usa "max", por eso nunca mostrará 999999.
- * Toma el primer tramo válido (min y precio).
+ * NO muestra max (999999 nunca aparece).
  */
 function getQtyPromoText(product) {
   const tramos = product?.dpc?.tramos;
@@ -75,8 +72,14 @@ function getQtyPromoText(product) {
       return `Llevando ${min} rebaja a $${precio} c/u`;
     }
   }
-
   return "";
+}
+
+/** Formatea $ 1234 */
+function money(n) {
+  const v = Number(n);
+  if (!Number.isFinite(v)) return "";
+  return `$ ${v}`;
 }
 
 /**
@@ -111,7 +114,7 @@ export function computeCartTotal(products, cart) {
 export function updateCartTotal(totalEl, products, cart) {
   if (!totalEl) return;
   const total = computeCartTotal(products, cart);
-  totalEl.textContent = `$ ${total}`;
+  totalEl.textContent = money(total);
 }
 
 /**
@@ -166,7 +169,6 @@ export function renderProducts(list, container, addHandler) {
         ? import.meta.env.BASE_URL
         : "./";
 
-    // soporta ambos nombres de campo
     const imgSrc = product.imagen || product.img || "";
     img.src = imgSrc || `${BASE}placeholder.png`;
     img.alt = getProductName(product) || "Producto";
@@ -205,7 +207,7 @@ export function renderProducts(list, container, addHandler) {
     if (product.stock !== undefined && product.stock <= 0) {
       price.textContent = "Sin stock";
     } else if (basePrice > 0) {
-      price.textContent = `$ ${basePrice}`;
+      price.textContent = money(basePrice);
     } else {
       price.textContent = "Consultar";
     }
@@ -216,7 +218,7 @@ export function renderProducts(list, container, addHandler) {
     if (promoText) {
       const note = document.createElement("div");
       note.className = "price-note";
-      note.textContent = promoText; // ✅ nunca muestra max (999999)
+      note.textContent = promoText;
       content.appendChild(note);
     }
 
@@ -227,8 +229,6 @@ export function renderProducts(list, container, addHandler) {
 
     btn.addEventListener("click", () => {
       addHandler && addHandler(product.id);
-
-      // feedback visual
       btn.classList.add("btn-tap");
       setTimeout(() => btn.classList.remove("btn-tap"), 100);
     });
@@ -270,7 +270,7 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
       const name = getProductName(p) || "Producto";
       const img = p.imagen || p.img || "";
       const bp = getBasePrice(p);
-      const price = bp > 0 ? `$ ${bp}` : "Consultar";
+      const price = bp > 0 ? money(bp) : "Consultar";
       const promo = getQtyPromoText(p);
 
       return `
@@ -303,7 +303,9 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
 }
 
 /**
- * Renderiza el carrito.
+ * Renderiza el carrito con:
+ * - Nombre + (si aplica) promo "Llevando 5 rebaja..."
+ * - Arriba a la derecha: "Q x $Unit = $Total"
  */
 export function renderCart(products, cart, container, updateHandler, removeHandler) {
   if (!container) return 0;
@@ -319,11 +321,16 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
 
   entries.forEach(([productId, qty]) => {
     const id = String(productId ?? "").trim();
+    const q = Number(qty) || 0;
+    if (!id || q < 1) return;
+
     const product = byId.get(id);
     if (!product) return;
 
     const item = document.createElement("div");
     item.className = "cart-item";
+    // ✅ para poder posicionar arriba a la derecha
+    item.style.position = "relative";
 
     const left = document.createElement("div");
 
@@ -332,28 +339,44 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
     name.textContent = getProductName(product) || "Producto";
     left.appendChild(name);
 
-    // Nota promo por cantidad en carrito
+    // Nota promo por cantidad
     const promoText = getQtyPromoText(product);
     if (promoText) {
       const note = document.createElement("div");
       note.className = "cart-item-note";
-      note.textContent = promoText; // ✅ nunca muestra max (999999)
+      note.textContent = promoText;
       left.appendChild(note);
     }
 
     item.appendChild(left);
 
+    // ✅ Arriba a la derecha: Q x $Unit = $Total
+    const unit = getUnitPriceByQty(product, q);
+    const rowTotal = unit > 0 ? unit * q : 0;
+
+    const calc = document.createElement("div");
+    calc.className = "cart-item-calc";
+
+    if (unit > 0) {
+      calc.textContent = `${q} x ${money(unit)} = ${money(rowTotal)}`;
+    } else {
+      calc.textContent = "Consultar";
+    }
+
+    item.appendChild(calc);
+
+    // Controles
     const controls = document.createElement("div");
     controls.className = "cart-item-controls";
 
     const minus = document.createElement("button");
     minus.textContent = "−";
-    minus.onclick = () => updateHandler && updateHandler(id, Number(qty) - 1);
+    minus.onclick = () => updateHandler && updateHandler(id, q - 1);
 
     const input = document.createElement("input");
     input.type = "number";
     input.min = "1";
-    input.value = qty;
+    input.value = q;
     input.onchange = (e) => {
       const v = parseInt(e.target.value, 10);
       const safe = isNaN(v) ? 1 : Math.max(1, v);
@@ -362,7 +385,7 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
 
     const plus = document.createElement("button");
     plus.textContent = "+";
-    plus.onclick = () => updateHandler && updateHandler(id, Number(qty) + 1);
+    plus.onclick = () => updateHandler && updateHandler(id, q + 1);
 
     const remove = document.createElement("button");
     remove.textContent = "✖";
@@ -370,6 +393,7 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
 
     controls.append(minus, input, plus, remove);
     item.appendChild(controls);
+
     container.appendChild(item);
   });
 
