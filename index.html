@@ -45,15 +45,10 @@
           </div>
         </div>
 
+        <!-- ✅ MENÚ SIMPLIFICADO (sin Inicio / sin Cómo comprar / sin Carrito) -->
         <nav class="main-nav">
-          <a href="#home">Inicio</a>
           <a href="#catalogue">Catálogo</a>
-          <a href="#how">Cómo comprar</a>
           <a href="#contact">Contacto</a>
-          <a class="nav-cart" href="#cart"
-            >Carrito
-            <span class="pill">(<span id="cart-count">0</span>)</span></a
-          >
         </nav>
       </div>
     </header>
@@ -214,16 +209,25 @@
         </div>
       </section>
 
-      <!-- Botón flotante WhatsApp -->
-      <a
-        href="https://wa.me/59896405927?text=Hola%20Makabra,%20quiero%20hacer%20un%20pedido"
-        class="whatsapp-float"
-        target="_blank"
-        rel="noopener"
-        aria-label="WhatsApp"
-      >
-        WhatsApp
-      </a>
+      <!-- ✅ BOTONES FLOTANTES: CARRITO (con contador) + WHATSAPP -->
+      <div class="float-actions" aria-label="Accesos rápidos">
+        <a href="#cart" class="cart-float" aria-label="Carrito">
+          Carrito
+          <span class="cart-badge" aria-label="Artículos en carrito">
+            <span id="cart-count">0</span>
+          </span>
+        </a>
+
+        <a
+          href="https://wa.me/59896405927?text=Hola%20Makabra,%20quiero%20hacer%20un%20pedido"
+          class="whatsapp-float"
+          target="_blank"
+          rel="noopener"
+          aria-label="WhatsApp"
+        >
+          WhatsApp
+        </a>
+      </div>
 
       <footer class="site-footer" role="contentinfo">
         <div class="container">
