@@ -1,19 +1,11 @@
 /*
- * whatsapp.js
- * Genera y envía el pedido por WhatsApp con:
- * - ID interno de pedido
- * - ID de cliente persistente
- * - Dirección para clientes nuevos
- * - Detalle de productos
- * - Total del pedido
- * - ✅ Precio por cantidad (dpc.tramos) si existe
- * - ✅ Compatibilidad con catálogos viejos/nuevos (nombre/name, precio/price)
- * - ✅ Redondeo UYU: .5 para arriba, .4 para abajo (Math.round)
+ * whatsapp.js — MODIFICADO y COMPLETO
  */
 
 function roundUYU(n) {
-  const x = Number(n);
-  return Number.isFinite(x) ? Math.round(x) : 0;
+  const v = Number(n);
+  if (!Number.isFinite(v)) return 0;
+  return Math.round(v);
 }
 
 function formatUYU(n) {
@@ -49,13 +41,6 @@ function getProductName(p) {
   return String(p?.nombre ?? p?.name ?? "").trim();
 }
 
-/**
- * Devuelve el precio unitario aplicando promo por cantidad si existe.
- * dpc esperado:
- *  dpc: { tramos: [ {min, max, precio}, ... ] }
- *
- * ✅ Soporta max vacío/0/999999 como "sin tope"
- */
 function getUnitPriceByQty(product, qty) {
   const base = toNumberPrice(product?.precio ?? product?.price);
 
@@ -69,9 +54,7 @@ function getUnitPriceByQty(product, qty) {
 
     if (!Number.isFinite(min) || min <= 0) continue;
 
-    const maxOk = Number.isFinite(max) && max > 0 && max < 999999
-      ? max
-      : Number.POSITIVE_INFINITY;
+    const maxOk = Number.isFinite(max) && max > 0 ? max : Number.POSITIVE_INFINITY;
 
     if (qty >= min && qty <= maxOk) {
       return precio > 0 ? precio : base;
@@ -81,12 +64,6 @@ function getUnitPriceByQty(product, qty) {
   return base;
 }
 
-/**
- * Envía el pedido armado por WhatsApp
- *
- * @param {Object} cart Objeto carrito { productId: qty }
- * @param {Array} products Lista completa de productos
- */
 export function sendOrder(cart, products) {
   const entries = Object.entries(cart || {});
   if (!entries.length) {
@@ -109,7 +86,6 @@ export function sendOrder(cart, products) {
     }
   }
 
-  // Índices para compatibilidad con carritos viejos
   const byId = new Map();
   const byNombre = new Map();
 
@@ -125,7 +101,7 @@ export function sendOrder(cart, products) {
   lines.push(`Cliente: ${customerId}`);
   lines.push("");
 
-  let totalRaw = 0;          // acumulador real
+  let total = 0; // ✅ total redondeado por línea
   let hasConsult = false;
   let foundAny = false;
 
@@ -134,31 +110,27 @@ export function sendOrder(cart, products) {
     if (qty < 1) return;
 
     const key = String(productId ?? "").trim();
-
-    // 1) Buscar por id
-    // 2) Si no existe, buscar por nombre (carritos viejos)
     const product = byId.get(key) || byNombre.get(key);
     if (!product) return;
 
     foundAny = true;
 
     const nombre = getProductName(product);
+    const unit = getUnitPriceByQty(product, qty);
 
-    // ✅ Precio por cantidad si existe (si no, precio base)
-    const unitRaw = getUnitPriceByQty(product, qty);
-
-    if (unitRaw <= 0) {
+    if (unit <= 0) {
       hasConsult = true;
       lines.push(`${qty} x ${nombre} — Consultar precio`);
       return;
     }
 
-    const subtotalRaw = unitRaw * qty;
-    totalRaw += subtotalRaw;
+    const subtotalExact = unit * qty;
+    const subtotalRounded = roundUYU(subtotalExact);
+    total += subtotalRounded;
 
-    // ✅ Mostrar unit y subtotal redondeados (sin decimales)
+    // Mostramos unit redondeado, pero subtotal calculado desde exact y redondeado al final
     lines.push(
-      `${qty} x ${nombre} — ${formatUYU(unitRaw)} c/u — Subtotal: ${formatUYU(subtotalRaw)}`
+      `${qty} x ${nombre} — ${formatUYU(unit)} c/u — Subtotal: ${formatUYU(subtotalRounded)}`
     );
   });
 
@@ -173,8 +145,7 @@ export function sendOrder(cart, products) {
     lines.push("Nota: Algunos productos quedan como 'Consultar precio'.");
   }
 
-  // ✅ Total redondeado al final (igual criterio que el carrito)
-  lines.push(`Total (sin consultables): ${formatUYU(totalRaw)}`);
+  lines.push(`Total (sin consultables): ${formatUYU(total)}`);
 
   if (address.trim()) {
     lines.push("");
@@ -185,11 +156,7 @@ export function sendOrder(cart, products) {
   lines.push("A la brevedad nos comunicaremos vía WhatsApp para coordinar.");
 
   const message = lines.join("\n");
+  const whatsappURL = "https://wa.me/59896405927?text=" + encodeURIComponent(message);
 
-  // ✅ número en formato internacional (sin +, sin espacios)
-  const whatsappURL =
-    "https://wa.me/59896405927?text=" + encodeURIComponent(message);
-
-  // ✅ iPhone/Safari: evita bloqueo de popups
   window.location.href = whatsappURL;
 }
