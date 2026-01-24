@@ -1,7 +1,18 @@
 /*
  * ui.js — MODIFICADO y COMPLETO
+ * Objetivo: que NO se vean decimales en ningún lado y que el TOTAL sea coherente.
+ *
+ * ✅ Redondeo UYU en:
+ *  - textos de promo (ej: $31 c/u)
+ *  - precios de cards / ofertas
+ *  - cálculo del carrito (líneas y total)
+ *
+ * ✅ Punto clave para que coincida:
+ *  - Se redondea el SUBTOTAL de cada ítem y se SUMA (igual que WhatsApp).
+ *    (Esto evita diferencias tipo 369.9996 -> 370 pero total termina 372 por float.)
  */
 
+/** Convierte precio a número (defensivo) */
 function toNumberPrice(v) {
   if (typeof v === "number") return Number.isFinite(v) ? v : 0;
   if (v == null) return 0;
@@ -13,20 +24,26 @@ function toNumberPrice(v) {
   return Number.isFinite(n) ? n : 0;
 }
 
+/** ✅ Redondeo UYU: 369.5 => 370, 369.4 => 369 */
 function roundUYU(n) {
-  const v = Number(n);
-  if (!Number.isFinite(v)) return 0;
-  return Math.round(v); // ✅ 0.5+ sube, 0.4 baja
+  const x = Number(n);
+  return Number.isFinite(x) ? Math.round(x) : 0;
 }
 
+/** Nombre soportando ambos formatos */
 function getProductName(p) {
   return String(p?.nombre ?? p?.name ?? "").trim();
 }
 
+/** Precio base soportando ambos formatos */
 function getBasePrice(p) {
   return toNumberPrice(p?.precio ?? p?.price);
 }
 
+/**
+ * Devuelve el precio unitario aplicando promo por cantidad (si existe).
+ * Espera: product.dpc.tramos = [{min, max, precio}, ...]
+ */
 function getUnitPriceByQty(product, qty) {
   const base = getBasePrice(product);
 
@@ -40,6 +57,7 @@ function getUnitPriceByQty(product, qty) {
 
     if (!Number.isFinite(min) || min <= 0) continue;
 
+    // max puede venir null / 0 / 999999 -> lo tratamos como "sin tope"
     const maxOk = Number.isFinite(max) && max > 0 ? max : Number.POSITIVE_INFINITY;
 
     if (qty >= min && qty <= maxOk) {
@@ -50,6 +68,11 @@ function getUnitPriceByQty(product, qty) {
   return base;
 }
 
+/**
+ * Arma el texto de promo por cantidad:
+ * "Llevando 5 rebaja a $65 c/u"
+ * ✅ Precio redondeado para evitar $30.8333
+ */
 function getQtyPromoText(product) {
   const tramos = product?.dpc?.tramos;
   if (!Array.isArray(tramos) || tramos.length === 0) return "";
@@ -59,22 +82,25 @@ function getQtyPromoText(product) {
     const precio = toNumberPrice(t?.precio);
 
     if (Number.isFinite(min) && min > 0 && precio > 0) {
-      return `Llevando ${min} rebaja a $${roundUYU(precio)} c/u`; // ✅ redondeo visible
+      return `Llevando ${min} rebaja a $${roundUYU(precio)} c/u`;
     }
   }
   return "";
 }
 
+/** ✅ Formatea $ 1234 (redondeado) */
 function money(n) {
-  const v = roundUYU(n);
-  return `$ ${v}`;
+  const v = Number(n);
+  if (!Number.isFinite(v)) return "";
+  return `$ ${roundUYU(v)}`;
 }
 
 /**
- * Total del carrito:
- * - Usa unit real (puede tener decimales)
- * - Subtotal redondeado por ítem
- * - Total = suma de subtotales redondeados
+ * Calcula total del carrito aplicando promos por cantidad si existen.
+ * ✅ COHERENTE: suma subtotales ya redondeados (igual que WhatsApp).
+ *
+ * @param {Array} products
+ * @param {Object} cart (id -> qty)
  */
 export function computeCartTotal(products, cart) {
   if (!Array.isArray(products) || !products.length) return 0;
@@ -93,21 +119,29 @@ export function computeCartTotal(products, cart) {
     if (!p) continue;
 
     const unit = getUnitPriceByQty(p, qty);
-    if (unit > 0) {
-      const subtotalExact = unit * qty;
-      const subtotalRounded = roundUYU(subtotalExact);
-      total += subtotalRounded;
-    }
+    if (unit <= 0) continue; // consultables no suman
+
+    const subtotalExact = unit * qty;
+    const subtotalRounded = roundUYU(subtotalExact);
+
+    total += subtotalRounded;
   }
 
   return total;
 }
 
+/**
+ * Actualiza el total en pantalla.
+ */
 export function updateCartTotal(totalEl, products, cart) {
   if (!totalEl) return;
-  totalEl.textContent = money(computeCartTotal(products, cart));
+  const total = computeCartTotal(products, cart);
+  totalEl.textContent = money(total);
 }
 
+/**
+ * Renderiza la lista de productos en un contenedor.
+ */
 export function renderProducts(list, container, addHandler) {
   if (!container) return;
   container.innerHTML = "";
@@ -121,6 +155,7 @@ export function renderProducts(list, container, addHandler) {
     const card = document.createElement("div");
     card.className = "product-card";
 
+    // BADGE
     let badgeLabel = "";
     let badgeClass = "";
 
@@ -145,6 +180,7 @@ export function renderProducts(list, container, addHandler) {
       card.appendChild(badge);
     }
 
+    // IMAGEN
     const img = document.createElement("img");
     img.className = "product-image";
 
@@ -160,6 +196,7 @@ export function renderProducts(list, container, addHandler) {
     img.alt = getProductName(product) || "Producto";
     card.appendChild(img);
 
+    // CONTENIDO
     const content = document.createElement("div");
     content.className = "product-content";
 
@@ -183,6 +220,7 @@ export function renderProducts(list, container, addHandler) {
 
     if (meta.childNodes.length) content.appendChild(meta);
 
+    // PRECIO
     const price = document.createElement("p");
     price.className = "price";
 
@@ -191,12 +229,14 @@ export function renderProducts(list, container, addHandler) {
     if (product.stock !== undefined && product.stock <= 0) {
       price.textContent = "Sin stock";
     } else if (basePrice > 0) {
+      // ✅ redondeado
       price.textContent = money(basePrice);
     } else {
       price.textContent = "Consultar";
     }
     content.appendChild(price);
 
+    // PROMO POR CANTIDAD
     const promoText = getQtyPromoText(product);
     if (promoText) {
       const note = document.createElement("div");
@@ -205,6 +245,7 @@ export function renderProducts(list, container, addHandler) {
       content.appendChild(note);
     }
 
+    // BOTÓN
     const btn = document.createElement("button");
     btn.className = "btn btn-primary";
     btn.textContent = "Agregar al carrito";
@@ -216,11 +257,15 @@ export function renderProducts(list, container, addHandler) {
     });
 
     content.appendChild(btn);
+
     card.appendChild(content);
     container.appendChild(card);
   });
 }
 
+/**
+ * Renderiza el carrusel de OFERTAS.
+ */
 export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
   if (!frameEl || !trackEl) return;
 
@@ -280,6 +325,13 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
   }
 }
 
+/**
+ * Renderiza el carrito con:
+ * - Nombre + promo
+ * - Arriba a la derecha: "Q x $Unit = $Total"
+ *
+ * ✅ Unit y Total redondeados para evitar 30.8333 y 369.9996
+ */
 export function renderCart(products, cart, container, updateHandler, removeHandler) {
   if (!container) return 0;
   container.innerHTML = "";
@@ -321,21 +373,25 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
 
     item.appendChild(left);
 
-    const unit = getUnitPriceByQty(product, q);
-    const rowTotalExact = unit > 0 ? unit * q : 0;
-    const rowTotalRounded = roundUYU(rowTotalExact);
+    // ✅ Cálculo arriba a la derecha (redondeo)
+    const unitRaw = getUnitPriceByQty(product, q);
 
-    const calc = document.createElement("div");
-    calc.className = "cart-item-calc";
+    if (unitRaw > 0) {
+      const unitShow = roundUYU(unitRaw);
+      const rowTotalShow = roundUYU(unitRaw * q);
 
-    if (unit > 0) {
-      calc.textContent = `${q} x ${money(unit)} = ${money(rowTotalRounded)}`; // ✅ coherente
+      const calc = document.createElement("div");
+      calc.className = "cart-item-calc";
+      calc.textContent = `${q} x $ ${unitShow} = $ ${rowTotalShow}`;
+      item.appendChild(calc);
     } else {
+      const calc = document.createElement("div");
+      calc.className = "cart-item-calc";
       calc.textContent = "Consultar";
+      item.appendChild(calc);
     }
 
-    item.appendChild(calc);
-
+    // Controles
     const controls = document.createElement("div");
     controls.className = "cart-item-controls";
 
@@ -367,15 +423,20 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
     container.appendChild(item);
   });
 
-  // ✅ devolvemos el total redondeado coherente
   return computeCartTotal(products, cart);
 }
 
+/**
+ * Actualiza contador carrito.
+ */
 export function updateCartCount(countEl, count) {
   if (!countEl) return;
   countEl.textContent = count;
 }
 
+/**
+ * Carga categorías únicas en el select.
+ */
 export function populateCategories(products, select) {
   if (!select) return;
 
@@ -390,7 +451,11 @@ export function populateCategories(products, select) {
   }
 
   const categories = Array.from(
-    new Set((products || []).map((p) => (p.categoria || p.category || "").trim()).filter(Boolean))
+    new Set(
+      (products || [])
+        .map((p) => (p.categoria || p.category || "").trim())
+        .filter(Boolean)
+    )
   ).sort((a, b) => a.localeCompare(b, "es"));
 
   categories.forEach((cat) => {
@@ -401,6 +466,9 @@ export function populateCategories(products, select) {
   });
 }
 
+/**
+ * Carga subcategorías en el select, según categoría elegida.
+ */
 export function populateSubcategories(products, category, select) {
   if (!select) return;
 
@@ -427,6 +495,9 @@ export function populateSubcategories(products, category, select) {
   });
 }
 
+/**
+ * Filtra por categoría y texto.
+ */
 export function filterProducts(products, category, searchTerm) {
   let result = products || [];
 
@@ -452,4 +523,145 @@ export function filterProducts(products, category, searchTerm) {
   }
 
   return result;
+}
+
+/**
+ * Panel tipo acordeón (opcional).
+ */
+export function renderCategoryAccordion(products, onSelect) {
+  const accordion = document.getElementById("categoryAccordion");
+  if (!accordion) return;
+  accordion.innerHTML = "";
+
+  const allProducts = Array.isArray(products) ? products : [];
+
+  const catMap = new Map();
+  for (const p of allProducts) {
+    const cat = (p.categoria || p.category || "Otros").trim();
+    const sub = (p.subcategoria || p.subcategory || "Otros").trim();
+    if (!catMap.has(cat)) catMap.set(cat, new Map());
+    const subMap = catMap.get(cat);
+    if (!subMap.has(sub)) subMap.set(sub, []);
+    subMap.get(sub).push(p);
+  }
+
+  const categories = Array.from(catMap.keys()).sort((a, b) => a.localeCompare(b, "es"));
+
+  const title = document.createElement("div");
+  title.className = "cat-panel-head";
+  title.innerHTML = `<strong>Filtrar</strong>`;
+  accordion.appendChild(title);
+
+  const renderCategoriesList = () => {
+    accordion.innerHTML = "";
+    accordion.appendChild(title);
+
+    const list = document.createElement("div");
+    list.className = "cat-list";
+
+    const allBtn = document.createElement("button");
+    allBtn.type = "button";
+    allBtn.className = "cat-pill";
+    allBtn.textContent = "Ver todo";
+    allBtn.onclick = () => typeof onSelect === "function" && onSelect(allProducts);
+    list.appendChild(allBtn);
+
+    categories.forEach((cat) => {
+      const subMap = catMap.get(cat);
+      const count = Array.from(subMap.values()).reduce((a, arr) => a + arr.length, 0);
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "accordion-btn";
+      btn.innerHTML = `<span>${cat}</span><span class="chev">▾</span><small style="opacity:.7;margin-left:auto">${count}</small>`;
+      btn.onclick = () => renderSubcategories(cat);
+      list.appendChild(btn);
+    });
+
+    accordion.appendChild(list);
+  };
+
+  const renderSubcategories = (cat) => {
+    const subMap = catMap.get(cat) || new Map();
+
+    accordion.innerHTML = "";
+    accordion.appendChild(title);
+
+    const head = document.createElement("div");
+    head.className = "subcats-head";
+
+    const back = document.createElement("button");
+    back.type = "button";
+    back.className = "btn";
+    back.textContent = "← Volver a categorías";
+    back.onclick = () => renderCategoriesList();
+
+    const h = document.createElement("div");
+    h.style.fontWeight = "800";
+    h.style.marginTop = "10px";
+    h.textContent = cat;
+
+    head.appendChild(back);
+    head.appendChild(h);
+
+    const subSearch = document.createElement("input");
+    subSearch.type = "text";
+    subSearch.placeholder = "Buscar subcategoría...";
+    subSearch.className = "subcat-search";
+
+    accordion.appendChild(head);
+    accordion.appendChild(subSearch);
+
+    const body = document.createElement("div");
+    body.className = "accordion-body open";
+
+    const allCat = document.createElement("div");
+    allCat.className = "subcat";
+    const totalCount = Array.from(subMap.values()).reduce((a, arr) => a + arr.length, 0);
+    allCat.innerHTML = `<span>Ver toda la categoría</span><small>${totalCount}</small>`;
+    allCat.onclick = () => {
+      const list = [];
+      for (const arr of subMap.values()) list.push(...arr);
+      typeof onSelect === "function" && onSelect(list);
+    };
+    body.appendChild(allCat);
+
+    const renderSubList = (term = "") => {
+      body.querySelectorAll(".subcat.row").forEach((n) => n.remove());
+
+      const t = term.trim().toLowerCase();
+      const subs = Array.from(subMap.entries())
+        .sort((a, b) => a[0].localeCompare(b[0], "es"))
+        .filter(([sub]) => !t || sub.toLowerCase().includes(t));
+
+      subs.forEach(([sub, arr]) => {
+        const row = document.createElement("div");
+        row.className = "subcat row";
+        row.innerHTML = `<span>${sub}</span><small>${arr.length}</small>`;
+        row.onclick = () => typeof onSelect === "function" && onSelect(arr);
+        body.appendChild(row);
+      });
+
+      if (subs.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "offers-empty sub-empty";
+        empty.textContent = "No hay subcategorías que coincidan.";
+        empty.style.marginTop = "8px";
+        body.querySelectorAll(".sub-empty").forEach((n) => n.remove());
+        body.appendChild(empty);
+      } else {
+        body.querySelectorAll(".sub-empty").forEach((n) => n.remove());
+      }
+    };
+
+    renderSubList("");
+
+    subSearch.addEventListener("input", () => {
+      renderSubList(subSearch.value);
+    });
+
+    accordion.appendChild(body);
+  };
+
+  renderCategoriesList();
 }
