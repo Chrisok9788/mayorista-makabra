@@ -1,7 +1,4 @@
 // app.js — versión MODIFICADA y COMPLETA
-// Cambios de esta versión:
-// ✅ Total del carrito SIEMPRE redondeado (Math.round) en la UI
-// ✅ Mantiene todo lo demás igual
 
 import { fetchProducts } from "./data.js";
 import {
@@ -12,7 +9,6 @@ import {
   removeItem,
   clearCart,
   totalItems,
-  totalAmount,
 } from "./cart.js";
 
 import {
@@ -23,6 +19,7 @@ import {
   populateSubcategories,
   filterProducts,
   renderOffersCarousel,
+  computeCartTotal, // ✅ NUEVO: total coherente con promos + redondeo
 } from "./ui.js";
 
 import { sendOrder } from "./whatsapp.js";
@@ -32,18 +29,7 @@ let baseProducts = [];
 let sending = false;
 
 // =======================
-// ✅ REDONDEO (UYU)
-// =======================
-function roundUYU(n) {
-  const x = Number(n);
-  return Number.isFinite(x) ? Math.round(x) : 0;
-}
-function formatUYU(n) {
-  return `$ ${roundUYU(n)}`;
-}
-
-// =======================
-// NORMALIZACIÓN (compatibilidad JSON viejo/nuevo)
+// NORMALIZACIÓN
 // =======================
 
 function normStr(v) {
@@ -100,7 +86,7 @@ function normalizeList(list) {
 }
 
 // =======================
-// UI: MODO CATEGORÍAS / MODO PRODUCTOS
+// UI: MODOS
 // =======================
 
 function showCategoriesMode() {
@@ -141,9 +127,9 @@ function renderCategoryGrid(categories, onClick) {
   grid.innerHTML = categories
     .map(
       (c) => `
-      <div class="category-card" data-cat="${encodeURIComponent(c.name)}">
-        <h3>${c.name}</h3>
-        <p>${c.count} artículos</p>
+      <div class="category-card" data-cat="${encodeURIComponent(Rca.name)}">
+        <h3>${Rca.name}</h3>
+        <p>${Rca.count} artículos</p>
       </div>
     `
     )
@@ -158,7 +144,7 @@ function renderCategoryGrid(categories, onClick) {
 }
 
 // =======================
-// HANDLERS CARRITO
+// CARRITO
 // =======================
 
 function handleAdd(productId) {
@@ -176,27 +162,25 @@ function handleRemove(productId) {
   rerenderCartUI();
 }
 
-// =======================
-// RENDER CARRITO
-// =======================
-
 function rerenderCartUI() {
   const cartContainer = document.getElementById("cart-container");
   const cartObj = getCart();
 
+  // renderCart ya calcula con promo por cantidad para mostrar cada ítem
   renderCart(products, cartObj, cartContainer, handleUpdate, handleRemove);
 
+  // ✅ Total coherente (promo + redondeo) usando computeCartTotal()
   const totalEl = document.getElementById("cart-total");
   if (totalEl) {
-    const totalRaw = totalAmount(cartObj, products); // puede venir con decimales
-    totalEl.textContent = formatUYU(totalRaw);       // ✅ redondeo final
+    const total = computeCartTotal(products, cartObj); // ya viene redondeado
+    totalEl.textContent = `$ ${total}`;
   }
 
   updateCartCount(document.getElementById("cart-count"), totalItems());
 }
 
 // =======================
-// FILTROS / BUSCADOR
+// FILTROS
 // =======================
 
 function applySearchAndFilter() {
@@ -257,7 +241,7 @@ function goToCatalogAndShowProduct(productId) {
 }
 
 // =======================
-// ENVÍO ROBUSTO WHATSAPP
+// WHATSAPP SAFE
 // =======================
 
 function sendWhatsAppOrderSafe() {
@@ -277,7 +261,6 @@ function sendWhatsAppOrderSafe() {
       return;
     }
 
-    // Nota: el redondeo del mensaje de WhatsApp se corrige en whatsapp.js
     sendOrder(cart, products);
   } catch (err) {
     console.error("Error al enviar pedido:", err);
@@ -416,6 +399,7 @@ async function init() {
     (e) => {
       const btn = e.target?.closest?.("#send-whatsapp-btn");
       if (!btn) return;
+
       e.preventDefault();
       e.stopPropagation();
       sendWhatsAppOrderSafe();
