@@ -8,10 +8,16 @@
  * - Total del pedido
  * - ✅ Precio por cantidad (dpc.tramos) si existe
  * - ✅ Compatibilidad con catálogos viejos/nuevos (nombre/name, precio/price)
+ * - ✅ Redondeo UYU: .5 para arriba, .4 para abajo (Math.round)
  */
 
+function roundUYU(n) {
+  const x = Number(n);
+  return Number.isFinite(x) ? Math.round(x) : 0;
+}
+
 function formatUYU(n) {
-  const num = Number(n) || 0;
+  const num = roundUYU(n);
   return "$ " + num.toLocaleString("es-UY");
 }
 
@@ -47,6 +53,8 @@ function getProductName(p) {
  * Devuelve el precio unitario aplicando promo por cantidad si existe.
  * dpc esperado:
  *  dpc: { tramos: [ {min, max, precio}, ... ] }
+ *
+ * ✅ Soporta max vacío/0/999999 como "sin tope"
  */
 function getUnitPriceByQty(product, qty) {
   const base = toNumberPrice(product?.precio ?? product?.price);
@@ -59,9 +67,13 @@ function getUnitPriceByQty(product, qty) {
     const max = Number(t?.max);
     const precio = toNumberPrice(t?.precio);
 
-    if (!Number.isFinite(min) || !Number.isFinite(max)) continue;
+    if (!Number.isFinite(min) || min <= 0) continue;
 
-    if (qty >= min && qty <= max) {
+    const maxOk = Number.isFinite(max) && max > 0 && max < 999999
+      ? max
+      : Number.POSITIVE_INFINITY;
+
+    if (qty >= min && qty <= maxOk) {
       return precio > 0 ? precio : base;
     }
   }
@@ -113,7 +125,7 @@ export function sendOrder(cart, products) {
   lines.push(`Cliente: ${customerId}`);
   lines.push("");
 
-  let total = 0;
+  let totalRaw = 0;          // acumulador real
   let hasConsult = false;
   let foundAny = false;
 
@@ -133,21 +145,20 @@ export function sendOrder(cart, products) {
     const nombre = getProductName(product);
 
     // ✅ Precio por cantidad si existe (si no, precio base)
-    const unit = getUnitPriceByQty(product, qty);
+    const unitRaw = getUnitPriceByQty(product, qty);
 
-    if (unit <= 0) {
+    if (unitRaw <= 0) {
       hasConsult = true;
       lines.push(`${qty} x ${nombre} — Consultar precio`);
       return;
     }
 
-    const subtotal = unit * qty;
-    total += subtotal;
+    const subtotalRaw = unitRaw * qty;
+    totalRaw += subtotalRaw;
 
-    // Si el precio unitario por cantidad difiere del base, lo dejamos implícito
-    // (el cliente ve "c/u" ya con el valor aplicado)
+    // ✅ Mostrar unit y subtotal redondeados (sin decimales)
     lines.push(
-      `${qty} x ${nombre} — ${formatUYU(unit)} c/u — Subtotal: ${formatUYU(subtotal)}`
+      `${qty} x ${nombre} — ${formatUYU(unitRaw)} c/u — Subtotal: ${formatUYU(subtotalRaw)}`
     );
   });
 
@@ -162,7 +173,8 @@ export function sendOrder(cart, products) {
     lines.push("Nota: Algunos productos quedan como 'Consultar precio'.");
   }
 
-  lines.push(`Total (sin consultables): ${formatUYU(total)}`);
+  // ✅ Total redondeado al final (igual criterio que el carrito)
+  lines.push(`Total (sin consultables): ${formatUYU(totalRaw)}`);
 
   if (address.trim()) {
     lines.push("");
