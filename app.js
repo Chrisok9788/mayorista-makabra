@@ -1,3 +1,12 @@
+// app.js — versión MODIFICADA y COMPLETA
+// Objetivos:
+// 1) Mantener tu UI de “modo categorías / modo productos”.
+// 2) Hacerlo compatible con products.json viejo (nombre/categoria/subcategoria/precio/oferta/imagen)
+//    y con formato nuevo (name/category/subcategory/price/offer/img).
+// 3) Arreglar el “Error al cargar productos” mostrando el motivo real (desde data.js robusto).
+// 4) Mantener carrusel de ofertas funcionando.
+// 5) Evitar que el filtro rompa cuando los campos vienen con nombres distintos.
+
 import { fetchProducts } from "./data.js";
 import {
   loadCart,
@@ -24,7 +33,69 @@ import { sendOrder } from "./whatsapp.js";
 
 let products = [];
 let baseProducts = [];
-let sending = false; // ✅ evita doble click/doble envío
+let sending = false; // evita doble click/doble envío
+
+// =======================
+// NORMALIZACIÓN (compatibilidad JSON viejo/nuevo)
+// =======================
+
+function normStr(v) {
+  return String(v ?? "").trim();
+}
+
+function getCat(p) {
+  return normStr(p?.categoria ?? p?.category) || "Otros";
+}
+
+function getSub(p) {
+  return normStr(p?.subcategoria ?? p?.subcategory);
+}
+
+function getName(p) {
+  return normStr(p?.nombre ?? p?.name) || "Producto";
+}
+
+function getId(p) {
+  return normStr(p?.id ?? p?.scanntechId ?? p?.codigoInterno);
+}
+
+function isOffer(p) {
+  const v = p?.oferta ?? p?.offer;
+  return v === true;
+}
+
+function getImg(p) {
+  return normStr(p?.imagen ?? p?.img);
+}
+
+function getPrice(p) {
+  // precio viejo o price nuevo
+  const v = p?.precio ?? p?.price;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : 0;
+}
+
+/**
+ * Devuelve un producto en “formato viejo” para que UI/cart/whatsapp sigan sin romper.
+ * (Tu ui.js está hecho para: nombre/categoria/subcategoria/precio/oferta/imagen)
+ */
+function normalizeProduct(p) {
+  return {
+    ...p,
+    id: getId(p) || normStr(p?.id),
+    nombre: getName(p),
+    categoria: getCat(p),
+    subcategoria: getSub(p),
+    precio: getPrice(p),
+    oferta: isOffer(p),
+    imagen: getImg(p),
+  };
+}
+
+function normalizeList(list) {
+  if (!Array.isArray(list)) return [];
+  return list.map(normalizeProduct).filter((p) => p.id);
+}
 
 // =======================
 // UI: MODO CATEGORÍAS / MODO PRODUCTOS
@@ -52,7 +123,7 @@ function clearProductsUI() {
 function buildCategoryCounts(items) {
   const map = new Map(); // categoria -> count
   for (const p of items) {
-    const cat = (p.categoria || "Otros").trim();
+    const cat = getCat(p);
     map.set(cat, (map.get(cat) || 0) + 1);
   }
 
@@ -135,7 +206,7 @@ function applySearchAndFilter() {
   const cat = categoryEl ? categoryEl.value : "";
   const sub = subcatEl ? subcatEl.value : "";
 
-  // ✅ Si no hay filtros ni búsqueda: mostrar categorías y no listar productos
+  // Si no hay filtros ni búsqueda: mostrar categorías y no listar productos
   if (!term && !cat && !sub) {
     showCategoriesMode();
     clearProductsUI();
@@ -147,8 +218,8 @@ function applySearchAndFilter() {
 
   let filtered = baseProducts;
 
-  if (cat) filtered = filtered.filter((p) => (p.categoria || "").trim() === cat);
-  if (sub) filtered = filtered.filter((p) => (p.subcategoria || "").trim() === sub);
+  if (cat) filtered = filtered.filter((p) => getCat(p) === cat);
+  if (sub) filtered = filtered.filter((p) => getSub(p) === sub);
 
   if (term) {
     filtered = filterProducts(filtered, "", term);
@@ -165,10 +236,10 @@ function goToCatalogAndShowProduct(productId) {
   const section = document.getElementById("catalogue");
   if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  const prod = products.find((p) => p.id === productId);
+  const prod = products.find((p) => String(p.id) === String(productId));
   if (!prod) return;
 
-  // ✅ Al venir desde ofertas: mostrar productos (no categorías)
+  // Al venir desde ofertas: mostrar productos (no categorías)
   showProductsMode();
 
   renderProducts([prod], document.getElementById("products-container"), handleAdd);
@@ -209,12 +280,10 @@ function sendWhatsAppOrderSafe() {
       return;
     }
 
-    // 1) Intento normal: usar whatsapp.js
     sendOrder(cart, products);
   } catch (err) {
     console.error("Error al enviar pedido:", err);
 
-    // 2) Fallback: disparar link oculto si existe
     const fallback = document.getElementById("send-whatsapp-link");
     if (fallback && fallback.href) {
       window.location.href = fallback.href;
@@ -235,7 +304,10 @@ async function init() {
   updateCartCount(document.getElementById("cart-count"), totalItems());
 
   try {
-    products = await fetchProducts();
+    const raw = await fetchProducts();
+
+    // ✅ normalizamos para que todo el sitio use mismo formato
+    products = normalizeList(raw);
     baseProducts = products;
 
     // ✅ Render inicial del GRID de categorías
@@ -264,25 +336,23 @@ async function init() {
 
       const cat = categoryEl.value;
 
-      // ✅ Si el usuario vuelve a "Todas las categorías"
+      // Si el usuario vuelve a "Todas las categorías"
       if (!cat) {
         subcatEl.value = "";
         subcatEl.style.display = "none";
         baseProducts = products;
-
-        // si no hay búsqueda -> volvemos al grid
         applySearchAndFilter();
         return;
       }
 
-      // ✅ Al elegir categoría: mostramos productos
+      // Al elegir categoría: mostramos productos
       showProductsMode();
 
       subcatEl.style.display = "block";
       populateSubcategories(products, cat, subcatEl);
 
       subcatEl.value = "";
-      baseProducts = products.filter((p) => (p.categoria || "").trim() === cat);
+      baseProducts = products.filter((p) => getCat(p) === cat);
 
       applySearchAndFilter();
     };
@@ -296,20 +366,19 @@ async function init() {
         const cat = categoryEl.value;
         const sub = subcatEl.value;
 
-        baseProducts = products.filter((p) => (p.categoria || "").trim() === cat);
-        if (sub) baseProducts = baseProducts.filter((p) => (p.subcategoria || "").trim() === sub);
+        baseProducts = products.filter((p) => getCat(p) === cat);
+        if (sub) baseProducts = baseProducts.filter((p) => getSub(p) === sub);
 
-        // ✅ Con subcategoría ya estamos en modo productos
         showProductsMode();
         applySearchAndFilter();
       });
     }
 
-    // ✅ En vez de listar todo al entrar, dejamos el modo categorías
+    // No listamos todo al entrar, dejamos modo categorías
     showCategoriesMode();
     clearProductsUI();
 
-    // Ofertas
+    // Ofertas (usa oferta:true)
     const frameEl = document.querySelector(".offers-frame");
     const trackEl = document.getElementById("offers-track");
     renderOffersCarousel(products, frameEl, trackEl, goToCatalogAndShowProduct);
@@ -317,15 +386,23 @@ async function init() {
     rerenderCartUI();
   } catch (err) {
     console.error(err);
+
+    // ✅ Mostrar error real en pantalla
     const pc = document.getElementById("products-container");
-    if (pc) pc.innerHTML = "<p>Error al cargar productos.</p>";
+    if (pc) {
+      pc.innerHTML = `<p style="color:#b00020;font-weight:700">Error al cargar productos: ${String(
+        err?.message || err
+      )}</p>`;
+    }
+
+    // Si falla, igual mostramos “modo productos” para que se vea el mensaje
+    showProductsMode();
   }
 
   // Buscador
   const searchEl = document.getElementById("search-input");
   if (searchEl) {
     searchEl.addEventListener("input", () => {
-      // ✅ Si el usuario escribe, mostramos productos
       if (searchEl.value.trim()) showProductsMode();
       applySearchAndFilter();
     });
