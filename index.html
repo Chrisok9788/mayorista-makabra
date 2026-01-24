@@ -31,7 +31,8 @@
   <body>
     <header class="site-header">
       <div class="container header-row">
-        <div class="brand">
+        <!-- BRAND CLICKEABLE -->
+        <a class="brand" href="#home" aria-label="Ir al inicio">
           <img
             src="./logo.png"
             class="brand-logo"
@@ -43,9 +44,8 @@
               Catálogo mayorista • Pedidos por WhatsApp
             </div>
           </div>
-        </div>
+        </a>
 
-        <!-- ✅ MENÚ SIMPLIFICADO (sin Inicio / sin Cómo comprar / sin Carrito) -->
         <nav class="main-nav">
           <a href="#catalogue">Catálogo</a>
           <a href="#contact">Contacto</a>
@@ -54,7 +54,8 @@
     </header>
 
     <main role="main">
-      <!-- INICIO (se eliminó el bloque HERO/Bienvenida) -->
+      <!-- ANCLA INICIO -->
+      <section id="home"></section>
 
       <!-- OFERTAS -->
       <section class="section offers-section" aria-label="Ofertas">
@@ -65,9 +66,7 @@
           </div>
 
           <div class="offers-frame">
-            <div id="offers-track" class="offers-track">
-              <!-- se llena con JS -->
-            </div>
+            <div id="offers-track" class="offers-track"></div>
           </div>
         </div>
       </section>
@@ -101,6 +100,10 @@
             <div id="categoryAccordion" class="accordion"></div>
           </aside>
 
+          <!-- GRID DE CATEGORÍAS -->
+          <div id="categoriesGrid" class="categories-grid"></div>
+
+          <!-- PRODUCTOS -->
           <div id="products-container" class="products-grid"></div>
         </div>
       </section>
@@ -136,12 +139,10 @@
 
               <a
                 id="send-whatsapp-link"
-                href="https://wa.me/59896405927?text=Hola%20Makabra"
+                href="https://wa.me/59896405927"
                 style="display:none"
                 rel="noopener"
-              >
-                enviar
-              </a>
+              ></a>
             </div>
 
             <div class="muted small">
@@ -203,33 +204,32 @@
 
             <div class="contact-item">
               <strong>Dirección</strong>
-              <span class="muted">Se coordina por WhatsApp</span>
+              <span>Luis Batlle Berres 5849</span>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ✅ BOTONES FLOTANTES: CARRITO (con contador) + WHATSAPP -->
+      <!-- BOTONES FLOTANTES -->
       <div class="float-actions" aria-label="Accesos rápidos">
         <a href="#cart" class="cart-float" aria-label="Carrito">
           Carrito
-          <span class="cart-badge" aria-label="Artículos en carrito">
+          <span class="cart-badge">
             <span id="cart-count">0</span>
           </span>
         </a>
 
         <a
-          href="https://wa.me/59896405927?text=Hola%20Makabra,%20quiero%20hacer%20un%20pedido"
+          href="https://wa.me/59896405927"
           class="whatsapp-float"
           target="_blank"
           rel="noopener"
-          aria-label="WhatsApp"
         >
           WhatsApp
         </a>
       </div>
 
-      <footer class="site-footer" role="contentinfo">
+      <footer class="site-footer">
         <div class="container">
           <p>
             &copy; <span id="year"></span> Mayorista Makabra. Todos los derechos
