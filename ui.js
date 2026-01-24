@@ -17,6 +17,12 @@ function toNumberPrice(v) {
   return Number.isFinite(n) ? n : 0;
 }
 
+/** ✅ Redondeo UYU: 369.5 => 370, 369.4 => 369 */
+function roundUYU(n) {
+  const x = Number(n);
+  return Number.isFinite(x) ? Math.round(x) : 0;
+}
+
 /** Nombre soportando ambos formatos */
 function getProductName(p) {
   return String(p?.nombre ?? p?.name ?? "").trim();
@@ -59,6 +65,8 @@ function getUnitPriceByQty(product, qty) {
  * Arma el texto de promo por cantidad:
  * "Llevando 5 rebaja a $65 c/u"
  * NO muestra max (999999 nunca aparece).
+ *
+ * ✅ Ahora el precio del texto se muestra redondeado, para evitar $30.8333
  */
 function getQtyPromoText(product) {
   const tramos = product?.dpc?.tramos;
@@ -69,21 +77,23 @@ function getQtyPromoText(product) {
     const precio = toNumberPrice(t?.precio);
 
     if (Number.isFinite(min) && min > 0 && precio > 0) {
-      return `Llevando ${min} rebaja a $${precio} c/u`;
+      return `Llevando ${min} rebaja a $${roundUYU(precio)} c/u`;
     }
   }
   return "";
 }
 
-/** Formatea $ 1234 */
+/** ✅ Formatea $ 1234 (redondeado) */
 function money(n) {
   const v = Number(n);
   if (!Number.isFinite(v)) return "";
-  return `$ ${v}`;
+  return `$ ${roundUYU(v)}`;
 }
 
 /**
  * Calcula total del carrito aplicando promos por cantidad si existen.
+ * ✅ Total redondeado al final.
+ *
  * @param {Array} products
  * @param {Object} cart (id -> qty)
  */
@@ -105,11 +115,14 @@ export function computeCartTotal(products, cart) {
     const unit = getUnitPriceByQty(p, qty);
     if (unit > 0) total += unit * qty;
   }
-  return total;
+
+  // ✅ Regla del usuario: redondeo final del total
+  return roundUYU(total);
 }
 
 /**
  * Actualiza el total en pantalla.
+ * ✅ Total redondeado.
  */
 export function updateCartTotal(totalEl, products, cart) {
   if (!totalEl) return;
@@ -207,13 +220,14 @@ export function renderProducts(list, container, addHandler) {
     if (product.stock !== undefined && product.stock <= 0) {
       price.textContent = "Sin stock";
     } else if (basePrice > 0) {
+      // ✅ mostramos precio base redondeado para no mostrar decimales
       price.textContent = money(basePrice);
     } else {
       price.textContent = "Consultar";
     }
     content.appendChild(price);
 
-    // PROMO POR CANTIDAD (debajo del precio)
+    // PROMO POR CANTIDAD
     const promoText = getQtyPromoText(product);
     if (promoText) {
       const note = document.createElement("div");
@@ -304,8 +318,10 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
 
 /**
  * Renderiza el carrito con:
- * - Nombre + (si aplica) promo "Llevando 5 rebaja..."
+ * - Nombre + promo
  * - Arriba a la derecha: "Q x $Unit = $Total"
+ *
+ * ✅ Unit y Total redondeados para evitar 30.8333 y 369.9996
  */
 export function renderCart(products, cart, container, updateHandler, removeHandler) {
   if (!container) return 0;
@@ -329,7 +345,6 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
 
     const item = document.createElement("div");
     item.className = "cart-item";
-    // ✅ para poder posicionar arriba a la derecha
     item.style.position = "relative";
 
     const left = document.createElement("div");
@@ -339,7 +354,6 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
     name.textContent = getProductName(product) || "Producto";
     left.appendChild(name);
 
-    // Nota promo por cantidad
     const promoText = getQtyPromoText(product);
     if (promoText) {
       const note = document.createElement("div");
@@ -350,15 +364,18 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
 
     item.appendChild(left);
 
-    // ✅ Arriba a la derecha: Q x $Unit = $Total
-    const unit = getUnitPriceByQty(product, q);
-    const rowTotal = unit > 0 ? unit * q : 0;
+    // ✅ Cálculo arriba a la derecha (redondeo)
+    const unitRaw = getUnitPriceByQty(product, q);
+    const unitShow = unitRaw > 0 ? roundUYU(unitRaw) : 0;
+
+    const rowTotalRaw = unitRaw > 0 ? unitRaw * q : 0;
+    const rowTotalShow = rowTotalRaw > 0 ? roundUYU(rowTotalRaw) : 0;
 
     const calc = document.createElement("div");
     calc.className = "cart-item-calc";
 
-    if (unit > 0) {
-      calc.textContent = `${q} x ${money(unit)} = ${money(rowTotal)}`;
+    if (unitRaw > 0) {
+      calc.textContent = `${q} x $ ${unitShow} = $ ${rowTotalShow}`;
     } else {
       calc.textContent = "Consultar";
     }
@@ -397,6 +414,7 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
     container.appendChild(item);
   });
 
+  // ✅ Total consistente (redondeado) desde computeCartTotal
   return computeCartTotal(products, cart);
 }
 
@@ -425,7 +443,11 @@ export function populateCategories(products, select) {
   }
 
   const categories = Array.from(
-    new Set((products || []).map((p) => (p.categoria || p.category || "").trim()).filter(Boolean))
+    new Set(
+      (products || [])
+        .map((p) => (p.categoria || p.category || "").trim())
+        .filter(Boolean)
+    )
   ).sort((a, b) => a.localeCompare(b, "es"));
 
   categories.forEach((cat) => {
