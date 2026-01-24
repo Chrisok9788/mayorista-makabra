@@ -1,11 +1,11 @@
 /*
+ * ui.js
  * Módulo de interfaz de usuario para el sitio del mayorista.
- * Contiene funciones para renderizar productos, el carrito,
- * actualizar contadores y filtrar resultados.
- * Totalmente compatible con GitHub Pages.
+ * Renderiza productos, carrito, contador, filtros y carrusel de ofertas.
+ * Compatible con GitHub Pages.
  */
 
-/** Convierte precio a número (por si viene como string) */
+/** Convierte precio a número (defensivo) */
 function toNumberPrice(v) {
   if (typeof v === "number") return Number.isFinite(v) ? v : 0;
   if (v == null) return 0;
@@ -17,117 +17,77 @@ function toNumberPrice(v) {
   return Number.isFinite(n) ? n : 0;
 }
 
-/** Formatea moneda UYU simple (sin decimales) */
-function formatUYU(n) {
-  const num = Math.round(Number(n) || 0);
-  return `$ ${num.toLocaleString("es-UY")}`;
-}
-
-/**
- * Helpers: soporta ambos formatos de producto (viejo y nuevo)
- * - nombre / name
- * - precio / price
- * - oferta / offer
- * - imagen / img
- */
+/** Nombre soportando ambos formatos */
 function getProductName(p) {
   return String(p?.nombre ?? p?.name ?? "").trim();
 }
 
-function getProductImage(p) {
-  return p?.imagen ?? p?.img ?? "";
-}
-
-function getProductOffer(p) {
-  return Boolean(p?.oferta ?? p?.offer);
-}
-
-function getProductPrice(p) {
+/** Precio base soportando ambos formatos */
+function getBasePrice(p) {
   return toNumberPrice(p?.precio ?? p?.price);
 }
 
 /**
- * Devuelve texto de promoción por cantidad (DPC) si existe.
- * Formato esperado:
- *   dpc: { tramos: [ {min, max?, precio}, ... ] }
- *
- * Ej:
- *   "Promo por cantidad: llevando 5+ u. $ 65 c/u"
+ * Devuelve el precio unitario aplicando promo por cantidad (si existe).
+ * Espera: product.dpc.tramos = [{min, max, precio}, ...]
  */
-function getDpcText(p) {
-  const tramos = p?.dpc?.tramos;
-  if (!Array.isArray(tramos) || tramos.length === 0) return "";
-
-  // Armamos un resumen corto (máx. 2 tramos para no ensuciar la tarjeta)
-  const parts = [];
-  for (const t of tramos) {
-    const min = Number(t?.min);
-    const maxRaw = t?.max;
-    const max = Number.isFinite(Number(maxRaw)) ? Number(maxRaw) : Infinity;
-    const precio = toNumberPrice(t?.precio);
-
-    if (!Number.isFinite(min) || min < 1 || precio <= 0) continue;
-
-    if (max === Infinity) {
-      parts.push(`llevando ${min}+ u. ${formatUYU(precio)} c/u`);
-    } else {
-      parts.push(`${min}-${max} u. ${formatUYU(precio)} c/u`);
-    }
-
-    if (parts.length >= 2) break;
-  }
-
-  if (!parts.length) return "";
-  return `Promo por cantidad: ${parts.join(" | ")}`;
-}
-
-/** Precio unitario aplicando promo por cantidad si corresponde */
 function getUnitPriceByQty(product, qty) {
-  const base = getProductPrice(product);
+  const base = getBasePrice(product);
+
   const tramos = product?.dpc?.tramos;
   if (!Array.isArray(tramos) || tramos.length === 0) return base;
 
-  const q = Number(qty) || 0;
-  if (q < 1) return base;
-
+  // Elegimos el tramo que matchee (qty dentro del rango)
   for (const t of tramos) {
     const min = Number(t?.min);
-    const maxRaw = t?.max;
-    const max = Number.isFinite(Number(maxRaw)) ? Number(maxRaw) : Infinity;
-    const promo = toNumberPrice(t?.precio);
+    const max = Number(t?.max);
+    const precio = toNumberPrice(t?.precio);
 
-    if (!Number.isFinite(min) || min < 1) continue;
-    if (q >= min && q <= max) return promo > 0 ? promo : base;
+    if (!Number.isFinite(min) || min <= 0) continue;
+
+    // max puede venir vacío, null, 0 o 999999 (lo tratamos como "sin tope")
+    const maxOk = Number.isFinite(max) && max > 0 ? max : Number.POSITIVE_INFINITY;
+
+    if (qty >= min && qty <= maxOk) {
+      return precio > 0 ? precio : base;
+    }
   }
 
   return base;
 }
 
 /**
- * Vibración corta (defensiva).
- * No hace nada si el dispositivo/navegador no lo soporta.
+ * Arma el texto de promo por cantidad:
+ * "Llevando 5 rebaja a $65 c/u"
+ *
+ * IMPORTANTE: NO usa "max", por eso nunca mostrará 999999.
+ * Toma el primer tramo válido (min y precio).
  */
-function vibrate60ms() {
-  try {
-    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
-      navigator.vibrate(60);
+function getQtyPromoText(product) {
+  const tramos = product?.dpc?.tramos;
+  if (!Array.isArray(tramos) || tramos.length === 0) return "";
+
+  for (const t of tramos) {
+    const min = Number(t?.min);
+    const precio = toNumberPrice(t?.precio);
+
+    if (Number.isFinite(min) && min > 0 && precio > 0) {
+      return `Llevando ${min} rebaja a $${precio} c/u`;
     }
-  } catch {
-    // silencioso
   }
+
+  return "";
 }
 
 /**
- * NUEVO: Calcula total del carrito usando products (campo: precio)
+ * Calcula total del carrito aplicando promos por cantidad si existen.
  * @param {Array} products
- * @param {Object} cart  (id -> qty)
- * @returns {number}
+ * @param {Object} cart (id -> qty)
  */
 export function computeCartTotal(products, cart) {
   if (!Array.isArray(products) || !products.length) return 0;
   if (!cart || typeof cart !== "object") return 0;
 
-  // Map por id para buscar rápido
   const byId = new Map(products.map((p) => [String(p.id ?? "").trim(), p]));
 
   let total = 0;
@@ -142,15 +102,11 @@ export function computeCartTotal(products, cart) {
     const unit = getUnitPriceByQty(p, qty);
     if (unit > 0) total += unit * qty;
   }
-
   return total;
 }
 
 /**
- * NUEVO: Actualiza el elemento del total en pantalla.
- * @param {HTMLElement} totalEl
- * @param {Array} products
- * @param {Object} cart
+ * Actualiza el total en pantalla.
  */
 export function updateCartTotal(totalEl, products, cart) {
   if (!totalEl) return;
@@ -171,14 +127,6 @@ export function renderProducts(list, container, addHandler) {
   }
 
   list.forEach((product) => {
-    const name = getProductName(product) || "Producto";
-    const imgSrc = getProductImage(product);
-    const hasStockInfo = typeof product.stock !== "undefined";
-    const inStock = !hasStockInfo || product.stock > 0;
-    const isOffer = getProductOffer(product);
-    const basePrice = getProductPrice(product);
-    const promoText = getDpcText(product);
-
     const card = document.createElement("div");
     card.className = "product-card";
 
@@ -186,15 +134,18 @@ export function renderProducts(list, container, addHandler) {
     let badgeLabel = "";
     let badgeClass = "";
 
-    if (hasStockInfo && !inStock) {
+    if (typeof product.stock !== "undefined" && product.stock <= 0) {
       badgeLabel = "SIN STOCK";
       badgeClass = "sin-stock";
-    } else if (isOffer === true) {
+    } else if (product.oferta === true || product.offer === true) {
       badgeLabel = "OFERTA";
       badgeClass = "oferta";
-    } else if (basePrice == null || basePrice <= 0) {
-      badgeLabel = "CONSULTAR";
-      badgeClass = "consultar";
+    } else {
+      const bp = getBasePrice(product);
+      if (bp <= 0) {
+        badgeLabel = "CONSULTAR";
+        badgeClass = "consultar";
+      }
     }
 
     if (badgeLabel) {
@@ -215,8 +166,10 @@ export function renderProducts(list, container, addHandler) {
         ? import.meta.env.BASE_URL
         : "./";
 
+    // soporta ambos nombres de campo
+    const imgSrc = product.imagen || product.img || "";
     img.src = imgSrc || `${BASE}placeholder.png`;
-    img.alt = name;
+    img.alt = getProductName(product) || "Producto";
     card.appendChild(img);
 
     // CONTENIDO
@@ -224,7 +177,7 @@ export function renderProducts(list, container, addHandler) {
     content.className = "product-content";
 
     const title = document.createElement("h3");
-    title.textContent = name;
+    title.textContent = getProductName(product) || "Producto";
     content.appendChild(title);
 
     const meta = document.createElement("div");
@@ -233,8 +186,7 @@ export function renderProducts(list, container, addHandler) {
     if (product.marca) meta.appendChild(document.createTextNode(product.marca));
 
     if (product.presentacion) {
-      if (meta.childNodes.length)
-        meta.appendChild(document.createTextNode(" · "));
+      if (meta.childNodes.length) meta.appendChild(document.createTextNode(" · "));
       meta.appendChild(document.createTextNode(product.presentacion));
     }
 
@@ -248,21 +200,23 @@ export function renderProducts(list, container, addHandler) {
     const price = document.createElement("p");
     price.className = "price";
 
-    if (hasStockInfo && !inStock) {
+    const basePrice = getBasePrice(product);
+
+    if (product.stock !== undefined && product.stock <= 0) {
       price.textContent = "Sin stock";
-    } else if (basePrice != null && basePrice > 0) {
-      price.textContent = formatUYU(basePrice);
+    } else if (basePrice > 0) {
+      price.textContent = `$ ${basePrice}`;
     } else {
       price.textContent = "Consultar";
     }
-
     content.appendChild(price);
 
-    // ✅ AGREGAR ESTO (debajo del precio): promo por cantidad (si existe)
+    // PROMO POR CANTIDAD (debajo del precio)
+    const promoText = getQtyPromoText(product);
     if (promoText) {
       const note = document.createElement("div");
       note.className = "price-note";
-      note.textContent = promoText;
+      note.textContent = promoText; // ✅ nunca muestra max (999999)
       content.appendChild(note);
     }
 
@@ -274,11 +228,9 @@ export function renderProducts(list, container, addHandler) {
     btn.addEventListener("click", () => {
       addHandler && addHandler(product.id);
 
-      // Feedback visual tipo "tap" (iPhone friendly)
+      // feedback visual
       btn.classList.add("btn-tap");
-      setTimeout(() => {
-        btn.classList.remove("btn-tap");
-      }, 100);
+      setTimeout(() => btn.classList.remove("btn-tap"), 100);
     });
 
     content.appendChild(btn);
@@ -301,7 +253,8 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
   const offers = (products || []).filter((p) => {
     const hasStockInfo = typeof p.stock !== "undefined";
     const inStock = !hasStockInfo || p.stock > 0;
-    return getProductOffer(p) === true && inStock;
+    const isOffer = p.oferta === true || p.offer === true;
+    return isOffer && inStock;
   });
 
   if (offers.length === 0) {
@@ -315,11 +268,10 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
   const cardsHtml = offers
     .map((p) => {
       const name = getProductName(p) || "Producto";
-      const img = getProductImage(p) || "";
-      const basePrice = getProductPrice(p);
-      const price =
-        basePrice != null && basePrice > 0 ? formatUYU(basePrice) : "Consultar";
-      const promo = getDpcText(p);
+      const img = p.imagen || p.img || "";
+      const bp = getBasePrice(p);
+      const price = bp > 0 ? `$ ${bp}` : "Consultar";
+      const promo = getQtyPromoText(p);
 
       return `
         <div class="offer-card" data-id="${p.id ?? ""}">
@@ -331,7 +283,7 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
           <div class="offer-body">
             <p class="offer-title">${name}</p>
             <div class="offer-price">${price}</div>
-            ${promo ? `<div class="offer-note">${promo}</div>` : ""}
+            ${promo ? `<div class="offer-note">${promo}</div>` : ``}
           </div>
         </div>
       `;
@@ -352,15 +304,8 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
 
 /**
  * Renderiza el carrito.
- * IMPORTANTE: devuelve el total calculado (por si querés usar retorno).
  */
-export function renderCart(
-  products,
-  cart,
-  container,
-  updateHandler,
-  removeHandler
-) {
+export function renderCart(products, cart, container, updateHandler, removeHandler) {
   if (!container) return 0;
   container.innerHTML = "";
 
@@ -370,10 +315,7 @@ export function renderCart(
     return 0;
   }
 
-  // Map por id para render rápido y seguro
-  const byId = new Map(
-    (products || []).map((p) => [String(p.id ?? "").trim(), p])
-  );
+  const byId = new Map((products || []).map((p) => [String(p.id ?? "").trim(), p]));
 
   entries.forEach(([productId, qty]) => {
     const id = String(productId ?? "").trim();
@@ -383,35 +325,23 @@ export function renderCart(
     const item = document.createElement("div");
     item.className = "cart-item";
 
+    const left = document.createElement("div");
+
     const name = document.createElement("div");
     name.className = "cart-item-name";
     name.textContent = getProductName(product) || "Producto";
-    item.appendChild(name);
+    left.appendChild(name);
 
-    // Precio aplicado + nota de promo por cantidad (si existe)
-    const qtyNum = Number(qty) || 0;
-    const baseUnit = getProductPrice(product);
-    const unit = getUnitPriceByQty(product, qtyNum);
-    if (unit > 0) {
-      const line = document.createElement("div");
-      line.className = "cart-item-meta";
-      const subtotal = unit * qtyNum;
-      const unitTxt = formatUYU(unit) + " c/u";
-      const subTxt = "Subtotal: " + formatUYU(subtotal);
-      line.textContent =
-        baseUnit > 0 && unit !== baseUnit
-          ? `${unitTxt} (promo) · ${subTxt}`
-          : `${unitTxt} · ${subTxt}`;
-      item.appendChild(line);
-    }
-
-    const promoText = getDpcText(product);
+    // Nota promo por cantidad en carrito
+    const promoText = getQtyPromoText(product);
     if (promoText) {
-      const promo = document.createElement("div");
-      promo.className = "cart-item-note";
-      promo.textContent = promoText;
-      item.appendChild(promo);
+      const note = document.createElement("div");
+      note.className = "cart-item-note";
+      note.textContent = promoText; // ✅ nunca muestra max (999999)
+      left.appendChild(note);
     }
+
+    item.appendChild(left);
 
     const controls = document.createElement("div");
     controls.className = "cart-item-controls";
@@ -443,7 +373,6 @@ export function renderCart(
     container.appendChild(item);
   });
 
-  // Devuelve total para que lo uses si querés
   return computeCartTotal(products, cart);
 }
 
@@ -472,11 +401,7 @@ export function populateCategories(products, select) {
   }
 
   const categories = Array.from(
-    new Set(
-      (products || [])
-        .map((p) => (p.categoria || "").trim())
-        .filter(Boolean)
-    )
+    new Set((products || []).map((p) => (p.categoria || p.category || "").trim()).filter(Boolean))
   ).sort((a, b) => a.localeCompare(b, "es"));
 
   categories.forEach((cat) => {
@@ -488,7 +413,7 @@ export function populateCategories(products, select) {
 }
 
 /**
- * NUEVO: Carga subcategorías en el select, según categoría elegida.
+ * Carga subcategorías en el select, según categoría elegida.
  */
 export function populateSubcategories(products, category, select) {
   if (!select) return;
@@ -502,8 +427,8 @@ export function populateSubcategories(products, category, select) {
   const subs = Array.from(
     new Set(
       (products || [])
-        .filter((p) => (p.categoria || "").trim() === category)
-        .map((p) => (p.subcategoria || "").trim())
+        .filter((p) => (p.categoria || p.category || "").trim() === category)
+        .map((p) => (p.subcategoria || p.subcategory || "").trim())
         .filter(Boolean)
     )
   ).sort((a, b) => a.localeCompare(b, "es"));
@@ -523,18 +448,19 @@ export function filterProducts(products, category, searchTerm) {
   let result = products || [];
 
   if (category) {
-    result = result.filter((p) => (p.categoria || "").trim() === category);
+    result = result.filter((p) => (p.categoria || p.category || "").trim() === category);
   }
 
   if (searchTerm) {
     const term = searchTerm.toLowerCase().trim();
     result = result.filter((p) => {
+      const tags = Array.isArray(p.tags) ? p.tags : [];
       const text = [
-        p.nombre,
+        getProductName(p),
         p.marca || "",
-        p.categoria || "",
-        p.subcategoria || "",
-        (p.tags || []).join(" "),
+        (p.categoria || p.category || ""),
+        (p.subcategoria || p.subcategory || ""),
+        tags.join(" "),
       ]
         .join(" ")
         .toLowerCase();
@@ -546,7 +472,7 @@ export function filterProducts(products, category, searchTerm) {
 }
 
 /**
- * Panel tipo acordeón
+ * Panel tipo acordeón (opcional).
  */
 export function renderCategoryAccordion(products, onSelect) {
   const accordion = document.getElementById("categoryAccordion");
@@ -557,17 +483,15 @@ export function renderCategoryAccordion(products, onSelect) {
 
   const catMap = new Map();
   for (const p of allProducts) {
-    const cat = (p.categoria || "Otros").trim();
-    const sub = (p.subcategoria || "Otros").trim();
+    const cat = (p.categoria || p.category || "Otros").trim();
+    const sub = (p.subcategoria || p.subcategory || "Otros").trim();
     if (!catMap.has(cat)) catMap.set(cat, new Map());
     const subMap = catMap.get(cat);
     if (!subMap.has(sub)) subMap.set(sub, []);
     subMap.get(sub).push(p);
   }
 
-  const categories = Array.from(catMap.keys()).sort((a, b) =>
-    a.localeCompare(b, "es")
-  );
+  const categories = Array.from(catMap.keys()).sort((a, b) => a.localeCompare(b, "es"));
 
   const title = document.createElement("div");
   title.className = "cat-panel-head";
@@ -585,16 +509,12 @@ export function renderCategoryAccordion(products, onSelect) {
     allBtn.type = "button";
     allBtn.className = "cat-pill";
     allBtn.textContent = "Ver todo";
-    allBtn.onclick = () =>
-      typeof onSelect === "function" && onSelect(allProducts);
+    allBtn.onclick = () => typeof onSelect === "function" && onSelect(allProducts);
     list.appendChild(allBtn);
 
     categories.forEach((cat) => {
       const subMap = catMap.get(cat);
-      const count = Array.from(subMap.values()).reduce(
-        (a, arr) => a + arr.length,
-        0
-      );
+      const count = Array.from(subMap.values()).reduce((a, arr) => a + arr.length, 0);
 
       const btn = document.createElement("button");
       btn.type = "button";
@@ -643,10 +563,7 @@ export function renderCategoryAccordion(products, onSelect) {
 
     const allCat = document.createElement("div");
     allCat.className = "subcat";
-    const totalCount = Array.from(subMap.values()).reduce(
-      (a, arr) => a + arr.length,
-      0
-    );
+    const totalCount = Array.from(subMap.values()).reduce((a, arr) => a + arr.length, 0);
     allCat.innerHTML = `<span>Ver toda la categoría</span><small>${totalCount}</small>`;
     allCat.onclick = () => {
       const list = [];
