@@ -1544,10 +1544,10 @@
   "oferta": true,
   "imagen": "images/Aceite/Aceite-condesa.JPG.WEBP",
   "dpc": {
-    "tramos": [
-      { "min": 5, "precio": 65 }
-    ]
-  }
+  "tramos": [
+    { "min": 5, "max": 999999, "precio": 65 }
+  ]
+}
 },
   {
     "id": "aceite-optimo-900cc-144",
