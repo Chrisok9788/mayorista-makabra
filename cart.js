@@ -122,10 +122,51 @@ function toNumberPrice(v) {
 }
 
 /**
+ * Devuelve el nombre del producto soportando ambos formatos:
+ * - nombre (viejo)
+ * - name (nuevo)
+ */
+function getProductName(p) {
+  return String(p?.nombre ?? p?.name ?? "").trim();
+}
+
+/**
+ * Devuelve el precio unitario aplicando promo por cantidad si existe.
+ *
+ * Soporta ambos formatos de precio:
+ * - precio (viejo)
+ * - price (nuevo)
+ *
+ * Promo por cantidad esperada:
+ * dpc: { tramos: [ {min, max, precio}, ... ] }
+ */
+function getUnitPriceByQty(product, qty) {
+  const base = toNumberPrice(product?.precio ?? product?.price);
+
+  const tramos = product?.dpc?.tramos;
+  if (!Array.isArray(tramos) || tramos.length === 0) return base;
+
+  for (const t of tramos) {
+    const min = Number(t?.min);
+    const max = Number(t?.max);
+    const precio = toNumberPrice(t?.precio);
+
+    if (!Number.isFinite(min) || !Number.isFinite(max)) continue;
+
+    if (qty >= min && qty <= max) {
+      return precio > 0 ? precio : base;
+    }
+  }
+
+  return base;
+}
+
+/**
  * Calcula el MONTO TOTAL del carrito en base a los productos.
  * - Ignora productos con precio 0 (Consultar)
  * - COMPATIBLE con carritos viejos: si la key no matchea con p.id,
- *   intenta matchear contra p.nombre.
+ *   intenta matchear contra p.nombre o p.name.
+ * - APLICA promociones por cantidad si el producto trae dpc.tramos.
  *
  * @param {Object} cartObj Carrito (key -> cantidad)
  * @param {Array} products Lista de productos
@@ -141,7 +182,7 @@ export function totalAmount(cartObj, products) {
 
   for (const p of products) {
     const id = String(p.id ?? "").trim();
-    const nombre = String(p.nombre ?? "").trim();
+    const nombre = getProductName(p);
 
     if (id) byId.set(id, p);
     if (nombre) byNombre.set(nombre, p);
@@ -159,8 +200,8 @@ export function totalAmount(cartObj, products) {
     const product = byId.get(key) || byNombre.get(key);
     if (!product) continue;
 
-    const price = toNumberPrice(product.precio); // tu JSON usa "precio" [oai_citation:1‡products.json.txt](sediment://file_000000007708720e9c7c5eaea4226aac)
-    if (price > 0) total += price * qty;
+    const unit = getUnitPriceByQty(product, qty);
+    if (unit > 0) total += unit * qty;
   }
 
   return total;
