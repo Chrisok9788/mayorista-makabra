@@ -3,7 +3,9 @@
 // ✅ Total del carrito SIEMPRE redondeado (Math.round) en la UI
 // ✅ NO usa totalAmount() (porque no aplica dpc.tramos) → ahora usa computeCartTotal() de ui.js
 // ✅ Corrige el error "Can't find variable: Rca" (estaba en renderCategoryGrid)
-// ✅ Mantiene todo lo demás igual
+// ✅ NUEVO: Orden inteligente GENERAL por:
+//    categoría → "base" (marca/línea) → sabor → tamaño (ml/gr)
+//    (Sirve para Nix, Coca, etc. y para cualquier producto con tamaños/sabores)
 
 import { fetchProducts } from "./data.js";
 import {
@@ -99,6 +101,192 @@ function normalizeProduct(p) {
 function normalizeList(list) {
   if (!Array.isArray(list)) return [];
   return list.map(normalizeProduct).filter((p) => p.id);
+}
+
+// =======================
+// ✅ ORDEN INTELIGENTE GENERAL
+// categoría → base → sabor → tamaño
+// =======================
+
+function normText(x) {
+  return String(x || "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .replace(/,/g, ".")
+    .trim();
+}
+
+// Detecta tamaño en ml o gramos (sirve para bebidas y sólidos)
+function parseSizeKey(product) {
+  const raw = normText(
+    [product?.presentacion, product?.presentación, product?.nombre, product?.name]
+      .filter(Boolean)
+      .join(" ")
+  );
+
+  // ml
+  let m = raw.match(/(\d+(?:\.\d+)?)\s*ml\b/);
+  if (m) return { kind: "ml", value: Math.round(Number(m[1])) };
+
+  // cc (1cc=1ml)
+  m = raw.match(/(\d+(?:\.\d+)?)\s*cc\b/);
+  if (m) return { kind: "ml", value: Math.round(Number(m[1])) };
+
+  // litros: l / lt / lts / litro(s)
+  m = raw.match(/(\d+(?:\.\d+)?)\s*(l|lt|lts|litro|litros)\b/);
+  if (m) return { kind: "ml", value: Math.round(Number(m[1]) * 1000) };
+
+  // pegado: 2.25l / 1lt
+  m = raw.match(/(\d+(?:\.\d+)?)(l|lt|lts)\b/);
+  if (m) return { kind: "ml", value: Math.round(Number(m[1]) * 1000) };
+
+  // gramos: g / gr / grs / gramos
+  m = raw.match(/(\d+(?:\.\d+)?)\s*(g|gr|grs|gramo|gramos)\b/);
+  if (m) return { kind: "g", value: Math.round(Number(m[1])) };
+
+  // kg
+  m = raw.match(/(\d+(?:\.\d+)?)\s*(kg|kgs|kilo|kilos)\b/);
+  if (m) return { kind: "g", value: Math.round(Number(m[1]) * 1000) };
+
+  return null;
+}
+
+// Si viene "1" sin unidad, SOLO para bebidas conocidas lo tratamos como 1L
+function fallbackOneLiterForBeverages(product) {
+  const raw = normText(
+    [product?.presentacion, product?.nombre, product?.name]
+      .filter(Boolean)
+      .join(" ")
+  );
+
+  // lista mínima de bebidas típicas (podés agregar marcas si querés)
+  const looksLikeBeverage =
+    raw.includes("coca") ||
+    raw.includes("nix") ||
+    raw.includes("cola") ||
+    raw.includes("agua") ||
+    raw.includes("fanta") ||
+    raw.includes("sprite") ||
+    raw.includes("pepsi") ||
+    raw.includes("refresco");
+
+  if (!looksLikeBeverage) return Number.POSITIVE_INFINITY;
+
+  // Detecta un "1" suelto (evita 10, 12, etc.)
+  const m = raw.match(/(?:^|\D)1(?:\D|$)/);
+  return m ? 1000 : Number.POSITIVE_INFINITY;
+}
+
+// Orden de sabores (ajustable)
+const FLAVOR_ORDER = [
+  "cola",
+  "lima",
+  "limon",
+  "pomelo",
+  "naranja",
+  "manzana",
+  "uva",
+  "tonica",
+  "ginger",
+  "sin azucar",
+  "cero",
+  "zero",
+  "light",
+];
+
+function detectFlavor(product) {
+  const raw = normText(
+    [product?.nombre, product?.name, product?.presentacion, product?.presentación]
+      .filter(Boolean)
+      .join(" ")
+  );
+
+  // normalizaciones rápidas por acentos
+  const s = raw
+    .replace("limón", "limon")
+    .replace("tónica", "tonica")
+    .replace("sin azúcar", "sin azucar")
+    .replace("s/azúcar", "sin azucar")
+    .replace("s/azucar", "sin azucar");
+
+  for (const key of FLAVOR_ORDER) {
+    if (s.includes(key)) return key;
+  }
+  return ""; // sin sabor explícito
+}
+
+function flavorRank(flavor) {
+  if (!flavor) return 999; // los “sin sabor” al final del grupo
+  const idx = FLAVOR_ORDER.indexOf(flavor);
+  return idx >= 0 ? idx : 998;
+}
+
+// Base/Línea: usa marca si existe; si no, adivina (coca cola, nix, etc.)
+function detectBase(product) {
+  const marca = normText(product?.marca);
+  if (marca) return marca;
+
+  const raw0 = normText(product?.nombre ?? product?.name);
+
+  // saco tamaños típicos para no romper el agrupado
+  const raw = raw0
+    .replace(/\b\d+(?:\.\d+)?\s*(ml|cc|l|lt|lts|litro|litros|g|gr|grs|kg|kgs|kilo|kilos)\b/g, " ")
+    .replace(/[-_/]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!raw) return "otros";
+
+  const tokens = raw.split(" ");
+  const two = tokens.slice(0, 2).join(" ");
+
+  if (two === "coca cola") return "coca cola";
+  return tokens[0]; // nix / coca / fanta / etc.
+}
+
+// Orden final: categoría → base → sabor → tamaño → nombre
+function sortCatalogue(list) {
+  const arr = [...(list || [])];
+
+  arr.sort((a, b) => {
+    // 1) categoría A-Z
+    const catA = getCat(a);
+    const catB = getCat(b);
+    const catCmp = catA.localeCompare(catB, "es");
+    if (catCmp !== 0) return catCmp;
+
+    // 2) base/línea A-Z
+    const baseA = detectBase(a);
+    const baseB = detectBase(b);
+    const baseCmp = baseA.localeCompare(baseB, "es");
+    if (baseCmp !== 0) return baseCmp;
+
+    // 3) sabor (orden definido)
+    const flA = detectFlavor(a);
+    const flB = detectFlavor(b);
+    const frA = flavorRank(flA);
+    const frB = flavorRank(flB);
+    if (frA !== frB) return frA - frB;
+
+    // 4) tamaño (ml o g) ascendente
+    const ak = parseSizeKey(a);
+    const bk = parseSizeKey(b);
+
+    let aV = ak ? ak.value : null;
+    let bV = bk ? bk.value : null;
+
+    if (aV == null) aV = fallbackOneLiterForBeverages(a);
+    if (bV == null) bV = fallbackOneLiterForBeverages(b);
+
+    if (aV !== bV) return aV - bV;
+
+    // 5) desempate: nombre A-Z
+    const an = normText(getName(a));
+    const bn = normText(getName(b));
+    return an.localeCompare(bn, "es");
+  });
+
+  return arr;
 }
 
 // =======================
@@ -230,6 +418,9 @@ function applySearchAndFilter() {
 
   if (term) filtered = filterProducts(filtered, "", term);
 
+  // ✅ NUEVO: ordenar siempre antes de renderizar
+  filtered = sortCatalogue(filtered);
+
   renderProducts(filtered, document.getElementById("products-container"), handleAdd);
 }
 
@@ -311,6 +502,9 @@ async function init() {
     const raw = await fetchProducts();
 
     products = normalizeList(raw);
+
+    // ✅ NUEVO: dejar el catálogo ordenado desde el inicio
+    products = sortCatalogue(products);
     baseProducts = products;
 
     const categories = buildCategoryCounts(products);
