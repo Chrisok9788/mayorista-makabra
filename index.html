@@ -2,7 +2,8 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- ✅ FIX iOS: viewport-fit=cover -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
     <meta property="og:title" content="Mayorista Makabra - Catálogo para revendedores" />
     <meta property="og:description" content="Catálogo online mayorista con pedido por WhatsApp." />
@@ -39,7 +40,8 @@
       </div>
     </header>
 
-    <main role="main">
+    <!-- ✅ clase para “blindar” stacking/pintado -->
+    <main class="site-main" role="main">
       <section id="home"></section>
 
       <!-- OFERTAS -->
@@ -178,7 +180,6 @@
 
       <!-- BOTONES FLOTANTES -->
       <div class="float-actions" aria-label="Accesos rápidos">
-        <!-- CARRITO GRANDE -->
         <a href="#cart" class="cart-float" aria-label="Carrito">
           Carrito
           <span class="cart-badge">
@@ -186,7 +187,6 @@
           </span>
         </a>
 
-        <!-- ✅ WHATSAPP ICON-ONLY (EL BOTÓN ES EL LOGO, NO IMG) -->
         <a
           href="https://wa.me/59896405927"
           class="whatsapp-float whatsapp-icon"
