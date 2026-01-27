@@ -1,5 +1,12 @@
+/* style.css — MODIFICADO y COMPLETO
+   Objetivo:
+   ✅ Que NO aparezca pantalla en blanco en iPhone/Android/PC al entrar
+   ✅ Mejorar carga percibida (menos “saltos” y render más liviano)
+   ✅ Mantener tu diseño y clases actuales (products-grid, categories-grid, etc.)
+*/
+
 :root {
-  /* ✅ Cambios: paleta clara (fondo blanco) manteniendo la identidad verde */
+  /* ✅ Paleta clara (fondo blanco) manteniendo la identidad verde */
   --bg: #ffffff;
   --card: #ffffff;
   --soft: #f6f8fb;
@@ -20,6 +27,12 @@ html, body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
+
+  /* ✅ iOS: evita “pantalla blanca” por bugs de render al cargar */
+  min-height: 100%;
+  height: auto;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -28,13 +41,35 @@ a { color: inherit; text-decoration: none; }
 .section { padding: 28px 0; }
 .section-soft { background: var(--soft); }
 
+/* =========================
+   ✅ HEADER: FIX iOS “BLANCO HASTA GIRAR”
+   Causa típica: position:sticky + backdrop-filter (Safari/iOS)
+   Solución: forzar composición y fallback seguro en iOS
+   ========================= */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 50;
   background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
+
+  /* Safari/iOS */
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+
+  /* Forzar capa */
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* iOS “quirk”: a veces backdrop-filter + sticky pinta blanco.
+   En iOS lo apagamos para estabilidad (se ve igual, solo sin blur). */
+@supports (-webkit-touch-callout: none) {
+  .site-header {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: #ffffff;
+  }
 }
 
 .header-row {
@@ -247,9 +282,8 @@ button:disabled,
 
 /* =========================
    ✅ GRID DE PRODUCTOS
-   - PC: 3 columnas (como lo tenías)
+   - PC: 3 columnas
    - Celular/Tablet: 2 columnas
-   - NUNCA 1 columna
    ========================= */
 .products-grid {
   display: grid;
@@ -266,29 +300,36 @@ button:disabled,
   overflow: hidden;
 }
 
+/* ✅ Rendimiento: el navegador puede “saltear” render fuera de pantalla (Chrome/Edge) */
+@supports (content-visibility: auto) {
+  .product-card {
+    content-visibility: auto;
+    contain-intrinsic-size: 340px; /* tamaño estimado para evitar saltos */
+  }
+}
+
 /* =========================
-   ✅ FIX VELOCIDAD / SIN SALTOS DE LAYOUT
+   ✅ FIX VELOCIDAD / SIN SALTOS DE LAYOUT (CLS)
    - Reservamos espacio para imágenes desde el inicio
-   - Evitamos reflow (CLS)
    ========================= */
 
 /* Catálogo (ui.js usa class="product-image") */
 .product-image{
   width: 100%;
-  aspect-ratio: 1 / 1;       /* ✅ reserva espacio aunque tarde el JPG */
+  aspect-ratio: 1 / 1;
   height: auto;
   display: block;
-  object-fit: contain;        /* sin deformar */
+  object-fit: contain;
   object-position: center;
   background: rgba(11,18,32,0.04);
   border-radius: 14px;
   border: 1px solid rgba(11,18,32,0.10);
 }
 
-/* Carrusel (ya tenías .offer-img, lo dejo mejorado) */
+/* Carrusel (ui.js usa class="offer-img") */
 .offer-img{
   width: 100%;
-  aspect-ratio: 1 / 1;       /* ✅ reserva espacio en el carrusel */
+  aspect-ratio: 1 / 1;
   height: auto;
   display: block;
   object-fit: contain;
@@ -296,7 +337,6 @@ button:disabled,
   background: rgba(11,18,32,0.04);
 }
 
-/* Eliminamos reglas genéricas que pueden pisar alturas y causar “saltos” */
 .product-card img,
 .offer-card img{
   display: block;
@@ -344,9 +384,6 @@ button:disabled,
 .price { font-weight: 900; }
 .price.muted { font-weight: 700; }
 
-/* =========================
-   ✅ NUEVO: TEXTO PROMO POR CANTIDAD (debajo del precio)
-   ========================= */
 .price-note{
   margin-top: 6px;
   font-size: 12px;
@@ -359,7 +396,6 @@ button:disabled,
   background: rgba(26,163,107,0.06);
 }
 
-/* Tap feedback del botón (lo usa ui.js) */
 .btn-tap{
   transform: scale(0.98);
   box-shadow: 0 4px 10px rgba(16,24,40,0.16);
@@ -392,11 +428,14 @@ button:disabled,
   min-height: 150px;
 }
 
+/* ✅ Rendimiento: carrusel en su propia capa */
 .offers-track {
   display: flex;
   gap: 12px;
   width: max-content;
   animation: offers-scroll 28s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .offer-card {
@@ -418,7 +457,6 @@ button:disabled,
 .offer-price { margin-top: 6px; font-weight: 900; }
 .offer-price.muted { font-weight: 700; }
 
-/* ✅ NUEVO: nota promo dentro del carrusel */
 .offer-note{
   margin-top: 6px;
   font-size: 11px;
@@ -442,11 +480,6 @@ button:disabled,
   .offer-card { width: 200px; }
 }
 
-/* ✅ QUITADO: reglas que te pisaban alturas
-.offer-card img { height: 180px; ... }
-@media (max-width: 560px) { .offer-card img { height: 220px; } }
-*/
-
 /* =========================
    CARRITO
    ========================= */
@@ -467,7 +500,6 @@ button:disabled,
 .cart-item h4 { margin: 0; font-size: 14px; }
 .cart-item .muted { font-size: 12px; }
 
-/* ✅ NUEVO: meta en carrito (precio unitario / subtotal / promo) */
 .cart-item-meta{
   margin-top: 6px;
   font-size: 12px;
@@ -476,7 +508,6 @@ button:disabled,
   line-height: 1.25;
 }
 
-/* ✅ NUEVO: nota promo en carrito */
 .cart-item-note{
   margin-top: 6px;
   font-size: 12px;
@@ -681,7 +712,6 @@ button:disabled,
   line-height: 1;
 }
 
-/* Base WhatsApp dentro del contenedor flotante */
 .whatsapp-float {
   background: var(--brand);
   color: #fff;
@@ -692,39 +722,32 @@ button:disabled,
   border: 1px solid rgba(26,163,107,0.6);
 }
 
-/* Importante: si whatsapp-float estaba fixed, lo anulamos para que lo maneje el contenedor */
 .float-actions .whatsapp-float { position: static; }
 
-/* ✅ WhatsApp icon-only REAL: el logo ocupa TODO el círculo (sin deformarse) */
 .whatsapp-float.whatsapp-icon {
   width: 62px;
   height: 62px;
   padding: 0;
   border-radius: 999px;
 
-  /* El botón ES el logo */
   background-image: url("./whatsapp.png.PNG");
-  background-size: cover;       /* ocupa todo */
-  background-position: center;  /* centrado */
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
 
-  /* limpiar estilos que molestan */
   border: none;
   box-shadow: 0 10px 22px rgba(0,0,0,0.16);
   overflow: hidden;
 
-  /* ocultar texto si queda */
   font-size: 0;
   line-height: 0;
   color: transparent;
 }
 
-/* Tap feedback */
 .whatsapp-float.whatsapp-icon:active {
   transform: scale(0.96);
 }
 
-/* En celular: un poco más chico, pero legible */
 @media (max-width: 560px) {
   .whatsapp-float.whatsapp-icon {
     width: 58px;
@@ -747,15 +770,12 @@ button:disabled,
   .main-nav { justify-content: flex-end; }
 }
 
-/* ✅ CAMBIO: antes a 560px bajaba a 1 columna.
-   Ahora NUNCA baja a 1 columna. */
+/* ✅ NUNCA 1 columna */
 @media (max-width: 560px) {
   .products-grid { grid-template-columns: repeat(2, 1fr); }
   .brand-subtitle { display: none; }
-}
 
-/* Header más compacto SOLO en celular */
-@media (max-width: 560px) {
+  /* Header más compacto SOLO en celular */
   .header-row { padding: 4px 0; }
 
   .brand-logo {
