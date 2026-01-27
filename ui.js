@@ -1,15 +1,13 @@
 /*
- * ui.js — MODIFICADO y COMPLETO
- * Objetivo: que NO se vean decimales en ningún lado y que el TOTAL sea coherente.
+ * ui.js — MODIFICADO y COMPLETO (performance imágenes)
  *
- * ✅ Redondeo UYU en:
- *  - textos de promo (ej: $31 c/u)
- *  - precios de cards / ofertas
- *  - cálculo del carrito (líneas y total)
+ * ✅ Mantiene TODO lo que ya tenías (redondeos, carrito, dpc.tramos, etc.)
  *
- * ✅ Punto clave para que coincida:
- *  - Se redondea el SUBTOTAL de cada ítem y se SUMA (igual que WhatsApp).
- *    (Esto evita diferencias tipo 369.9996 -> 370 pero total termina 372 por float.)
+ * ✅ NUEVO (para que cargue rápido):
+ *  - Carrusel: imágenes con prioridad alta (fetchpriority="high") + eager
+ *  - Catálogo: imágenes lazy + decoding async + fetchpriority low
+ *  - Placeholder inmediato + transición suave al cargar
+ *  - Manejo de error (si una imagen falla, cae a placeholder)
  */
 
 /** Convierte precio a número (defensivo) */
@@ -95,6 +93,85 @@ function money(n) {
   return `$ ${roundUYU(v)}`;
 }
 
+/** Base URL defensivo */
+function getBaseUrl() {
+  const BASE =
+    typeof import.meta !== "undefined" &&
+    import.meta.env &&
+    import.meta.env.BASE_URL
+      ? import.meta.env.BASE_URL
+      : "./";
+  return BASE;
+}
+
+/** Placeholder defensivo (puede ser placeholder.png) */
+function getPlaceholderUrl() {
+  return `${getBaseUrl()}placeholder.png`;
+}
+
+/**
+ * ✅ Aplica “carga rápida” a imágenes:
+ * - placeholder inmediato
+ * - prioridad configurable
+ * - lazy/eager configurable
+ * - decode async
+ * - fade-in cuando carga
+ */
+function setupFastImage(imgEl, realSrc, alt, opts = {}) {
+  const {
+    priority = "low", // "high" para carrusel
+    loading = "lazy", // "eager" para carrusel
+    width,
+    height,
+  } = opts;
+
+  const placeholder = getPlaceholderUrl();
+
+  // atributos “baratos” primero (para evitar layout raro)
+  if (width) imgEl.width = width;
+  if (height) imgEl.height = height;
+
+  imgEl.alt = alt || "Producto";
+
+  // placeholder ya
+  imgEl.src = placeholder;
+
+  // mejoras de performance
+  imgEl.loading = loading;         // lazy / eager
+  imgEl.decoding = "async";        // decode sin trabar UI
+
+  // fetchpriority no está en todos los navegadores, por eso setAttribute
+  imgEl.setAttribute("fetchpriority", priority); // "high" / "low"
+
+  // fade-in
+  imgEl.style.opacity = "0";
+  imgEl.style.transition = "opacity 160ms ease";
+
+  // si hay src real, lo seteo después (micro-tarea)
+  const finalSrc = realSrc || "";
+  if (!finalSrc) {
+    // sin src real, queda el placeholder visible
+    imgEl.style.opacity = "1";
+    return;
+  }
+
+  // onload / onerror
+  imgEl.onload = () => {
+    imgEl.style.opacity = "1";
+  };
+
+  imgEl.onerror = () => {
+    // si falla, mantenemos placeholder
+    imgEl.src = placeholder;
+    imgEl.style.opacity = "1";
+  };
+
+  // setear el src real en un tick: mejora “primera pintura”
+  queueMicrotask(() => {
+    imgEl.src = finalSrc;
+  });
+}
+
 /**
  * Calcula total del carrito aplicando promos por cantidad si existen.
  * ✅ COHERENTE: suma subtotales ya redondeados (igual que WhatsApp).
@@ -141,6 +218,7 @@ export function updateCartTotal(totalEl, products, cart) {
 
 /**
  * Renderiza la lista de productos en un contenedor.
+ * ✅ Mejoras: lazy + async decode + placeholder + fade-in
  */
 export function renderProducts(list, container, addHandler) {
   if (!container) return;
@@ -180,20 +258,19 @@ export function renderProducts(list, container, addHandler) {
       card.appendChild(badge);
     }
 
-    // IMAGEN
+    // IMAGEN (catálogo: low + lazy)
     const img = document.createElement("img");
     img.className = "product-image";
 
-    const BASE =
-      typeof import.meta !== "undefined" &&
-      import.meta.env &&
-      import.meta.env.BASE_URL
-        ? import.meta.env.BASE_URL
-        : "./";
-
     const imgSrc = product.imagen || product.img || "";
-    img.src = imgSrc || `${BASE}placeholder.png`;
-    img.alt = getProductName(product) || "Producto";
+    setupFastImage(img, imgSrc, getProductName(product) || "Producto", {
+      priority: "low",
+      loading: "lazy",
+      // opcional: si querés ayudar al layout, podés fijar tamaño acorde a tu CSS
+      // width: 300,
+      // height: 300,
+    });
+
     card.appendChild(img);
 
     // CONTENIDO
@@ -265,6 +342,7 @@ export function renderProducts(list, container, addHandler) {
 
 /**
  * Renderiza el carrusel de OFERTAS.
+ * ✅ Mejora: imágenes eager + prioridad alta para que “salga primero”
  */
 export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
   if (!frameEl || !trackEl) return;
@@ -288,41 +366,77 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
     return;
   }
 
-  const cardsHtml = offers
-    .map((p) => {
-      const name = getProductName(p) || "Producto";
-      const img = p.imagen || p.img || "";
-      const bp = getBasePrice(p);
-      const price = bp > 0 ? money(bp) : "Consultar";
-      const promo = getQtyPromoText(p);
+  // Armamos nodos en vez de HTML string para poder setear loading/fetchpriority
+  const makeCard = (p) => {
+    const card = document.createElement("div");
+    card.className = "offer-card";
+    card.setAttribute("data-id", String(p.id ?? ""));
 
-      return `
-        <div class="offer-card" data-id="${p.id ?? ""}">
-          ${
-            img
-              ? `<img class="offer-img" src="${img}" alt="${name}">`
-              : `<div class="offer-img"></div>`
-          }
-          <div class="offer-body">
-            <p class="offer-title">${name}</p>
-            <div class="offer-price">${price}</div>
-            ${promo ? `<div class="offer-note">${promo}</div>` : ``}
-          </div>
-        </div>
-      `;
-    })
-    .join("");
+    const name = getProductName(p) || "Producto";
+    const imgSrc = p.imagen || p.img || "";
 
-  trackEl.innerHTML = offers.length >= 2 ? cardsHtml + cardsHtml : cardsHtml;
+    if (imgSrc) {
+      const img = document.createElement("img");
+      img.className = "offer-img";
 
-  if (typeof onClick === "function") {
-    trackEl.querySelectorAll(".offer-card").forEach((el) => {
-      el.addEventListener("click", () => {
-        const id = el.getAttribute("data-id");
+      // Carrusel: eager + high
+      setupFastImage(img, imgSrc, name, {
+        priority: "high",
+        loading: "eager",
+      });
+
+      card.appendChild(img);
+    } else {
+      const ph = document.createElement("div");
+      ph.className = "offer-img";
+      card.appendChild(ph);
+    }
+
+    const body = document.createElement("div");
+    body.className = "offer-body";
+
+    const title = document.createElement("p");
+    title.className = "offer-title";
+    title.textContent = name;
+
+    const bp = getBasePrice(p);
+    const price = document.createElement("div");
+    price.className = "offer-price";
+    price.textContent = bp > 0 ? money(bp) : "Consultar";
+
+    body.appendChild(title);
+    body.appendChild(price);
+
+    const promo = getQtyPromoText(p);
+    if (promo) {
+      const note = document.createElement("div");
+      note.className = "offer-note";
+      note.textContent = promo;
+      body.appendChild(note);
+    }
+
+    card.appendChild(body);
+
+    if (typeof onClick === "function") {
+      card.addEventListener("click", () => {
+        const id = card.getAttribute("data-id");
         if (id) onClick(id);
       });
-    });
+    }
+
+    return card;
+  };
+
+  // render base + duplicado para loop
+  const frag = document.createDocumentFragment();
+  offers.forEach((p) => frag.appendChild(makeCard(p)));
+
+  // duplicamos si hay 2+ para que el scroll sea continuo
+  if (offers.length >= 2) {
+    offers.forEach((p) => frag.appendChild(makeCard(p)));
   }
+
+  trackEl.appendChild(frag);
 }
 
 /**
