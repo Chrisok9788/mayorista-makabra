@@ -266,6 +266,50 @@ button:disabled,
   overflow: hidden;
 }
 
+/* =========================
+   ✅ FIX VELOCIDAD / SIN SALTOS DE LAYOUT
+   - Reservamos espacio para imágenes desde el inicio
+   - Evitamos reflow (CLS)
+   ========================= */
+
+/* Catálogo (ui.js usa class="product-image") */
+.product-image{
+  width: 100%;
+  aspect-ratio: 1 / 1;       /* ✅ reserva espacio aunque tarde el JPG */
+  height: auto;
+  display: block;
+  object-fit: contain;        /* sin deformar */
+  object-position: center;
+  background: rgba(11,18,32,0.04);
+  border-radius: 14px;
+  border: 1px solid rgba(11,18,32,0.10);
+}
+
+/* Carrusel (ya tenías .offer-img, lo dejo mejorado) */
+.offer-img{
+  width: 100%;
+  aspect-ratio: 1 / 1;       /* ✅ reserva espacio en el carrusel */
+  height: auto;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  background: rgba(11,18,32,0.04);
+}
+
+/* Eliminamos reglas genéricas que pueden pisar alturas y causar “saltos” */
+.product-card img,
+.offer-card img{
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Si la imagen falla, que no rompa todo */
+.product-image[alt=""],
+.offer-img[alt=""]{
+  background: rgba(11,18,32,0.06);
+}
+
 .product-top { display: flex; gap: 12px; align-items: center; }
 
 .product-img {
@@ -369,15 +413,6 @@ button:disabled,
 }
 .offer-card:hover { transform: translateY(-1px); }
 
-.offer-img {
-  width: 100%;
-  height: 160px;
-  object-fit: contain;
-  object-position: center;
-  display: block;
-  background: rgba(11,18,32,0.04);
-}
-
 .offer-body { padding: 10px; }
 .offer-title { font-weight: 800; font-size: 13px; margin: 0; }
 .offer-price { margin-top: 6px; font-weight: 900; }
@@ -405,28 +440,16 @@ button:disabled,
 
 @media (max-width: 560px) {
   .offer-card { width: 200px; }
-  .offer-img { height: 190px; }
 }
 
-.product-card img,
-.offer-card img {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-}
+/* ✅ QUITADO: reglas que te pisaban alturas
+.offer-card img { height: 180px; ... }
+@media (max-width: 560px) { .offer-card img { height: 220px; } }
+*/
 
-.offer-card img {
-  height: 180px;
-  object-fit: contain;
-  object-position: center;
-  background: rgba(11,18,32,0.04);
-}
-
-@media (max-width: 560px) {
-  .offer-card img { height: 220px; }
-}
-
+/* =========================
+   CARRITO
+   ========================= */
 .cart-items { display: grid; gap: 10px; }
 
 .cart-item {
