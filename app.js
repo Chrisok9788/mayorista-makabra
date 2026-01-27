@@ -5,7 +5,7 @@
 // ✅ Corrige el error "Can't find variable: Rca" (estaba en renderCategoryGrid)
 // ✅ NUEVO: Orden inteligente GENERAL por:
 //    categoría → "base" (marca/línea) → sabor → tamaño (ml/gr)
-//    (Sirve para Nix, Coca, etc. y para cualquier producto con tamaños/sabores)
+// ✅ FIX iOS: evita pantalla en blanco hasta girar (forzamos repaint/resize)
 
 import { fetchProducts } from "./data.js";
 import {
@@ -26,7 +26,7 @@ import {
   populateSubcategories,
   filterProducts,
   renderOffersCarousel,
-  computeCartTotal, // ✅ usa el mismo cálculo que el detalle del carrito (dpc.tramos)
+  computeCartTotal,
 } from "./ui.js";
 
 import { sendOrder } from "./whatsapp.js";
@@ -34,6 +34,42 @@ import { sendOrder } from "./whatsapp.js";
 let products = [];
 let baseProducts = [];
 let sending = false;
+
+// =======================
+// ✅ FIX iOS “pantalla blanca hasta girar”
+// Safari a veces no repinta hasta un resize real.
+// Esto fuerza repaint + resize “suave” sin mover la página.
+// =======================
+function isIOS() {
+  const ua = navigator.userAgent || "";
+  const iOSDevice = /iPad|iPhone|iPod/.test(ua);
+  // iPadOS 13+ se identifica como Mac, pero con touch
+  const iPadOS = navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
+  return iOSDevice || iPadOS;
+}
+
+function forceIOSRepaint() {
+  if (!isIOS()) return;
+
+  // 1) Fuerza reflow
+  document.body.style.webkitTransform = "translateZ(0)";
+  void document.body.offsetHeight; // reflow
+  document.body.style.webkitTransform = "";
+
+  // 2) Fuerza “resize” (como si giraras)
+  // Safari iOS suele repintar con esto
+  window.dispatchEvent(new Event("resize"));
+
+  // 3) Un repaint extra en el próximo frame (por las dudas)
+  requestAnimationFrame(() => {
+    window.dispatchEvent(new Event("resize"));
+  });
+}
+
+// Si Safari vuelve desde “atrás” (bfcache), también puede quedar blanco
+window.addEventListener("pageshow", (e) => {
+  if (e.persisted) forceIOSRepaint();
+});
 
 // =======================
 // ✅ REDONDEO (UYU)
@@ -49,7 +85,6 @@ function formatUYU(n) {
 // =======================
 // NORMALIZACIÓN (compatibilidad JSON viejo/nuevo)
 // =======================
-
 function normStr(v) {
   return String(v ?? "").trim();
 }
@@ -107,7 +142,6 @@ function normalizeList(list) {
 // ✅ ORDEN INTELIGENTE GENERAL
 // categoría → base → sabor → tamaño
 // =======================
-
 function normText(x) {
   return String(x || "")
     .toLowerCase()
@@ -116,7 +150,6 @@ function normText(x) {
     .trim();
 }
 
-// Detecta tamaño en ml o gramos (sirve para bebidas y sólidos)
 function parseSizeKey(product) {
   const raw = normText(
     [product?.presentacion, product?.presentación, product?.nombre, product?.name]
@@ -124,34 +157,27 @@ function parseSizeKey(product) {
       .join(" ")
   );
 
-  // ml
   let m = raw.match(/(\d+(?:\.\d+)?)\s*ml\b/);
   if (m) return { kind: "ml", value: Math.round(Number(m[1])) };
 
-  // cc (1cc=1ml)
   m = raw.match(/(\d+(?:\.\d+)?)\s*cc\b/);
   if (m) return { kind: "ml", value: Math.round(Number(m[1])) };
 
-  // litros: l / lt / lts / litro(s)
   m = raw.match(/(\d+(?:\.\d+)?)\s*(l|lt|lts|litro|litros)\b/);
   if (m) return { kind: "ml", value: Math.round(Number(m[1]) * 1000) };
 
-  // pegado: 2.25l / 1lt
   m = raw.match(/(\d+(?:\.\d+)?)(l|lt|lts)\b/);
   if (m) return { kind: "ml", value: Math.round(Number(m[1]) * 1000) };
 
-  // gramos: g / gr / grs / gramos
   m = raw.match(/(\d+(?:\.\d+)?)\s*(g|gr|grs|gramo|gramos)\b/);
   if (m) return { kind: "g", value: Math.round(Number(m[1])) };
 
-  // kg
   m = raw.match(/(\d+(?:\.\d+)?)\s*(kg|kgs|kilo|kilos)\b/);
   if (m) return { kind: "g", value: Math.round(Number(m[1]) * 1000) };
 
   return null;
 }
 
-// Si viene "1" sin unidad, SOLO para bebidas conocidas lo tratamos como 1L
 function fallbackOneLiterForBeverages(product) {
   const raw = normText(
     [product?.presentacion, product?.nombre, product?.name]
@@ -159,7 +185,6 @@ function fallbackOneLiterForBeverages(product) {
       .join(" ")
   );
 
-  // lista mínima de bebidas típicas (podés agregar marcas si querés)
   const looksLikeBeverage =
     raw.includes("coca") ||
     raw.includes("nix") ||
@@ -172,12 +197,10 @@ function fallbackOneLiterForBeverages(product) {
 
   if (!looksLikeBeverage) return Number.POSITIVE_INFINITY;
 
-  // Detecta un "1" suelto (evita 10, 12, etc.)
   const m = raw.match(/(?:^|\D)1(?:\D|$)/);
   return m ? 1000 : Number.POSITIVE_INFINITY;
 }
 
-// Orden de sabores (ajustable)
 const FLAVOR_ORDER = [
   "cola",
   "lima",
@@ -201,7 +224,6 @@ function detectFlavor(product) {
       .join(" ")
   );
 
-  // normalizaciones rápidas por acentos
   const s = raw
     .replace("limón", "limon")
     .replace("tónica", "tonica")
@@ -212,25 +234,26 @@ function detectFlavor(product) {
   for (const key of FLAVOR_ORDER) {
     if (s.includes(key)) return key;
   }
-  return ""; // sin sabor explícito
+  return "";
 }
 
 function flavorRank(flavor) {
-  if (!flavor) return 999; // los “sin sabor” al final del grupo
+  if (!flavor) return 999;
   const idx = FLAVOR_ORDER.indexOf(flavor);
   return idx >= 0 ? idx : 998;
 }
 
-// Base/Línea: usa marca si existe; si no, adivina (coca cola, nix, etc.)
 function detectBase(product) {
   const marca = normText(product?.marca);
   if (marca) return marca;
 
   const raw0 = normText(product?.nombre ?? product?.name);
 
-  // saco tamaños típicos para no romper el agrupado
   const raw = raw0
-    .replace(/\b\d+(?:\.\d+)?\s*(ml|cc|l|lt|lts|litro|litros|g|gr|grs|kg|kgs|kilo|kilos)\b/g, " ")
+    .replace(
+      /\b\d+(?:\.\d+)?\s*(ml|cc|l|lt|lts|litro|litros|g|gr|grs|kg|kgs|kilo|kilos)\b/g,
+      " "
+    )
     .replace(/[-_/]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
@@ -241,34 +264,29 @@ function detectBase(product) {
   const two = tokens.slice(0, 2).join(" ");
 
   if (two === "coca cola") return "coca cola";
-  return tokens[0]; // nix / coca / fanta / etc.
+  return tokens[0];
 }
 
-// Orden final: categoría → base → sabor → tamaño → nombre
 function sortCatalogue(list) {
   const arr = [...(list || [])];
 
   arr.sort((a, b) => {
-    // 1) categoría A-Z
     const catA = getCat(a);
     const catB = getCat(b);
     const catCmp = catA.localeCompare(catB, "es");
     if (catCmp !== 0) return catCmp;
 
-    // 2) base/línea A-Z
     const baseA = detectBase(a);
     const baseB = detectBase(b);
     const baseCmp = baseA.localeCompare(baseB, "es");
     if (baseCmp !== 0) return baseCmp;
 
-    // 3) sabor (orden definido)
     const flA = detectFlavor(a);
     const flB = detectFlavor(b);
     const frA = flavorRank(flA);
     const frB = flavorRank(flB);
     if (frA !== frB) return frA - frB;
 
-    // 4) tamaño (ml o g) ascendente
     const ak = parseSizeKey(a);
     const bk = parseSizeKey(b);
 
@@ -280,7 +298,6 @@ function sortCatalogue(list) {
 
     if (aV !== bV) return aV - bV;
 
-    // 5) desempate: nombre A-Z
     const an = normText(getName(a));
     const bn = normText(getName(b));
     return an.localeCompare(bn, "es");
@@ -292,7 +309,6 @@ function sortCatalogue(list) {
 // =======================
 // UI: MODO CATEGORÍAS / MODO PRODUCTOS
 // =======================
-
 function showCategoriesMode() {
   const grid = document.getElementById("categoriesGrid");
   const pc = document.getElementById("products-container");
@@ -328,7 +344,6 @@ function renderCategoryGrid(categories, onClick) {
   const grid = document.getElementById("categoriesGrid");
   if (!grid) return;
 
-  // ✅ FIX: antes decía Rca.name / Rca.count (rompía todo)
   grid.innerHTML = categories
     .map(
       (c) => `
@@ -351,7 +366,6 @@ function renderCategoryGrid(categories, onClick) {
 // =======================
 // HANDLERS CARRITO
 // =======================
-
 function handleAdd(productId) {
   addItem(productId);
   rerenderCartUI();
@@ -370,20 +384,16 @@ function handleRemove(productId) {
 // =======================
 // RENDER CARRITO
 // =======================
-
 function rerenderCartUI() {
   const cartContainer = document.getElementById("cart-container");
   const cartObj = getCart();
 
-  // renderCart ya muestra unit/subtotal con dpc.tramos
   renderCart(products, cartObj, cartContainer, handleUpdate, handleRemove);
 
-  // ✅ Total coherente con el detalle: computeCartTotal() (aplica dpc.tramos)
-  // ✅ y redondeo final (Math.round)
   const totalEl = document.getElementById("cart-total");
   if (totalEl) {
-    const totalRaw = computeCartTotal(products, cartObj); // puede devolver decimal si hay precios con decimales
-    totalEl.textContent = formatUYU(totalRaw); // ✅ redondeo final
+    const totalRaw = computeCartTotal(products, cartObj);
+    totalEl.textContent = formatUYU(totalRaw);
   }
 
   updateCartCount(document.getElementById("cart-count"), totalItems());
@@ -392,7 +402,6 @@ function rerenderCartUI() {
 // =======================
 // FILTROS / BUSCADOR
 // =======================
-
 function applySearchAndFilter() {
   const searchEl = document.getElementById("search-input");
   const categoryEl = document.getElementById("category-filter");
@@ -418,7 +427,6 @@ function applySearchAndFilter() {
 
   if (term) filtered = filterProducts(filtered, "", term);
 
-  // ✅ NUEVO: ordenar siempre antes de renderizar
   filtered = sortCatalogue(filtered);
 
   renderProducts(filtered, document.getElementById("products-container"), handleAdd);
@@ -427,7 +435,6 @@ function applySearchAndFilter() {
 // =======================
 // OFERTAS → SALTO A CATÁLOGO
 // =======================
-
 function goToCatalogAndShowProduct(productId) {
   const section = document.getElementById("catalogue");
   if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -456,7 +463,6 @@ function goToCatalogAndShowProduct(productId) {
 // =======================
 // ENVÍO ROBUSTO WHATSAPP
 // =======================
-
 function sendWhatsAppOrderSafe() {
   if (sending) return;
   sending = true;
@@ -474,7 +480,6 @@ function sendWhatsAppOrderSafe() {
       return;
     }
 
-    // Nota: el redondeo del mensaje de WhatsApp se corrige en whatsapp.js
     sendOrder(cart, products);
   } catch (err) {
     console.error("Error al enviar pedido:", err);
@@ -493,7 +498,6 @@ function sendWhatsAppOrderSafe() {
 // =======================
 // INIT
 // =======================
-
 async function init() {
   loadCart();
   updateCartCount(document.getElementById("cart-count"), totalItems());
@@ -503,7 +507,6 @@ async function init() {
 
     products = normalizeList(raw);
 
-    // ✅ NUEVO: dejar el catálogo ordenado desde el inicio
     products = sortCatalogue(products);
     baseProducts = products;
 
@@ -575,6 +578,9 @@ async function init() {
     renderOffersCarousel(products, frameEl, trackEl, goToCatalogAndShowProduct);
 
     rerenderCartUI();
+
+    // ✅ CLAVE: cuando ya renderizó, forzamos repaint iOS
+    setTimeout(forceIOSRepaint, 50);
   } catch (err) {
     console.error(err);
     const pc = document.getElementById("products-container");
@@ -584,6 +590,9 @@ async function init() {
       )}</p>`;
     }
     showProductsMode();
+
+    // Igual intentamos “destrabar” el paint
+    setTimeout(forceIOSRepaint, 50);
   }
 
   const searchEl = document.getElementById("search-input");
