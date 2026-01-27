@@ -245,6 +245,12 @@ button:disabled,
   font-weight: 700;
 }
 
+/* =========================
+   ✅ GRID DE PRODUCTOS
+   - PC: 3 columnas (como lo tenías)
+   - Celular/Tablet: 2 columnas
+   - NUNCA 1 columna
+   ========================= */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -718,8 +724,10 @@ button:disabled,
   .main-nav { justify-content: flex-end; }
 }
 
+/* ✅ CAMBIO: antes a 560px bajaba a 1 columna.
+   Ahora NUNCA baja a 1 columna. */
 @media (max-width: 560px) {
-  .products-grid { grid-template-columns: 1fr; }
+  .products-grid { grid-template-columns: repeat(2, 1fr); }
   .brand-subtitle { display: none; }
 }
 
