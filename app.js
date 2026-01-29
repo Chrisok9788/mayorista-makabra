@@ -107,6 +107,13 @@ function getPrice(p) {
   return Number.isFinite(n) ? n : 0;
 }
 
+function toBool(v) {
+  // acepta boolean, "TRUE", "true", "VERDADERO", "1", "SI"
+  if (v === true) return true;
+  const s = String(v ?? "").trim().toLowerCase();
+  return s === "true" || s === "verdadero" || s === "1" || s === "si" || s === "sí";
+}
+
 function normalizeProduct(p) {
   return {
     ...p,
@@ -117,6 +124,9 @@ function normalizeProduct(p) {
     precio: getPrice(p),
     oferta: isOffer(p),
     imagen: getImg(p),
+
+    // ✅ NUEVO: lee columna "Destacados" (o "destacado")
+    destacado: toBool(p?.Destacados ?? p?.destacado ?? p?.destacados ?? p?.featured),
   };
 }
 
