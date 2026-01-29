@@ -4,8 +4,13 @@
    ✅ Mejorar carga percibida (menos “saltos” y render más liviano)
    ✅ Mantener tu diseño y clases actuales (products-grid, categories-grid, etc.)
    ✅ Alineado con tu ui.js (product-content, meta, cart-item-controls, cart-item-calc, etc.)
+   ✅ NUEVO: estilos para “destacados por categoría” (renderFeaturedByCategory)
+   ✅ NUEVO: carruseles extra (10 nuevos / 10 más vendidos) si los agregás en HTML
 */
 
+/* =========================
+   BASE / VARIABLES
+   ========================= */
 :root {
   /* ✅ Paleta clara (fondo blanco) manteniendo la identidad verde */
   --bg: #ffffff;
@@ -37,7 +42,6 @@ html, body {
 }
 
 /* ✅ Extra seguro: evitar “white flash” sin romper sticky */
-/* (NO usamos transform en body porque puede romper sticky/backdrop en iOS) */
 body {
   backface-visibility: hidden;
   -webkit-font-smoothing: antialiased;
@@ -51,8 +55,6 @@ a { color: inherit; text-decoration: none; }
 
 /* =========================
    ✅ HEADER: FIX iOS “BLANCO HASTA GIRAR”
-   Causa típica: sticky + backdrop-filter + ciertos paints.
-   Solución: mantener sticky pero evitando combinaciones problemáticas en iOS.
    ========================= */
 .site-header {
   position: sticky;
@@ -433,6 +435,61 @@ button:disabled,
 }
 
 /* =========================
+   ✅ DESTACADOS POR CATEGORÍA (renderFeaturedByCategory)
+   “un grid lindo y liviano para esos bloques”
+   ========================= */
+#featured-by-category{
+  display: grid;
+  gap: 14px;
+}
+
+.featured-cat{
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+  box-shadow: var(--shadow);
+  padding: 12px;
+}
+
+.featured-cat-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.featured-cat-title{
+  margin: 0;
+  font-size: 16px;
+  font-weight: 950;
+  letter-spacing: 0.2px;
+}
+
+.featured-cat-btn{
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+
+.featured-grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)); /* ✅ siempre 2 por fila */
+  gap: 12px;
+}
+
+/* Reutiliza tu card actual, pero un poquito más compacta */
+.featured-card{
+  padding: 10px;
+}
+
+/* en pantallas grandes podés mantener 2 por categoría (más “limpio”) */
+@media (min-width: 920px){
+  .featured-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* =========================
    OFERTAS (Carrusel)
    ========================= */
 .offers-section { padding-top: 10px; }
@@ -496,6 +553,39 @@ button:disabled,
 
 @media (max-width: 560px) {
   .offer-card { width: 200px; }
+}
+
+/* =========================
+   ✅ CARRUSELES EXTRA (si los usás)
+   HTML sugerido:
+   <div class="offers-frame">
+     <div class="offers-track" id="new-track"></div>
+   </div>
+   ========================= */
+.carousel-title-row{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+  margin: 0 0 10px;
+}
+
+.carousel-title-row h2{
+  margin:0;
+  font-size: 18px;
+}
+
+/* si querés que estos carruseles NO auto-scrolleen, podés usar .offers-track.no-anim */
+.offers-track.no-anim{
+  animation: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 6px;
+}
+
+.offers-track.no-anim .offer-card{
+  scroll-snap-align: start;
 }
 
 /* =========================
