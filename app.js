@@ -1,10 +1,9 @@
 // app.js — versión MODIFICADA y COMPLETA
-// Cambios de esta versión (respecto a tu app.js anterior):
-// ✅ Se ELIMINAN carruseles “NUEVOS” y “MÁS VENDIDOS”
-// ✅ Se AGREGA “DESTACADOS POR CATEGORÍA”: muestra 2 productos por cada categoría
-//    - Renderiza dentro de: <div id="featured-by-category"></div> (en tu index.html)
+// ✅ FIX: filtros reales (buscador/categoría/subcategoría)
+// ✅ Cuando hay filtros activos: OCULTA "Destacados por categoría"
+// ✅ Click en destacado: abre catálogo con categoría/subcat completa y enfoca el producto
+// ✅ Botón ↑ Inicio (si existe): sube al buscador sticky y enfoca input
 // ✅ Mantiene: FIX iOS, redondeos, categorías, subcategorías, ofertas, carrito, orden inteligente, etc.
-// ✅ No rompe si #featured-by-category no existe: simplemente no renderiza esa sección.
 
 import { fetchProducts } from "./data.js";
 import {
@@ -315,6 +314,71 @@ function clearProductsUI() {
   if (pc) pc.innerHTML = "";
 }
 
+// =======================
+// ✅ VISIBILIDAD "DESTACADOS" SEGÚN FILTROS
+// =======================
+function hasActiveFilters() {
+  const q = (document.getElementById("search-input")?.value || "").trim();
+  const cat = (document.getElementById("category-filter")?.value || "").trim();
+  const sub = (document.getElementById("subcategory-filter")?.value || "").trim();
+  return q.length > 0 || cat.length > 0 || sub.length > 0;
+}
+
+function setFeaturedVisibility() {
+  const featuredSection = document.querySelector(".featured-section");
+  if (!featuredSection) return;
+
+  featuredSection.style.display = hasActiveFilters() ? "none" : "";
+}
+
+// =======================
+// ✅ Scroll util
+// =======================
+function scrollToCatalogue() {
+  const section = document.getElementById("catalogue");
+  if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function scrollToFiltersAndFocus() {
+  const sticky = document.querySelector(".filters-sticky");
+  if (sticky) sticky.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  // enfocar input luego del scroll
+  setTimeout(() => {
+    const s = document.getElementById("search-input");
+    if (s) s.focus({ preventScroll: true });
+  }, 250);
+}
+
+// =======================
+// ✅ Highlight producto al que “lleva”
+// =======================
+function focusProductCardById(productId) {
+  const container = document.getElementById("products-container");
+  if (!container) return;
+
+  // limpiar focos previos
+  container.querySelectorAll(".product-card.focused").forEach((el) => {
+    el.classList.remove("focused");
+  });
+
+  // buscamos por data-id (si ui.js lo pone), o fallback por query
+  const card =
+    container.querySelector(`.product-card[data-id="${CSS.escape(String(productId))}"]`) ||
+    container.querySelector(`[data-id="${CSS.escape(String(productId))}"]`);
+
+  if (!card) return;
+
+  card.classList.add("focused");
+  card.scrollIntoView({ behavior: "smooth", block: "center" });
+
+  // quitar highlight luego de un rato
+  setTimeout(() => card.classList.remove("focused"), 1600);
+}
+
+// =======================
+// CATEGORÍAS GRID (conteos)
+// =======================
 function buildCategoryCounts(items) {
   const map = new Map();
   for (const p of items) {
@@ -352,13 +416,11 @@ function renderCategoryGrid(categories, onClick) {
 
 // =======================
 // ✅ DESTACADOS POR CATEGORÍA (2 productos por categoría)
-// Render en: #featured-by-category (si existe)
 // =======================
 function pickFeaturedByCategory(allProducts, perCategory = 2) {
   const map = new Map();
   const arr = Array.isArray(allProducts) ? allProducts : [];
 
-  // Usamos el orden actual (ya viene sortCatalogue) para “elegir” los primeros de cada categoría
   for (const p of arr) {
     const cat = getCat(p);
     if (!map.has(cat)) map.set(cat, []);
@@ -366,7 +428,6 @@ function pickFeaturedByCategory(allProducts, perCategory = 2) {
     if (list.length < perCategory) list.push(p);
   }
 
-  // Orden de categorías alfabético
   return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0], "es"));
 }
 
@@ -414,7 +475,6 @@ function renderFeaturedByCategory(allProducts, onClickProduct, onViewCategory) {
       card.className = "product-card featured-card";
       card.setAttribute("data-id", String(p.id));
 
-      // Badge simple
       const badgeLabel =
         (typeof p.stock !== "undefined" && p.stock <= 0)
           ? "SIN STOCK"
@@ -473,7 +533,6 @@ function renderFeaturedByCategory(allProducts, onClickProduct, onViewCategory) {
 
       card.appendChild(content);
 
-      // Click en la card → ir al producto
       card.addEventListener("click", () => {
         if (typeof onClickProduct === "function") onClickProduct(String(p.id));
       });
@@ -527,6 +586,7 @@ function rerenderCartUI() {
 
 // =======================
 // FILTROS / BUSCADOR
+// ✅ comportamiento correcto pedido por vos
 // =======================
 function applySearchAndFilter() {
   const searchEl = document.getElementById("search-input");
@@ -537,6 +597,10 @@ function applySearchAndFilter() {
   const cat = categoryEl ? categoryEl.value : "";
   const sub = subcatEl ? subcatEl.value : "";
 
+  // ✅ siempre ajustar visibilidad de destacados
+  setFeaturedVisibility();
+
+  // ✅ si NO hay filtros, volvemos a modo categorías
   if (!term && !cat && !sub) {
     showCategoriesMode();
     clearProductsUI();
@@ -544,14 +608,18 @@ function applySearchAndFilter() {
     return;
   }
 
+  // ✅ si HAY filtros, mostramos productos filtrados
   showProductsMode();
 
-  let filtered = baseProducts;
+  let filtered = products;
 
   if (cat) filtered = filtered.filter((p) => getCat(p) === cat);
   if (sub) filtered = filtered.filter((p) => getSub(p) === sub);
 
-  if (term) filtered = filterProducts(filtered, "", term);
+  if (term) {
+    // tu filterProducts usa firma (list, category, term) o similar
+    filtered = filterProducts(filtered, "", term);
+  }
 
   filtered = sortCatalogue(filtered);
 
@@ -559,45 +627,72 @@ function applySearchAndFilter() {
 }
 
 // =======================
-// OFERTAS → SALTO A CATÁLOGO
+// ✅ Navegación desde OFERTAS / DESTACADOS
 // =======================
-function goToCatalogAndShowProduct(productId) {
-  const section = document.getElementById("catalogue");
-  if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
 
+// ✅ desde carrusel ofertas: abrir producto (pero ahora lo hacemos como “focus real”)
+function goToCatalogAndFocusProduct(productId) {
   const prod = products.find((p) => String(p.id) === String(productId));
   if (!prod) return;
 
-  showProductsMode();
-  renderProducts([prod], document.getElementById("products-container"), handleAdd);
+  const section = document.getElementById("catalogue");
+  if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
 
+  // limpiar búsqueda
   const searchEl = document.getElementById("search-input");
   if (searchEl) searchEl.value = "";
 
+  // setear categoría/subcategoría según el producto
   const categoryEl = document.getElementById("category-filter");
-  if (categoryEl) categoryEl.value = "";
-
   const subcatEl = document.getElementById("subcategory-filter");
-  if (subcatEl) {
-    subcatEl.value = "";
-    subcatEl.style.display = "none";
+
+  if (categoryEl) {
+    categoryEl.value = getCat(prod);
   }
 
-  baseProducts = products;
+  if (subcatEl) {
+    const cat = getCat(prod);
+
+    // mostrar subcat y poblarla según esa cat
+    subcatEl.style.display = "block";
+    populateSubcategories(products, cat, subcatEl);
+
+    const prodSub = getSub(prod);
+    if (prodSub) {
+      subcatEl.value = prodSub;
+    } else {
+      subcatEl.value = "";
+    }
+  }
+
+  // aplicar filtros (esto también oculta destacados)
+  applySearchAndFilter();
+
+  // enfocar / resaltar card
+  setTimeout(() => focusProductCardById(productId), 220);
 }
 
 // ✅ Click “Ver todo” de una categoría desde destacados
 function goToCatalogAndFilterCategory(categoryName) {
   const categoryEl = document.getElementById("category-filter");
+  const subcatEl = document.getElementById("subcategory-filter");
+  const searchEl = document.getElementById("search-input");
+
+  if (searchEl) searchEl.value = "";
+
   if (categoryEl) {
     categoryEl.value = categoryName;
-    categoryEl.dispatchEvent(new Event("change"));
+  }
+
+  if (subcatEl) {
+    subcatEl.style.display = "block";
+    populateSubcategories(products, categoryName, subcatEl);
+    subcatEl.value = "";
   }
 
   showProductsMode();
-
-  const section = document.getElementById("catalogue");
-  if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+  applySearchAndFilter();
+  scrollToCatalogue();
 }
 
 // =======================
@@ -649,28 +744,37 @@ async function init() {
     products = sortCatalogue(products);
     baseProducts = products;
 
-    // ✅ DESTACADOS POR CATEGORÍA (2 por categoría) — si existe el contenedor
-    renderFeaturedByCategory(products, goToCatalogAndShowProduct, goToCatalogAndFilterCategory);
+    // ✅ DESTACADOS POR CATEGORÍA
+    renderFeaturedByCategory(products, goToCatalogAndFocusProduct, goToCatalogAndFilterCategory);
 
     const categories = buildCategoryCounts(products);
     renderCategoryGrid(categories, (selectedCategory) => {
+      // set category
       const categoryEl = document.getElementById("category-filter");
-      if (categoryEl) {
-        categoryEl.value = selectedCategory;
-        categoryEl.dispatchEvent(new Event("change"));
+      const subcatEl = document.getElementById("subcategory-filter");
+      const searchEl = document.getElementById("search-input");
+      if (searchEl) searchEl.value = "";
+
+      if (categoryEl) categoryEl.value = selectedCategory;
+
+      if (subcatEl) {
+        subcatEl.style.display = "block";
+        populateSubcategories(products, selectedCategory, subcatEl);
+        subcatEl.value = "";
       }
 
       showProductsMode();
-
-      const section = document.getElementById("catalogue");
-      if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+      applySearchAndFilter();
+      scrollToCatalogue();
     });
 
+    // populate selects
     const categoryEl = document.getElementById("category-filter");
     if (categoryEl) populateCategories(products, categoryEl);
 
     const subcatEl = document.getElementById("subcategory-filter");
 
+    // ✅ change de categoría: muestra subcats y filtra
     const refreshSubcats = () => {
       if (!categoryEl || !subcatEl) return;
 
@@ -679,7 +783,6 @@ async function init() {
       if (!cat) {
         subcatEl.value = "";
         subcatEl.style.display = "none";
-        baseProducts = products;
         applySearchAndFilter();
         return;
       }
@@ -688,39 +791,53 @@ async function init() {
 
       subcatEl.style.display = "block";
       populateSubcategories(products, cat, subcatEl);
-
       subcatEl.value = "";
-      baseProducts = products.filter((p) => getCat(p) === cat);
 
       applySearchAndFilter();
     };
 
     if (categoryEl) categoryEl.addEventListener("change", refreshSubcats);
 
+    // ✅ change de subcategoría: solo aplicar filtros
     if (subcatEl) {
       subcatEl.addEventListener("change", () => {
-        if (!categoryEl) return;
-
-        const cat = categoryEl.value;
-        const sub = subcatEl.value;
-
-        baseProducts = products.filter((p) => getCat(p) === cat);
-        if (sub) baseProducts = baseProducts.filter((p) => getSub(p) === sub);
-
-        showProductsMode();
         applySearchAndFilter();
       });
     }
 
+    // ✅ Buscador: filtra y oculta destacados
+    const searchEl = document.getElementById("search-input");
+    if (searchEl) {
+      searchEl.addEventListener("input", () => {
+        // cuando escriben, vamos a productos
+        if (searchEl.value.trim()) showProductsMode();
+        applySearchAndFilter();
+      });
+    }
+
+    // ✅ estado inicial
     showCategoriesMode();
     clearProductsUI();
+    setFeaturedVisibility();
 
-    // ✅ Carrusel OFERTAS (tu función en ui.js)
+    // ✅ Carrusel OFERTAS
     const frameEl = document.querySelector(".offers-frame");
     const trackEl = document.getElementById("offers-track");
-    renderOffersCarousel(products, frameEl, trackEl, goToCatalogAndShowProduct);
+    renderOffersCarousel(products, frameEl, trackEl, goToCatalogAndFocusProduct);
 
     rerenderCartUI();
+
+    // ✅ Botón ↑ Inicio (si existe)
+    const topBtn =
+      document.getElementById("top-btn") ||
+      document.querySelector(".top-float");
+    if (topBtn) {
+      topBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        scrollToFiltersAndFocus();
+      });
+    }
 
     setTimeout(forceIOSRepaint, 50);
   } catch (err) {
@@ -732,17 +849,11 @@ async function init() {
       )}</p>`;
     }
     showProductsMode();
+    setFeaturedVisibility();
     setTimeout(forceIOSRepaint, 50);
   }
 
-  const searchEl = document.getElementById("search-input");
-  if (searchEl) {
-    searchEl.addEventListener("input", () => {
-      if (searchEl.value.trim()) showProductsMode();
-      applySearchAndFilter();
-    });
-  }
-
+  // carrito buttons
   const clearBtn = document.getElementById("clear-cart-btn");
   if (clearBtn) {
     clearBtn.addEventListener("click", () => {
@@ -774,76 +885,3 @@ async function init() {
 }
 
 init();
-// ===============================
-// ✅ FIX: cuando hay filtros activos
-// ocultar "Destacados por categoría"
-// ===============================
-
-function getEl(id) {
-  return document.getElementById(id);
-}
-
-function hasActiveFilters() {
-  const q = (getEl("search-input")?.value || "").trim();
-  const cat = (getEl("category-filter")?.value || "").trim();
-  const sub = (getEl("subcategory-filter")?.value || "").trim();
-  return q.length > 0 || cat.length > 0 || sub.length > 0;
-}
-
-function setFeaturedVisibility() {
-  // Section completa (más prolijo que ocultar solo el div)
-  const featuredSection = document.querySelector(".featured-section");
-  if (!featuredSection) return;
-
-  if (hasActiveFilters()) {
-    featuredSection.style.display = "none";
-  } else {
-    featuredSection.style.display = "";
-  }
-}
-
-// ✅ opcional: cuando filtrás, te baja al catálogo automáticamente
-function scrollToCatalogue() {
-  const catalogue = document.getElementById("catalogue");
-  if (!catalogue) return;
-  catalogue.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-// ===============================
-// ✅ enganchar eventos de filtros
-// ===============================
-function bindFilterVisibilityAndRender(rerenderFn) {
-  const search = getEl("search-input");
-  const cat = getEl("category-filter");
-  const sub = getEl("subcategory-filter");
-
-  const onAnyFilterChange = () => {
-    setFeaturedVisibility();   // 🔥 esto es lo que te faltaba
-    if (typeof rerenderFn === "function") rerenderFn(); // re-render de productos
-    // Si querés que al buscar te lleve al catálogo, dejalo:
-    scrollToCatalogue();
-  };
-
-  if (search) search.addEventListener("input", onAnyFilterChange);
-  if (cat) cat.addEventListener("change", onAnyFilterChange);
-  if (sub) sub.addEventListener("change", onAnyFilterChange);
-
-  // correr 1 vez al cargar (importante)
-  setFeaturedVisibility();
-}
-
-/*
-  ✅ CÓMO USARLO:
-  En tu app.js ya tenés una función tipo:
-  - rerenderProductsUI()
-  - renderAll()
-  - applyFilters()
-  - etc.
-
-  Entonces, después de definir esa función, llamás:
-
-  bindFilterVisibilityAndRender(rerenderProductsUI);
-
-  Si NO tenés una función, igual podés llamarlo con null:
-  bindFilterVisibilityAndRender(null);
-*/
