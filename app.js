@@ -1,9 +1,10 @@
 // app.js — versión MODIFICADA y COMPLETA
-// ✅ FIX: filtros reales (buscador/categoría/subcategoría)
+// ✅ LEE columna "Destacados" desde products.json (TRUE/FALSE, SI/NO, 1/0)
+// ✅ Usa SOLO destacados marcados (y si no hay, hace fallback a “2 primeros por categoría”)
+// ✅ Click en destacado: abre catálogo con categoría/subcat y enfoca el producto
 // ✅ Cuando hay filtros activos: OCULTA "Destacados por categoría"
-// ✅ Click en destacado: abre catálogo con categoría/subcat completa y enfoca el producto
-// ✅ Botón ↑ Inicio (si existe): sube al buscador sticky y enfoca input
-// ✅ Mantiene: FIX iOS, redondeos, categorías, subcategorías, ofertas, carrito, orden inteligente, etc.
+// ✅ Botón ↑ Inicio: sube al buscador sticky y enfoca input
+// ✅ Mantiene: FIX iOS, redondeos, categorías/subcategorías, ofertas, carrito, orden inteligente
 
 import { fetchProducts } from "./data.js";
 import {
@@ -102,16 +103,25 @@ function getImg(p) {
 }
 
 function getPrice(p) {
-  const v = p?.precio ?? p?.price;
-  const n = Number(v);
+  // acepta $ 1.234, 1234, "1234", etc.
+  const v = p?.precio ?? p?.price ?? p?.precio_base ?? p?.precioBase ?? 0;
+  if (typeof v === "number") return Number.isFinite(v) ? v : 0;
+
+  const s = String(v ?? "")
+    .replace(/\$/g, "")
+    .trim()
+    .replace(/\./g, "")
+    .replace(/,/g, ".");
+  const n = Number(s);
   return Number.isFinite(n) ? n : 0;
 }
 
 function toBool(v) {
-  // acepta boolean, "TRUE", "true", "VERDADERO", "1", "SI"
+  // acepta boolean, "TRUE", "true", "VERDADERO", "1", "SI", "SÍ", "YES"
   if (v === true) return true;
+  if (v === false) return false;
   const s = String(v ?? "").trim().toLowerCase();
-  return s === "true" || s === "verdadero" || s === "1" || s === "si" || s === "sí";
+  return s === "true" || s === "verdadero" || s === "1" || s === "si" || s === "sí" || s === "yes";
 }
 
 function normalizeProduct(p) {
@@ -125,7 +135,8 @@ function normalizeProduct(p) {
     oferta: isOffer(p),
     imagen: getImg(p),
 
-    // ✅ NUEVO: lee columna "Destacados" (o "destacado")
+    // ✅ CLAVE:
+    // Lee tu columna de planilla "Destacados" (TRUE/FALSE) y la guarda como boolean:
     destacado: toBool(p?.Destacados ?? p?.destacado ?? p?.destacados ?? p?.featured),
   };
 }
@@ -353,7 +364,6 @@ function scrollToFiltersAndFocus() {
   const sticky = document.querySelector(".filters-sticky");
   if (sticky) sticky.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  // enfocar input luego del scroll
   setTimeout(() => {
     const s = document.getElementById("search-input");
     if (s) s.focus({ preventScroll: true });
@@ -367,12 +377,10 @@ function focusProductCardById(productId) {
   const container = document.getElementById("products-container");
   if (!container) return;
 
-  // limpiar focos previos
   container.querySelectorAll(".product-card.focused").forEach((el) => {
     el.classList.remove("focused");
   });
 
-  // buscamos por data-id (si ui.js lo pone), o fallback por query
   const card =
     container.querySelector(`.product-card[data-id="${CSS.escape(String(productId))}"]`) ||
     container.querySelector(`[data-id="${CSS.escape(String(productId))}"]`);
@@ -381,8 +389,6 @@ function focusProductCardById(productId) {
 
   card.classList.add("focused");
   card.scrollIntoView({ behavior: "smooth", block: "center" });
-
-  // quitar highlight luego de un rato
   setTimeout(() => card.classList.remove("focused"), 1600);
 }
 
@@ -425,20 +431,45 @@ function renderCategoryGrid(categories, onClick) {
 }
 
 // =======================
-// ✅ DESTACADOS POR CATEGORÍA (2 productos por categoría)
+// ✅ DESTACADOS POR CATEGORÍA
+// ✅ Lógica nueva:
+//   1) Si hay productos con destacado=true dentro de la categoría -> usa esos (hasta 2)
+//   2) Si NO hay ninguno marcado en esa categoría -> fallback a “2 primeros” (para no quedar vacío)
+//   3) Si querés que aparezcan SI o SI los que marcaste, marcá "TRUE" en la planilla.
 // =======================
 function pickFeaturedByCategory(allProducts, perCategory = 2) {
-  const map = new Map();
   const arr = Array.isArray(allProducts) ? allProducts : [];
 
+  // agrupamos por categoría
+  const cats = new Map();
   for (const p of arr) {
     const cat = getCat(p);
-    if (!map.has(cat)) map.set(cat, []);
-    const list = map.get(cat);
-    if (list.length < perCategory) list.push(p);
+    if (!cats.has(cat)) cats.set(cat, []);
+    cats.get(cat).push(p);
   }
 
-  return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0], "es"));
+  const result = [];
+
+  for (const [cat, list] of cats.entries()) {
+    // 1) primero los marcados
+    const marked = list.filter((p) => p.destacado === true);
+
+    // 2) tomar hasta perCategory
+    let chosen = marked.slice(0, perCategory);
+
+    // 3) fallback: completar con los primeros si faltan
+    if (chosen.length < perCategory) {
+      const rest = list.filter((p) => !chosen.includes(p));
+      chosen = chosen.concat(rest.slice(0, perCategory - chosen.length));
+    }
+
+    // 4) opcional: si querés que NO se muestren sin stock, descomentá:
+    // chosen = chosen.filter(p => typeof p.stock === "undefined" || p.stock > 0);
+
+    result.push([cat, chosen]);
+  }
+
+  return result.sort((a, b) => a[0].localeCompare(b[0], "es"));
 }
 
 function renderFeaturedByCategory(allProducts, onClickProduct, onViewCategory) {
@@ -596,7 +627,6 @@ function rerenderCartUI() {
 
 // =======================
 // FILTROS / BUSCADOR
-// ✅ comportamiento correcto pedido por vos
 // =======================
 function applySearchAndFilter() {
   const searchEl = document.getElementById("search-input");
@@ -607,10 +637,8 @@ function applySearchAndFilter() {
   const cat = categoryEl ? categoryEl.value : "";
   const sub = subcatEl ? subcatEl.value : "";
 
-  // ✅ siempre ajustar visibilidad de destacados
   setFeaturedVisibility();
 
-  // ✅ si NO hay filtros, volvemos a modo categorías
   if (!term && !cat && !sub) {
     showCategoriesMode();
     clearProductsUI();
@@ -618,7 +646,6 @@ function applySearchAndFilter() {
     return;
   }
 
-  // ✅ si HAY filtros, mostramos productos filtrados
   showProductsMode();
 
   let filtered = products;
@@ -627,7 +654,6 @@ function applySearchAndFilter() {
   if (sub) filtered = filtered.filter((p) => getSub(p) === sub);
 
   if (term) {
-    // tu filterProducts usa firma (list, category, term) o similar
     filtered = filterProducts(filtered, "", term);
   }
 
@@ -639,8 +665,6 @@ function applySearchAndFilter() {
 // =======================
 // ✅ Navegación desde OFERTAS / DESTACADOS
 // =======================
-
-// ✅ desde carrusel ofertas: abrir producto (pero ahora lo hacemos como “focus real”)
 function goToCatalogAndFocusProduct(productId) {
   const prod = products.find((p) => String(p.id) === String(productId));
   if (!prod) return;
@@ -648,11 +672,9 @@ function goToCatalogAndFocusProduct(productId) {
   const section = document.getElementById("catalogue");
   if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  // limpiar búsqueda
   const searchEl = document.getElementById("search-input");
   if (searchEl) searchEl.value = "";
 
-  // setear categoría/subcategoría según el producto
   const categoryEl = document.getElementById("category-filter");
   const subcatEl = document.getElementById("subcategory-filter");
 
@@ -662,27 +684,17 @@ function goToCatalogAndFocusProduct(productId) {
 
   if (subcatEl) {
     const cat = getCat(prod);
-
-    // mostrar subcat y poblarla según esa cat
     subcatEl.style.display = "block";
     populateSubcategories(products, cat, subcatEl);
 
     const prodSub = getSub(prod);
-    if (prodSub) {
-      subcatEl.value = prodSub;
-    } else {
-      subcatEl.value = "";
-    }
+    subcatEl.value = prodSub ? prodSub : "";
   }
 
-  // aplicar filtros (esto también oculta destacados)
   applySearchAndFilter();
-
-  // enfocar / resaltar card
   setTimeout(() => focusProductCardById(productId), 220);
 }
 
-// ✅ Click “Ver todo” de una categoría desde destacados
 function goToCatalogAndFilterCategory(categoryName) {
   const categoryEl = document.getElementById("category-filter");
   const subcatEl = document.getElementById("subcategory-filter");
@@ -754,12 +766,11 @@ async function init() {
     products = sortCatalogue(products);
     baseProducts = products;
 
-    // ✅ DESTACADOS POR CATEGORÍA
+    // ✅ DESTACADOS POR CATEGORÍA (AHORA LEE TU COLUMNA "Destacados")
     renderFeaturedByCategory(products, goToCatalogAndFocusProduct, goToCatalogAndFilterCategory);
 
     const categories = buildCategoryCounts(products);
     renderCategoryGrid(categories, (selectedCategory) => {
-      // set category
       const categoryEl = document.getElementById("category-filter");
       const subcatEl = document.getElementById("subcategory-filter");
       const searchEl = document.getElementById("search-input");
@@ -778,13 +789,11 @@ async function init() {
       scrollToCatalogue();
     });
 
-    // populate selects
     const categoryEl = document.getElementById("category-filter");
     if (categoryEl) populateCategories(products, categoryEl);
 
     const subcatEl = document.getElementById("subcategory-filter");
 
-    // ✅ change de categoría: muestra subcats y filtra
     const refreshSubcats = () => {
       if (!categoryEl || !subcatEl) return;
 
@@ -808,36 +817,30 @@ async function init() {
 
     if (categoryEl) categoryEl.addEventListener("change", refreshSubcats);
 
-    // ✅ change de subcategoría: solo aplicar filtros
     if (subcatEl) {
       subcatEl.addEventListener("change", () => {
         applySearchAndFilter();
       });
     }
 
-    // ✅ Buscador: filtra y oculta destacados
     const searchEl = document.getElementById("search-input");
     if (searchEl) {
       searchEl.addEventListener("input", () => {
-        // cuando escriben, vamos a productos
         if (searchEl.value.trim()) showProductsMode();
         applySearchAndFilter();
       });
     }
 
-    // ✅ estado inicial
     showCategoriesMode();
     clearProductsUI();
     setFeaturedVisibility();
 
-    // ✅ Carrusel OFERTAS
     const frameEl = document.querySelector(".offers-frame");
     const trackEl = document.getElementById("offers-track");
     renderOffersCarousel(products, frameEl, trackEl, goToCatalogAndFocusProduct);
 
     rerenderCartUI();
 
-    // ✅ Botón ↑ Inicio (si existe)
     const topBtn =
       document.getElementById("top-btn") ||
       document.querySelector(".top-float");
@@ -863,7 +866,6 @@ async function init() {
     setTimeout(forceIOSRepaint, 50);
   }
 
-  // carrito buttons
   const clearBtn = document.getElementById("clear-cart-btn");
   if (clearBtn) {
     clearBtn.addEventListener("click", () => {
