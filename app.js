@@ -1,13 +1,10 @@
 // app.js — versión MODIFICADA y COMPLETA
-// Cambios (además de lo que ya tenías):
-// ✅ “Más vendidos” con memoria local (localStorage) por dispositivo
-//    - 1 función que actualiza ranking al enviar WhatsApp
-//    - 1 función que devuelve Top 10
-//    - 1 carrusel “Más vendidos” (si existe #bestsellers-track en el HTML)
-// ✅ “Más nuevos” (Top 10) (si existe #newest-track en el HTML)
-// ⚠️ Nota: para que se vean los 2 carruseles nuevos, tu index.html debe tener
-//   secciones con <div id="bestsellers-track"> y <div id="newest-track">.
-//   Si no existen, el código no rompe: simplemente no renderiza.
+// Cambios de esta versión (respecto a tu app.js anterior):
+// ✅ Se ELIMINAN carruseles “NUEVOS” y “MÁS VENDIDOS”
+// ✅ Se AGREGA “DESTACADOS POR CATEGORÍA”: muestra 2 productos por cada categoría
+//    - Renderiza dentro de: <div id="featured-by-category"></div> (en tu index.html)
+// ✅ Mantiene: FIX iOS, redondeos, categorías, subcategorías, ofertas, carrito, orden inteligente, etc.
+// ✅ No rompe si #featured-by-category no existe: simplemente no renderiza esa sección.
 
 import { fetchProducts } from "./data.js";
 import {
@@ -71,119 +68,6 @@ function roundUYU(n) {
 }
 function formatUYU(n) {
   return `$ ${roundUYU(n)}`;
-}
-
-// =======================
-// ✅ “MÁS VENDIDOS” (localStorage por dispositivo)
-// =======================
-const SALES_KEY = "mk_sales_v1";
-
-function loadSalesMap() {
-  try {
-    const raw = localStorage.getItem(SALES_KEY);
-    if (!raw) return {};
-    const obj = JSON.parse(raw);
-    return obj && typeof obj === "object" ? obj : {};
-  } catch {
-    return {};
-  }
-}
-
-function saveSalesMap(map) {
-  try {
-    localStorage.setItem(SALES_KEY, JSON.stringify(map || {}));
-  } catch {
-    // si el storage está lleno o bloqueado, no hacemos nada
-  }
-}
-
-/**
- * ✅ 1) Actualiza ranking de ventas usando el carrito
- * (se llama al momento de enviar el pedido por WhatsApp)
- */
-function bumpSalesFromCart(cart) {
-  if (!cart || typeof cart !== "object") return;
-
-  const sales = loadSalesMap();
-
-  for (const [rawId, rawQty] of Object.entries(cart)) {
-    const id = String(rawId ?? "").trim();
-    const qty = Number(rawQty) || 0;
-    if (!id || qty <= 0) continue;
-    sales[id] = (Number(sales[id]) || 0) + qty;
-  }
-
-  saveSalesMap(sales);
-}
-
-/**
- * ✅ 2) Devuelve Top N IDs por “más vendidos” (según localStorage)
- */
-function getTopSoldIds(n = 10) {
-  const sales = loadSalesMap();
-  const entries = Object.entries(sales)
-    .map(([id, qty]) => [String(id), Number(qty) || 0])
-    .filter(([, qty]) => qty > 0);
-
-  entries.sort((a, b) => b[1] - a[1]); // desc
-  return entries.slice(0, n).map(([id]) => id);
-}
-
-function getTopSoldProducts(allProducts, n = 10) {
-  const ids = getTopSoldIds(n);
-  if (!ids.length) return [];
-
-  const byId = new Map((allProducts || []).map((p) => [String(p.id), p]));
-  const list = ids.map((id) => byId.get(id)).filter(Boolean);
-
-  return list.slice(0, n);
-}
-
-// =======================
-// ✅ “MÁS NUEVOS” (Top N)
-// - Si tu JSON trae createdAt/updatedAt/date/timestamp: ordena por eso
-// - Si no trae nada: usa el orden del array (últimos N)
-// =======================
-function extractDateMs(p) {
-  const candidates = [
-    p?.createdAt,
-    p?.created_at,
-    p?.updatedAt,
-    p?.updated_at,
-    p?.fecha,
-    p?.date,
-    p?.timestamp,
-  ];
-
-  for (const v of candidates) {
-    if (!v) continue;
-    const ms =
-      typeof v === "number"
-        ? v
-        : Date.parse(String(v));
-    if (Number.isFinite(ms)) return ms;
-  }
-  return null;
-}
-
-function getNewestProducts(allProducts, n = 10) {
-  const arr = [...(allProducts || [])];
-  if (!arr.length) return [];
-
-  // Si al menos uno tiene fecha, ordenamos por fecha desc
-  const anyHasDate = arr.some((p) => extractDateMs(p) != null);
-
-  if (anyHasDate) {
-    arr.sort((a, b) => {
-      const am = extractDateMs(a) ?? 0;
-      const bm = extractDateMs(b) ?? 0;
-      return bm - am;
-    });
-    return arr.slice(0, n);
-  }
-
-  // Fallback: últimos N del array
-  return arr.slice(-n).reverse();
 }
 
 // =======================
@@ -467,117 +351,142 @@ function renderCategoryGrid(categories, onClick) {
 }
 
 // =======================
-// ✅ Carrusel genérico simple (para "Más vendidos" y "Más nuevos")
+// ✅ DESTACADOS POR CATEGORÍA (2 productos por categoría)
+// Render en: #featured-by-category (si existe)
 // =======================
-function renderGenericCarousel(list, frameSelector, trackId, onClick) {
-  const frameEl = document.querySelector(frameSelector);
-  const trackEl = document.getElementById(trackId);
+function pickFeaturedByCategory(allProducts, perCategory = 2) {
+  const map = new Map();
+  const arr = Array.isArray(allProducts) ? allProducts : [];
 
-  if (!frameEl || !trackEl) return; // si no existe en el HTML, no rompe
+  // Usamos el orden actual (ya viene sortCatalogue) para “elegir” los primeros de cada categoría
+  for (const p of arr) {
+    const cat = getCat(p);
+    if (!map.has(cat)) map.set(cat, []);
+    const list = map.get(cat);
+    if (list.length < perCategory) list.push(p);
+  }
 
-  trackEl.innerHTML = "";
+  // Orden de categorías alfabético
+  return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0], "es"));
+}
 
-  const items = Array.isArray(list) ? list : [];
-  if (items.length === 0) {
-    const empty = document.createElement("div");
-    empty.className = "offers-empty";
-    empty.textContent = "Todavía no hay datos para mostrar.";
-    frameEl.appendChild(empty);
+function renderFeaturedByCategory(allProducts, onClickProduct, onViewCategory) {
+  const root = document.getElementById("featured-by-category");
+  if (!root) return;
+
+  root.innerHTML = "";
+
+  const groups = pickFeaturedByCategory(allProducts, 2);
+  if (!groups.length) {
+    root.innerHTML = `<div class="offers-empty">No hay productos para mostrar.</div>`;
     return;
   }
 
   const frag = document.createDocumentFragment();
 
-  items.forEach((p) => {
-    const card = document.createElement("div");
-    card.className = "offer-card";
-    card.setAttribute("data-id", String(p.id));
+  groups.forEach(([cat, list]) => {
+    const block = document.createElement("div");
+    block.className = "featured-cat";
 
-    const imgSrc = p.imagen || p.img || "";
-    if (imgSrc) {
+    const head = document.createElement("div");
+    head.className = "featured-cat-head";
+
+    const h = document.createElement("h3");
+    h.className = "featured-cat-title";
+    h.textContent = cat;
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn btn-ghost featured-cat-btn";
+    btn.textContent = "Ver todo";
+    btn.addEventListener("click", () => {
+      if (typeof onViewCategory === "function") onViewCategory(cat);
+    });
+
+    head.appendChild(h);
+    head.appendChild(btn);
+
+    const grid = document.createElement("div");
+    grid.className = "featured-grid";
+
+    list.forEach((p) => {
+      const card = document.createElement("div");
+      card.className = "product-card featured-card";
+      card.setAttribute("data-id", String(p.id));
+
+      // Badge simple
+      const badgeLabel =
+        (typeof p.stock !== "undefined" && p.stock <= 0)
+          ? "SIN STOCK"
+          : (p.oferta === true || p.offer === true)
+          ? "OFERTA"
+          : (getPrice(p) <= 0 ? "CONSULTAR" : "");
+
+      if (badgeLabel) {
+        const badge = document.createElement("span");
+        badge.className = "badge";
+        badge.textContent = badgeLabel;
+        card.appendChild(badge);
+      }
+
       const img = document.createElement("img");
-      img.className = "offer-img";
+      img.className = "product-image";
       img.loading = "lazy";
       img.decoding = "async";
       img.alt = getName(p);
-      img.src = imgSrc;
+
+      const src = getImg(p);
+      img.src = src || "./placeholder.png";
+      img.onerror = () => {
+        img.src = "./placeholder.png";
+      };
+
       card.appendChild(img);
-    } else {
-      const ph = document.createElement("div");
-      ph.className = "offer-img";
-      card.appendChild(ph);
-    }
 
-    const body = document.createElement("div");
-    body.className = "offer-body";
+      const content = document.createElement("div");
+      content.className = "product-content";
 
-    const title = document.createElement("p");
-    title.className = "offer-title";
-    title.textContent = getName(p);
-
-    const price = document.createElement("div");
-    price.className = "offer-price";
-    const bp = getPrice(p);
-    price.textContent = bp > 0 ? formatUYU(bp) : "Consultar";
-
-    body.appendChild(title);
-    body.appendChild(price);
-    card.appendChild(body);
-
-    if (typeof onClick === "function") {
-      card.addEventListener("click", () => onClick(String(p.id)));
-    }
-
-    frag.appendChild(card);
-  });
-
-  // duplicamos para loop suave si hay 2+
-  if (items.length >= 2) {
-    items.forEach((p) => {
-      const card = document.createElement("div");
-      card.className = "offer-card";
-      card.setAttribute("data-id", String(p.id));
-
-      const imgSrc = p.imagen || p.img || "";
-      if (imgSrc) {
-        const img = document.createElement("img");
-        img.className = "offer-img";
-        img.loading = "lazy";
-        img.decoding = "async";
-        img.alt = getName(p);
-        img.src = imgSrc;
-        card.appendChild(img);
-      } else {
-        const ph = document.createElement("div");
-        ph.className = "offer-img";
-        card.appendChild(ph);
-      }
-
-      const body = document.createElement("div");
-      body.className = "offer-body";
-
-      const title = document.createElement("p");
-      title.className = "offer-title";
+      const title = document.createElement("h3");
       title.textContent = getName(p);
 
-      const price = document.createElement("div");
-      price.className = "offer-price";
+      const price = document.createElement("p");
+      price.className = "price";
       const bp = getPrice(p);
-      price.textContent = bp > 0 ? formatUYU(bp) : "Consultar";
+      price.textContent =
+        (typeof p.stock !== "undefined" && p.stock <= 0)
+          ? "Sin stock"
+          : (bp > 0 ? formatUYU(bp) : "Consultar");
 
-      body.appendChild(title);
-      body.appendChild(price);
-      card.appendChild(body);
+      const addBtn = document.createElement("button");
+      addBtn.className = "btn btn-primary";
+      addBtn.type = "button";
+      addBtn.textContent = "Agregar";
+      addBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handleAdd(p.id);
+      });
 
-      if (typeof onClick === "function") {
-        card.addEventListener("click", () => onClick(String(p.id)));
-      }
+      content.appendChild(title);
+      content.appendChild(price);
+      content.appendChild(addBtn);
 
-      frag.appendChild(card);
+      card.appendChild(content);
+
+      // Click en la card → ir al producto
+      card.addEventListener("click", () => {
+        if (typeof onClickProduct === "function") onClickProduct(String(p.id));
+      });
+
+      grid.appendChild(card);
     });
-  }
 
-  trackEl.appendChild(frag);
+    block.appendChild(head);
+    block.appendChild(grid);
+    frag.appendChild(block);
+  });
+
+  root.appendChild(frag);
 }
 
 // =======================
@@ -677,9 +586,22 @@ function goToCatalogAndShowProduct(productId) {
   baseProducts = products;
 }
 
+// ✅ Click “Ver todo” de una categoría desde destacados
+function goToCatalogAndFilterCategory(categoryName) {
+  const categoryEl = document.getElementById("category-filter");
+  if (categoryEl) {
+    categoryEl.value = categoryName;
+    categoryEl.dispatchEvent(new Event("change"));
+  }
+
+  showProductsMode();
+
+  const section = document.getElementById("catalogue");
+  if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 // =======================
 // ENVÍO ROBUSTO WHATSAPP
-// ✅ acá es donde “sumamos ventas” al ranking local
 // =======================
 function sendWhatsAppOrderSafe() {
   if (sending) return;
@@ -698,14 +620,6 @@ function sendWhatsAppOrderSafe() {
       return;
     }
 
-    // ✅ 1) actualizamos “más vendidos” (por dispositivo)
-    bumpSalesFromCart(cart);
-
-    // ✅ 2) re-render del carrusel “más vendidos” (si existe en HTML)
-    const best = getTopSoldProducts(products, 10);
-    renderGenericCarousel(best, ".bestsellers-frame", "bestsellers-track", goToCatalogAndShowProduct);
-
-    // ✅ 3) enviamos pedido
     sendOrder(cart, products);
   } catch (err) {
     console.error("Error al enviar pedido:", err);
@@ -734,6 +648,9 @@ async function init() {
     products = normalizeList(raw);
     products = sortCatalogue(products);
     baseProducts = products;
+
+    // ✅ DESTACADOS POR CATEGORÍA (2 por categoría) — si existe el contenedor
+    renderFeaturedByCategory(products, goToCatalogAndShowProduct, goToCatalogAndFilterCategory);
 
     const categories = buildCategoryCounts(products);
     renderCategoryGrid(categories, (selectedCategory) => {
@@ -798,18 +715,10 @@ async function init() {
     showCategoriesMode();
     clearProductsUI();
 
-    // ✅ Carrusel OFERTAS (el tuyo)
+    // ✅ Carrusel OFERTAS (tu función en ui.js)
     const frameEl = document.querySelector(".offers-frame");
     const trackEl = document.getElementById("offers-track");
     renderOffersCarousel(products, frameEl, trackEl, goToCatalogAndShowProduct);
-
-    // ✅ Carrusel MÁS VENDIDOS (si existe en HTML)
-    const best = getTopSoldProducts(products, 10);
-    renderGenericCarousel(best, ".bestsellers-frame", "bestsellers-track", goToCatalogAndShowProduct);
-
-    // ✅ Carrusel MÁS NUEVOS (si existe en HTML)
-    const newest = getNewestProducts(products, 10);
-    renderGenericCarousel(newest, ".newest-frame", "newest-track", goToCatalogAndShowProduct);
 
     rerenderCartUI();
 
