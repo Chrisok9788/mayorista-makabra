@@ -8,6 +8,10 @@
  *   - Placeholder inmediato + fade-in
  *   - Fallback si falla imagen
  *
+ * ✅ NUEVO:
+ *   - renderFeaturedByCategory (2 artículos por categoría) + callbacks:
+ *     onClickProduct / onViewCategory / onAddToCart (opcional)
+ *
  * ✅ Exporta TODO lo que usa tu app.js:
  *   - renderProducts
  *   - renderCart
@@ -19,6 +23,7 @@
  *   - computeCartTotal
  *   - updateCartTotal
  *   - renderCategoryAccordion (opcional)
+ *   - renderFeaturedByCategory (nuevo)
  */
 
 /** Convierte precio a número (defensivo) */
@@ -785,4 +790,170 @@ export function renderCategoryAccordion(products, onSelect) {
   };
 
   renderCategoriesList();
+}
+
+/* =========================================================
+   ✅ NUEVO: DESTACADOS (2 artículos por categoría)
+   - Requiere: <div id="featured-by-category"></div> en el HTML
+   - Callbacks:
+     onClickProduct(id)  -> para saltar al producto
+     onViewCategory(cat) -> para filtrar toda la categoría
+     onAddToCart(id)     -> opcional para que "Agregar" funcione
+   ========================================================= */
+export function renderFeaturedByCategory(products, options = {}) {
+  const {
+    rootId = "featured-by-category",
+    perCategory = 2,
+    onClickProduct,
+    onViewCategory,
+    onAddToCart,
+  } = options;
+
+  const root = document.getElementById(rootId);
+  if (!root) return;
+
+  const list = Array.isArray(products) ? products : [];
+  root.innerHTML = "";
+
+  if (!list.length) {
+    root.innerHTML = `<div class="offers-empty">No hay productos para mostrar.</div>`;
+    return;
+  }
+
+  // agrupar por categoría (tomamos los primeros N que aparezcan en el array)
+  const map = new Map();
+  for (const p of list) {
+    const cat = String(p?.categoria ?? p?.category ?? "Otros").trim() || "Otros";
+    if (!map.has(cat)) map.set(cat, []);
+    const arr = map.get(cat);
+    if (arr.length < perCategory) arr.push(p);
+  }
+
+  // ordenar categorías alfabéticamente
+  const groups = Array.from(map.entries()).sort((a, b) =>
+    a[0].localeCompare(b[0], "es")
+  );
+
+  const frag = document.createDocumentFragment();
+
+  groups.forEach(([cat, items]) => {
+    const section = document.createElement("section");
+    section.className = "featured-cat";
+
+    // Header
+    const head = document.createElement("div");
+    head.className = "featured-cat-head";
+
+    const title = document.createElement("h3");
+    title.className = "featured-cat-title";
+    title.textContent = cat;
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn btn-ghost featured-cat-btn";
+    btn.textContent = "Ver todo";
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (typeof onViewCategory === "function") onViewCategory(cat);
+    });
+
+    head.appendChild(title);
+    head.appendChild(btn);
+    section.appendChild(head);
+
+    // Grid (2 cards)
+    const grid = document.createElement("div");
+    grid.className = "featured-grid";
+
+    items.forEach((p) => {
+      const card = document.createElement("div");
+      card.className = "product-card featured-card";
+
+      // Badge (misma lógica base)
+      let badgeLabel = "";
+      let badgeClass = "";
+
+      if (typeof p.stock !== "undefined" && p.stock <= 0) {
+        badgeLabel = "SIN STOCK";
+        badgeClass = "sin-stock";
+      } else if (p.oferta === true || p.offer === true) {
+        badgeLabel = "OFERTA";
+        badgeClass = "oferta";
+      } else if (getBasePrice(p) <= 0) {
+        badgeLabel = "CONSULTAR";
+        badgeClass = "consultar";
+      }
+
+      if (badgeLabel) {
+        const badge = document.createElement("span");
+        badge.className = `badge ${badgeClass}`;
+        badge.textContent = badgeLabel;
+        card.appendChild(badge);
+      }
+
+      // Imagen (lazy)
+      const img = document.createElement("img");
+      img.className = "product-image";
+      const imgSrc = p.imagen || p.img || "";
+      setupFastImage(img, imgSrc, getProductName(p) || "Producto", {
+        priority: "low",
+        loading: "lazy",
+      });
+      card.appendChild(img);
+
+      // Content
+      const content = document.createElement("div");
+      content.className = "product-content";
+
+      const h3 = document.createElement("h3");
+      h3.textContent = getProductName(p) || "Producto";
+
+      const price = document.createElement("p");
+      price.className = "price";
+
+      const bp = getBasePrice(p);
+      if (typeof p.stock !== "undefined" && p.stock <= 0) price.textContent = "Sin stock";
+      else if (bp > 0) price.textContent = money(bp);
+      else price.textContent = "Consultar";
+
+      content.appendChild(h3);
+      content.appendChild(price);
+
+      const promoText = getQtyPromoText(p);
+      if (promoText) {
+        const note = document.createElement("div");
+        note.className = "price-note";
+        note.textContent = promoText;
+        content.appendChild(note);
+      }
+
+      const addBtn = document.createElement("button");
+      addBtn.className = "btn btn-primary";
+      addBtn.type = "button";
+      addBtn.textContent = "Agregar al carrito";
+      addBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof onAddToCart === "function") onAddToCart(p.id);
+        addBtn.classList.add("btn-tap");
+        setTimeout(() => addBtn.classList.remove("btn-tap"), 100);
+      });
+
+      content.appendChild(addBtn);
+      card.appendChild(content);
+
+      // Click card -> ir al producto
+      card.addEventListener("click", () => {
+        if (typeof onClickProduct === "function") onClickProduct(String(p.id));
+      });
+
+      grid.appendChild(card);
+    });
+
+    section.appendChild(grid);
+    frag.appendChild(section);
+  });
+
+  root.appendChild(frag);
 }
