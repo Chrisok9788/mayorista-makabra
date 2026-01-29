@@ -3,6 +3,7 @@
    ✅ Que NO aparezca pantalla en blanco en iPhone/Android/PC al entrar
    ✅ Mejorar carga percibida (menos “saltos” y render más liviano)
    ✅ Mantener tu diseño y clases actuales (products-grid, categories-grid, etc.)
+   ✅ Alineado con tu ui.js (product-content, meta, cart-item-controls, cart-item-calc, etc.)
 */
 
 :root {
@@ -28,17 +29,18 @@ html, body {
   background: var(--bg);
   color: var(--text);
 
-  /* ✅ iOS: evita “pantalla blanca” por bugs de render al cargar */
+  /* ✅ iOS: evita glitches al cargar */
   min-height: 100%;
   height: auto;
   -webkit-text-size-adjust: 100%;
   overflow-x: hidden;
 }
 
-/* ✅ Extra seguro: evita glitches de pintura en iOS sin romper sticky */
+/* ✅ Extra seguro: evitar “white flash” sin romper sticky */
+/* (NO usamos transform en body porque puede romper sticky/backdrop en iOS) */
 body {
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -49,8 +51,8 @@ a { color: inherit; text-decoration: none; }
 
 /* =========================
    ✅ HEADER: FIX iOS “BLANCO HASTA GIRAR”
-   Causa típica: position:sticky + backdrop-filter (Safari/iOS)
-   Solución: NO usar transform/will-change en el sticky
+   Causa típica: sticky + backdrop-filter + ciertos paints.
+   Solución: mantener sticky pero evitando combinaciones problemáticas en iOS.
    ========================= */
 .site-header {
   position: sticky;
@@ -59,17 +61,15 @@ a { color: inherit; text-decoration: none; }
   background: rgba(255,255,255,0.92);
   border-bottom: 1px solid var(--border);
 
-  /* Safari/iOS */
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 
-  /* ✅ CLAVE: en iOS esto puede causar pantalla blanca si está en sticky */
+  /* ✅ CLAVE: no usar transform/will-change en sticky */
   transform: none;
   will-change: auto;
 }
 
-/* iOS “quirk”: a veces backdrop-filter + sticky pinta blanco.
-   En iOS lo apagamos para estabilidad (se ve igual, solo sin blur). */
+/* iOS: apagamos blur para estabilidad */
 @supports (-webkit-touch-callout: none) {
   .site-header {
     -webkit-backdrop-filter: none;
@@ -220,6 +220,9 @@ button:disabled,
 .muted { color: var(--muted); }
 .small { font-size: 12px; }
 
+/* =========================
+   FILTROS
+   ========================= */
 .filters {
   display: grid;
   grid-template-columns: 1fr 240px;
@@ -297,6 +300,7 @@ button:disabled,
   gap: 14px;
 }
 
+/* ✅ Cards */
 .product-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -304,22 +308,20 @@ button:disabled,
   padding: 12px;
   box-shadow: var(--shadow);
   overflow: hidden;
+  position: relative;
 }
 
 /* ✅ Rendimiento: el navegador puede “saltear” render fuera de pantalla (Chrome/Edge) */
 @supports (content-visibility: auto) {
   .product-card {
     content-visibility: auto;
-    contain-intrinsic-size: 340px; /* tamaño estimado para evitar saltos */
+    contain-intrinsic-size: 340px; /* estimado para evitar saltos */
   }
 }
 
 /* =========================
-   ✅ FIX VELOCIDAD / SIN SALTOS DE LAYOUT (CLS)
-   - Reservamos espacio para imágenes desde el inicio
+   ✅ IMÁGENES SIN SALTOS (CLS)
    ========================= */
-
-/* Catálogo (ui.js usa class="product-image") */
 .product-image{
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -350,48 +352,37 @@ button:disabled,
   max-width: 100%;
 }
 
-/* Si la imagen falla, que no rompa todo */
-.product-image[alt=""],
-.offer-img[alt=""]{
-  background: rgba(11,18,32,0.06);
+/* =========================
+   ✅ CONTENIDO PRODUCTO (ui.js)
+   ========================= */
+.product-content{
+  padding-top: 10px;
+  display: grid;
+  gap: 8px;
 }
 
-.product-top { display: flex; gap: 12px; align-items: center; }
-
-.product-img {
-  width: 74px;
-  height: 74px;
-  border-radius: 14px;
-  object-fit: cover;
-  background: rgba(11,18,32,0.04);
-  border: 1px solid rgba(11,18,32,0.10);
-  flex: 0 0 auto;
+.product-content h3{
+  margin: 0;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.2px;
 }
 
-.drop-hint {
-  font-size: 11px;
-  color: rgba(91,103,119,0.85);
-  margin-top: 6px;
-}
-.drop-active { outline: 2px dashed rgba(26,163,107,0.85); outline-offset: 4px; }
-
-.product-meta { min-width: 0; }
-.product-name { margin: 0; font-size: 16px; }
-.product-cat { color: var(--muted); font-size: 12px; margin-top: 4px; }
-
-.price-row {
-  margin-top: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+.product-content .meta{
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 700;
+  line-height: 1.3;
 }
 
-.price { font-weight: 900; }
-.price.muted { font-weight: 700; }
+.price {
+  margin: 0;
+  font-weight: 900;
+  font-size: 15px;
+}
 
 .price-note{
-  margin-top: 6px;
+  margin-top: 2px;
   font-size: 12px;
   color: var(--muted);
   font-weight: 800;
@@ -407,10 +398,13 @@ button:disabled,
   box-shadow: 0 4px 10px rgba(16,24,40,0.16);
 }
 
-.product-actions { display: flex; gap: 8px; margin-top: 10px; }
-.product-actions button { width: 100%; }
-
+/* =========================
+   BADGES (ui.js)
+   ========================= */
 .badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
   display: inline-flex;
   align-items: center;
   padding: 3px 10px;
@@ -418,10 +412,29 @@ button:disabled,
   border: 1px solid rgba(26,163,107,0.35);
   background: rgba(26,163,107,0.12);
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 900;
   color: var(--text);
+  z-index: 2;
 }
 
+.badge.oferta{
+  background: rgba(255, 193, 7, 0.18);
+  border-color: rgba(255, 193, 7, 0.45);
+}
+
+.badge.consultar{
+  background: rgba(17,24,39,0.10);
+  border-color: rgba(17,24,39,0.18);
+}
+
+.badge.sin-stock{
+  background: rgba(176, 0, 32, 0.12);
+  border-color: rgba(176, 0, 32, 0.25);
+}
+
+/* =========================
+   OFERTAS (Carrusel)
+   ========================= */
 .offers-section { padding-top: 10px; }
 
 .offers-frame {
@@ -455,14 +468,13 @@ button:disabled,
   box-shadow: 0 8px 18px rgba(16,24,40,0.10);
   display: flex;
   flex-direction: column;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
-.offer-card:hover { transform: translateY(-1px); }
+.offer-card:hover { transform: translateY(-1px); box-shadow: 0 12px 22px rgba(16,24,40,0.14); }
 
 .offer-body { padding: 10px; }
-.offer-title { font-weight: 800; font-size: 13px; margin: 0; }
+.offer-title { font-weight: 900; font-size: 13px; margin: 0; }
 .offer-price { margin-top: 6px; font-weight: 900; }
-.offer-price.muted { font-weight: 700; }
-
 .offer-note{
   margin-top: 6px;
   font-size: 11px;
@@ -487,7 +499,7 @@ button:disabled,
 }
 
 /* =========================
-   CARRITO
+   CARRITO (ui.js)
    ========================= */
 .cart-items { display: grid; gap: 10px; }
 
@@ -503,15 +515,9 @@ button:disabled,
   box-shadow: var(--shadow);
 }
 
-.cart-item h4 { margin: 0; font-size: 14px; }
-.cart-item .muted { font-size: 12px; }
-
-.cart-item-meta{
-  margin-top: 6px;
-  font-size: 12px;
-  color: var(--muted);
-  font-weight: 800;
-  line-height: 1.25;
+.cart-item-name{
+  font-weight: 900;
+  font-size: 14px;
 }
 
 .cart-item-note{
@@ -526,9 +532,30 @@ button:disabled,
   background: rgba(26,163,107,0.06);
 }
 
-.qty-controls { display: flex; align-items: center; gap: 8px; }
+/* ✅ Arriba derecha: "Q x $Unit = $Total" */
+.cart-item-calc{
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 12px;
+  font-weight: 900;
+  color: rgba(11,18,32,0.80);
+  background: rgba(17,24,39,0.04);
+  border: 1px solid rgba(11,18,32,0.10);
+  border-radius: 10px;
+  padding: 6px 8px;
+}
 
-.qty-controls input {
+/* ✅ Controles del carrito (ui.js usa .cart-item-controls) */
+.cart-item-controls{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+}
+
+.cart-item-controls input{
   width: 64px;
   padding: 10px;
   border-radius: 12px;
@@ -536,8 +563,16 @@ button:disabled,
   background: #ffffff;
   color: var(--text);
   text-align: center;
+  font-weight: 800;
 }
 
+/* Botones +/-/remove un poco más compactos */
+.cart-item-controls button{
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+
+/* Summary */
 .cart-summary {
   margin-top: 12px;
   border: 1px solid var(--border);
@@ -559,6 +594,9 @@ button:disabled,
 
 .how-to-list { margin: 0; padding-left: 18px; color: var(--muted); line-height: 1.6; }
 
+/* =========================
+   CONTACTO
+   ========================= */
 .contact-card {
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -568,7 +606,6 @@ button:disabled,
   gap: 10px;
   box-shadow: var(--shadow);
 }
-
 .contact-item { display: grid; gap: 4px; }
 
 /* =========================
@@ -587,7 +624,7 @@ button:disabled,
   margin: 6px 6px 10px;
   font-size: 14px;
   color: var(--muted);
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .accordion-item {
@@ -621,17 +658,17 @@ button:disabled,
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 10px;
-  border-radius: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
   cursor: pointer;
-  color: var(--text);
 }
-
-.subcat:hover { background: rgba(26, 163, 107, 0.10); }
+.subcat:hover { background: rgba(17,24,39,0.04); }
 
 .subcat small {
   color: var(--muted);
-  font-weight: 800;
+  font-weight: 900;
 }
 
 @media (max-width: 920px) {
@@ -652,19 +689,6 @@ button:disabled,
   outline: none;
   margin: 10px 0 6px;
 }
-
-.subcat {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: #fff;
-  cursor: pointer;
-}
-
-.subcat:hover { background: rgba(17,24,39,0.04); }
 
 #subcategory-filter {
   width: 100%;
@@ -698,7 +722,7 @@ button:disabled,
   border-radius: 999px;
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.12);
-  font-weight: 700;
+  font-weight: 800;
   text-decoration: none;
   color: #111;
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
@@ -769,7 +793,9 @@ button:disabled,
   background: #ffffff;
 }
 
-/* Responsive */
+/* =========================
+   RESPONSIVE
+   ========================= */
 @media (max-width: 920px) {
   .products-grid { grid-template-columns: repeat(2, 1fr); }
   .filters { grid-template-columns: 1fr; }
@@ -797,5 +823,21 @@ button:disabled,
   .nav-cart {
     padding: 5px 8px;
     font-size: 13px;
+  }
+
+  /* Calc del carrito no tape controles en pantallas chicas */
+  .cart-item-calc{
+    position: static;
+    margin-bottom: 8px;
+    justify-self: end;
+  }
+
+  .cart-item{
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .cart-item-controls{
+    justify-content: space-between;
   }
 }
