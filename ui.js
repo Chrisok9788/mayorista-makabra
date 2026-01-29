@@ -143,7 +143,6 @@ function setupFastImage(imgEl, realSrc, alt, opts = {}) {
 
   const placeholder = getPlaceholderUrl();
 
-  // atributos “baratos” primero (para evitar layout raro)
   if (width) imgEl.width = width;
   if (height) imgEl.height = height;
 
@@ -152,12 +151,10 @@ function setupFastImage(imgEl, realSrc, alt, opts = {}) {
   // placeholder ya
   imgEl.src = placeholder;
 
-  // mejoras de performance
-  imgEl.loading = loading; // lazy / eager
-  imgEl.decoding = "async"; // decode sin trabar UI
-  imgEl.setAttribute("fetchpriority", priority); // "high" / "low"
+  imgEl.loading = loading;
+  imgEl.decoding = "async";
+  imgEl.setAttribute("fetchpriority", priority);
 
-  // fade-in
   imgEl.style.opacity = "0";
   imgEl.style.transition = "opacity 160ms ease";
 
@@ -176,7 +173,6 @@ function setupFastImage(imgEl, realSrc, alt, opts = {}) {
     imgEl.style.opacity = "1";
   };
 
-  // setear src real en un tick (mejor primera pintura)
   if (typeof queueMicrotask === "function") {
     queueMicrotask(() => {
       imgEl.src = finalSrc;
@@ -190,17 +186,13 @@ function setupFastImage(imgEl, realSrc, alt, opts = {}) {
 
 /**
  * Calcula total del carrito aplicando promos por cantidad si existen.
- * ✅ COHERENTE: suma subtotales ya redondeados (igual que WhatsApp).
- *
- * @param {Array} products
- * @param {Object} cart (id -> qty)
+ * ✅ COHERENTE: suma subtotales ya redondeados
  */
 export function computeCartTotal(products, cart) {
   if (!Array.isArray(products) || !products.length) return 0;
   if (!cart || typeof cart !== "object") return 0;
 
   const byId = new Map(products.map((p) => [String(p.id ?? "").trim(), p]));
-
   let total = 0;
 
   for (const [rawId, rawQty] of Object.entries(cart)) {
@@ -212,20 +204,15 @@ export function computeCartTotal(products, cart) {
     if (!p) continue;
 
     const unit = getUnitPriceByQty(p, qty);
-    if (unit <= 0) continue; // consultables no suman
+    if (unit <= 0) continue;
 
-    const subtotalExact = unit * qty;
-    const subtotalRounded = roundUYU(subtotalExact);
-
-    total += subtotalRounded;
+    total += roundUYU(unit * qty);
   }
 
   return total;
 }
 
-/**
- * Actualiza el total en pantalla.
- */
+/** Actualiza total */
 export function updateCartTotal(totalEl, products, cart) {
   if (!totalEl) return;
   const total = computeCartTotal(products, cart);
@@ -233,8 +220,8 @@ export function updateCartTotal(totalEl, products, cart) {
 }
 
 /**
- * Renderiza la lista de productos en un contenedor.
- * ✅ Mejoras: lazy + async decode + placeholder + fade-in
+ * Renderiza el catálogo
+ * ✅ FIX CLAVE: agrega data-id para poder enfocar el producto exacto
  */
 export function renderProducts(list, container, addHandler) {
   if (!container) return;
@@ -248,6 +235,9 @@ export function renderProducts(list, container, addHandler) {
   list.forEach((product) => {
     const card = document.createElement("div");
     card.className = "product-card";
+
+    // ✅ CLAVE para focus/highlight desde app.js
+    card.dataset.id = String(product?.id ?? "");
 
     // BADGE
     let badgeLabel = "";
@@ -354,7 +344,7 @@ export function renderProducts(list, container, addHandler) {
 
 /**
  * Renderiza el carrusel de OFERTAS.
- * ✅ Mejora: imágenes eager + prioridad alta para que “salga primero”
+ * ✅ eager + prioridad alta
  */
 export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
   if (!frameEl || !trackEl) return;
@@ -440,7 +430,6 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
   const frag = document.createDocumentFragment();
   offers.forEach((p) => frag.appendChild(makeCard(p)));
 
-  // duplicamos si hay 2+ para loop continuo
   if (offers.length >= 2) {
     offers.forEach((p) => frag.appendChild(makeCard(p)));
   }
@@ -449,11 +438,7 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
 }
 
 /**
- * Renderiza el carrito con:
- * - Nombre + promo
- * - Arriba a la derecha: "Q x $Unit = $Total"
- *
- * ✅ Unit y Total redondeados
+ * Renderiza el carrito
  */
 export function renderCart(products, cart, container, updateHandler, removeHandler) {
   if (!container) return 0;
@@ -496,7 +481,6 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
 
     item.appendChild(left);
 
-    // ✅ cálculo arriba derecha
     const unitRaw = getUnitPriceByQty(product, q);
 
     const calc = document.createElement("div");
@@ -510,7 +494,6 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
     }
     item.appendChild(calc);
 
-    // Controles
     const controls = document.createElement("div");
     controls.className = "cart-item-controls";
 
@@ -548,17 +531,13 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
   return computeCartTotal(products, cart);
 }
 
-/**
- * Actualiza contador carrito.
- */
+/** Contador carrito */
 export function updateCartCount(countEl, count) {
   if (!countEl) return;
   countEl.textContent = count;
 }
 
-/**
- * Carga categorías únicas en el select.
- */
+/** Carga categorías */
 export function populateCategories(products, select) {
   if (!select) return;
 
@@ -588,9 +567,7 @@ export function populateCategories(products, select) {
   });
 }
 
-/**
- * Carga subcategorías en el select, según categoría elegida.
- */
+/** Carga subcategorías */
 export function populateSubcategories(products, category, select) {
   if (!select) return;
 
@@ -617,9 +594,7 @@ export function populateSubcategories(products, category, select) {
   });
 }
 
-/**
- * Filtra por categoría y texto.
- */
+/** Filtra por categoría y texto */
 export function filterProducts(products, category, searchTerm) {
   let result = products || [];
 
@@ -650,7 +625,7 @@ export function filterProducts(products, category, searchTerm) {
 }
 
 /**
- * Panel tipo acordeón (opcional).
+ * Panel acordeón (opcional).
  */
 export function renderCategoryAccordion(products, onSelect) {
   const accordion = document.getElementById("categoryAccordion");
@@ -792,14 +767,9 @@ export function renderCategoryAccordion(products, onSelect) {
   renderCategoriesList();
 }
 
-/* =========================================================
-   ✅ NUEVO: DESTACADOS (2 artículos por categoría)
-   - Requiere: <div id="featured-by-category"></div> en el HTML
-   - Callbacks:
-     onClickProduct(id)  -> para saltar al producto
-     onViewCategory(cat) -> para filtrar toda la categoría
-     onAddToCart(id)     -> opcional para que "Agregar" funcione
-   ========================================================= */
+/**
+ * ✅ DESTACADOS (2 artículos por categoría)
+ */
 export function renderFeaturedByCategory(products, options = {}) {
   const {
     rootId = "featured-by-category",
@@ -820,7 +790,6 @@ export function renderFeaturedByCategory(products, options = {}) {
     return;
   }
 
-  // agrupar por categoría (tomamos los primeros N que aparezcan en el array)
   const map = new Map();
   for (const p of list) {
     const cat = String(p?.categoria ?? p?.category ?? "Otros").trim() || "Otros";
@@ -829,7 +798,6 @@ export function renderFeaturedByCategory(products, options = {}) {
     if (arr.length < perCategory) arr.push(p);
   }
 
-  // ordenar categorías alfabéticamente
   const groups = Array.from(map.entries()).sort((a, b) =>
     a[0].localeCompare(b[0], "es")
   );
@@ -840,7 +808,6 @@ export function renderFeaturedByCategory(products, options = {}) {
     const section = document.createElement("section");
     section.className = "featured-cat";
 
-    // Header
     const head = document.createElement("div");
     head.className = "featured-cat-head";
 
@@ -862,7 +829,6 @@ export function renderFeaturedByCategory(products, options = {}) {
     head.appendChild(btn);
     section.appendChild(head);
 
-    // Grid (2 cards)
     const grid = document.createElement("div");
     grid.className = "featured-grid";
 
@@ -870,7 +836,9 @@ export function renderFeaturedByCategory(products, options = {}) {
       const card = document.createElement("div");
       card.className = "product-card featured-card";
 
-      // Badge (misma lógica base)
+      // ✅ también dejamos data-id por consistencia
+      card.dataset.id = String(p?.id ?? "");
+
       let badgeLabel = "";
       let badgeClass = "";
 
@@ -892,7 +860,6 @@ export function renderFeaturedByCategory(products, options = {}) {
         card.appendChild(badge);
       }
 
-      // Imagen (lazy)
       const img = document.createElement("img");
       img.className = "product-image";
       const imgSrc = p.imagen || p.img || "";
@@ -902,7 +869,6 @@ export function renderFeaturedByCategory(products, options = {}) {
       });
       card.appendChild(img);
 
-      // Content
       const content = document.createElement("div");
       content.className = "product-content";
 
@@ -943,7 +909,6 @@ export function renderFeaturedByCategory(products, options = {}) {
       content.appendChild(addBtn);
       card.appendChild(content);
 
-      // Click card -> ir al producto
       card.addEventListener("click", () => {
         if (typeof onClickProduct === "function") onClickProduct(String(p.id));
       });
@@ -956,64 +921,4 @@ export function renderFeaturedByCategory(products, options = {}) {
   });
 
   root.appendChild(frag);
-}
-// =======================
-// ✅ NAVEGAR A PRODUCTO (desde destacados)
-// =======================
-function isInteractiveTarget(el) {
-  return !!el.closest("button, a, input, select, textarea, label");
-}
-
-function normalizeStr(s) {
-  return String(s ?? "").trim();
-}
-
-/**
- * Navega al Catálogo, aplica filtros (cat/subcat) y enfoca el producto.
- * Requiere que tus cards tengan data-id (lo agregamos abajo).
- */
-export function goToProductInCatalogue(product, opts = {}) {
-  const cat = normalizeStr(product?.categoria ?? product?.category);
-  const sub = normalizeStr(product?.subcategoria ?? product?.subcategory);
-  const id = String(product?.id ?? product?.ID ?? "").trim();
-
-  const catSel = document.getElementById("category-filter");
-  const subSel = document.getElementById("subcategory-filter");
-  const searchInput = document.getElementById("search-input");
-
-  // 1) Ir al catálogo
-  document.querySelector("#catalogue")?.scrollIntoView({ behavior: "smooth", block: "start" });
-
-  // 2) Limpiar búsqueda (opcional, pero recomendado)
-  if (searchInput) searchInput.value = "";
-
-  // 3) Setear categoría
-  if (catSel && cat) {
-    catSel.value = cat;
-    catSel.dispatchEvent(new Event("change", { bubbles: true }));
-  }
-
-  // 4) Setear subcategoría (esperamos un poco por si el change llena opciones)
-  window.setTimeout(() => {
-    if (subSel && sub) {
-      subSel.style.display = "";
-      subSel.value = sub;
-      subSel.dispatchEvent(new Event("change", { bubbles: true }));
-    }
-
-    // 5) Scroll al producto exacto (cuando ya está renderizado)
-    window.setTimeout(() => {
-      const card = document.querySelector(`.product-card[data-id="${CSS.escape(id)}"]`);
-      if (!card) return;
-
-      // Quitar focus anterior
-      document.querySelectorAll(".product-card.focused").forEach((n) => n.classList.remove("focused"));
-
-      card.classList.add("focused");
-      card.scrollIntoView({ behavior: "smooth", block: "center" });
-
-      // Sacar highlight luego de un rato
-      window.setTimeout(() => card.classList.remove("focused"), 2200);
-    }, 120);
-  }, 120);
 }
