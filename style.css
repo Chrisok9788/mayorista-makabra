@@ -23,12 +23,11 @@
   --shadow: 0 10px 30px rgba(16,24,40,0.12);
   --radius: 14px;
 
-  /* ✅ NUEVO: alto de header para sticky-bar
-     Desktop/tablet: 74px aprox con tu header actual */
+  /* ✅ alto de header para sticky-bar */
   --header-h: 74px;
 }
 
-/* ✅ En móvil tu header es más chico (por tu media query) */
+/* ✅ En móvil tu header es más chico */
 @media (max-width: 560px){
   :root { --header-h: 56px; }
 }
@@ -230,29 +229,25 @@ button:disabled,
 
 /* =========================
    ✅ STICKY FILTER BAR
-   (Buscador + selectores siempre arriba)
    ========================= */
 .filters-sticky{
   position: sticky;
-  top: var(--header-h);     /* ✅ debajo del header (auto con variable) */
-  z-index: 45;              /* ✅ debajo del header (50) */
+  top: var(--header-h);
+  z-index: 45;
   background: rgba(255,255,255,0.98);
   border-bottom: 1px solid var(--border);
   padding: 10px 0;
 
-  /* ✅ evita “parpadeos” y mejora scroll en iOS */
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
 }
 
-/* iOS: sin blur para estabilidad */
 @supports (-webkit-touch-callout: none) {
   .filters-sticky{
     background: #ffffff;
   }
 }
 
-/* ✅ evita overflow raro en iOS con sticky */
 .filters-sticky .container{
   overflow: visible;
 }
@@ -264,11 +259,6 @@ button:disabled,
   display: grid;
   grid-template-columns: 1fr 240px;
   gap: 10px;
-
-  /* ✅ CAMBIO CLAVE:
-     antes tenías margin: 14px 0;
-     eso te “bajaba” el buscador y te lo separaba.
-     Ahora lo controlamos con el padding del sticky-bar */
   margin: 0;
 }
 
@@ -285,7 +275,6 @@ button:disabled,
 
 .filters input::placeholder { color: rgba(91,103,119,0.75); }
 
-/* ✅ si aparece subcategoría, que no rompa el layout */
 #subcategory-filter { width: 100%; }
 
 @media (max-width: 920px) {
@@ -522,7 +511,7 @@ button:disabled,
   padding: 10px;
 }
 
-/* ✅ FIX iPhone: fuerza 2 columnas aunque el JS meta wrappers */
+/* ✅ FIX iPhone: fuerza 2 columnas */
 #featured-by-category .featured-grid,
 #featured-by-category .products-grid,
 #featured-by-category .featured-products,
@@ -532,13 +521,11 @@ button:disabled,
   gap: 12px !important;
 }
 
-/* Evita que una card “no entre” y se vaya sola a otra fila */
 #featured-by-category .product-card {
   min-width: 0 !important;
   width: auto !important;
 }
 
-/* Anti-flex/overflow raro */
 #featured-by-category * {
   min-width: 0;
 }
@@ -946,8 +933,9 @@ button:disabled,
     justify-content: space-between;
   }
 }
+
 /* =========================
-   ✅ BOTÓN "INICIO" (subir al buscador sticky)
+   ✅ BOTÓN "INICIO"
    ========================= */
 .top-float{
   appearance: none;
@@ -965,7 +953,6 @@ button:disabled,
   transform: scale(0.96);
 }
 
-/* En mobile que no tape tanto */
 @media (max-width: 560px){
   .top-float{
     padding: 10px 12px;
@@ -975,25 +962,30 @@ button:disabled,
 
 /* =========================
    ✅ HIGHLIGHT del producto al que te “lleva”
+   ✅ SIN mover layout (NO transform)
    ========================= */
 .product-card.focused{
   outline: 3px solid rgba(26,163,107,0.55);
-  box-shadow: 0 14px 34px rgba(26,163,107,0.18), var(--shadow);
+  outline-offset: 2px; /* ✅ se ve más sin cambiar tamaño */
+  box-shadow:
+    0 0 0 6px rgba(26,163,107,0.10),
+    0 14px 34px rgba(26,163,107,0.18),
+    var(--shadow);
 }
 
-@keyframes pulseFocus {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-2px); }
-  100% { transform: translateY(0); }
+/* ✅ animación sin “saltos”: pulso de sombra */
+@keyframes focusGlow {
+  0%   { box-shadow: 0 0 0 0 rgba(26,163,107,0.00), 0 14px 34px rgba(26,163,107,0.16), var(--shadow); }
+  50%  { box-shadow: 0 0 0 10px rgba(26,163,107,0.12), 0 14px 34px rgba(26,163,107,0.18), var(--shadow); }
+  100% { box-shadow: 0 0 0 0 rgba(26,163,107,0.00), 0 14px 34px rgba(26,163,107,0.16), var(--shadow); }
 }
 
 .product-card.focused{
-  animation: pulseFocus 0.6s ease-in-out 2;
+  animation: focusGlow 650ms ease-in-out 2;
 }
 
 /* =========================
-   ✅ DESTACADOS: que se note que “clickea”
-   (sin romper botones)
+   ✅ DESTACADOS: cursor “clickeable”
    ========================= */
 .featured-grid .product-card{
   cursor: pointer;
