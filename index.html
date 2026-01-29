@@ -3,13 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <!-- ✅ FIX iOS: viewport-fit=cover -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
 
-    <meta property="og:title" content="Mayorista Makabra - Catálogo para revendedores" />
-    <meta property="og:description" content="Catálogo online mayorista con pedido por WhatsApp." />
+    <meta
+      property="og:title"
+      content="Mayorista Makabra - Catálogo para revendedores"
+    />
+    <meta
+      property="og:description"
+      content="Catálogo online mayorista con pedido por WhatsApp."
+    />
     <meta property="og:image" content="./logo.png" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://chrisok9788.github.io/mayorista-makabra/" />
+    <meta
+      property="og:url"
+      content="https://chrisok9788.github.io/mayorista-makabra/"
+    />
 
     <meta
       name="description"
@@ -24,7 +36,11 @@
     <header class="site-header">
       <div class="container header-row">
         <a class="brand" href="#home" aria-label="Ir al inicio">
-          <img src="./logo.png" class="brand-logo" alt="Mayorista Makabra logo" />
+          <img
+            src="./logo.png"
+            class="brand-logo"
+            alt="Mayorista Makabra logo"
+          />
           <div class="brand-text">
             <div class="brand-title">Mayorista Makabra</div>
             <div class="brand-subtitle">
@@ -45,7 +61,7 @@
       <section id="home"></section>
 
       <!-- =======================
-           CARRUSEL 1: OFERTAS
+           CARRUSEL: OFERTAS
            ======================= -->
       <section class="section offers-section" aria-label="Carrusel de ofertas">
         <div class="container">
@@ -62,34 +78,21 @@
       </section>
 
       <!-- =======================
-           CARRUSEL 2: NUEVOS
+           ✅ DESTACADOS POR CATEGORÍA
+           (2 productos por cada categoría)
            ======================= -->
-      <section class="section offers-section" aria-label="Carrusel de productos nuevos">
+      <section
+        class="section featured-section"
+        aria-label="Destacados por categoría"
+      >
         <div class="container">
           <div class="section-title-row">
-            <h2>NUEVOS</h2>
-            <span class="muted">Los 10 más recientes</span>
+            <h2>DESTACADOS POR CATEGORÍA</h2>
+            <span class="muted">2 productos por cada categoría</span>
           </div>
 
-          <div class="offers-frame">
-            <div id="newest-track" class="offers-track slow"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- =======================
-           CARRUSEL 3: MÁS VENDIDOS
-           ======================= -->
-      <section class="section offers-section" aria-label="Carrusel de productos más vendidos">
-        <div class="container">
-          <div class="section-title-row">
-            <h2>MÁS VENDIDOS</h2>
-            <span class="muted">Top 10 por ventas</span>
-          </div>
-
-          <div class="offers-frame">
-            <div id="bestsellers-track" class="offers-track slow"></div>
-          </div>
+          <!-- ✅ ACÁ JS INYECTA todo -->
+          <div id="featured-by-category" class="featured-by-category"></div>
         </div>
       </section>
 
@@ -112,7 +115,7 @@
               <option value="">Todas las categorías</option>
             </select>
 
-            <select id="subcategory-filter" style="display: none;">
+            <select id="subcategory-filter" style="display: none">
               <option value="">Todas las subcategorías</option>
             </select>
           </div>
@@ -148,14 +151,18 @@
                 Vaciar carrito
               </button>
 
-              <button id="send-whatsapp-btn" class="btn btn-primary" type="button">
+              <button
+                id="send-whatsapp-btn"
+                class="btn btn-primary"
+                type="button"
+              >
                 Enviar pedido por WhatsApp
               </button>
 
               <a
                 id="send-whatsapp-link"
                 href="https://wa.me/59896405927"
-                style="display:none"
+                style="display: none"
                 rel="noopener"
               ></a>
             </div>
