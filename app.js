@@ -1,11 +1,13 @@
 // app.js — versión MODIFICADA y COMPLETA
-// Cambios de esta versión:
-// ✅ Total del carrito SIEMPRE redondeado (Math.round) en la UI
-// ✅ NO usa totalAmount() (porque no aplica dpc.tramos) → ahora usa computeCartTotal() de ui.js
-// ✅ Corrige el error "Can't find variable: Rca" (estaba en renderCategoryGrid)
-// ✅ NUEVO: Orden inteligente GENERAL por:
-//    categoría → "base" (marca/línea) → sabor → tamaño (ml/gr)
-// ✅ FIX iOS: evita pantalla en blanco hasta girar (forzamos repaint/resize)
+// Cambios (además de lo que ya tenías):
+// ✅ “Más vendidos” con memoria local (localStorage) por dispositivo
+//    - 1 función que actualiza ranking al enviar WhatsApp
+//    - 1 función que devuelve Top 10
+//    - 1 carrusel “Más vendidos” (si existe #bestsellers-track en el HTML)
+// ✅ “Más nuevos” (Top 10) (si existe #newest-track en el HTML)
+// ⚠️ Nota: para que se vean los 2 carruseles nuevos, tu index.html debe tener
+//   secciones con <div id="bestsellers-track"> y <div id="newest-track">.
+//   Si no existen, el código no rompe: simplemente no renderiza.
 
 import { fetchProducts } from "./data.js";
 import {
@@ -37,13 +39,10 @@ let sending = false;
 
 // =======================
 // ✅ FIX iOS “pantalla blanca hasta girar”
-// Safari a veces no repinta hasta un resize real.
-// Esto fuerza repaint + resize “suave” sin mover la página.
 // =======================
 function isIOS() {
   const ua = navigator.userAgent || "";
   const iOSDevice = /iPad|iPhone|iPod/.test(ua);
-  // iPadOS 13+ se identifica como Mac, pero con touch
   const iPadOS = navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
   return iOSDevice || iPadOS;
 }
@@ -51,22 +50,14 @@ function isIOS() {
 function forceIOSRepaint() {
   if (!isIOS()) return;
 
-  // 1) Fuerza reflow
   document.body.style.webkitTransform = "translateZ(0)";
-  void document.body.offsetHeight; // reflow
+  void document.body.offsetHeight;
   document.body.style.webkitTransform = "";
 
-  // 2) Fuerza “resize” (como si giraras)
-  // Safari iOS suele repintar con esto
   window.dispatchEvent(new Event("resize"));
-
-  // 3) Un repaint extra en el próximo frame (por las dudas)
-  requestAnimationFrame(() => {
-    window.dispatchEvent(new Event("resize"));
-  });
+  requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
 }
 
-// Si Safari vuelve desde “atrás” (bfcache), también puede quedar blanco
 window.addEventListener("pageshow", (e) => {
   if (e.persisted) forceIOSRepaint();
 });
@@ -80,6 +71,119 @@ function roundUYU(n) {
 }
 function formatUYU(n) {
   return `$ ${roundUYU(n)}`;
+}
+
+// =======================
+// ✅ “MÁS VENDIDOS” (localStorage por dispositivo)
+// =======================
+const SALES_KEY = "mk_sales_v1";
+
+function loadSalesMap() {
+  try {
+    const raw = localStorage.getItem(SALES_KEY);
+    if (!raw) return {};
+    const obj = JSON.parse(raw);
+    return obj && typeof obj === "object" ? obj : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveSalesMap(map) {
+  try {
+    localStorage.setItem(SALES_KEY, JSON.stringify(map || {}));
+  } catch {
+    // si el storage está lleno o bloqueado, no hacemos nada
+  }
+}
+
+/**
+ * ✅ 1) Actualiza ranking de ventas usando el carrito
+ * (se llama al momento de enviar el pedido por WhatsApp)
+ */
+function bumpSalesFromCart(cart) {
+  if (!cart || typeof cart !== "object") return;
+
+  const sales = loadSalesMap();
+
+  for (const [rawId, rawQty] of Object.entries(cart)) {
+    const id = String(rawId ?? "").trim();
+    const qty = Number(rawQty) || 0;
+    if (!id || qty <= 0) continue;
+    sales[id] = (Number(sales[id]) || 0) + qty;
+  }
+
+  saveSalesMap(sales);
+}
+
+/**
+ * ✅ 2) Devuelve Top N IDs por “más vendidos” (según localStorage)
+ */
+function getTopSoldIds(n = 10) {
+  const sales = loadSalesMap();
+  const entries = Object.entries(sales)
+    .map(([id, qty]) => [String(id), Number(qty) || 0])
+    .filter(([, qty]) => qty > 0);
+
+  entries.sort((a, b) => b[1] - a[1]); // desc
+  return entries.slice(0, n).map(([id]) => id);
+}
+
+function getTopSoldProducts(allProducts, n = 10) {
+  const ids = getTopSoldIds(n);
+  if (!ids.length) return [];
+
+  const byId = new Map((allProducts || []).map((p) => [String(p.id), p]));
+  const list = ids.map((id) => byId.get(id)).filter(Boolean);
+
+  return list.slice(0, n);
+}
+
+// =======================
+// ✅ “MÁS NUEVOS” (Top N)
+// - Si tu JSON trae createdAt/updatedAt/date/timestamp: ordena por eso
+// - Si no trae nada: usa el orden del array (últimos N)
+// =======================
+function extractDateMs(p) {
+  const candidates = [
+    p?.createdAt,
+    p?.created_at,
+    p?.updatedAt,
+    p?.updated_at,
+    p?.fecha,
+    p?.date,
+    p?.timestamp,
+  ];
+
+  for (const v of candidates) {
+    if (!v) continue;
+    const ms =
+      typeof v === "number"
+        ? v
+        : Date.parse(String(v));
+    if (Number.isFinite(ms)) return ms;
+  }
+  return null;
+}
+
+function getNewestProducts(allProducts, n = 10) {
+  const arr = [...(allProducts || [])];
+  if (!arr.length) return [];
+
+  // Si al menos uno tiene fecha, ordenamos por fecha desc
+  const anyHasDate = arr.some((p) => extractDateMs(p) != null);
+
+  if (anyHasDate) {
+    arr.sort((a, b) => {
+      const am = extractDateMs(a) ?? 0;
+      const bm = extractDateMs(b) ?? 0;
+      return bm - am;
+    });
+    return arr.slice(0, n);
+  }
+
+  // Fallback: últimos N del array
+  return arr.slice(-n).reverse();
 }
 
 // =======================
@@ -140,7 +244,6 @@ function normalizeList(list) {
 
 // =======================
 // ✅ ORDEN INTELIGENTE GENERAL
-// categoría → base → sabor → tamaño
 // =======================
 function normText(x) {
   return String(x || "")
@@ -364,6 +467,120 @@ function renderCategoryGrid(categories, onClick) {
 }
 
 // =======================
+// ✅ Carrusel genérico simple (para "Más vendidos" y "Más nuevos")
+// =======================
+function renderGenericCarousel(list, frameSelector, trackId, onClick) {
+  const frameEl = document.querySelector(frameSelector);
+  const trackEl = document.getElementById(trackId);
+
+  if (!frameEl || !trackEl) return; // si no existe en el HTML, no rompe
+
+  trackEl.innerHTML = "";
+
+  const items = Array.isArray(list) ? list : [];
+  if (items.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "offers-empty";
+    empty.textContent = "Todavía no hay datos para mostrar.";
+    frameEl.appendChild(empty);
+    return;
+  }
+
+  const frag = document.createDocumentFragment();
+
+  items.forEach((p) => {
+    const card = document.createElement("div");
+    card.className = "offer-card";
+    card.setAttribute("data-id", String(p.id));
+
+    const imgSrc = p.imagen || p.img || "";
+    if (imgSrc) {
+      const img = document.createElement("img");
+      img.className = "offer-img";
+      img.loading = "lazy";
+      img.decoding = "async";
+      img.alt = getName(p);
+      img.src = imgSrc;
+      card.appendChild(img);
+    } else {
+      const ph = document.createElement("div");
+      ph.className = "offer-img";
+      card.appendChild(ph);
+    }
+
+    const body = document.createElement("div");
+    body.className = "offer-body";
+
+    const title = document.createElement("p");
+    title.className = "offer-title";
+    title.textContent = getName(p);
+
+    const price = document.createElement("div");
+    price.className = "offer-price";
+    const bp = getPrice(p);
+    price.textContent = bp > 0 ? formatUYU(bp) : "Consultar";
+
+    body.appendChild(title);
+    body.appendChild(price);
+    card.appendChild(body);
+
+    if (typeof onClick === "function") {
+      card.addEventListener("click", () => onClick(String(p.id)));
+    }
+
+    frag.appendChild(card);
+  });
+
+  // duplicamos para loop suave si hay 2+
+  if (items.length >= 2) {
+    items.forEach((p) => {
+      const card = document.createElement("div");
+      card.className = "offer-card";
+      card.setAttribute("data-id", String(p.id));
+
+      const imgSrc = p.imagen || p.img || "";
+      if (imgSrc) {
+        const img = document.createElement("img");
+        img.className = "offer-img";
+        img.loading = "lazy";
+        img.decoding = "async";
+        img.alt = getName(p);
+        img.src = imgSrc;
+        card.appendChild(img);
+      } else {
+        const ph = document.createElement("div");
+        ph.className = "offer-img";
+        card.appendChild(ph);
+      }
+
+      const body = document.createElement("div");
+      body.className = "offer-body";
+
+      const title = document.createElement("p");
+      title.className = "offer-title";
+      title.textContent = getName(p);
+
+      const price = document.createElement("div");
+      price.className = "offer-price";
+      const bp = getPrice(p);
+      price.textContent = bp > 0 ? formatUYU(bp) : "Consultar";
+
+      body.appendChild(title);
+      body.appendChild(price);
+      card.appendChild(body);
+
+      if (typeof onClick === "function") {
+        card.addEventListener("click", () => onClick(String(p.id)));
+      }
+
+      frag.appendChild(card);
+    });
+  }
+
+  trackEl.appendChild(frag);
+}
+
+// =======================
 // HANDLERS CARRITO
 // =======================
 function handleAdd(productId) {
@@ -462,6 +679,7 @@ function goToCatalogAndShowProduct(productId) {
 
 // =======================
 // ENVÍO ROBUSTO WHATSAPP
+// ✅ acá es donde “sumamos ventas” al ranking local
 // =======================
 function sendWhatsAppOrderSafe() {
   if (sending) return;
@@ -480,6 +698,14 @@ function sendWhatsAppOrderSafe() {
       return;
     }
 
+    // ✅ 1) actualizamos “más vendidos” (por dispositivo)
+    bumpSalesFromCart(cart);
+
+    // ✅ 2) re-render del carrusel “más vendidos” (si existe en HTML)
+    const best = getTopSoldProducts(products, 10);
+    renderGenericCarousel(best, ".bestsellers-frame", "bestsellers-track", goToCatalogAndShowProduct);
+
+    // ✅ 3) enviamos pedido
     sendOrder(cart, products);
   } catch (err) {
     console.error("Error al enviar pedido:", err);
@@ -506,7 +732,6 @@ async function init() {
     const raw = await fetchProducts();
 
     products = normalizeList(raw);
-
     products = sortCatalogue(products);
     baseProducts = products;
 
@@ -573,13 +798,21 @@ async function init() {
     showCategoriesMode();
     clearProductsUI();
 
+    // ✅ Carrusel OFERTAS (el tuyo)
     const frameEl = document.querySelector(".offers-frame");
     const trackEl = document.getElementById("offers-track");
     renderOffersCarousel(products, frameEl, trackEl, goToCatalogAndShowProduct);
 
+    // ✅ Carrusel MÁS VENDIDOS (si existe en HTML)
+    const best = getTopSoldProducts(products, 10);
+    renderGenericCarousel(best, ".bestsellers-frame", "bestsellers-track", goToCatalogAndShowProduct);
+
+    // ✅ Carrusel MÁS NUEVOS (si existe en HTML)
+    const newest = getNewestProducts(products, 10);
+    renderGenericCarousel(newest, ".newest-frame", "newest-track", goToCatalogAndShowProduct);
+
     rerenderCartUI();
 
-    // ✅ CLAVE: cuando ya renderizó, forzamos repaint iOS
     setTimeout(forceIOSRepaint, 50);
   } catch (err) {
     console.error(err);
@@ -590,8 +823,6 @@ async function init() {
       )}</p>`;
     }
     showProductsMode();
-
-    // Igual intentamos “destrabar” el paint
     setTimeout(forceIOSRepaint, 50);
   }
 
