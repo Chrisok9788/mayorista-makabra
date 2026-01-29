@@ -1,10 +1,14 @@
-// app.js — COMPLETO y MODIFICADO
-// ✅ Destacados=TRUE funciona (lee columna "Destacados" desde products.json)
-// ✅ Prioriza los marcados (destacado=true). Si una categoría NO tiene marcados, fallback a “2 primeros”.
+// app.js — COMPLETO y MODIFICADO (OPERATIVO)
+// ✅ Destacados=TRUE funciona (CSV/JSON) leyendo columna "Destacados"
+// ✅ Prioriza marcados (destacado=true). Si una categoría NO tiene marcados -> fallback a 2 primeros
 // ✅ Click en destacado: abre catálogo con categoría/subcat y enfoca el producto
 // ✅ Cuando hay filtros activos: OCULTA "Destacados por categoría"
 // ✅ Botón ↑ Inicio: sube al buscador sticky y enfoca input
 // ✅ Mantiene: FIX iOS, redondeos, categorías/subcategorías, ofertas, carrito, orden inteligente
+//
+// IMPORTANTE:
+// - Si tu data.js hoy trae CSV desde Google Sheets, igual funciona.
+// - Si mañana volvés a products.json (array), también funciona.
 
 import { fetchProducts } from "./data.js";
 import {
@@ -71,7 +75,74 @@ function formatUYU(n) {
 }
 
 // =======================
-// NORMALIZACIÓN (compatibilidad JSON viejo/nuevo)
+// ✅ CSV -> Array<Object> (para Google Sheets output=csv)
+// (sin librerías, robusto para comillas)
+// =======================
+function parseCSV(text) {
+  const s = String(text ?? "");
+  if (!s.trim()) return [];
+
+  const rows = [];
+  let row = [];
+  let cur = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    const next = s[i + 1];
+
+    if (ch === '"' && inQuotes && next === '"') {
+      cur += '"';
+      i++;
+      continue;
+    }
+    if (ch === '"') {
+      inQuotes = !inQuotes;
+      continue;
+    }
+    if (!inQuotes && (ch === "\n" || ch === "\r")) {
+      if (ch === "\r" && next === "\n") i++;
+      row.push(cur);
+      rows.push(row);
+      row = [];
+      cur = "";
+      continue;
+    }
+    if (!inQuotes && ch === ",") {
+      row.push(cur);
+      cur = "";
+      continue;
+    }
+    cur += ch;
+  }
+  row.push(cur);
+  rows.push(row);
+
+  // headers
+  const headers = (rows.shift() || []).map((h) => String(h || "").trim());
+
+  // rows -> objects
+  const out = [];
+  for (const r of rows) {
+    if (!r || r.length === 0) continue;
+
+    const obj = {};
+    for (let i = 0; i < headers.length; i++) {
+      const key = headers[i] ?? "";
+      if (!key) continue;
+      obj[key] = (r[i] ?? "").trim();
+    }
+
+    // descartar filas completamente vacías
+    const hasAny = Object.values(obj).some((v) => String(v).trim() !== "");
+    if (hasAny) out.push(obj);
+  }
+
+  return out;
+}
+
+// =======================
+// NORMALIZACIÓN (compatibilidad CSV/JSON viejo/nuevo)
 // =======================
 function normStr(v) {
   return String(v ?? "").trim();
@@ -94,8 +165,9 @@ function getId(p) {
 }
 
 function isOffer(p) {
-  const v = p?.oferta ?? p?.offer;
-  return v === true;
+  // CSV: "TRUE"/"FALSE" -> lo tratamos con toBool
+  const v = p?.oferta ?? p?.offer ?? p?.oferta_carrusel ?? p?.ofertaCarrusel;
+  return toBool(v) === true;
 }
 
 function getImg(p) {
@@ -103,8 +175,8 @@ function getImg(p) {
 }
 
 function getPrice(p) {
-  // acepta $ 1.234, 1234, "1234", etc.
   const v = p?.precio ?? p?.price ?? p?.precio_base ?? p?.precioBase ?? 0;
+
   if (typeof v === "number") return Number.isFinite(v) ? v : 0;
 
   const s = String(v ?? "")
@@ -112,34 +184,44 @@ function getPrice(p) {
     .trim()
     .replace(/\./g, "")
     .replace(/,/g, ".");
+
   const n = Number(s);
   return Number.isFinite(n) ? n : 0;
 }
 
 function toBool(v) {
-  // acepta boolean, "TRUE", "true", "VERDADERO", "1", "SI", "SÍ", "YES"
+  // ✅ DEFINITIVA para CSV + JSON:
+  // boolean, "TRUE", "FALSE", "1", "0", "SI", etc.
   if (v === true) return true;
   if (v === false) return false;
+
   const s = String(v ?? "").trim().toLowerCase();
-  return (
-    s === "true" ||
-    s === "verdadero" ||
-    s === "1" ||
-    s === "si" ||
-    s === "sí" ||
-    s === "yes"
-  );
+
+  if (!s) return false;
+
+  // true values
+  if (s === "true" || s === "verdadero" || s === "1" || s === "si" || s === "sí" || s === "yes")
+    return true;
+
+  // false values
+  if (s === "false" || s === "falso" || s === "0" || s === "no")
+    return false;
+
+  // fallback: cualquier otra cosa -> false
+  return false;
 }
 
 function normalizeProduct(p) {
-  // ✅ IMPORTANTE: soportar encabezados raros por export (ej: "Destacados " con espacio)
+  // ✅ soportar encabezados raros por export / espacios / mayúsculas
   const dRaw =
     p?.Destacados ??
     p?.destacado ??
     p?.destacados ??
     p?.featured ??
     p?.["Destacados "] ??
-    p?.["DESTACADOS"];
+    p?.["DESTACADOS"] ??
+    p?.["destacados "] ??
+    p?.["FEATURED"];
 
   return {
     ...p,
@@ -151,12 +233,16 @@ function normalizeProduct(p) {
     oferta: isOffer(p),
     imagen: getImg(p),
 
-    // ✅ CLAVE: lee tu columna "Destacados"
+    // ✅ CLAVE
     destacado: toBool(dRaw),
   };
 }
 
-function normalizeList(list) {
+function normalizeList(input) {
+  // ✅ Si viene CSV (string) -> parse -> normalizar
+  // ✅ Si viene array -> normalizar directo
+  const list = typeof input === "string" ? parseCSV(input) : input;
+
   if (!Array.isArray(list)) return [];
   return list.map(normalizeProduct).filter((p) => p.id);
 }
@@ -395,9 +481,10 @@ function focusProductCardById(productId) {
     el.classList.remove("focused");
   });
 
+  const sel = String(productId);
   const card =
-    container.querySelector(`.product-card[data-id="${CSS.escape(String(productId))}"]`) ||
-    container.querySelector(`[data-id="${CSS.escape(String(productId))}"]`);
+    container.querySelector(`.product-card[data-id="${CSS.escape(sel)}"]`) ||
+    container.querySelector(`[data-id="${CSS.escape(sel)}"]`);
 
   if (!card) return;
 
@@ -447,7 +534,7 @@ function renderCategoryGrid(categories, onClick) {
 // =======================
 // ✅ DESTACADOS POR CATEGORÍA (Destacados=TRUE)
 //   1) Usa marcados en esa categoría (hasta 2)
-//   2) Si esa categoría NO tiene marcados -> fallback a 2 primeros (para no quedar vacía)
+//   2) Si esa categoría NO tiene marcados -> fallback a 2 primeros
 // =======================
 function pickFeaturedByCategory(allProducts, perCategory = 2) {
   const arr = Array.isArray(allProducts) ? allProducts : [];
@@ -521,7 +608,7 @@ function renderFeaturedByCategory(allProducts, onClickProduct, onViewCategory) {
       card.setAttribute("data-id", String(p.id));
 
       const badgeLabel =
-        typeof p.stock !== "undefined" && p.stock <= 0
+        typeof p.stock !== "undefined" && Number(p.stock) <= 0
           ? "SIN STOCK"
           : p.oferta === true || p.offer === true
           ? "OFERTA"
@@ -544,9 +631,7 @@ function renderFeaturedByCategory(allProducts, onClickProduct, onViewCategory) {
 
       const src = getImg(p);
       img.src = src || "./placeholder.png";
-      img.onerror = () => {
-        img.src = "./placeholder.png";
-      };
+      img.onerror = () => (img.src = "./placeholder.png");
 
       card.appendChild(img);
 
@@ -560,7 +645,7 @@ function renderFeaturedByCategory(allProducts, onClickProduct, onViewCategory) {
       price.className = "price";
       const bp = getPrice(p);
       price.textContent =
-        typeof p.stock !== "undefined" && p.stock <= 0
+        typeof p.stock !== "undefined" && Number(p.stock) <= 0
           ? "Sin stock"
           : bp > 0
           ? formatUYU(bp)
@@ -604,12 +689,10 @@ function handleAdd(productId) {
   addItem(productId);
   rerenderCartUI();
 }
-
 function handleUpdate(productId, qty) {
   updateItem(productId, qty);
   rerenderCartUI();
 }
-
 function handleRemove(productId) {
   removeItem(productId);
   rerenderCartUI();
@@ -661,9 +744,7 @@ function applySearchAndFilter() {
   if (cat) filtered = filtered.filter((p) => getCat(p) === cat);
   if (sub) filtered = filtered.filter((p) => getSub(p) === sub);
 
-  if (term) {
-    filtered = filterProducts(filtered, "", term);
-  }
+  if (term) filtered = filterProducts(filtered, "", term);
 
   filtered = sortCatalogue(filtered);
 
@@ -762,13 +843,13 @@ async function init() {
   updateCartCount(document.getElementById("cart-count"), totalItems());
 
   try {
-    const raw = await fetchProducts();
+    const raw = await fetchProducts(); // puede ser CSV string o array JSON
 
     products = normalizeList(raw);
     products = sortCatalogue(products);
     baseProducts = products;
 
-    // ✅ DESTACADOS POR CATEGORÍA (LEE Destacados=TRUE)
+    // ✅ DESTACADOS POR CATEGORÍA
     renderFeaturedByCategory(products, goToCatalogAndFocusProduct, goToCatalogAndFilterCategory);
 
     const categories = buildCategoryCounts(products);
@@ -818,10 +899,7 @@ async function init() {
     };
 
     if (categoryEl) categoryEl.addEventListener("change", refreshSubcats);
-
-    if (subcatEl) {
-      subcatEl.addEventListener("change", () => applySearchAndFilter());
-    }
+    if (subcatEl) subcatEl.addEventListener("change", applySearchAndFilter);
 
     const searchEl = document.getElementById("search-input");
     if (searchEl) {
@@ -835,12 +913,14 @@ async function init() {
     clearProductsUI();
     setFeaturedVisibility();
 
+    // ✅ Carrusel OFERTAS
     const frameEl = document.querySelector(".offers-frame");
     const trackEl = document.getElementById("offers-track");
     renderOffersCarousel(products, frameEl, trackEl, goToCatalogAndFocusProduct);
 
     rerenderCartUI();
 
+    // ✅ Botón ↑ Inicio
     const topBtn = document.getElementById("top-btn") || document.querySelector(".top-float");
     if (topBtn) {
       topBtn.addEventListener("click", (e) => {
@@ -864,6 +944,7 @@ async function init() {
     setTimeout(forceIOSRepaint, 50);
   }
 
+  // carrito buttons
   const clearBtn = document.getElementById("clear-cart-btn");
   if (clearBtn) {
     clearBtn.addEventListener("click", () => {
