@@ -957,3 +957,63 @@ export function renderFeaturedByCategory(products, options = {}) {
 
   root.appendChild(frag);
 }
+// =======================
+// ✅ NAVEGAR A PRODUCTO (desde destacados)
+// =======================
+function isInteractiveTarget(el) {
+  return !!el.closest("button, a, input, select, textarea, label");
+}
+
+function normalizeStr(s) {
+  return String(s ?? "").trim();
+}
+
+/**
+ * Navega al Catálogo, aplica filtros (cat/subcat) y enfoca el producto.
+ * Requiere que tus cards tengan data-id (lo agregamos abajo).
+ */
+export function goToProductInCatalogue(product, opts = {}) {
+  const cat = normalizeStr(product?.categoria ?? product?.category);
+  const sub = normalizeStr(product?.subcategoria ?? product?.subcategory);
+  const id = String(product?.id ?? product?.ID ?? "").trim();
+
+  const catSel = document.getElementById("category-filter");
+  const subSel = document.getElementById("subcategory-filter");
+  const searchInput = document.getElementById("search-input");
+
+  // 1) Ir al catálogo
+  document.querySelector("#catalogue")?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  // 2) Limpiar búsqueda (opcional, pero recomendado)
+  if (searchInput) searchInput.value = "";
+
+  // 3) Setear categoría
+  if (catSel && cat) {
+    catSel.value = cat;
+    catSel.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
+  // 4) Setear subcategoría (esperamos un poco por si el change llena opciones)
+  window.setTimeout(() => {
+    if (subSel && sub) {
+      subSel.style.display = "";
+      subSel.value = sub;
+      subSel.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+
+    // 5) Scroll al producto exacto (cuando ya está renderizado)
+    window.setTimeout(() => {
+      const card = document.querySelector(`.product-card[data-id="${CSS.escape(id)}"]`);
+      if (!card) return;
+
+      // Quitar focus anterior
+      document.querySelectorAll(".product-card.focused").forEach((n) => n.classList.remove("focused"));
+
+      card.classList.add("focused");
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      // Sacar highlight luego de un rato
+      window.setTimeout(() => card.classList.remove("focused"), 2200);
+    }, 120);
+  }, 120);
+}
