@@ -1,6 +1,6 @@
-// app.js — versión MODIFICADA y COMPLETA
-// ✅ LEE columna "Destacados" desde products.json (TRUE/FALSE, SI/NO, 1/0)
-// ✅ Usa SOLO destacados marcados (y si no hay, hace fallback a “2 primeros por categoría”)
+// app.js — COMPLETO y MODIFICADO
+// ✅ Destacados=TRUE funciona (lee columna "Destacados" desde products.json)
+// ✅ Prioriza los marcados (destacado=true). Si una categoría NO tiene marcados, fallback a “2 primeros”.
 // ✅ Click en destacado: abre catálogo con categoría/subcat y enfoca el producto
 // ✅ Cuando hay filtros activos: OCULTA "Destacados por categoría"
 // ✅ Botón ↑ Inicio: sube al buscador sticky y enfoca input
@@ -121,10 +121,26 @@ function toBool(v) {
   if (v === true) return true;
   if (v === false) return false;
   const s = String(v ?? "").trim().toLowerCase();
-  return s === "true" || s === "verdadero" || s === "1" || s === "si" || s === "sí" || s === "yes";
+  return (
+    s === "true" ||
+    s === "verdadero" ||
+    s === "1" ||
+    s === "si" ||
+    s === "sí" ||
+    s === "yes"
+  );
 }
 
 function normalizeProduct(p) {
+  // ✅ IMPORTANTE: soportar encabezados raros por export (ej: "Destacados " con espacio)
+  const dRaw =
+    p?.Destacados ??
+    p?.destacado ??
+    p?.destacados ??
+    p?.featured ??
+    p?.["Destacados "] ??
+    p?.["DESTACADOS"];
+
   return {
     ...p,
     id: getId(p) || normStr(p?.id),
@@ -135,9 +151,8 @@ function normalizeProduct(p) {
     oferta: isOffer(p),
     imagen: getImg(p),
 
-    // ✅ CLAVE:
-    // Lee tu columna de planilla "Destacados" (TRUE/FALSE) y la guarda como boolean:
-    destacado: toBool(p?.Destacados ?? p?.destacado ?? p?.destacados ?? p?.featured),
+    // ✅ CLAVE: lee tu columna "Destacados"
+    destacado: toBool(dRaw),
   };
 }
 
@@ -348,7 +363,6 @@ function hasActiveFilters() {
 function setFeaturedVisibility() {
   const featuredSection = document.querySelector(".featured-section");
   if (!featuredSection) return;
-
   featuredSection.style.display = hasActiveFilters() ? "none" : "";
 }
 
@@ -431,16 +445,13 @@ function renderCategoryGrid(categories, onClick) {
 }
 
 // =======================
-// ✅ DESTACADOS POR CATEGORÍA
-// ✅ Lógica nueva:
-//   1) Si hay productos con destacado=true dentro de la categoría -> usa esos (hasta 2)
-//   2) Si NO hay ninguno marcado en esa categoría -> fallback a “2 primeros” (para no quedar vacío)
-//   3) Si querés que aparezcan SI o SI los que marcaste, marcá "TRUE" en la planilla.
+// ✅ DESTACADOS POR CATEGORÍA (Destacados=TRUE)
+//   1) Usa marcados en esa categoría (hasta 2)
+//   2) Si esa categoría NO tiene marcados -> fallback a 2 primeros (para no quedar vacía)
 // =======================
 function pickFeaturedByCategory(allProducts, perCategory = 2) {
   const arr = Array.isArray(allProducts) ? allProducts : [];
 
-  // agrupamos por categoría
   const cats = new Map();
   for (const p of arr) {
     const cat = getCat(p);
@@ -451,20 +462,13 @@ function pickFeaturedByCategory(allProducts, perCategory = 2) {
   const result = [];
 
   for (const [cat, list] of cats.entries()) {
-    // 1) primero los marcados
     const marked = list.filter((p) => p.destacado === true);
-
-    // 2) tomar hasta perCategory
     let chosen = marked.slice(0, perCategory);
 
-    // 3) fallback: completar con los primeros si faltan
     if (chosen.length < perCategory) {
       const rest = list.filter((p) => !chosen.includes(p));
       chosen = chosen.concat(rest.slice(0, perCategory - chosen.length));
     }
-
-    // 4) opcional: si querés que NO se muestren sin stock, descomentá:
-    // chosen = chosen.filter(p => typeof p.stock === "undefined" || p.stock > 0);
 
     result.push([cat, chosen]);
   }
@@ -517,11 +521,13 @@ function renderFeaturedByCategory(allProducts, onClickProduct, onViewCategory) {
       card.setAttribute("data-id", String(p.id));
 
       const badgeLabel =
-        (typeof p.stock !== "undefined" && p.stock <= 0)
+        typeof p.stock !== "undefined" && p.stock <= 0
           ? "SIN STOCK"
-          : (p.oferta === true || p.offer === true)
+          : p.oferta === true || p.offer === true
           ? "OFERTA"
-          : (getPrice(p) <= 0 ? "CONSULTAR" : "");
+          : getPrice(p) <= 0
+          ? "CONSULTAR"
+          : "";
 
       if (badgeLabel) {
         const badge = document.createElement("span");
@@ -554,9 +560,11 @@ function renderFeaturedByCategory(allProducts, onClickProduct, onViewCategory) {
       price.className = "price";
       const bp = getPrice(p);
       price.textContent =
-        (typeof p.stock !== "undefined" && p.stock <= 0)
+        typeof p.stock !== "undefined" && p.stock <= 0
           ? "Sin stock"
-          : (bp > 0 ? formatUYU(bp) : "Consultar");
+          : bp > 0
+          ? formatUYU(bp)
+          : "Consultar";
 
       const addBtn = document.createElement("button");
       addBtn.className = "btn btn-primary";
@@ -678,15 +686,12 @@ function goToCatalogAndFocusProduct(productId) {
   const categoryEl = document.getElementById("category-filter");
   const subcatEl = document.getElementById("subcategory-filter");
 
-  if (categoryEl) {
-    categoryEl.value = getCat(prod);
-  }
+  if (categoryEl) categoryEl.value = getCat(prod);
 
   if (subcatEl) {
     const cat = getCat(prod);
     subcatEl.style.display = "block";
     populateSubcategories(products, cat, subcatEl);
-
     const prodSub = getSub(prod);
     subcatEl.value = prodSub ? prodSub : "";
   }
@@ -701,10 +706,7 @@ function goToCatalogAndFilterCategory(categoryName) {
   const searchEl = document.getElementById("search-input");
 
   if (searchEl) searchEl.value = "";
-
-  if (categoryEl) {
-    categoryEl.value = categoryName;
-  }
+  if (categoryEl) categoryEl.value = categoryName;
 
   if (subcatEl) {
     subcatEl.style.display = "block";
@@ -766,7 +768,7 @@ async function init() {
     products = sortCatalogue(products);
     baseProducts = products;
 
-    // ✅ DESTACADOS POR CATEGORÍA (AHORA LEE TU COLUMNA "Destacados")
+    // ✅ DESTACADOS POR CATEGORÍA (LEE Destacados=TRUE)
     renderFeaturedByCategory(products, goToCatalogAndFocusProduct, goToCatalogAndFilterCategory);
 
     const categories = buildCategoryCounts(products);
@@ -818,9 +820,7 @@ async function init() {
     if (categoryEl) categoryEl.addEventListener("change", refreshSubcats);
 
     if (subcatEl) {
-      subcatEl.addEventListener("change", () => {
-        applySearchAndFilter();
-      });
+      subcatEl.addEventListener("change", () => applySearchAndFilter());
     }
 
     const searchEl = document.getElementById("search-input");
@@ -841,9 +841,7 @@ async function init() {
 
     rerenderCartUI();
 
-    const topBtn =
-      document.getElementById("top-btn") ||
-      document.querySelector(".top-float");
+    const topBtn = document.getElementById("top-btn") || document.querySelector(".top-float");
     if (topBtn) {
       topBtn.addEventListener("click", (e) => {
         e.preventDefault();
