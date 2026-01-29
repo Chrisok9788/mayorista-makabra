@@ -2,17 +2,16 @@
    Objetivo:
    ✅ Que NO aparezca pantalla en blanco en iPhone/Android/PC al entrar
    ✅ Mejorar carga percibida (menos “saltos” y render más liviano)
-   ✅ Mantener tu diseño y clases actuales (products-grid, categories-grid, etc.)
-   ✅ Alineado con tu ui.js (product-content, meta, cart-item-controls, cart-item-calc, etc.)
-   ✅ NUEVO: estilos para “destacados por categoría” (renderFeaturedByCategory)
-   ✅ NUEVO: carruseles extra (10 nuevos / 10 más vendidos) si los agregás en HTML
+   ✅ Mantener tu diseño y clases actuales
+   ✅ Alineado con tu ui.js
+   ✅ DESTACADOS por categoría en 2 columnas (SIEMPRE en iPhone)
+   ✅ Buscador + categoría + subcategoría siempre arriba (sticky bar)
 */
 
 /* =========================
    BASE / VARIABLES
    ========================= */
 :root {
-  /* ✅ Paleta clara (fondo blanco) manteniendo la identidad verde */
   --bg: #ffffff;
   --card: #ffffff;
   --soft: #f6f8fb;
@@ -34,7 +33,6 @@ html, body {
   background: var(--bg);
   color: var(--text);
 
-  /* ✅ iOS: evita glitches al cargar */
   min-height: 100%;
   height: auto;
   -webkit-text-size-adjust: 100%;
@@ -66,7 +64,6 @@ a { color: inherit; text-decoration: none; }
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 
-  /* ✅ CLAVE: no usar transform/will-change en sticky */
   transform: none;
   will-change: auto;
 }
@@ -223,6 +220,37 @@ button:disabled,
 .small { font-size: 12px; }
 
 /* =========================
+   ✅ STICKY FILTER BAR
+   (Buscador + selectores siempre arriba)
+   ========================= */
+.filters-sticky{
+  position: sticky;
+  top: 74px;               /* ✅ debajo del header (ajustable) */
+  z-index: 40;
+  background: rgba(255,255,255,0.96);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 0;
+}
+
+/* iOS: sin blur para estabilidad */
+@supports (-webkit-touch-callout: none) {
+  .filters-sticky{
+    background: #ffffff;
+  }
+}
+
+.filters-sticky .container{
+  overflow: hidden;
+}
+
+@media (max-width: 560px){
+  .filters-sticky{
+    top: 56px;
+    padding: 8px 0;
+  }
+}
+
+/* =========================
    FILTROS
    ========================= */
 .filters {
@@ -313,11 +341,11 @@ button:disabled,
   position: relative;
 }
 
-/* ✅ Rendimiento: el navegador puede “saltear” render fuera de pantalla (Chrome/Edge) */
+/* ✅ Rendimiento: el navegador puede “saltear” render fuera de pantalla */
 @supports (content-visibility: auto) {
   .product-card {
     content-visibility: auto;
-    contain-intrinsic-size: 340px; /* estimado para evitar saltos */
+    contain-intrinsic-size: 340px;
   }
 }
 
@@ -336,7 +364,7 @@ button:disabled,
   border: 1px solid rgba(11,18,32,0.10);
 }
 
-/* Carrusel (ui.js usa class="offer-img") */
+/* Carrusel */
 .offer-img{
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -435,8 +463,7 @@ button:disabled,
 }
 
 /* =========================
-   ✅ DESTACADOS POR CATEGORÍA (renderFeaturedByCategory)
-   “un grid lindo y liviano para esos bloques”
+   ✅ DESTACADOS POR CATEGORÍA
    ========================= */
 #featured-by-category{
   display: grid;
@@ -477,16 +504,9 @@ button:disabled,
   gap: 12px;
 }
 
-/* Reutiliza tu card actual, pero un poquito más compacta */
+/* Reutiliza tu card, un poco más compacta */
 .featured-card{
   padding: 10px;
-}
-
-/* en pantallas grandes podés mantener 2 por categoría (más “limpio”) */
-@media (min-width: 920px){
-  .featured-grid{
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
 /* =========================
@@ -504,7 +524,6 @@ button:disabled,
   min-height: 150px;
 }
 
-/* ✅ Rendimiento: carrusel en su propia capa */
 .offers-track {
   display: flex;
   gap: 12px;
@@ -557,10 +576,6 @@ button:disabled,
 
 /* =========================
    ✅ CARRUSELES EXTRA (si los usás)
-   HTML sugerido:
-   <div class="offers-frame">
-     <div class="offers-track" id="new-track"></div>
-   </div>
    ========================= */
 .carousel-title-row{
   display:flex;
@@ -569,13 +584,12 @@ button:disabled,
   gap:12px;
   margin: 0 0 10px;
 }
-
 .carousel-title-row h2{
   margin:0;
   font-size: 18px;
 }
 
-/* si querés que estos carruseles NO auto-scrolleen, podés usar .offers-track.no-anim */
+/* Si querés estos carruseles sin animación: .offers-track.no-anim */
 .offers-track.no-anim{
   animation: none;
   overflow-x: auto;
@@ -583,7 +597,6 @@ button:disabled,
   -webkit-overflow-scrolling: touch;
   padding-bottom: 6px;
 }
-
 .offers-track.no-anim .offer-card{
   scroll-snap-align: start;
 }
@@ -636,7 +649,7 @@ button:disabled,
   padding: 6px 8px;
 }
 
-/* ✅ Controles del carrito (ui.js usa .cart-item-controls) */
+/* ✅ Controles del carrito */
 .cart-item-controls{
   display: flex;
   align-items: center;
@@ -656,7 +669,6 @@ button:disabled,
   font-weight: 800;
 }
 
-/* Botones +/-/remove un poco más compactos */
 .cart-item-controls button{
   padding: 10px 12px;
   border-radius: 12px;
@@ -791,7 +803,7 @@ button:disabled,
 }
 
 /* =========================
-   BOTONES FLOTANTES (CARRITO + WHATSAPP)
+   BOTONES FLOTANTES
    ========================= */
 .float-actions {
   position: fixed;
@@ -897,7 +909,6 @@ button:disabled,
   .products-grid { grid-template-columns: repeat(2, 1fr); }
   .brand-subtitle { display: none; }
 
-  /* Header más compacto SOLO en celular */
   .header-row { padding: 4px 0; }
 
   .brand-logo {
@@ -915,7 +926,6 @@ button:disabled,
     font-size: 13px;
   }
 
-  /* Calc del carrito no tape controles en pantallas chicas */
   .cart-item-calc{
     position: static;
     margin-bottom: 8px;
@@ -931,12 +941,15 @@ button:disabled,
     justify-content: space-between;
   }
 }
+
 /* =========================
-   FIX: DESTACADOS POR CATEGORÍA
-   (forzar 2 columnas SIEMPRE en iPhone)
+   FIX: DESTACADOS POR CATEGORÍA (iPhone)
+   ✅ fuerza 2 columnas aunque el JS meta otro wrapper
    ========================= */
 #featured-by-category .featured-grid,
-#featured-by-category .products-grid {
+#featured-by-category .products-grid,
+#featured-by-category .featured-products,
+#featured-by-category .grid {
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   gap: 12px !important;
@@ -948,8 +961,7 @@ button:disabled,
   width: auto !important;
 }
 
-/* Si algún contenedor interno te mete flex por error */
-#featured-by-category .featured-grid > * ,
-#featured-by-category .products-grid > * {
-  min-width: 0 !important;
+/* Anti-flex/overflow raro */
+#featured-by-category * {
+  min-width: 0;
 }
