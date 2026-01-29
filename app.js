@@ -774,3 +774,76 @@ async function init() {
 }
 
 init();
+// ===============================
+// ✅ FIX: cuando hay filtros activos
+// ocultar "Destacados por categoría"
+// ===============================
+
+function getEl(id) {
+  return document.getElementById(id);
+}
+
+function hasActiveFilters() {
+  const q = (getEl("search-input")?.value || "").trim();
+  const cat = (getEl("category-filter")?.value || "").trim();
+  const sub = (getEl("subcategory-filter")?.value || "").trim();
+  return q.length > 0 || cat.length > 0 || sub.length > 0;
+}
+
+function setFeaturedVisibility() {
+  // Section completa (más prolijo que ocultar solo el div)
+  const featuredSection = document.querySelector(".featured-section");
+  if (!featuredSection) return;
+
+  if (hasActiveFilters()) {
+    featuredSection.style.display = "none";
+  } else {
+    featuredSection.style.display = "";
+  }
+}
+
+// ✅ opcional: cuando filtrás, te baja al catálogo automáticamente
+function scrollToCatalogue() {
+  const catalogue = document.getElementById("catalogue");
+  if (!catalogue) return;
+  catalogue.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+// ===============================
+// ✅ enganchar eventos de filtros
+// ===============================
+function bindFilterVisibilityAndRender(rerenderFn) {
+  const search = getEl("search-input");
+  const cat = getEl("category-filter");
+  const sub = getEl("subcategory-filter");
+
+  const onAnyFilterChange = () => {
+    setFeaturedVisibility();   // 🔥 esto es lo que te faltaba
+    if (typeof rerenderFn === "function") rerenderFn(); // re-render de productos
+    // Si querés que al buscar te lleve al catálogo, dejalo:
+    scrollToCatalogue();
+  };
+
+  if (search) search.addEventListener("input", onAnyFilterChange);
+  if (cat) cat.addEventListener("change", onAnyFilterChange);
+  if (sub) sub.addEventListener("change", onAnyFilterChange);
+
+  // correr 1 vez al cargar (importante)
+  setFeaturedVisibility();
+}
+
+/*
+  ✅ CÓMO USARLO:
+  En tu app.js ya tenés una función tipo:
+  - rerenderProductsUI()
+  - renderAll()
+  - applyFilters()
+  - etc.
+
+  Entonces, después de definir esa función, llamás:
+
+  bindFilterVisibilityAndRender(rerenderProductsUI);
+
+  Si NO tenés una función, igual podés llamarlo con null:
+  bindFilterVisibilityAndRender(null);
+*/
