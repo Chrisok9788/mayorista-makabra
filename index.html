@@ -44,8 +44,10 @@
     <main class="site-main" role="main">
       <section id="home"></section>
 
-      <!-- OFERTAS -->
-      <section class="section offers-section">
+      <!-- =======================
+           CARRUSEL 1: OFERTAS
+           ======================= -->
+      <section class="section offers-section" aria-label="Carrusel de ofertas">
         <div class="container">
           <div class="section-title-row">
             <h2>OFERTAS</h2>
@@ -53,7 +55,40 @@
           </div>
 
           <div class="offers-frame">
-            <div id="offers-track" class="offers-track"></div>
+            <!-- ✅ slow: para bajar velocidad por CSS -->
+            <div id="offers-track" class="offers-track slow"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =======================
+           CARRUSEL 2: NUEVOS
+           ======================= -->
+      <section class="section offers-section" aria-label="Carrusel de productos nuevos">
+        <div class="container">
+          <div class="section-title-row">
+            <h2>NUEVOS</h2>
+            <span class="muted">Los 10 más recientes</span>
+          </div>
+
+          <div class="offers-frame">
+            <div id="newest-track" class="offers-track slow"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =======================
+           CARRUSEL 3: MÁS VENDIDOS
+           ======================= -->
+      <section class="section offers-section" aria-label="Carrusel de productos más vendidos">
+        <div class="container">
+          <div class="section-title-row">
+            <h2>MÁS VENDIDOS</h2>
+            <span class="muted">Top 10 por ventas</span>
+          </div>
+
+          <div class="offers-frame">
+            <div id="bestsellers-track" class="offers-track slow"></div>
           </div>
         </div>
       </section>
