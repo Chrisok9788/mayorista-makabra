@@ -56,7 +56,6 @@
       </div>
     </header>
 
-    <!-- ✅ clase para “blindar” stacking/pintado -->
     <main class="site-main" role="main">
       <section id="home"></section>
 
@@ -71,7 +70,6 @@
           </div>
 
           <div class="offers-frame">
-            <!-- ✅ slow: para bajar velocidad por CSS -->
             <div id="offers-track" class="offers-track slow"></div>
           </div>
         </div>
@@ -96,14 +94,12 @@
         </div>
       </section>
 
-      <!-- CATÁLOGO -->
-      <section id="catalogue" class="section">
+      <!-- =======================
+           ✅ STICKY FILTER BAR
+           (Buscador + categoría + subcategoría SIEMPRE arriba)
+           ======================= -->
+      <div class="filters-sticky" aria-label="Filtros del catálogo">
         <div class="container">
-          <div class="section-title-row">
-            <h2>Catálogo</h2>
-            <span class="muted">Buscá y filtrá por categoría</span>
-          </div>
-
           <div class="filters">
             <input
               type="text"
@@ -118,6 +114,16 @@
             <select id="subcategory-filter" style="display: none">
               <option value="">Todas las subcategorías</option>
             </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- CATÁLOGO -->
+      <section id="catalogue" class="section">
+        <div class="container">
+          <div class="section-title-row">
+            <h2>Catálogo</h2>
+            <span class="muted">Buscá y filtrá por categoría</span>
           </div>
 
           <aside class="cat-panel">
