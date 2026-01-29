@@ -931,3 +931,25 @@ button:disabled,
     justify-content: space-between;
   }
 }
+/* =========================
+   FIX: DESTACADOS POR CATEGORÍA
+   (forzar 2 columnas SIEMPRE en iPhone)
+   ========================= */
+#featured-by-category .featured-grid,
+#featured-by-category .products-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+}
+
+/* Evita que una card “no entre” y se vaya sola a otra fila */
+#featured-by-category .product-card {
+  min-width: 0 !important;
+  width: auto !important;
+}
+
+/* Si algún contenedor interno te mete flex por error */
+#featured-by-category .featured-grid > * ,
+#featured-by-category .products-grid > * {
+  min-width: 0 !important;
+}
