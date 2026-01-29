@@ -1,13 +1,24 @@
 /*
- * ui.js — MODIFICADO y COMPLETO (performance imágenes)
+ * ui.js — MODIFICADO y COMPLETO (performance + compatibilidad)
  *
- * ✅ Mantiene TODO lo que ya tenías (redondeos, carrito, dpc.tramos, etc.)
+ * ✅ Mantiene TODO lo base (redondeos, carrito, dpc.tramos, etc.)
+ * ✅ Performance imágenes:
+ *   - Carrusel: eager + fetchpriority high
+ *   - Catálogo: lazy + decoding async + fetchpriority low
+ *   - Placeholder inmediato + fade-in
+ *   - Fallback si falla imagen
  *
- * ✅ NUEVO (para que cargue rápido):
- *  - Carrusel: imágenes con prioridad alta (fetchpriority="high") + eager
- *  - Catálogo: imágenes lazy + decoding async + fetchpriority low
- *  - Placeholder inmediato + transición suave al cargar
- *  - Manejo de error (si una imagen falla, cae a placeholder)
+ * ✅ Exporta TODO lo que usa tu app.js:
+ *   - renderProducts
+ *   - renderCart
+ *   - updateCartCount
+ *   - populateCategories
+ *   - populateSubcategories
+ *   - filterProducts
+ *   - renderOffersCarousel
+ *   - computeCartTotal
+ *   - updateCartTotal
+ *   - renderCategoryAccordion (opcional)
  */
 
 /** Convierte precio a número (defensivo) */
@@ -22,7 +33,7 @@ function toNumberPrice(v) {
   return Number.isFinite(n) ? n : 0;
 }
 
-/** ✅ Redondeo UYU: 369.5 => 370, 369.4 => 369 */
+/** ✅ Redondeo UYU: 369.5 => 370 */
 function roundUYU(n) {
   const x = Number(n);
   return Number.isFinite(x) ? Math.round(x) : 0;
@@ -137,39 +148,39 @@ function setupFastImage(imgEl, realSrc, alt, opts = {}) {
   imgEl.src = placeholder;
 
   // mejoras de performance
-  imgEl.loading = loading;         // lazy / eager
-  imgEl.decoding = "async";        // decode sin trabar UI
-
-  // fetchpriority no está en todos los navegadores, por eso setAttribute
+  imgEl.loading = loading; // lazy / eager
+  imgEl.decoding = "async"; // decode sin trabar UI
   imgEl.setAttribute("fetchpriority", priority); // "high" / "low"
 
   // fade-in
   imgEl.style.opacity = "0";
   imgEl.style.transition = "opacity 160ms ease";
 
-  // si hay src real, lo seteo después (micro-tarea)
   const finalSrc = realSrc || "";
   if (!finalSrc) {
-    // sin src real, queda el placeholder visible
     imgEl.style.opacity = "1";
     return;
   }
 
-  // onload / onerror
   imgEl.onload = () => {
     imgEl.style.opacity = "1";
   };
 
   imgEl.onerror = () => {
-    // si falla, mantenemos placeholder
     imgEl.src = placeholder;
     imgEl.style.opacity = "1";
   };
 
-  // setear el src real en un tick: mejora “primera pintura”
-  queueMicrotask(() => {
-    imgEl.src = finalSrc;
-  });
+  // setear src real en un tick (mejor primera pintura)
+  if (typeof queueMicrotask === "function") {
+    queueMicrotask(() => {
+      imgEl.src = finalSrc;
+    });
+  } else {
+    setTimeout(() => {
+      imgEl.src = finalSrc;
+    }, 0);
+  }
 }
 
 /**
@@ -266,9 +277,6 @@ export function renderProducts(list, container, addHandler) {
     setupFastImage(img, imgSrc, getProductName(product) || "Producto", {
       priority: "low",
       loading: "lazy",
-      // opcional: si querés ayudar al layout, podés fijar tamaño acorde a tu CSS
-      // width: 300,
-      // height: 300,
     });
 
     card.appendChild(img);
@@ -306,7 +314,6 @@ export function renderProducts(list, container, addHandler) {
     if (product.stock !== undefined && product.stock <= 0) {
       price.textContent = "Sin stock";
     } else if (basePrice > 0) {
-      // ✅ redondeado
       price.textContent = money(basePrice);
     } else {
       price.textContent = "Consultar";
@@ -366,7 +373,6 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
     return;
   }
 
-  // Armamos nodos en vez de HTML string para poder setear loading/fetchpriority
   const makeCard = (p) => {
     const card = document.createElement("div");
     card.className = "offer-card";
@@ -379,7 +385,6 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
       const img = document.createElement("img");
       img.className = "offer-img";
 
-      // Carrusel: eager + high
       setupFastImage(img, imgSrc, name, {
         priority: "high",
         loading: "eager",
@@ -427,11 +432,10 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
     return card;
   };
 
-  // render base + duplicado para loop
   const frag = document.createDocumentFragment();
   offers.forEach((p) => frag.appendChild(makeCard(p)));
 
-  // duplicamos si hay 2+ para que el scroll sea continuo
+  // duplicamos si hay 2+ para loop continuo
   if (offers.length >= 2) {
     offers.forEach((p) => frag.appendChild(makeCard(p)));
   }
@@ -444,7 +448,7 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
  * - Nombre + promo
  * - Arriba a la derecha: "Q x $Unit = $Total"
  *
- * ✅ Unit y Total redondeados para evitar 30.8333 y 369.9996
+ * ✅ Unit y Total redondeados
  */
 export function renderCart(products, cart, container, updateHandler, removeHandler) {
   if (!container) return 0;
@@ -487,29 +491,26 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
 
     item.appendChild(left);
 
-    // ✅ Cálculo arriba a la derecha (redondeo)
+    // ✅ cálculo arriba derecha
     const unitRaw = getUnitPriceByQty(product, q);
 
+    const calc = document.createElement("div");
+    calc.className = "cart-item-calc";
     if (unitRaw > 0) {
       const unitShow = roundUYU(unitRaw);
       const rowTotalShow = roundUYU(unitRaw * q);
-
-      const calc = document.createElement("div");
-      calc.className = "cart-item-calc";
       calc.textContent = `${q} x $ ${unitShow} = $ ${rowTotalShow}`;
-      item.appendChild(calc);
     } else {
-      const calc = document.createElement("div");
-      calc.className = "cart-item-calc";
       calc.textContent = "Consultar";
-      item.appendChild(calc);
     }
+    item.appendChild(calc);
 
     // Controles
     const controls = document.createElement("div");
     controls.className = "cart-item-controls";
 
     const minus = document.createElement("button");
+    minus.type = "button";
     minus.textContent = "−";
     minus.onclick = () => updateHandler && updateHandler(id, q - 1);
 
@@ -524,10 +525,12 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
     };
 
     const plus = document.createElement("button");
+    plus.type = "button";
     plus.textContent = "+";
     plus.onclick = () => updateHandler && updateHandler(id, q + 1);
 
     const remove = document.createElement("button");
+    remove.type = "button";
     remove.textContent = "✖";
     remove.onclick = () => removeHandler && removeHandler(id);
 
@@ -616,7 +619,9 @@ export function filterProducts(products, category, searchTerm) {
   let result = products || [];
 
   if (category) {
-    result = result.filter((p) => (p.categoria || p.category || "").trim() === category);
+    result = result.filter(
+      (p) => (p.categoria || p.category || "").trim() === category
+    );
   }
 
   if (searchTerm) {
@@ -659,7 +664,9 @@ export function renderCategoryAccordion(products, onSelect) {
     subMap.get(sub).push(p);
   }
 
-  const categories = Array.from(catMap.keys()).sort((a, b) => a.localeCompare(b, "es"));
+  const categories = Array.from(catMap.keys()).sort((a, b) =>
+    a.localeCompare(b, "es")
+  );
 
   const title = document.createElement("div");
   title.className = "cat-panel-head";
