@@ -75,8 +75,13 @@
         </div>
       </section>
 
-      <!-- ✅✅✅ FILTROS: AHORA VAN ACÁ (debajo del carrusel de ofertas) -->
-      <section class="filters-sticky" aria-label="Buscador y filtros">
+      <!-- ✅✅✅ FILTROS: AHORA VAN ACÁ (debajo del carrusel de ofertas)
+           ✅ NUEVO: id="filters-sticky" para poder scrollear acá con el botón Inicio -->
+      <section
+        id="filters-sticky"
+        class="filters-sticky"
+        aria-label="Buscador y filtros"
+      >
         <div class="container">
           <div class="filters">
             <input
@@ -223,6 +228,11 @@
 
       <!-- BOTONES FLOTANTES -->
       <div class="float-actions" aria-label="Accesos rápidos">
+        <!-- ✅ NUEVO: Botón Inicio (sube a buscador/filtros) -->
+        <a href="#filters-sticky" class="top-float" aria-label="Ir al buscador">
+          ⬆︎ Inicio
+        </a>
+
         <a href="#cart" class="cart-float" aria-label="Carrito">
           Carrito
           <span class="cart-badge">
