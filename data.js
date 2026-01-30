@@ -1,5 +1,6 @@
 // data.js — versión FINAL (Google Sheets CSV -> productos)
 // ✅ Incluye Destacados=TRUE -> destacado:true (para “Destacados por categoría”)
+// ✅ Incluye promo_group (para promos mixtas: 2+1+1 = 4 y aplica precio promo)
 // Compatible con GitHub Pages
 
 // ✅ TU LINK (CSV publicado)
@@ -22,11 +23,17 @@ function toBool(v) {
   const s = toStr(v).toLowerCase();
   if (!s) return false;
 
-  if (s === "true" || s === "verdadero" || s === "1" || s === "si" || s === "sí" || s === "yes")
+  if (
+    s === "true" ||
+    s === "verdadero" ||
+    s === "1" ||
+    s === "si" ||
+    s === "sí" ||
+    s === "yes"
+  )
     return true;
 
-  if (s === "false" || s === "falso" || s === "0" || s === "no")
-    return false;
+  if (s === "false" || s === "falso" || s === "0" || s === "no") return false;
 
   return false;
 }
@@ -140,6 +147,22 @@ function getDestacadosValue(r) {
   );
 }
 
+function getPromoGroupValue(r) {
+  // ✅ Soporta nombres típicos de columna (por si cambias el encabezado)
+  return (
+    r.promo_group ??
+    r.PROMO_GROUP ??
+    r["promo group"] ??
+    r["Promo Group"] ??
+    r.promogroup ??
+    r.PromoGroup ??
+    r.grupo_promo ??
+    r.GrupoPromo ??
+    r.grupo ??
+    r.Grupo
+  );
+}
+
 function rowToProduct(r) {
   // Campos base
   const id = toStr(r.id);
@@ -164,8 +187,11 @@ function rowToProduct(r) {
   // Carrusel / oferta
   const ofertaCarrusel = toBool(r.oferta_carrusel);
 
-  // ✅ DESTACADOS (lo que necesitabas)
+  // ✅ DESTACADOS
   const destacado = toBool(getDestacadosValue(r));
+
+  // ✅ promo_group (para promos mixtas)
+  const promo_group = toStr(getPromoGroupValue(r)) || null;
 
   // Promo por cantidad (DPC)
   const promoMin = toNumber(r.promo_min_qty);
@@ -189,6 +215,9 @@ function rowToProduct(r) {
     presentacion,
     tags,
     destacado, // ✅ CLAVE: ahora tu app.js lo ve como boolean REAL
+
+    // ✅ CLAVE: habilita “mix & match”
+    promo_group,
 
     ...(dpc ? { dpc } : {}),
     ...(r.stock !== undefined && r.stock !== "" ? { stock: toNumber(r.stock) } : {}),
