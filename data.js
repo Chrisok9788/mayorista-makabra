@@ -1,4 +1,5 @@
 // data.js — versión FINAL (Google Sheets CSV -> productos)
+// ✅ Incluye Destacados=TRUE -> destacado:true (para “Destacados por categoría”)
 // Compatible con GitHub Pages
 
 // ✅ TU LINK (CSV publicado)
@@ -14,8 +15,20 @@ function toStr(v) {
 }
 
 function toBool(v) {
+  // ✅ robusto: TRUE/FALSE, verdadero/falso, 1/0, si/no, yes/no
+  if (v === true) return true;
+  if (v === false) return false;
+
   const s = toStr(v).toLowerCase();
-  return s === "true" || s === "1" || s === "si" || s === "sí" || s === "yes";
+  if (!s) return false;
+
+  if (s === "true" || s === "verdadero" || s === "1" || s === "si" || s === "sí" || s === "yes")
+    return true;
+
+  if (s === "false" || s === "falso" || s === "0" || s === "no")
+    return false;
+
+  return false;
 }
 
 function toNumber(v) {
@@ -113,6 +126,20 @@ function rowsToObjects(rows) {
    Normalización a tu formato
    ========================= */
 
+function getDestacadosValue(r) {
+  // ✅ Soporta nombres típicos de columna
+  return (
+    r.Destacados ??
+    r.destacados ??
+    r.destacado ??
+    r.DESTACADOS ??
+    r["Destacados "] ??
+    r["destacados "] ??
+    r.Featured ??
+    r.featured
+  );
+}
+
 function rowToProduct(r) {
   // Campos base
   const id = toStr(r.id);
@@ -129,10 +156,16 @@ function rowToProduct(r) {
   const presentacion = toStr(r.presentacion) || null;
 
   const tags = parseTags(r.tags);
-  const activo = r.activo === "" ? true : toBool(r.activo); // si está vacío, asumimos activo
 
-  // Carrusel (lo usamos como "oferta" también para que aparezca en el carrusel de tu UI)
+  // activo
+  const activo = r.activo === "" ? true : toBool(r.activo); // si está vacío, asumimos activo
+  if (!activo) return null;
+
+  // Carrusel / oferta
   const ofertaCarrusel = toBool(r.oferta_carrusel);
+
+  // ✅ DESTACADOS (lo que necesitabas)
+  const destacado = toBool(getDestacadosValue(r));
 
   // Promo por cantidad (DPC)
   const promoMin = toNumber(r.promo_min_qty);
@@ -140,25 +173,24 @@ function rowToProduct(r) {
 
   const dpc =
     promoMin > 0 && promoPrecio > 0
-      ? {
-          tramos: [{ min: promoMin, precio: promoPrecio }],
-        }
+      ? { tramos: [{ min: promoMin, precio: promoPrecio }] }
       : undefined;
 
-  // Producto final (formato que tu web ya consume)
+  // Producto final (formato que tu web consume)
   return {
     id,
     nombre: nombre || id,
     categoria: categoria || "Otros",
     subcategoria: subcategoria || "Otros",
     precio: precio_base > 0 ? precio_base : 0,
-    oferta: ofertaCarrusel, // ✅ así lo detecta tu carrusel actual
+    oferta: ofertaCarrusel, // ✅ carrusel de ofertas
     imagen,
     marca,
     presentacion,
     tags,
+    destacado, // ✅ CLAVE: ahora tu app.js lo ve como boolean REAL
+
     ...(dpc ? { dpc } : {}),
-    // stock opcional (si después lo agregás en la planilla)
     ...(r.stock !== undefined && r.stock !== "" ? { stock: toNumber(r.stock) } : {}),
   };
 }
@@ -191,7 +223,7 @@ export async function fetchProducts() {
     throw new Error(`Error HTTP ${res.status} al cargar CSV de Google Sheets`);
   }
 
-  // Validación rápida: si Google devolvió HTML (error de publicación), lo detectamos
+  // Si Google devolvió HTML (error de publicación), lo detectamos
   if (text.trim().startsWith("<!DOCTYPE html") || text.includes("<html")) {
     throw new Error(
       "El link no está devolviendo CSV (parece HTML). Revisá: Publicar en la web → CSV."
@@ -203,10 +235,6 @@ export async function fetchProducts() {
 
   const products = [];
   for (const r of objs) {
-    // Filtrar inactivos
-    const activo = r.activo === "" ? true : toBool(r.activo);
-    if (!activo) continue;
-
     const p = rowToProduct(r);
     if (p) products.push(p);
   }
