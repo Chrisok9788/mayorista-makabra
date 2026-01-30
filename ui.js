@@ -8,9 +8,14 @@
  *   - Placeholder inmediato + fade-in
  *   - Fallback si falla imagen
  *
+ * ✅ NUEVO (PROMO MIX por grupo):
+ *   - Si el producto tiene promo_group, la promo por cantidad (dpc.tramos)
+ *     se calcula con la SUMA de cantidades del carrito dentro del mismo grupo.
+ *   - Ej: Budín Romanato (3 sabores) promo_group="romanato_budin_100g"
+ *     dpc.tramos: [{min:4, precio:26}] => llevando 4 combinados, todos a $26 c/u.
+ *
  * ✅ NUEVO:
- *   - renderFeaturedByCategory (2 artículos por categoría) + callbacks:
- *     onClickProduct / onViewCategory / onAddToCart (opcional)
+ *   - renderFeaturedByCategory (2 artículos por categoría) + callbacks
  *
  * ✅ Exporta TODO lo que usa tu app.js:
  *   - renderProducts
@@ -54,9 +59,16 @@ function getBasePrice(p) {
   return toNumberPrice(p?.precio ?? p?.price);
 }
 
+/** Promo group (mix) */
+function getPromoGroup(p) {
+  const g = String(p?.promo_group ?? p?.promoGroup ?? p?.grupo_promo ?? "").trim();
+  return g || "";
+}
+
 /**
  * Devuelve el precio unitario aplicando promo por cantidad (si existe).
  * Espera: product.dpc.tramos = [{min, max, precio}, ...]
+ * NOTA: qty aquí puede ser la qty del item o la qty del grupo (mix).
  */
 function getUnitPriceByQty(product, qty) {
   const base = getBasePrice(product);
@@ -71,7 +83,6 @@ function getUnitPriceByQty(product, qty) {
 
     if (!Number.isFinite(min) || min <= 0) continue;
 
-    // max puede venir null / 0 / 999999 -> lo tratamos como "sin tope"
     const maxOk = Number.isFinite(max) && max > 0 ? max : Number.POSITIVE_INFINITY;
 
     if (qty >= min && qty <= maxOk) {
@@ -84,19 +95,23 @@ function getUnitPriceByQty(product, qty) {
 
 /**
  * Arma el texto de promo por cantidad:
- * "Llevando 5 rebaja a $65 c/u"
- * ✅ Precio redondeado para evitar $30.8333
+ * - normal: "Llevando 5 rebaja a $65 c/u"
+ * - mix:    "Llevando 4 (combinables) rebaja a $26 c/u"
  */
 function getQtyPromoText(product) {
   const tramos = product?.dpc?.tramos;
   if (!Array.isArray(tramos) || tramos.length === 0) return "";
+
+  const isMix = !!getPromoGroup(product);
 
   for (const t of tramos) {
     const min = Number(t?.min);
     const precio = toNumberPrice(t?.precio);
 
     if (Number.isFinite(min) && min > 0 && precio > 0) {
-      return `Llevando ${min} rebaja a $${roundUYU(precio)} c/u`;
+      return isMix
+        ? `Llevando ${min} (combinables) rebaja a $${roundUYU(precio)} c/u`
+        : `Llevando ${min} rebaja a $${roundUYU(precio)} c/u`;
     }
   }
   return "";
@@ -112,9 +127,7 @@ function money(n) {
 /** Base URL defensivo */
 function getBaseUrl() {
   const BASE =
-    typeof import.meta !== "undefined" &&
-    import.meta.env &&
-    import.meta.env.BASE_URL
+    typeof import.meta !== "undefined" && import.meta.env && import.meta.env.BASE_URL
       ? import.meta.env.BASE_URL
       : "./";
   return BASE;
@@ -134,12 +147,7 @@ function getPlaceholderUrl() {
  * - fade-in cuando carga
  */
 function setupFastImage(imgEl, realSrc, alt, opts = {}) {
-  const {
-    priority = "low", // "high" para carrusel
-    loading = "lazy", // "eager" para carrusel
-    width,
-    height,
-  } = opts;
+  const { priority = "low", loading = "lazy", width, height } = opts;
 
   const placeholder = getPlaceholderUrl();
 
@@ -148,7 +156,6 @@ function setupFastImage(imgEl, realSrc, alt, opts = {}) {
 
   imgEl.alt = alt || "Producto";
 
-  // placeholder ya
   imgEl.src = placeholder;
 
   imgEl.loading = loading;
@@ -184,15 +191,62 @@ function setupFastImage(imgEl, realSrc, alt, opts = {}) {
   }
 }
 
+/* =========================
+   ✅ PROMO MIX: utilidades
+   ========================= */
+
+/** Crea mapa id->producto */
+function mapById(products) {
+  return new Map((products || []).map((p) => [String(p?.id ?? "").trim(), p]));
+}
+
+/** Suma cantidades por promo_group (mix) usando el carrito actual */
+function buildGroupQtyMap(products, cart) {
+  const byId = mapById(products);
+  const groupQty = new Map();
+
+  for (const [rawId, rawQty] of Object.entries(cart || {})) {
+    const id = String(rawId ?? "").trim();
+    const qty = Number(rawQty) || 0;
+    if (!id || qty < 1) continue;
+
+    const p = byId.get(id);
+    if (!p) continue;
+
+    const g = getPromoGroup(p);
+    if (!g) continue;
+
+    groupQty.set(g, (groupQty.get(g) || 0) + qty);
+  }
+
+  return groupQty;
+}
+
+/** Qty efectiva: si hay promo_group, usa qty del grupo; si no, usa qty del ítem */
+function getEffectiveQtyForPricing(product, itemQty, groupQtyMap) {
+  const g = getPromoGroup(product);
+  if (!g) return itemQty;
+  const qg = groupQtyMap?.get(g);
+  return Number(qg) > 0 ? Number(qg) : itemQty;
+}
+
+/* =========================
+   Totales carrito
+   ========================= */
+
 /**
- * Calcula total del carrito aplicando promos por cantidad si existen.
+ * Calcula total del carrito aplicando:
+ * - promos por cantidad por producto
+ * - ✅ promos mix por promo_group (suma qty del grupo)
  * ✅ COHERENTE: suma subtotales ya redondeados
  */
 export function computeCartTotal(products, cart) {
   if (!Array.isArray(products) || !products.length) return 0;
   if (!cart || typeof cart !== "object") return 0;
 
-  const byId = new Map(products.map((p) => [String(p.id ?? "").trim(), p]));
+  const byId = mapById(products);
+  const groupQtyMap = buildGroupQtyMap(products, cart);
+
   let total = 0;
 
   for (const [rawId, rawQty] of Object.entries(cart)) {
@@ -203,7 +257,8 @@ export function computeCartTotal(products, cart) {
     const p = byId.get(id);
     if (!p) continue;
 
-    const unit = getUnitPriceByQty(p, qty);
+    const effQty = getEffectiveQtyForPricing(p, qty, groupQtyMap);
+    const unit = getUnitPriceByQty(p, effQty);
     if (unit <= 0) continue;
 
     total += roundUYU(unit * qty);
@@ -218,6 +273,10 @@ export function updateCartTotal(totalEl, products, cart) {
   const total = computeCartTotal(products, cart);
   totalEl.textContent = money(total);
 }
+
+/* =========================
+   Catálogo
+   ========================= */
 
 /**
  * Renderiza el catálogo
@@ -315,7 +374,7 @@ export function renderProducts(list, container, addHandler) {
     }
     content.appendChild(price);
 
-    // PROMO POR CANTIDAD
+    // PROMO POR CANTIDAD / MIX
     const promoText = getQtyPromoText(product);
     if (promoText) {
       const note = document.createElement("div");
@@ -341,6 +400,10 @@ export function renderProducts(list, container, addHandler) {
     container.appendChild(card);
   });
 }
+
+/* =========================
+   Carrusel ofertas
+   ========================= */
 
 /**
  * Renderiza el carrusel de OFERTAS.
@@ -437,8 +500,13 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
   trackEl.appendChild(frag);
 }
 
+/* =========================
+   Carrito
+   ========================= */
+
 /**
  * Renderiza el carrito
+ * ✅ Aplica promo mix por promo_group (si existe)
  */
 export function renderCart(products, cart, container, updateHandler, removeHandler) {
   if (!container) return 0;
@@ -450,7 +518,8 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
     return 0;
   }
 
-  const byId = new Map((products || []).map((p) => [String(p.id ?? "").trim(), p]));
+  const byId = mapById(products || []);
+  const groupQtyMap = buildGroupQtyMap(products || [], cart || {});
 
   entries.forEach(([productId, qty]) => {
     const id = String(productId ?? "").trim();
@@ -471,6 +540,7 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
     name.textContent = getProductName(product) || "Producto";
     left.appendChild(name);
 
+    // promo note
     const promoText = getQtyPromoText(product);
     if (promoText) {
       const note = document.createElement("div");
@@ -479,9 +549,22 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
       left.appendChild(note);
     }
 
+    // ✅ si es mix, mostramos qty del grupo también (ayuda al usuario)
+    const g = getPromoGroup(product);
+    if (g) {
+      const qg = groupQtyMap.get(g) || 0;
+      const mix = document.createElement("div");
+      mix.className = "cart-item-note";
+      mix.style.opacity = "0.85";
+      mix.textContent = `Combinados del grupo: ${qg}`;
+      left.appendChild(mix);
+    }
+
     item.appendChild(left);
 
-    const unitRaw = getUnitPriceByQty(product, q);
+    // ✅ unit price usando qty efectiva (grupo o item)
+    const effQty = getEffectiveQtyForPricing(product, q, groupQtyMap);
+    const unitRaw = getUnitPriceByQty(product, effQty);
 
     const calc = document.createElement("div");
     calc.className = "cart-item-calc";
@@ -536,6 +619,10 @@ export function updateCartCount(countEl, count) {
   if (!countEl) return;
   countEl.textContent = count;
 }
+
+/* =========================
+   Filtros / categorías
+   ========================= */
 
 /** Carga categorías */
 export function populateCategories(products, select) {
@@ -599,9 +686,7 @@ export function filterProducts(products, category, searchTerm) {
   let result = products || [];
 
   if (category) {
-    result = result.filter(
-      (p) => (p.categoria || p.category || "").trim() === category
-    );
+    result = result.filter((p) => (p.categoria || p.category || "").trim() === category);
   }
 
   if (searchTerm) {
@@ -624,9 +709,10 @@ export function filterProducts(products, category, searchTerm) {
   return result;
 }
 
-/**
- * Panel acordeón (opcional).
- */
+/* =========================
+   Panel acordeón (opcional)
+   ========================= */
+
 export function renderCategoryAccordion(products, onSelect) {
   const accordion = document.getElementById("categoryAccordion");
   if (!accordion) return;
@@ -644,9 +730,7 @@ export function renderCategoryAccordion(products, onSelect) {
     subMap.get(sub).push(p);
   }
 
-  const categories = Array.from(catMap.keys()).sort((a, b) =>
-    a.localeCompare(b, "es")
-  );
+  const categories = Array.from(catMap.keys()).sort((a, b) => a.localeCompare(b, "es"));
 
   const title = document.createElement("div");
   title.className = "cat-panel-head";
@@ -767,9 +851,10 @@ export function renderCategoryAccordion(products, onSelect) {
   renderCategoriesList();
 }
 
-/**
- * ✅ DESTACADOS (2 artículos por categoría)
- */
+/* =========================
+   ✅ DESTACADOS (2 por categoría)
+   ========================= */
+
 export function renderFeaturedByCategory(products, options = {}) {
   const {
     rootId = "featured-by-category",
@@ -798,9 +883,7 @@ export function renderFeaturedByCategory(products, options = {}) {
     if (arr.length < perCategory) arr.push(p);
   }
 
-  const groups = Array.from(map.entries()).sort((a, b) =>
-    a[0].localeCompare(b[0], "es")
-  );
+  const groups = Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0], "es"));
 
   const frag = document.createDocumentFragment();
 
@@ -835,8 +918,6 @@ export function renderFeaturedByCategory(products, options = {}) {
     items.forEach((p) => {
       const card = document.createElement("div");
       card.className = "product-card featured-card";
-
-      // ✅ también dejamos data-id por consistencia
       card.dataset.id = String(p?.id ?? "");
 
       let badgeLabel = "";
