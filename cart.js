@@ -169,9 +169,11 @@ function getUnitPriceByQty(product, qty) {
     const max = Number(t?.max);
     const precio = toNumberPrice(t?.precio);
 
-    if (!Number.isFinite(min) || !Number.isFinite(max)) continue;
+    if (!Number.isFinite(min) || min <= 0) continue;
 
-    if (qty >= min && qty <= max) {
+    const maxOk = Number.isFinite(max) && max > 0 ? max : Number.POSITIVE_INFINITY;
+
+    if (qty >= min && qty <= maxOk) {
       return precio > 0 ? precio : base;
     }
   }

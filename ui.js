@@ -1,7 +1,7 @@
 /*
  * ui.js — MODIFICADO y COMPLETO (performance + compatibilidad)
  *
- * ✅ Mantiene TODO lo base (redondeos, carrito, dpc.tramos, etc.)
+ * ✅ Mantiene TODO lo básico (redondeos, carrito, dpc.tramos, etc.)
  * ✅ Performance imágenes:
  *   - Carrusel: eager + fetchpriority high
  *   - Catálogo: lazy + decoding async + fetchpriority low

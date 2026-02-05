@@ -23,25 +23,23 @@ npm install
 
 ## Cargar/actualizar productos
 
-1. Editá el archivo Excel en `data/productos.xlsx`. Cada fila representa un producto. Las columnas soportadas son:
-   - **nombre** (obligatorio): nombre del producto.
-   - **categoria** (obligatorio): categoría o rubro (p. ej. “Bebidas”, “Alimentos”, etc.).
-   - **marca** (opcional)
-   - **presentacion** (opcional): presentación, formato o volumen (p. ej. “1L”, “6u”, “500g”).
-   - **precio** (opcional): número sin símbolo; dejar vacío para mostrar “Consultar”.
-   - **imagen** (opcional): URL o ruta a la imagen (dejar vacío para usar `placeholder.png`).
-   - **stock** (opcional): texto informativo de stock.
-   - **tags** (opcional): palabras clave separadas por comas para mejorar las búsquedas.
+El sitio consume productos desde Google Sheets como CSV (ver `PRODUCTS_URL` en `data.js`). Para actualizar el catálogo:
 
-2. Ejecutá el script que convierte el Excel en JSON:
+1. Editá la hoja publicada en Google Sheets (columnas: **nombre**, **categoria**, **marca**, **presentacion**, **precio**, **imagen**, **stock**, **tags**, **promo_group**, **Destacados**).
+2. Verificá que el CSV siga publicado y que el link esté actualizado en `data.js`.
+
+### Opción alternativa (Excel local)
+
+Si preferís generar un JSON local desde Excel:
+
+1. Guardá el Excel como `data/productos.xlsx`.
+2. Ejecutá:
 
 ```bash
 npm run build:products
 ```
 
-   Esto genera o actualiza `public/data/products.json` con los productos y crea un `id` único para cada uno.
-
-3. (Opcional) Si añadís imágenes nuevas, colocalas en `public/` o una carpeta accesible y especificá su ruta en la columna **imagen**.
+Esto genera o actualiza `products.json` en la raíz del repo con los productos y crea un `id` único para cada uno.
 
 ## Ejecutar en desarrollo
 
@@ -94,6 +92,7 @@ https://TU_USUARIO.github.io/mayorista-makabra-web/
 | Convertir Excel a JSON              | `npm run build:products`       |
 | Generar build de producción         | `npm run build`                |
 | Previsualizar build local           | `npm run preview`              |
+| Ejecutar tests                      | `npm run test`                 |
 
 ---
 

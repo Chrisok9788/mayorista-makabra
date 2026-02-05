@@ -10,7 +10,7 @@ import xlsx from 'xlsx';
 
 const args = process.argv.slice(2);
 const inputPath = args[0] || path.join('data', 'productos.xlsx');
-const outputPath = path.join('public', 'data', 'products.json');
+const outputPath = path.join('products.json');
 
 function slugify(text) {
   return text.toString().toLowerCase()
