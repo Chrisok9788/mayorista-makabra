@@ -7,6 +7,7 @@ const API_BASE =
   (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_BASE) ||
   "";
 const API_ENDPOINT = `${API_BASE}/api/catalog`.replace(/([^:]\/)\/+/g, "$1");
+const STATIC_PRODUCTS_URL = "/products.json";
 const CACHE_KEY = "catalog-cache-v2";
 const CACHE_VERSION = 2;
 const DEFAULT_TIMEOUT_MS = 10000;
@@ -89,16 +90,52 @@ async function fetchProductsRemote(timeoutMs = DEFAULT_TIMEOUT_MS) {
   }
 
   if (!res?.ok) {
+    if (res?.status === 404) {
+      return await fetchProductsFromStatic(timeoutMs);
+    }
     const msg = data?.error ? `: ${data.error}` : "";
     throw new Error(`Error HTTP ${res?.status ?? "?"} al cargar catálogo${msg}`);
   }
 
-  const products = data?.products;
+  const products = normalizeProductsPayload(data);
   if (!Array.isArray(products) || products.length === 0) {
     throw new Error("No llegaron productos desde /api/catalog.");
   }
 
   return products;
+}
+
+async function fetchProductsFromStatic(timeoutMs = DEFAULT_TIMEOUT_MS) {
+  let res;
+  let data;
+  try {
+    const url = STATIC_PRODUCTS_URL.includes("?")
+      ? `${STATIC_PRODUCTS_URL}&_ts=${Date.now()}`
+      : `${STATIC_PRODUCTS_URL}?_ts=${Date.now()}`;
+    ({ res, data } = await fetchJsonWithTimeout(url, timeoutMs));
+  } catch (err) {
+    if (err?.name === "AbortError") {
+      throw new Error("Timeout al cargar el catálogo local.");
+    }
+    throw new Error("No se pudo cargar el catálogo local.");
+  }
+
+  if (!res?.ok) {
+    throw new Error(`Error HTTP ${res?.status ?? "?"} al cargar catálogo local`);
+  }
+
+  const products = normalizeProductsPayload(data);
+  if (!Array.isArray(products) || products.length === 0) {
+    throw new Error("No llegaron productos desde /products.json.");
+  }
+
+  return products;
+}
+
+function normalizeProductsPayload(data) {
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.products)) return data.products;
+  return [];
 }
 
 export async function loadProductsWithCache({ timeoutMs = DEFAULT_TIMEOUT_MS } = {}) {
