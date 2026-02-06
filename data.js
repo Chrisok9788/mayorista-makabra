@@ -7,6 +7,10 @@
 export const PRODUCTS_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJAgesFM5B0OTnVSvcOxrtC4VlI1ijay6erm7XnX8zjRtwUnbX-M0_4yXxRhcairW01hFOjoKQHW7t/pub?gid=1128238455&single=true&output=csv";
 
+const CACHE_KEY = "catalog-cache-v1";
+const CACHE_VERSION = 1;
+const DEFAULT_TIMEOUT_MS = 10000;
+
 /* =========================
    Helpers defensivos
    ========================= */
@@ -173,7 +177,7 @@ function rowToProduct(r) {
   const subcategoria = toStr(r.subcategoria);
 
   const precio_base = toNumber(r.precio_base);
-  const imagen = toStr(r.imagen_url) || null;
+  const imagen = toStr(r.imagen_url || r.imagen) || null;
 
   const marca = toStr(r.marca) || null;
   const presentacion = toStr(r.presentacion) || null;
@@ -228,31 +232,85 @@ function rowToProduct(r) {
    Fetch principal
    ========================= */
 
-export async function fetchProducts() {
-  let res;
+function safeJsonParse(raw) {
   try {
-    // cache-bust para que vea cambios al toque
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+function hashString(input) {
+  let hash = 0;
+  const s = String(input ?? "");
+  for (let i = 0; i < s.length; i++) {
+    hash = (hash << 5) - hash + s.charCodeAt(i);
+    hash |= 0;
+  }
+  return String(hash);
+}
+
+function readCache() {
+  if (typeof localStorage === "undefined") return null;
+  const raw = localStorage.getItem(CACHE_KEY);
+  if (!raw) return null;
+  const parsed = safeJsonParse(raw);
+  if (!parsed || parsed.version !== CACHE_VERSION || !Array.isArray(parsed.products)) {
+    return null;
+  }
+  return parsed;
+}
+
+function writeCache(products) {
+  if (typeof localStorage === "undefined") return null;
+  const payload = {
+    version: CACHE_VERSION,
+    lastUpdated: Date.now(),
+    hash: hashString(JSON.stringify(products)),
+    products,
+  };
+  localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
+  return payload;
+}
+
+async function fetchTextWithTimeout(url, timeoutMs) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, {
+      cache: "no-store",
+      headers: { Accept: "text/csv, text/plain, */*" },
+      signal: controller.signal,
+    });
+    const text = await res.text();
+    return { res, text };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchProductsRemote(timeoutMs = DEFAULT_TIMEOUT_MS) {
+  let res;
+  let text;
+  try {
     const url = PRODUCTS_URL.includes("?")
       ? `${PRODUCTS_URL}&_ts=${Date.now()}`
       : `${PRODUCTS_URL}?_ts=${Date.now()}`;
 
-    res = await fetch(url, {
-      cache: "no-store",
-      headers: { Accept: "text/csv, text/plain, */*" },
-    });
+    ({ res, text } = await fetchTextWithTimeout(url, timeoutMs));
   } catch (err) {
+    if (err?.name === "AbortError") {
+      throw new Error("Timeout al cargar la planilla (CSV). Intentá nuevamente.");
+    }
     throw new Error(
       "No se pudo conectar para cargar la planilla (CSV). Verificá conexión o link publicado."
     );
   }
 
-  const text = await res.text();
-
   if (!res.ok) {
     throw new Error(`Error HTTP ${res.status} al cargar CSV de Google Sheets`);
   }
 
-  // Si Google devolvió HTML (error de publicación), lo detectamos
   if (text.trim().startsWith("<!DOCTYPE html") || text.includes("<html")) {
     throw new Error(
       "El link no está devolviendo CSV (parece HTML). Revisá: Publicar en la web → CSV."
@@ -275,4 +333,40 @@ export async function fetchProducts() {
   }
 
   return products;
+}
+
+export async function loadProductsWithCache({ timeoutMs = DEFAULT_TIMEOUT_MS } = {}) {
+  const cached = readCache();
+
+  const updatePromise = fetchProductsRemote(timeoutMs)
+    .then((products) => {
+      const hash = hashString(JSON.stringify(products));
+      const isSame = cached?.hash === hash;
+      const payload = isSame ? cached : writeCache(products);
+      return {
+        products,
+        fromCache: false,
+        lastUpdated: payload?.lastUpdated ?? Date.now(),
+        changed: !isSame,
+      };
+    })
+    .catch((error) => ({ error }));
+
+  if (cached?.products?.length) {
+    return {
+      products: cached.products,
+      fromCache: true,
+      lastUpdated: cached.lastUpdated,
+      updatePromise,
+    };
+  }
+
+  const result = await updatePromise;
+  if (result?.error) throw result.error;
+  return {
+    products: result.products,
+    fromCache: false,
+    lastUpdated: result.lastUpdated,
+    updatePromise: Promise.resolve(result),
+  };
 }

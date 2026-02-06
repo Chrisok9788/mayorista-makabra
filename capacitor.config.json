@@ -1,0 +1,6 @@
+{
+  "appId": "com.mayorista.makabra",
+  "appName": "Mayorista Makabra",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}
