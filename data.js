@@ -7,6 +7,9 @@
 export const PRODUCTS_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJAgesFM5B0OTnVSvcOxrtC4VlI1ijay6erm7XnX8zjRtwUnbX-M0_4yXxRhcairW01hFOjoKQHW7t/pub?gid=1128238455&single=true&output=csv";
 
+const CATALOG_CACHE_KEY = "catalog_cache_v1";
+const DEFAULT_TIMEOUT_MS = 10000;
+
 /* =========================
    Helpers defensivos
    ========================= */
@@ -56,6 +59,70 @@ function parseTags(v) {
     .split(/[;,]/g)
     .map((x) => x.trim())
     .filter(Boolean);
+}
+
+function getApiBase() {
+  const raw =
+    typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_API_BASE
+      ? String(import.meta.env.VITE_API_BASE).trim()
+      : "";
+  return raw.replace(/\/$/, "");
+}
+
+function withTimeout(url, timeoutMs) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  return fetch(url, {
+    cache: "no-store",
+    headers: { Accept: "application/json, text/csv, text/plain, */*" },
+    signal: controller.signal,
+  }).finally(() => clearTimeout(timer));
+}
+
+function readCatalogCache() {
+  if (typeof localStorage === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(CATALOG_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed?.products) || parsed.products.length === 0) return null;
+    return {
+      products: parsed.products,
+      updatedAt: Number(parsed.updatedAt) || null,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function writeCatalogCache(products, updatedAt) {
+  if (typeof localStorage === "undefined") return;
+  try {
+    localStorage.setItem(
+      CATALOG_CACHE_KEY,
+      JSON.stringify({ products, updatedAt: Number(updatedAt) || Date.now() })
+    );
+  } catch {
+    // sin storage disponible, ignoramos
+  }
+}
+
+function hashString(input) {
+  let hash = 0;
+  for (let i = 0; i < input.length; i++) {
+    hash = (hash * 31 + input.charCodeAt(i)) | 0;
+  }
+  return hash;
+}
+
+function getProductsSignature(list) {
+  if (!Array.isArray(list) || list.length === 0) return "0";
+  let combined = "";
+  for (const p of list) {
+    const id = toStr(p?.id);
+    combined += `${id}|`;
+  }
+  return `${list.length}:${hashString(combined)}`;
 }
 
 /**
@@ -228,6 +295,30 @@ function rowToProduct(r) {
    Fetch principal
    ========================= */
 
+async function fetchCatalogFromApi() {
+  const base = getApiBase();
+  const apiUrl = base ? `${base}/api/catalog` : "/api/catalog";
+  const url = apiUrl.includes("?") ? `${apiUrl}&_ts=${Date.now()}` : `${apiUrl}?_ts=${Date.now()}`;
+
+  const res = await withTimeout(url, DEFAULT_TIMEOUT_MS);
+
+  if (!res.ok) {
+    const error = new Error(`Error HTTP ${res.status} al cargar catálogo`);
+    error.status = res.status;
+    throw error;
+  }
+
+  const payload = await res.json();
+  if (!Array.isArray(payload?.products) || payload.products.length === 0) {
+    throw new Error("Catálogo vacío desde API.");
+  }
+
+  return {
+    products: payload.products,
+    updatedAt: payload.updatedAt || Date.now(),
+  };
+}
+
 export async function fetchProducts() {
   let res;
   try {
@@ -275,4 +366,53 @@ export async function fetchProducts() {
   }
 
   return products;
+}
+
+export async function loadProductsWithCache() {
+  const cached = readCatalogCache();
+  const cachedSignature = cached ? getProductsSignature(cached.products) : "";
+
+  const updatePromise = (async () => {
+    try {
+      let fresh;
+      try {
+        fresh = await fetchCatalogFromApi();
+      } catch (err) {
+        const products = await fetchProducts();
+        fresh = { products, updatedAt: Date.now() };
+      }
+
+      const freshSignature = getProductsSignature(fresh.products);
+      const changed = !cached || cachedSignature !== freshSignature;
+
+      if (changed) {
+        writeCatalogCache(fresh.products, fresh.updatedAt);
+      }
+
+      return { changed, products: fresh.products, updatedAt: fresh.updatedAt };
+    } catch (err) {
+      return { error: err?.message || "No se pudo actualizar el catálogo." };
+    }
+  })();
+
+  if (cached?.products?.length) {
+    return {
+      products: cached.products,
+      fromCache: true,
+      lastUpdated: cached.updatedAt,
+      updatePromise,
+    };
+  }
+
+  const first = await updatePromise;
+  if (first?.error) {
+    throw new Error(first.error);
+  }
+
+  return {
+    products: first.products,
+    fromCache: false,
+    lastUpdated: first.updatedAt,
+    updatePromise: Promise.resolve(first),
+  };
 }
