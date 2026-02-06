@@ -76,6 +76,28 @@ a { color: inherit; text-decoration: none; }
   will-change: auto;
 }
 
+.catalog-status {
+  position: sticky;
+  top: var(--header-h);
+  z-index: 45;
+  padding: 8px 16px;
+  text-align: center;
+  font-size: 14px;
+  background: #f5f7ff;
+  color: #1b2a4a;
+  border-bottom: 1px solid var(--border);
+}
+
+.catalog-status[data-variant="warning"] {
+  background: #fff4e5;
+  color: #7a4b00;
+}
+
+.catalog-status[data-variant="success"] {
+  background: #e8f7ef;
+  color: #0f5132;
+}
+
 /* iOS: apagamos blur para estabilidad */
 @supports (-webkit-touch-callout: none) {
   .site-header {

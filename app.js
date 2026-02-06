@@ -10,7 +10,7 @@
 // - Si tu data.js hoy trae CSV desde Google Sheets, igual funciona.
 // - Si mañana volvés a products.json (array), también funciona.
 
-import { fetchProducts } from "./data.js";
+import { loadProductsWithCache } from "./data.js";
 import {
   loadCart,
   getCart,
@@ -72,6 +72,27 @@ function roundUYU(n) {
 }
 function formatUYU(n) {
   return `$ ${roundUYU(n)}`;
+}
+
+function formatDateTime(ts) {
+  if (!ts) return "";
+  const d = new Date(ts);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleString("es-UY");
+}
+
+function showCatalogStatus(message, variant = "info") {
+  const el = document.getElementById("catalog-status");
+  if (!el) return;
+  if (!message) {
+    el.hidden = true;
+    el.textContent = "";
+    el.dataset.variant = "info";
+    return;
+  }
+  el.hidden = false;
+  el.textContent = message;
+  el.dataset.variant = variant;
 }
 
 // =======================
@@ -843,38 +864,78 @@ async function init() {
   updateCartCount(document.getElementById("cart-count"), totalItems());
 
   try {
-    const raw = await fetchProducts(); // puede ser CSV string o array JSON
+    const { products: cachedProducts, fromCache, lastUpdated, updatePromise } =
+      await loadProductsWithCache();
 
-    products = normalizeList(raw);
-    products = sortCatalogue(products);
-    baseProducts = products;
+    const applyProducts = (rawList) => {
+      const normalized = normalizeList(rawList);
+      const sorted = sortCatalogue(normalized);
 
-    // ✅ DESTACADOS POR CATEGORÍA
-    renderFeaturedByCategory(products, goToCatalogAndFocusProduct, goToCatalogAndFilterCategory);
+      products = sorted;
+      baseProducts = sorted;
 
-    const categories = buildCategoryCounts(products);
-    renderCategoryGrid(categories, (selectedCategory) => {
+      renderFeaturedByCategory(sorted, goToCatalogAndFocusProduct, goToCatalogAndFilterCategory);
+
+      const categories = buildCategoryCounts(sorted);
+      renderCategoryGrid(categories, (selectedCategory) => {
+        const categoryEl = document.getElementById("category-filter");
+        const subcatEl = document.getElementById("subcategory-filter");
+        const searchEl = document.getElementById("search-input");
+        if (searchEl) searchEl.value = "";
+
+        if (categoryEl) categoryEl.value = selectedCategory;
+
+        if (subcatEl) {
+          subcatEl.style.display = "block";
+          populateSubcategories(sorted, selectedCategory, subcatEl);
+          subcatEl.value = "";
+        }
+
+        showProductsMode();
+        applySearchAndFilter();
+        scrollToCatalogue();
+      });
+
       const categoryEl = document.getElementById("category-filter");
-      const subcatEl = document.getElementById("subcategory-filter");
-      const searchEl = document.getElementById("search-input");
-      if (searchEl) searchEl.value = "";
+      if (categoryEl) populateCategories(sorted, categoryEl);
 
-      if (categoryEl) categoryEl.value = selectedCategory;
+      showCategoriesMode();
+      clearProductsUI();
+      setFeaturedVisibility();
 
-      if (subcatEl) {
-        subcatEl.style.display = "block";
-        populateSubcategories(products, selectedCategory, subcatEl);
-        subcatEl.value = "";
-      }
+      const frameEl = document.querySelector(".offers-frame");
+      const trackEl = document.getElementById("offers-track");
+      renderOffersCarousel(sorted, frameEl, trackEl, goToCatalogAndFocusProduct);
 
-      showProductsMode();
-      applySearchAndFilter();
-      scrollToCatalogue();
-    });
+      rerenderCartUI();
+    };
+
+    applyProducts(cachedProducts);
+
+    if (fromCache) {
+      const updatedText = lastUpdated ? ` (actualizado ${formatDateTime(lastUpdated)})` : "";
+      showCatalogStatus(`Mostrando último catálogo guardado${updatedText}.`, "warning");
+    } else {
+      showCatalogStatus("", "info");
+    }
+
+    const updateResult = await updatePromise;
+    if (updateResult?.error) {
+      const updatedText = lastUpdated ? ` (actualizado ${formatDateTime(lastUpdated)})` : "";
+      showCatalogStatus(
+        `Mostrando último catálogo guardado${updatedText}. No se pudo actualizar.`,
+        "warning"
+      );
+    } else if (updateResult?.changed) {
+      applyProducts(updateResult.products);
+      showCatalogStatus("Catálogo actualizado.", "success");
+      setTimeout(() => showCatalogStatus("", "info"), 2500);
+    } else if (fromCache) {
+      showCatalogStatus("Catálogo actualizado.", "success");
+      setTimeout(() => showCatalogStatus("", "info"), 2500);
+    }
 
     const categoryEl = document.getElementById("category-filter");
-    if (categoryEl) populateCategories(products, categoryEl);
-
     const subcatEl = document.getElementById("subcategory-filter");
 
     const refreshSubcats = () => {
@@ -909,18 +970,6 @@ async function init() {
       });
     }
 
-    showCategoriesMode();
-    clearProductsUI();
-    setFeaturedVisibility();
-
-    // ✅ Carrusel OFERTAS
-    const frameEl = document.querySelector(".offers-frame");
-    const trackEl = document.getElementById("offers-track");
-    renderOffersCarousel(products, frameEl, trackEl, goToCatalogAndFocusProduct);
-
-    rerenderCartUI();
-
-    // ✅ Botón ↑ Inicio
     const topBtn = document.getElementById("top-btn") || document.querySelector(".top-float");
     if (topBtn) {
       topBtn.addEventListener("click", (e) => {
@@ -975,4 +1024,28 @@ async function init() {
   );
 }
 
+function registerServiceWorker() {
+  if (!("serviceWorker" in navigator)) return;
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}
+
+function setupNativeBackButton() {
+  const cap = window.Capacitor;
+  if (!cap?.isNativePlatform?.()) return;
+
+  import("@capacitor/app").then(({ App }) => {
+    App.addListener("backButton", ({ canGoBack }) => {
+      if (canGoBack && window.history.length > 1) {
+        window.history.back();
+      } else {
+        App.exitApp();
+      }
+    });
+  });
+}
+
+registerServiceWorker();
+setupNativeBackButton();
 init();
