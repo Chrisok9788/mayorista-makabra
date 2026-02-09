@@ -119,8 +119,26 @@ function getProductsSignature(list) {
   if (!Array.isArray(list) || list.length === 0) return "0";
   let combined = "";
   for (const p of list) {
-    const id = toStr(p?.id);
-    combined += `${id}|`;
+    const tags = Array.isArray(p?.tags) ? p.tags.join(";") : "";
+    const dpc = p?.dpc ? JSON.stringify(p.dpc) : "";
+    const stock = p?.stock ?? "";
+    combined += [
+      toStr(p?.id),
+      toStr(p?.nombre),
+      toStr(p?.categoria),
+      toStr(p?.subcategoria),
+      String(p?.precio ?? ""),
+      String(p?.oferta ?? ""),
+      toStr(p?.imagen),
+      toStr(p?.marca),
+      toStr(p?.presentacion),
+      tags,
+      String(p?.destacado ?? ""),
+      toStr(p?.promo_group),
+      dpc,
+      String(stock),
+    ].join("|");
+    combined += "||";
   }
   return `${list.length}:${hashString(combined)}`;
 }
