@@ -6,11 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:android": "VITE_BASE=./ npm run build",
+    "preview": "vite preview",
+
     "android:init": "npx cap add android",
     "android:sync": "npx cap sync android",
     "android:open": "npx cap open android",
-    "preview": "vite preview",
+
     "build:products": "node build-products.mjs",
     "test": "vitest run"
   },
