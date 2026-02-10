@@ -1,18 +1,23 @@
 import { defineConfig } from "vite";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 
-/**
- * Configuración Vite estable para hosting estático
- *
- * ✔ Funciona correctamente en Vercel
- * ✔ Funco (si algún día querés) en GitHub Pages
- * ✔ Evita errores de rutas de CSS / JS / assets
- * ✔ No depende de variables de entorno frágiles
- */
+// Base:
+// - "/" para Vercel
+// - "./" para Android / Capacitor
+const base = process.env.VITE_BASE ?? "/";
 
 export default defineConfig({
-  // Base relativa: SOLUCIÓN al problema de Vercel
-  base: "./",
-
+  base,
+  plugins: [
+    viteStaticCopy({
+      targets: [
+        {
+          src: "images/**/*", // carpeta que TENÉS en el repo
+          dest: "images",     // se copiará a dist/images
+        },
+      ],
+    }),
+  ],
   build: {
     outDir: "dist",
     emptyOutDir: true,
