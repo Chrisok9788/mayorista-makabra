@@ -1,0 +1,26 @@
+name: Unzip images
+
+on:
+  push:
+    paths:
+      - "assets/imagenes.zip"
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create public/images
+        run: mkdir -p public/images
+
+      - name: Unzip images
+        run: unzip -o assets/imagenes.zip -d public/images
+
+      - name: Commit extracted images
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add public/images
+          git commit -m "Extract images.zip into public/images" || echo "No changes"
+          git push
