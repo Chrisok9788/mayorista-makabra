@@ -7,7 +7,7 @@
 // ✅ Mantiene: FIX iOS, redondeos, categorías/subcategorías, ofertas, carrito, orden inteligente
 //
 // IMPORTANTE:
-// - Si tu data.js hoy trae CSV desde Google Sheets, igual funciona.
+// - Si tu data.js trae CSV desde Google Sheets, funciona.
 // - Si mañana volvés a products.json (array), también funciona.
 
 import { loadProductsWithCache } from "./data.js";
@@ -37,6 +37,8 @@ import { sendOrder } from "./whatsapp.js";
 let products = [];
 let baseProducts = [];
 let sending = false;
+
+let listenersBound = false; // ✅ evita duplicar listeners al refrescar catálogo
 
 // =======================
 // ✅ FIX iOS “pantalla blanca hasta girar”
@@ -74,6 +76,9 @@ function formatUYU(n) {
   return `$ ${roundUYU(n)}`;
 }
 
+// =======================
+// Status catálogo (cache/actualización)
+// =======================
 function formatDateTime(ts) {
   if (!ts) return "";
   const d = new Date(ts);
@@ -96,8 +101,7 @@ function showCatalogStatus(message, variant = "info") {
 }
 
 // =======================
-// ✅ CSV -> Array<Object> (para Google Sheets output=csv)
-// (sin librerías, robusto para comillas)
+// ✅ CSV -> Array<Object> (por si algún día te llega un string)
 // =======================
 function parseCSV(text) {
   const s = String(text ?? "");
@@ -139,10 +143,8 @@ function parseCSV(text) {
   row.push(cur);
   rows.push(row);
 
-  // headers
   const headers = (rows.shift() || []).map((h) => String(h || "").trim());
 
-  // rows -> objects
   const out = [];
   for (const r of rows) {
     if (!r || r.length === 0) continue;
@@ -154,7 +156,6 @@ function parseCSV(text) {
       obj[key] = (r[i] ?? "").trim();
     }
 
-    // descartar filas completamente vacías
     const hasAny = Object.values(obj).some((v) => String(v).trim() !== "");
     if (hasAny) out.push(obj);
   }
@@ -167,6 +168,22 @@ function parseCSV(text) {
 // =======================
 function normStr(v) {
   return String(v ?? "").trim();
+}
+
+function toBool(v) {
+  if (v === true) return true;
+  if (v === false) return false;
+
+  const s = String(v ?? "").trim().toLowerCase();
+  if (!s) return false;
+
+  if (s === "true" || s === "verdadero" || s === "1" || s === "si" || s === "sí" || s === "yes")
+    return true;
+
+  if (s === "false" || s === "falso" || s === "0" || s === "no")
+    return false;
+
+  return false;
 }
 
 function getCat(p) {
@@ -186,7 +203,6 @@ function getId(p) {
 }
 
 function isOffer(p) {
-  // CSV: "TRUE"/"FALSE" -> lo tratamos con toBool
   const v = p?.oferta ?? p?.offer ?? p?.oferta_carrusel ?? p?.ofertaCarrusel;
   return toBool(v) === true;
 }
@@ -210,30 +226,7 @@ function getPrice(p) {
   return Number.isFinite(n) ? n : 0;
 }
 
-function toBool(v) {
-  // ✅ DEFINITIVA para CSV + JSON:
-  // boolean, "TRUE", "FALSE", "1", "0", "SI", etc.
-  if (v === true) return true;
-  if (v === false) return false;
-
-  const s = String(v ?? "").trim().toLowerCase();
-
-  if (!s) return false;
-
-  // true values
-  if (s === "true" || s === "verdadero" || s === "1" || s === "si" || s === "sí" || s === "yes")
-    return true;
-
-  // false values
-  if (s === "false" || s === "falso" || s === "0" || s === "no")
-    return false;
-
-  // fallback: cualquier otra cosa -> false
-  return false;
-}
-
 function normalizeProduct(p) {
-  // ✅ soportar encabezados raros por export / espacios / mayúsculas
   const dRaw =
     p?.Destacados ??
     p?.destacado ??
@@ -253,17 +246,12 @@ function normalizeProduct(p) {
     precio: getPrice(p),
     oferta: isOffer(p),
     imagen: getImg(p),
-
-    // ✅ CLAVE
     destacado: toBool(dRaw),
   };
 }
 
 function normalizeList(input) {
-  // ✅ Si viene CSV (string) -> parse -> normalizar
-  // ✅ Si viene array -> normalizar directo
   const list = typeof input === "string" ? parseCSV(input) : input;
-
   if (!Array.isArray(list)) return [];
   return list.map(normalizeProduct).filter((p) => p.id);
 }
@@ -308,12 +296,7 @@ function parseSizeKey(product) {
 }
 
 function fallbackOneLiterForBeverages(product) {
-  const raw = normText(
-    [product?.presentacion, product?.nombre, product?.name]
-      .filter(Boolean)
-      .join(" ")
-  );
-
+  const raw = normText([product?.presentacion, product?.nombre, product?.name].filter(Boolean).join(" "));
   const looksLikeBeverage =
     raw.includes("coca") ||
     raw.includes("nix") ||
@@ -330,29 +313,10 @@ function fallbackOneLiterForBeverages(product) {
   return m ? 1000 : Number.POSITIVE_INFINITY;
 }
 
-const FLAVOR_ORDER = [
-  "cola",
-  "lima",
-  "limon",
-  "pomelo",
-  "naranja",
-  "manzana",
-  "uva",
-  "tonica",
-  "ginger",
-  "sin azucar",
-  "cero",
-  "zero",
-  "light",
-];
+const FLAVOR_ORDER = ["cola","lima","limon","pomelo","naranja","manzana","uva","tonica","ginger","sin azucar","cero","zero","light"];
 
 function detectFlavor(product) {
-  const raw = normText(
-    [product?.nombre, product?.name, product?.presentacion, product?.presentación]
-      .filter(Boolean)
-      .join(" ")
-  );
-
+  const raw = normText([product?.nombre, product?.name, product?.presentacion, product?.presentación].filter(Boolean).join(" "));
   const s = raw
     .replace("limón", "limon")
     .replace("tónica", "tonica")
@@ -377,12 +341,8 @@ function detectBase(product) {
   if (marca) return marca;
 
   const raw0 = normText(product?.nombre ?? product?.name);
-
   const raw = raw0
-    .replace(
-      /\b\d+(?:\.\d+)?\s*(ml|cc|l|lt|lts|litro|litros|g|gr|grs|kg|kgs|kilo|kilos)\b/g,
-      " "
-    )
+    .replace(/\b\d+(?:\.\d+)?\s*(ml|cc|l|lt|lts|litro|litros|g|gr|grs|kg|kgs|kilo|kilos)\b/g, " ")
     .replace(/[-_/]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
@@ -391,7 +351,6 @@ function detectBase(product) {
 
   const tokens = raw.split(" ");
   const two = tokens.slice(0, 2).join(" ");
-
   if (two === "coca cola") return "coca cola";
   return tokens[0];
 }
@@ -400,36 +359,25 @@ function sortCatalogue(list) {
   const arr = [...(list || [])];
 
   arr.sort((a, b) => {
-    const catA = getCat(a);
-    const catB = getCat(b);
-    const catCmp = catA.localeCompare(catB, "es");
+    const catCmp = getCat(a).localeCompare(getCat(b), "es");
     if (catCmp !== 0) return catCmp;
 
-    const baseA = detectBase(a);
-    const baseB = detectBase(b);
-    const baseCmp = baseA.localeCompare(baseB, "es");
+    const baseCmp = detectBase(a).localeCompare(detectBase(b), "es");
     if (baseCmp !== 0) return baseCmp;
 
-    const flA = detectFlavor(a);
-    const flB = detectFlavor(b);
-    const frA = flavorRank(flA);
-    const frB = flavorRank(flB);
+    const frA = flavorRank(detectFlavor(a));
+    const frB = flavorRank(detectFlavor(b));
     if (frA !== frB) return frA - frB;
 
     const ak = parseSizeKey(a);
     const bk = parseSizeKey(b);
-
     let aV = ak ? ak.value : null;
     let bV = bk ? bk.value : null;
-
     if (aV == null) aV = fallbackOneLiterForBeverages(a);
     if (bV == null) bV = fallbackOneLiterForBeverages(b);
-
     if (aV !== bV) return aV - bV;
 
-    const an = normText(getName(a));
-    const bn = normText(getName(b));
-    return an.localeCompare(bn, "es");
+    return normText(getName(a)).localeCompare(normText(getName(b)), "es");
   });
 
   return arr;
@@ -498,9 +446,7 @@ function focusProductCardById(productId) {
   const container = document.getElementById("products-container");
   if (!container) return;
 
-  container.querySelectorAll(".product-card.focused").forEach((el) => {
-    el.classList.remove("focused");
-  });
+  container.querySelectorAll(".product-card.focused").forEach((el) => el.classList.remove("focused"));
 
   const sel = String(productId);
   const card =
@@ -553,9 +499,7 @@ function renderCategoryGrid(categories, onClick) {
 }
 
 // =======================
-// ✅ DESTACADOS POR CATEGORÍA (Destacados=TRUE)
-//   1) Usa marcados en esa categoría (hasta 2)
-//   2) Si esa categoría NO tiene marcados -> fallback a 2 primeros
+// ✅ DESTACADOS POR CATEGORÍA
 // =======================
 function pickFeaturedByCategory(allProducts, perCategory = 2) {
   const arr = Array.isArray(allProducts) ? allProducts : [];
@@ -857,143 +801,56 @@ function sendWhatsAppOrderSafe() {
 }
 
 // =======================
-// INIT
+// Bind listeners una sola vez
 // =======================
-async function init() {
-  loadCart();
-  updateCartCount(document.getElementById("cart-count"), totalItems());
+function bindUIListenersOnce() {
+  if (listenersBound) return;
+  listenersBound = true;
 
-  try {
-    const { products: cachedProducts, fromCache, lastUpdated, updatePromise } =
-      await loadProductsWithCache();
+  const categoryEl = document.getElementById("category-filter");
+  const subcatEl = document.getElementById("subcategory-filter");
 
-    const applyProducts = (rawList) => {
-      const normalized = normalizeList(rawList);
-      const sorted = sortCatalogue(normalized);
+  const refreshSubcats = () => {
+    if (!categoryEl || !subcatEl) return;
 
-      products = sorted;
-      baseProducts = sorted;
+    const cat = categoryEl.value;
 
-      renderFeaturedByCategory(sorted, goToCatalogAndFocusProduct, goToCatalogAndFilterCategory);
-
-      const categories = buildCategoryCounts(sorted);
-      renderCategoryGrid(categories, (selectedCategory) => {
-        const categoryEl = document.getElementById("category-filter");
-        const subcatEl = document.getElementById("subcategory-filter");
-        const searchEl = document.getElementById("search-input");
-        if (searchEl) searchEl.value = "";
-
-        if (categoryEl) categoryEl.value = selectedCategory;
-
-        if (subcatEl) {
-          subcatEl.style.display = "block";
-          populateSubcategories(sorted, selectedCategory, subcatEl);
-          subcatEl.value = "";
-        }
-
-        showProductsMode();
-        applySearchAndFilter();
-        scrollToCatalogue();
-      });
-
-      const categoryEl = document.getElementById("category-filter");
-      if (categoryEl) populateCategories(sorted, categoryEl);
-
-      showCategoriesMode();
-      clearProductsUI();
-      setFeaturedVisibility();
-
-      const frameEl = document.querySelector(".offers-frame");
-      const trackEl = document.getElementById("offers-track");
-      renderOffersCarousel(sorted, frameEl, trackEl, goToCatalogAndFocusProduct);
-
-      rerenderCartUI();
-    };
-
-    applyProducts(cachedProducts);
-
-    if (fromCache) {
-      const updatedText = lastUpdated ? ` (actualizado ${formatDateTime(lastUpdated)})` : "";
-      showCatalogStatus(`Mostrando último catálogo guardado${updatedText}.`, "warning");
-    } else {
-      showCatalogStatus("", "info");
-    }
-
-    const updateResult = await updatePromise;
-    if (updateResult?.error) {
-      const updatedText = lastUpdated ? ` (actualizado ${formatDateTime(lastUpdated)})` : "";
-      showCatalogStatus(
-        `Mostrando último catálogo guardado${updatedText}. No se pudo actualizar.`,
-        "warning"
-      );
-    } else if (updateResult?.changed) {
-      applyProducts(updateResult.products);
-      showCatalogStatus("Catálogo actualizado.", "success");
-      setTimeout(() => showCatalogStatus("", "info"), 2500);
-    } else if (fromCache) {
-      showCatalogStatus("Catálogo actualizado.", "success");
-      setTimeout(() => showCatalogStatus("", "info"), 2500);
-    }
-
-    const categoryEl = document.getElementById("category-filter");
-    const subcatEl = document.getElementById("subcategory-filter");
-
-    const refreshSubcats = () => {
-      if (!categoryEl || !subcatEl) return;
-
-      const cat = categoryEl.value;
-
-      if (!cat) {
-        subcatEl.value = "";
-        subcatEl.style.display = "none";
-        applySearchAndFilter();
-        return;
-      }
-
-      showProductsMode();
-
-      subcatEl.style.display = "block";
-      populateSubcategories(products, cat, subcatEl);
+    if (!cat) {
       subcatEl.value = "";
-
+      subcatEl.style.display = "none";
       applySearchAndFilter();
-    };
-
-    if (categoryEl) categoryEl.addEventListener("change", refreshSubcats);
-    if (subcatEl) subcatEl.addEventListener("change", applySearchAndFilter);
-
-    const searchEl = document.getElementById("search-input");
-    if (searchEl) {
-      searchEl.addEventListener("input", () => {
-        if (searchEl.value.trim()) showProductsMode();
-        applySearchAndFilter();
-      });
+      return;
     }
 
-    const topBtn = document.getElementById("top-btn") || document.querySelector(".top-float");
-    if (topBtn) {
-      topBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        scrollToFiltersAndFocus();
-      });
-    }
-
-    setTimeout(forceIOSRepaint, 50);
-  } catch (err) {
-    console.error(err);
-    const pc = document.getElementById("products-container");
-    if (pc) {
-      pc.innerHTML = `<p style="color:#b00020;font-weight:700">Error al cargar productos: ${String(
-        err?.message || err
-      )}</p>`;
-    }
     showProductsMode();
-    setFeaturedVisibility();
-    setTimeout(forceIOSRepaint, 50);
+
+    subcatEl.style.display = "block";
+    populateSubcategories(products, cat, subcatEl);
+    subcatEl.value = "";
+
+    applySearchAndFilter();
+  };
+
+  if (categoryEl) categoryEl.addEventListener("change", refreshSubcats);
+  if (subcatEl) subcatEl.addEventListener("change", applySearchAndFilter);
+
+  const searchEl = document.getElementById("search-input");
+  if (searchEl) {
+    searchEl.addEventListener("input", () => {
+      if (searchEl.value.trim()) showProductsMode();
+      applySearchAndFilter();
+    });
   }
 
-  // carrito buttons
+  const topBtn = document.getElementById("top-btn") || document.querySelector(".top-float");
+  if (topBtn) {
+    topBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      scrollToFiltersAndFocus();
+    });
+  }
+
   const clearBtn = document.getElementById("clear-cart-btn");
   if (clearBtn) {
     clearBtn.addEventListener("click", () => {
@@ -1022,6 +879,107 @@ async function init() {
     },
     true
   );
+}
+
+// =======================
+// Aplicar productos a la UI (reusable)
+// =======================
+function applyProductsToUI(rawList) {
+  const normalized = normalizeList(rawList);
+  const sorted = sortCatalogue(normalized);
+
+  products = sorted;
+  baseProducts = sorted;
+
+  renderFeaturedByCategory(sorted, goToCatalogAndFocusProduct, goToCatalogAndFilterCategory);
+
+  const categories = buildCategoryCounts(sorted);
+  renderCategoryGrid(categories, (selectedCategory) => {
+    const categoryEl = document.getElementById("category-filter");
+    const subcatEl = document.getElementById("subcategory-filter");
+    const searchEl = document.getElementById("search-input");
+    if (searchEl) searchEl.value = "";
+
+    if (categoryEl) categoryEl.value = selectedCategory;
+
+    if (subcatEl) {
+      subcatEl.style.display = "block";
+      populateSubcategories(sorted, selectedCategory, subcatEl);
+      subcatEl.value = "";
+    }
+
+    showProductsMode();
+    applySearchAndFilter();
+    scrollToCatalogue();
+  });
+
+  const categoryEl = document.getElementById("category-filter");
+  if (categoryEl) populateCategories(sorted, categoryEl);
+
+  showCategoriesMode();
+  clearProductsUI();
+  setFeaturedVisibility();
+
+  const frameEl = document.querySelector(".offers-frame");
+  const trackEl = document.getElementById("offers-track");
+  renderOffersCarousel(sorted, frameEl, trackEl, goToCatalogAndFocusProduct);
+
+  rerenderCartUI();
+}
+
+// =======================
+// INIT
+// =======================
+async function init() {
+  loadCart();
+  updateCartCount(document.getElementById("cart-count"), totalItems());
+
+  try {
+    const { products: cachedProducts, fromCache, lastUpdated, updatePromise } =
+      await loadProductsWithCache();
+
+    // Render inmediato (cache o primera carga)
+    applyProductsToUI(cachedProducts);
+    bindUIListenersOnce();
+
+    if (fromCache) {
+      const updatedText = lastUpdated ? ` (actualizado ${formatDateTime(lastUpdated)})` : "";
+      showCatalogStatus(`Mostrando último catálogo guardado${updatedText}.`, "warning");
+    } else {
+      showCatalogStatus("", "info");
+    }
+
+    // Actualiza en background
+    const updateResult = await updatePromise;
+
+    if (updateResult?.error) {
+      const updatedText = lastUpdated ? ` (actualizado ${formatDateTime(lastUpdated)})` : "";
+      showCatalogStatus(
+        `Mostrando último catálogo guardado${updatedText}. No se pudo actualizar.`,
+        "warning"
+      );
+    } else if (updateResult?.changed) {
+      applyProductsToUI(updateResult.products);
+      showCatalogStatus("Catálogo actualizado.", "success");
+      setTimeout(() => showCatalogStatus("", "info"), 2500);
+    } else if (fromCache) {
+      showCatalogStatus("Catálogo actualizado.", "success");
+      setTimeout(() => showCatalogStatus("", "info"), 2500);
+    }
+
+    setTimeout(forceIOSRepaint, 50);
+  } catch (err) {
+    console.error(err);
+    const pc = document.getElementById("products-container");
+    if (pc) {
+      pc.innerHTML = `<p style="color:#b00020;font-weight:700">Error al cargar productos: ${String(
+        err?.message || err
+      )}</p>`;
+    }
+    showProductsMode();
+    setFeaturedVisibility();
+    setTimeout(forceIOSRepaint, 50);
+  }
 }
 
 function registerServiceWorker() {
