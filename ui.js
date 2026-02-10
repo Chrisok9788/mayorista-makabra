@@ -17,6 +17,10 @@
  * ✅ NUEVO:
  *   - renderFeaturedByCategory (2 artículos por categoría) + callbacks
  *
+ * ✅ FIX VERCEL/GH/ANDROID (IMÁGENES):
+ *   - resolveAssetUrl(): convierte "images/..." o "/images/..." a una URL válida
+ *     respetando import.meta.env.BASE_URL (Vite).
+ *
  * ✅ Exporta TODO lo que usa tu app.js:
  *   - renderProducts
  *   - renderCart
@@ -128,14 +132,37 @@ function money(n) {
 function getBaseUrl() {
   const BASE =
     typeof import.meta !== "undefined" && import.meta.env && import.meta.env.BASE_URL
-      ? import.meta.env.BASE_URL
+      ? String(import.meta.env.BASE_URL)
       : "./";
-  return BASE;
+
+  // Asegura que termine en "/"
+  return BASE.endsWith("/") ? BASE : `${BASE}/`;
 }
 
 /** Placeholder defensivo (puede ser placeholder.png) */
 function getPlaceholderUrl() {
   return `${getBaseUrl()}placeholder.png`;
+}
+
+/**
+ * ✅ FIX VERCEL/GH/ANDROID:
+ * Convierte rutas relativas o root-relative en una ruta válida respetando BASE_URL.
+ * - "images/x.jpg"   => BASE_URL + "images/x.jpg"
+ * - "/images/x.jpg"  => BASE_URL + "images/x.jpg"  (IMPORTANTE para GH Pages)
+ * - "./images/x.jpg" => BASE_URL + "images/x.jpg"
+ * - "http..."        => se deja tal cual
+ */
+function resolveAssetUrl(src) {
+  const s = String(src || "").trim();
+  if (!s) return "";
+
+  // absolutas o especiales: no tocar
+  if (/^(https?:)?\/\//i.test(s) || /^data:/i.test(s) || /^blob:/i.test(s)) return s;
+
+  // normaliza prefijos
+  const clean = s.replace(/^\.?\//, "").replace(/^\/+/, "");
+
+  return `${getBaseUrl()}${clean}`;
 }
 
 /**
@@ -145,6 +172,7 @@ function getPlaceholderUrl() {
  * - lazy/eager configurable
  * - decode async
  * - fade-in cuando carga
+ * - ✅ FIX: resuelve URL final con BASE_URL
  */
 function setupFastImage(imgEl, realSrc, alt, opts = {}) {
   const { priority = "low", loading = "lazy", width, height } = opts;
@@ -165,7 +193,7 @@ function setupFastImage(imgEl, realSrc, alt, opts = {}) {
   imgEl.style.opacity = "0";
   imgEl.style.transition = "opacity 160ms ease";
 
-  const finalSrc = realSrc || "";
+  const finalSrc = resolveAssetUrl(realSrc);
   if (!finalSrc) {
     imgEl.style.opacity = "1";
     return;
@@ -234,12 +262,6 @@ function getEffectiveQtyForPricing(product, itemQty, groupQtyMap) {
    Totales carrito
    ========================= */
 
-/**
- * Calcula total del carrito aplicando:
- * - promos por cantidad por producto
- * - ✅ promos mix por promo_group (suma qty del grupo)
- * ✅ COHERENTE: suma subtotales ya redondeados
- */
 export function computeCartTotal(products, cart) {
   if (!Array.isArray(products) || !products.length) return 0;
   if (!cart || typeof cart !== "object") return 0;
@@ -267,7 +289,6 @@ export function computeCartTotal(products, cart) {
   return total;
 }
 
-/** Actualiza total */
 export function updateCartTotal(totalEl, products, cart) {
   if (!totalEl) return;
   const total = computeCartTotal(products, cart);
@@ -278,10 +299,6 @@ export function updateCartTotal(totalEl, products, cart) {
    Catálogo
    ========================= */
 
-/**
- * Renderiza el catálogo
- * ✅ FIX CLAVE: agrega data-id para poder enfocar el producto exacto
- */
 export function renderProducts(list, container, addHandler) {
   if (!container) return;
   container.innerHTML = "";
@@ -405,10 +422,6 @@ export function renderProducts(list, container, addHandler) {
    Carrusel ofertas
    ========================= */
 
-/**
- * Renderiza el carrusel de OFERTAS.
- * ✅ eager + prioridad alta
- */
 export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
   if (!frameEl || !trackEl) return;
 
@@ -504,10 +517,6 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
    Carrito
    ========================= */
 
-/**
- * Renderiza el carrito
- * ✅ Aplica promo mix por promo_group (si existe)
- */
 export function renderCart(products, cart, container, updateHandler, removeHandler) {
   if (!container) return 0;
   container.innerHTML = "";
@@ -540,7 +549,6 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
     name.textContent = getProductName(product) || "Producto";
     left.appendChild(name);
 
-    // promo note
     const promoText = getQtyPromoText(product);
     if (promoText) {
       const note = document.createElement("div");
@@ -549,7 +557,6 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
       left.appendChild(note);
     }
 
-    // ✅ si es mix, mostramos qty del grupo también (ayuda al usuario)
     const g = getPromoGroup(product);
     if (g) {
       const qg = groupQtyMap.get(g) || 0;
@@ -562,7 +569,6 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
 
     item.appendChild(left);
 
-    // ✅ unit price usando qty efectiva (grupo o item)
     const effQty = getEffectiveQtyForPricing(product, q, groupQtyMap);
     const unitRaw = getUnitPriceByQty(product, effQty);
 
@@ -624,7 +630,6 @@ export function updateCartCount(countEl, count) {
    Filtros / categorías
    ========================= */
 
-/** Carga categorías */
 export function populateCategories(products, select) {
   if (!select) return;
 
@@ -654,7 +659,6 @@ export function populateCategories(products, select) {
   });
 }
 
-/** Carga subcategorías */
 export function populateSubcategories(products, category, select) {
   if (!select) return;
 
@@ -681,7 +685,6 @@ export function populateSubcategories(products, category, select) {
   });
 }
 
-/** Filtra por categoría y texto */
 export function filterProducts(products, category, searchTerm) {
   let result = products || [];
 
