@@ -1,9 +1,10 @@
 // data.js — versión FINAL (Google Sheets CSV -> productos)
 // ✅ Incluye Destacados=TRUE -> destacado:true (para “Destacados por categoría”)
 // ✅ Incluye promo_group (para promos mixtas: 2+1+1 = 4 y aplica precio promo)
+// ✅ Cache local + actualización en background
+// ✅ Fallback: /api/catalog (si existe) -> si falla, usa Google Sheets CSV
 // Compatible con GitHub Pages
 
-// ✅ TU LINK (CSV publicado)
 export const PRODUCTS_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJAgesFM5B0OTnVSvcOxrtC4VlI1ijay6erm7XnX8zjRtwUnbX-M0_4yXxRhcairW01hFOjoKQHW7t/pub?gid=1128238455&single=true&output=csv";
 
@@ -19,7 +20,6 @@ function toStr(v) {
 }
 
 function toBool(v) {
-  // ✅ robusto: TRUE/FALSE, verdadero/falso, 1/0, si/no, yes/no
   if (v === true) return true;
   if (v === false) return false;
 
@@ -33,8 +33,7 @@ function toBool(v) {
     s === "si" ||
     s === "sí" ||
     s === "yes"
-  )
-    return true;
+  ) return true;
 
   if (s === "false" || s === "falso" || s === "0" || s === "no") return false;
 
@@ -43,10 +42,7 @@ function toBool(v) {
 
 function toNumber(v) {
   if (typeof v === "number") return Number.isFinite(v) ? v : 0;
-  const s = toStr(v)
-    .replace(/\$/g, "")
-    .replace(/\./g, "")
-    .replace(/,/g, "."); // por si viene 1.234,56
+  const s = toStr(v).replace(/\$/g, "").replace(/\./g, "").replace(/,/g, ".");
   const n = Number(s);
   return Number.isFinite(n) ? n : 0;
 }
@@ -54,30 +50,41 @@ function toNumber(v) {
 function parseTags(v) {
   const s = toStr(v);
   if (!s) return [];
-  // Permite: "cola; coca; 2lt" o "cola, coca, 2lt"
-  return s
-    .split(/[;,]/g)
-    .map((x) => x.trim())
-    .filter(Boolean);
+  return s.split(/[;,]/g).map((x) => x.trim()).filter(Boolean);
 }
 
 function getApiBase() {
   const raw =
-    typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_API_BASE
+    typeof import.meta !== "undefined" &&
+    import.meta.env &&
+    import.meta.env.VITE_API_BASE
       ? String(import.meta.env.VITE_API_BASE).trim()
       : "";
   return raw.replace(/\/$/, "");
 }
 
-function withTimeout(url, timeoutMs) {
+async function fetchWithTimeout(url, timeoutMs) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
-  return fetch(url, {
-    cache: "no-store",
-    headers: { Accept: "application/json, text/csv, text/plain, */*" },
-    signal: controller.signal,
-  }).finally(() => clearTimeout(timer));
+
+  try {
+    return await fetch(url, {
+      cache: "no-store",
+      headers: {
+        Accept: "application/json, text/csv, text/plain, */*",
+        "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+        Pragma: "no-cache",
+      },
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timer);
+  }
 }
+
+/* =========================
+   Cache local (opcional)
+   ========================= */
 
 function readCatalogCache() {
   if (typeof localStorage === "undefined") return null;
@@ -103,7 +110,7 @@ function writeCatalogCache(products, updatedAt) {
       JSON.stringify({ products, updatedAt: Number(updatedAt) || Date.now() })
     );
   } catch {
-    // sin storage disponible, ignoramos
+    // storage lleno o bloqueado -> ignorar
   }
 }
 
@@ -143,11 +150,10 @@ function getProductsSignature(list) {
   return `${list.length}:${hashString(combined)}`;
 }
 
-/**
- * CSV parser simple y robusto:
- * - soporta comillas
- * - soporta comas dentro de comillas
- */
+/* =========================
+   CSV parser simple y robusto
+   ========================= */
+
 function parseCSV(text) {
   const rows = [];
   let row = [];
@@ -159,7 +165,6 @@ function parseCSV(text) {
     const next = text[i + 1];
 
     if (ch === '"' && inQuotes && next === '"') {
-      // escape de comillas: ""
       cur += '"';
       i++;
       continue;
@@ -177,7 +182,7 @@ function parseCSV(text) {
     }
 
     if ((ch === "\n" || ch === "\r") && !inQuotes) {
-      if (ch === "\r" && next === "\n") i++; // CRLF
+      if (ch === "\r" && next === "\n") i++;
       row.push(cur);
       rows.push(row);
       row = [];
@@ -188,11 +193,9 @@ function parseCSV(text) {
     cur += ch;
   }
 
-  // último campo
   row.push(cur);
   rows.push(row);
 
-  // limpiar filas vacías
   return rows.filter((r) => r.some((c) => toStr(c) !== ""));
 }
 
@@ -219,7 +222,6 @@ function rowsToObjects(rows) {
    ========================= */
 
 function getDestacadosValue(r) {
-  // ✅ Soporta nombres típicos de columna
   return (
     r.Destacados ??
     r.destacados ??
@@ -233,7 +235,6 @@ function getDestacadosValue(r) {
 }
 
 function getPromoGroupValue(r) {
-  // ✅ Soporta nombres típicos de columna (por si cambias el encabezado)
   return (
     r.promo_group ??
     r.PROMO_GROUP ??
@@ -249,7 +250,6 @@ function getPromoGroupValue(r) {
 }
 
 function rowToProduct(r) {
-  // Campos base
   const id = toStr(r.id);
   if (!id) return null;
 
@@ -265,20 +265,13 @@ function rowToProduct(r) {
 
   const tags = parseTags(r.tags);
 
-  // activo
-  const activo = r.activo === "" ? true : toBool(r.activo); // si está vacío, asumimos activo
+  const activo = r.activo === "" ? true : toBool(r.activo);
   if (!activo) return null;
 
-  // Carrusel / oferta
   const ofertaCarrusel = toBool(r.oferta_carrusel);
-
-  // ✅ DESTACADOS
   const destacado = toBool(getDestacadosValue(r));
-
-  // ✅ promo_group (para promos mixtas)
   const promo_group = toStr(getPromoGroupValue(r)) || null;
 
-  // Promo por cantidad (DPC)
   const promoMin = toNumber(r.promo_min_qty);
   const promoPrecio = toNumber(r.promo_precio);
 
@@ -287,30 +280,26 @@ function rowToProduct(r) {
       ? { tramos: [{ min: promoMin, precio: promoPrecio }] }
       : undefined;
 
-  // Producto final (formato que tu web consume)
   return {
     id,
     nombre: nombre || id,
     categoria: categoria || "Otros",
     subcategoria: subcategoria || "Otros",
     precio: precio_base > 0 ? precio_base : 0,
-    oferta: ofertaCarrusel, // ✅ carrusel de ofertas
+    oferta: ofertaCarrusel,
     imagen,
     marca,
     presentacion,
     tags,
-    destacado, // ✅ CLAVE: ahora tu app.js lo ve como boolean REAL
-
-    // ✅ CLAVE: habilita “mix & match”
+    destacado,
     promo_group,
-
     ...(dpc ? { dpc } : {}),
     ...(r.stock !== undefined && r.stock !== "" ? { stock: toNumber(r.stock) } : {}),
   };
 }
 
 /* =========================
-   Fetch principal
+   Fetch desde API (si existe)
    ========================= */
 
 async function fetchCatalogFromApi() {
@@ -318,7 +307,7 @@ async function fetchCatalogFromApi() {
   const apiUrl = base ? `${base}/api/catalog` : "/api/catalog";
   const url = apiUrl.includes("?") ? `${apiUrl}&_ts=${Date.now()}` : `${apiUrl}?_ts=${Date.now()}`;
 
-  const res = await withTimeout(url, DEFAULT_TIMEOUT_MS);
+  const res = await fetchWithTimeout(url, DEFAULT_TIMEOUT_MS);
 
   if (!res.ok) {
     const error = new Error(`Error HTTP ${res.status} al cargar catálogo`);
@@ -327,32 +316,34 @@ async function fetchCatalogFromApi() {
   }
 
   const payload = await res.json();
-  if (!Array.isArray(payload?.products) || payload.products.length === 0) {
+
+  // ✅ Acepta ambos formatos:
+  // 1) API devuelve { products: [...] , updatedAt }
+  // 2) API devuelve directamente [...]
+  const products = Array.isArray(payload) ? payload : payload?.products;
+  const updatedAt = Array.isArray(payload) ? Date.now() : (payload?.updatedAt || Date.now());
+
+  if (!Array.isArray(products) || products.length === 0) {
     throw new Error("Catálogo vacío desde API.");
   }
 
-  return {
-    products: payload.products,
-    updatedAt: payload.updatedAt || Date.now(),
-  };
+  return { products, updatedAt };
 }
+
+/* =========================
+   Fetch desde CSV
+   ========================= */
 
 export async function fetchProducts() {
   let res;
   try {
-    // cache-bust para que vea cambios al toque
     const url = PRODUCTS_URL.includes("?")
       ? `${PRODUCTS_URL}&_ts=${Date.now()}`
       : `${PRODUCTS_URL}?_ts=${Date.now()}`;
 
-    res = await fetch(url, {
-      cache: "no-store",
-      headers: { Accept: "text/csv, text/plain, */*" },
-    });
-  } catch (err) {
-    throw new Error(
-      "No se pudo conectar para cargar la planilla (CSV). Verificá conexión o link publicado."
-    );
+    res = await fetchWithTimeout(url, DEFAULT_TIMEOUT_MS);
+  } catch {
+    throw new Error("No se pudo conectar para cargar la planilla (CSV). Verificá conexión o link publicado.");
   }
 
   const text = await res.text();
@@ -361,11 +352,8 @@ export async function fetchProducts() {
     throw new Error(`Error HTTP ${res.status} al cargar CSV de Google Sheets`);
   }
 
-  // Si Google devolvió HTML (error de publicación), lo detectamos
   if (text.trim().startsWith("<!DOCTYPE html") || text.includes("<html")) {
-    throw new Error(
-      "El link no está devolviendo CSV (parece HTML). Revisá: Publicar en la web → CSV."
-    );
+    throw new Error("El link no está devolviendo CSV (parece HTML). Revisá: Publicar en la web → CSV.");
   }
 
   const rows = parseCSV(text);
@@ -377,14 +365,16 @@ export async function fetchProducts() {
     if (p) products.push(p);
   }
 
-  if (!Array.isArray(products) || products.length === 0) {
-    throw new Error(
-      "CSV cargó, pero no se generaron productos. Revisá que exista la columna 'id' y tenga valores."
-    );
+  if (!products.length) {
+    throw new Error("CSV cargó, pero no se generaron productos. Revisá que exista la columna 'id' y tenga valores.");
   }
 
   return products;
 }
+
+/* =========================
+   Loader con cache + update en background
+   ========================= */
 
 export async function loadProductsWithCache() {
   const cached = readCatalogCache();
@@ -395,7 +385,7 @@ export async function loadProductsWithCache() {
       let fresh;
       try {
         fresh = await fetchCatalogFromApi();
-      } catch (err) {
+      } catch {
         const products = await fetchProducts();
         fresh = { products, updatedAt: Date.now() };
       }
@@ -423,9 +413,7 @@ export async function loadProductsWithCache() {
   }
 
   const first = await updatePromise;
-  if (first?.error) {
-    throw new Error(first.error);
-  }
+  if (first?.error) throw new Error(first.error);
 
   return {
     products: first.products,
