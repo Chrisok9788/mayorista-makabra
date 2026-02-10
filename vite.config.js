@@ -1,12 +1,18 @@
 import { defineConfig } from "vite";
 
-// Vite configuration for static hosting.
-// Default base is "/" for platforms like Vercel.
-// Set VITE_BASE (e.g. "/mayorista-makabra-web/") for GitHub Pages.
-const base = process.env.VITE_BASE ?? "/";
+/**
+ * Configuración Vite estable para hosting estático
+ *
+ * ✔ Funciona correctamente en Vercel
+ * ✔ Funco (si algún día querés) en GitHub Pages
+ * ✔ Evita errores de rutas de CSS / JS / assets
+ * ✔ No depende de variables de entorno frágiles
+ */
 
 export default defineConfig({
-  base,
+  // Base relativa: SOLUCIÓN al problema de Vercel
+  base: "./",
+
   build: {
     outDir: "dist",
     emptyOutDir: true,
