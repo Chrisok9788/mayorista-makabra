@@ -4,6 +4,7 @@
 // ✅ Cache local + actualización en background
 // ✅ Fallback: /api/catalog (si existe) -> si falla, usa Google Sheets CSV
 // Compatible con GitHub Pages
+import { getUserCode } from "./src/auth.js";
 
 export const PRODUCTS_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJAgesFM5B0OTnVSvcOxrtC4VlI1ijay6erm7XnX8zjRtwUnbX-M0_4yXxRhcairW01hFOjoKQHW7t/pub?gid=1128238455&single=true&output=csv";
@@ -66,15 +67,32 @@ function getApiBase() {
 async function fetchWithTimeout(url, timeoutMs) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
+  const userCode = getUserCode();
+  const finalUrl = (() => {
+    if (!userCode) return url;
+    try {
+      const parsed = new URL(url, window.location.origin);
+      parsed.searchParams.set("mmw_user_code", userCode);
+      return parsed.toString();
+    } catch {
+      return url;
+    }
+  })();
+
+  const headers = {
+    Accept: "application/json, text/csv, text/plain, */*",
+    "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+    Pragma: "no-cache",
+  };
+
+  if (userCode) {
+    headers["X-MMW-User-Code"] = userCode;
+  }
 
   try {
-    return await fetch(url, {
+    return await fetch(finalUrl, {
       cache: "no-store",
-      headers: {
-        Accept: "application/json, text/csv, text/plain, */*",
-        "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
-        Pragma: "no-cache",
-      },
+      headers,
       signal: controller.signal,
     });
   } finally {

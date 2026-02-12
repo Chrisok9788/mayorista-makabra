@@ -10,6 +10,9 @@
  *    - Calcula precio unitario usando qty efectiva del grupo cuando corresponde
  */
 
+import { getUserCode } from "./src/auth.js";
+
+
 function roundUYU(n) {
   const v = Number(n);
   return Number.isFinite(v) ? Math.round(v) : 0;
@@ -100,6 +103,7 @@ export function sendOrder(cart, products) {
 
   const customerId = getOrCreateCustomerId();
   const orderId = makeOrderId();
+  const userCode = getUserCode();
 
   let address = localStorage.getItem("customerAddress") || "";
   const isNewCustomer = !address;
@@ -168,6 +172,7 @@ export function sendOrder(cart, products) {
   const lines = [];
   lines.push(`Pedido: ${orderId}`);
   lines.push(`Cliente: ${customerId}`);
+  if (userCode) lines.push(`Código: ${userCode}`);
   lines.push("");
 
   let totalRoundedSum = 0; // ✅ sumamos subtotales ya redondeados

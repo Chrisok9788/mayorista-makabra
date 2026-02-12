@@ -33,6 +33,7 @@ import {
 } from "./ui.js";
 
 import { sendOrder } from "./whatsapp.js";
+import { initAuthGate } from "./src/auth.js";
 
 let products = [];
 let baseProducts = [];
@@ -1004,6 +1005,14 @@ function setupNativeBackButton() {
   });
 }
 
-registerServiceWorker();
-setupNativeBackButton();
-init();
+let appBootstrapped = false;
+
+function startApp() {
+  if (appBootstrapped) return;
+  appBootstrapped = true;
+  registerServiceWorker();
+  setupNativeBackButton();
+  init();
+}
+
+initAuthGate({ onAuthed: startApp });
