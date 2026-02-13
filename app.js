@@ -33,6 +33,7 @@ import {
 } from "./ui.js";
 
 import { sendOrder } from "./whatsapp.js";
+import { getDeliveryProfile, initDeliveryModeUI, isDeliveryActive } from "./src/delivery-mode.js";
 
 let products = [];
 let baseProducts = [];
@@ -785,7 +786,7 @@ function sendWhatsAppOrderSafe() {
       return;
     }
 
-    sendOrder(cart, products);
+    sendOrder(cart, products, isDeliveryActive() ? getDeliveryProfile() : null);
   } catch (err) {
     console.error("Error al enviar pedido:", err);
 
@@ -931,6 +932,7 @@ function applyProductsToUI(rawList) {
 // INIT
 // =======================
 async function init() {
+  initDeliveryModeUI();
   loadCart();
   updateCartCount(document.getElementById("cart-count"), totalItems());
 
