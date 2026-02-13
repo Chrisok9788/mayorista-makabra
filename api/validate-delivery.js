@@ -1,4 +1,8 @@
-const CODE_REGEX = /^\d{7}$/;
+const CODE_REGEX = /^\d{7,8}$/;
+
+function sanitizeCode(input) {
+  return String(input ?? "").replace(/\D/g, "").trim();
+}
 
 function getLast3(code) {
   const value = String(code || "");
@@ -22,7 +26,7 @@ function readDirectoryFromEnv() {
 function sanitizeProfile(entry) {
   if (!entry || typeof entry !== "object") return null;
 
-  const code = String(entry.code ?? "").trim();
+  const code = sanitizeCode(entry.code);
   const name = String(entry.name ?? "").trim();
   const address = String(entry.address ?? "").trim();
   const phone = String(entry.phone ?? "").trim();
@@ -45,7 +49,7 @@ export default async function handler(req, res) {
   let code = "";
   try {
     const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
-    code = String(body?.code ?? "").trim();
+    code = sanitizeCode(body?.code);
   } catch {
     return res.status(400).json({ valid: false, error: "BAD_REQUEST" });
   }
@@ -56,7 +60,7 @@ export default async function handler(req, res) {
 
   try {
     const directory = readDirectoryFromEnv();
-    const match = directory.find((entry) => String(entry?.code ?? "").trim() === code);
+    const match = directory.find((entry) => sanitizeCode(entry?.code) === code);
     const profile = sanitizeProfile(match);
 
     if (!profile) {
