@@ -136,18 +136,53 @@ https://TU_USUARIO.github.io/mayorista-makabra-web/
 
 ## Modo Reparto (opcional)
 
-### Variable de entorno en Vercel
+### Configuración en Vercel (dónde poner el enlace)
 
-En **Vercel → Settings → Environment Variables** agregá:
+En **Vercel → tu proyecto → Settings → Environment Variables** cargá una de estas opciones:
 
-- `DELIVERY_DIRECTORY_JSON` (**Sensitive: ON**)
+1. **Opción simple (recomendada):**
+   - `DELIVERY_DIRECTORY_SHEET_ID`: ID de la planilla Google Sheets.
+   - `DELIVERY_DIRECTORY_SHEET_GID` (opcional): GID de la pestaña (por defecto `0`).
 
-Ejemplo de valor:
+2. **Opción URL directa:**
+   - `DELIVERY_DIRECTORY_CSV_URL`: URL CSV publicada desde Google Sheets.
+
+3. **Fallback opcional:**
+   - `DELIVERY_DIRECTORY_JSON`: directorio en JSON usado si falla la carga desde Sheets.
+
+> El backend prioriza `DELIVERY_DIRECTORY_CSV_URL`. Si no existe, arma la URL con `DELIVERY_DIRECTORY_SHEET_ID` + `DELIVERY_DIRECTORY_SHEET_GID`.
+
+Ejemplo de `DELIVERY_DIRECTORY_SHEET_ID`:
+
+`https://docs.google.com/spreadsheets/d/1AbCdEfGhIjKlMnOpQrStUvWxYz1234567890/edit#gid=0`
+
+En ese caso, el ID es: `1AbCdEfGhIjKlMnOpQrStUvWxYz1234567890`
+
+### Parámetros de la planilla Google Sheets (CSV)
+
+Publicá la hoja como CSV con estos encabezados:
+
+- `code` (obligatorio): **código numérico de 5 dígitos**.
+- `name` (obligatorio): nombre del repartidor/cliente.
+- `address` (obligatorio): dirección.
+- `phone` (obligatorio): teléfono.
+
+También se aceptan alias de columnas: `codigo` para `code`, `nombre` para `name`, `direccion` para `address`, `telefono` para `phone`.
+
+Ejemplo CSV:
+
+```csv
+code,name,address,phone
+12345,Juan Perez,Av Italia 1234,099123456
+54321,Maria Lopez,8 de Octubre 555,098222333
+```
+
+### Fallback opcional con JSON
 
 ```json
 [
-  {"code":"1234567","name":"Juan Perez","address":"Av Italia 1234","phone":"099123456"},
-  {"code":"7654321","name":"Maria Lopez","address":"8 de Octubre 555","phone":"098222333"}
+  {"code":"12345","name":"Juan Perez","address":"Av Italia 1234","phone":"099123456"},
+  {"code":"54321","name":"Maria Lopez","address":"8 de Octubre 555","phone":"098222333"}
 ]
 ```
 
@@ -156,7 +191,7 @@ Ejemplo de valor:
 ```bash
 curl -X POST https://TU-DOMINIO.vercel.app/api/validate-delivery \
   -H "Content-Type: application/json" \
-  -d '{"code":"1234567"}'
+  -d '{"code":"12345"}'
 ```
 
 > Después de agregar o cambiar variables de entorno en Vercel, hacé **Redeploy** para aplicar cambios.
