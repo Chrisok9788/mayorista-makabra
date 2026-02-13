@@ -5,7 +5,7 @@ const CODE_REGEX = /^\d{7,8}$/;
 let currentProfile = null;
 
 function sanitizeCode(input) {
-  return String(input || "").replace(/[\s.-]/g, "").trim();
+  return String(input || "").replace(/\D/g, "").trim();
 }
 
 function isValidProfile(profile) {
@@ -77,8 +77,12 @@ function updateStatusUI() {
 
 function closeModal() {
   const modal = document.getElementById("delivery-modal");
+  const feedback = document.getElementById("delivery-feedback");
   if (!modal) return;
   modal.hidden = true;
+  if (feedback) {
+    feedback.textContent = "";
+  }
 }
 
 function openModal() {
