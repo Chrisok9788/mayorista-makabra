@@ -91,7 +91,7 @@ function getUnitPriceByQty(product, qty) {
  * @param {Object} cart Objeto carrito { productId: qty } (o nombre -> qty en carritos viejos)
  * @param {Array} products Lista completa de productos
  */
-export function sendOrder(cart, products) {
+export function sendOrder(cart, products, deliveryProfile = null) {
   const entries = Object.entries(cart || {});
   if (!entries.length) {
     alert("Tu carrito está vacío.");
@@ -166,6 +166,16 @@ export function sendOrder(cart, products) {
   // Mensaje
   // ==========================
   const lines = [];
+
+  if (deliveryProfile && /^\d{7}$/.test(String(deliveryProfile.code || ""))) {
+    lines.push("REPARTO");
+    lines.push(`CI: ${String(deliveryProfile.code).trim()}`);
+    lines.push(`Nombre: ${String(deliveryProfile.name || "").trim()}`);
+    lines.push(`Dirección: ${String(deliveryProfile.address || "").trim()}`);
+    lines.push(`Tel: ${String(deliveryProfile.phone || "").trim()}`);
+    lines.push("");
+  }
+
   lines.push(`Pedido: ${orderId}`);
   lines.push(`Cliente: ${customerId}`);
   lines.push("");

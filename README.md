@@ -133,3 +133,30 @@ https://TU_USUARIO.github.io/mayorista-makabra-web/
 - **SEO:** ajustá `<title>`, meta descripciones y `public/sitemap.xml`.
 
 ¡Con esto tendrás un sitio completo listo para ser publicado y administrar tu catálogo de mayorista sin complicaciones!
+
+## Modo Reparto (opcional)
+
+### Variable de entorno en Vercel
+
+En **Vercel → Settings → Environment Variables** agregá:
+
+- `DELIVERY_DIRECTORY_JSON` (**Sensitive: ON**)
+
+Ejemplo de valor:
+
+```json
+[
+  {"code":"1234567","name":"Juan Perez","address":"Av Italia 1234","phone":"099123456"},
+  {"code":"7654321","name":"Maria Lopez","address":"8 de Octubre 555","phone":"098222333"}
+]
+```
+
+### Probar endpoint
+
+```bash
+curl -X POST https://TU-DOMINIO.vercel.app/api/validate-delivery \
+  -H "Content-Type: application/json" \
+  -d '{"code":"1234567"}'
+```
+
+> Después de agregar o cambiar variables de entorno en Vercel, hacé **Redeploy** para aplicar cambios.

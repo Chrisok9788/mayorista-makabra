@@ -1016,3 +1016,102 @@ button:disabled,
 .featured-grid .product-card input{
   cursor: pointer;
 }
+
+.delivery-open-btn {
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  font-weight: 700;
+}
+
+.delivery-banner {
+  background: #f3f7ff;
+  border-bottom: 1px solid #d9e4ff;
+}
+
+.delivery-banner-inner {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  align-items: center;
+  padding: 0.65rem 0;
+}
+
+.delivery-status {
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.delivery-details {
+  color: #1f2937;
+  font-size: 0.92rem;
+}
+
+.delivery-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+}
+
+.delivery-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.delivery-modal-card {
+  position: relative;
+  width: min(92vw, 420px);
+  background: #fff;
+  border-radius: 14px;
+  padding: 1rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.delivery-modal-card input {
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 0.75rem;
+  font-size: 1rem;
+}
+
+.delivery-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.delivery-feedback {
+  min-height: 1.3rem;
+  color: #b91c1c;
+  margin: 0;
+}
+
+.delivery-open-btn:focus-visible,
+.delivery-modal-card input:focus-visible,
+#delivery-cancel:focus-visible,
+#delivery-submit:focus-visible,
+#delivery-deactivate:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .delivery-banner-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .delivery-modal-actions {
+    width: 100%;
+  }
+
+  .delivery-modal-actions .btn {
+    flex: 1;
+  }
+}
