@@ -34,6 +34,7 @@ import {
 
 import { sendOrder } from "./whatsapp.js";
 import { getDeliveryProfile, initDeliveryModeUI, isDeliveryActive } from "./src/delivery-mode.js";
+import { initOrderHistoryUI } from "./src/order-history-ui.js";
 
 let products = [];
 let baseProducts = [];
@@ -933,6 +934,7 @@ function applyProductsToUI(rawList) {
 // =======================
 async function init() {
   initDeliveryModeUI();
+  initOrderHistoryUI();
   loadCart();
   updateCartCount(document.getElementById("cart-count"), totalItems());
 
