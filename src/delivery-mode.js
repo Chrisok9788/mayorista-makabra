@@ -55,20 +55,22 @@ function getMaskedCode(code) {
 }
 
 function updateStatusUI() {
-  const status = document.getElementById("delivery-status");
-  const details = document.getElementById("delivery-details");
+  const openBtn = document.getElementById("delivery-open-btn");
+  const currentData = document.getElementById("delivery-current-data");
   const deactivate = document.getElementById("delivery-deactivate");
-  if (!status || !details || !deactivate) return;
+  if (!openBtn || !currentData || !deactivate) return;
 
   if (!currentProfile) {
-    status.textContent = "Reparto inactivo";
-    details.innerHTML = "";
+    openBtn.textContent = "Identificarme";
+    currentData.innerHTML = "";
     deactivate.hidden = true;
     return;
   }
 
-  status.textContent = `Reparto activo: ${currentProfile.name} (${getMaskedCode(currentProfile.code)})`;
-  details.innerHTML = `
+  openBtn.textContent = `Cliente: ${getMaskedCode(currentProfile.code)}`;
+  currentData.innerHTML = `
+    <div><strong>Código:</strong> ${getMaskedCode(currentProfile.code)}</div>
+    <div><strong>Nombre:</strong> ${currentProfile.name}</div>
     <div><strong>Dirección:</strong> ${currentProfile.address}</div>
     <div><strong>Tel:</strong> ${currentProfile.phone}</div>
   `;
@@ -91,7 +93,7 @@ function openModal() {
   const error = document.getElementById("delivery-feedback");
   if (!modal || !input || !error) return;
   error.textContent = "";
-  input.value = "";
+  input.value = currentProfile?.code || "";
   modal.hidden = false;
   setTimeout(() => input.focus(), 30);
 }
@@ -162,27 +164,8 @@ function ensureUI() {
     button.type = "button";
     button.id = "delivery-open-btn";
     button.className = "delivery-open-btn";
-    button.textContent = "Reparto";
+    button.textContent = "Identificarme";
     nav.appendChild(button);
-  }
-
-  if (!document.getElementById("delivery-banner")) {
-    const banner = document.createElement("section");
-    banner.id = "delivery-banner";
-    banner.className = "delivery-banner";
-    banner.innerHTML = `
-      <div class="container delivery-banner-inner">
-        <div>
-          <div id="delivery-status" class="delivery-status" role="status" aria-live="polite">Reparto inactivo</div>
-          <div id="delivery-details" class="delivery-details"></div>
-        </div>
-        <button id="delivery-deactivate" class="btn" type="button" hidden>Desactivar</button>
-      </div>
-    `;
-    const siteHeader = document.querySelector(".site-header");
-    if (siteHeader) {
-      siteHeader.insertAdjacentElement("afterend", banner);
-    }
   }
 
   if (!document.getElementById("delivery-modal")) {
@@ -194,12 +177,14 @@ function ensureUI() {
       <div class="delivery-modal-backdrop" data-close-delivery="1"></div>
       <div class="delivery-modal-card" role="dialog" aria-modal="true" aria-labelledby="delivery-modal-title">
         <h3 id="delivery-modal-title">Modo Reparto</h3>
+        <div id="delivery-current-data" class="delivery-details"></div>
         <label for="delivery-code-input">Código (5 dígitos, opcional)</label>
         <input id="delivery-code-input" inputmode="numeric" autocomplete="off" placeholder="12345" maxlength="5" />
         <p id="delivery-feedback" class="delivery-feedback" aria-live="polite"></p>
         <div class="delivery-modal-actions">
           <button type="button" class="btn" id="delivery-cancel">Cancelar</button>
-          <button type="button" class="btn btn-primary" id="delivery-submit">Activar</button>
+          <button type="button" class="btn" id="delivery-deactivate" hidden>Desactivar</button>
+          <button type="button" class="btn btn-primary" id="delivery-submit">Guardar</button>
         </div>
       </div>
     `;

@@ -1,3 +1,5 @@
+import { addOrderToHistory } from "./src/order-history.js";
+
 /*
  * whatsapp.js — MODIFICADO y COMPLETO (PROMO MIX + total correcto)
  * Cambios:
@@ -91,6 +93,28 @@ function getUnitPriceByQty(product, qty) {
  * @param {Object} cart Objeto carrito { productId: qty } (o nombre -> qty en carritos viejos)
  * @param {Array} products Lista completa de productos
  */
+
+function pushOrderToSheet(order) {
+  try {
+    const payload = JSON.stringify(order);
+
+    if (navigator.sendBeacon) {
+      const blob = new Blob([payload], { type: "application/json" });
+      navigator.sendBeacon("/api/order-history", blob);
+      return;
+    }
+
+    fetch("/api/order-history", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: payload,
+      keepalive: true,
+    }).catch(() => {});
+  } catch {
+    // no-op: nunca romper envío a WhatsApp
+  }
+}
+
 export function sendOrder(cart, products, deliveryProfile = null) {
   const entries = Object.entries(cart || {});
   if (!entries.length) {
@@ -100,9 +124,14 @@ export function sendOrder(cart, products, deliveryProfile = null) {
 
   const customerId = getOrCreateCustomerId();
   const orderId = makeOrderId();
+  const deliveryCode = String(deliveryProfile?.code || "").trim();
+  const isDeliveryEnabled = Boolean(deliveryProfile && /^\d{5}$/.test(deliveryCode));
+  const customerLabel = isDeliveryEnabled ? `C-${deliveryCode}` : customerId;
 
-  let address = localStorage.getItem("customerAddress") || "";
-  const isNewCustomer = !address;
+  let address = isDeliveryEnabled
+    ? String(deliveryProfile?.address || "").trim()
+    : localStorage.getItem("customerAddress") || "";
+  const isNewCustomer = !isDeliveryEnabled && !address;
 
   if (isNewCustomer) {
     address =
@@ -167,9 +196,9 @@ export function sendOrder(cart, products, deliveryProfile = null) {
   // ==========================
   const lines = [];
 
-  if (deliveryProfile && /^\d{7}$/.test(String(deliveryProfile.code || ""))) {
+  if (isDeliveryEnabled) {
     lines.push("REPARTO");
-    lines.push(`CI: ${String(deliveryProfile.code).trim()}`);
+    lines.push(`Código: ${deliveryCode}`);
     lines.push(`Nombre: ${String(deliveryProfile.name || "").trim()}`);
     lines.push(`Dirección: ${String(deliveryProfile.address || "").trim()}`);
     lines.push(`Tel: ${String(deliveryProfile.phone || "").trim()}`);
@@ -177,11 +206,12 @@ export function sendOrder(cart, products, deliveryProfile = null) {
   }
 
   lines.push(`Pedido: ${orderId}`);
-  lines.push(`Cliente: ${customerId}`);
+  lines.push(`Cliente: ${customerLabel}`);
   lines.push("");
 
   let totalRoundedSum = 0; // ✅ sumamos subtotales ya redondeados
   let hasConsult = false;
+  const historyItems = [];
 
   for (const it of resolvedItems) {
     const qty = Number(it.qty) || 0;
@@ -205,6 +235,12 @@ export function sendOrder(cart, products, deliveryProfile = null) {
     const subtotalRounded = roundUYU(unitExact * qty);
 
     totalRoundedSum += subtotalRounded;
+    historyItems.push({
+      name: nombre,
+      qty,
+      unitPriceRounded: unitRounded,
+      subtotalRounded,
+    });
 
     lines.push(
       `${qty} x ${nombre} — ${formatUYU(unitRounded)} c/u — Subtotal: ${formatUYU(
@@ -221,7 +257,7 @@ export function sendOrder(cart, products, deliveryProfile = null) {
 
   lines.push(`Total (sin consultables): ${formatUYU(totalRoundedSum)}`);
 
-  if (address.trim()) {
+  if (address.trim() && !isDeliveryEnabled) {
     lines.push("");
     lines.push(`Dirección: ${address.trim()}`);
   }
@@ -230,6 +266,24 @@ export function sendOrder(cart, products, deliveryProfile = null) {
   lines.push("A la brevedad nos comunicaremos vía WhatsApp para coordinar.");
 
   const message = lines.join("\n");
+
+  const orderPayload = {
+    orderId,
+    createdAt: new Date().toISOString(),
+    customerKey: customerLabel,
+    customerLabel,
+    items: historyItems,
+    totalRounded: totalRoundedSum,
+    hasConsultables: hasConsult,
+    messagePreview: message.slice(0, 300),
+    messageText: message,
+  };
+
+  addOrderToHistory(orderPayload);
+
+  if (isDeliveryEnabled) {
+    pushOrderToSheet(orderPayload);
+  }
 
   // ✅ número en formato internacional (sin +, sin espacios)
   const whatsappURL =
