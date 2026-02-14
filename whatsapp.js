@@ -94,28 +94,50 @@ function getUnitPriceByQty(product, qty) {
  * @param {Array} products Lista completa de productos
  */
 
-function pushOrderToSheet(order) {
+async function pushOrderToSheet(order) {
   try {
     const payload = JSON.stringify(order);
 
-    if (navigator.sendBeacon) {
-      const blob = new Blob([payload], { type: "application/json" });
-      navigator.sendBeacon("/api/order-history", blob);
-      return;
-    }
-
-    fetch("/api/order-history", {
+    const res = await fetch("/api/order-history", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: payload,
       keepalive: true,
-    }).catch(() => {});
+    });
+
+    if (res.ok) return { ok: true, error: "" };
+
+    let errorCode = `HTTP_${res.status}`;
+    try {
+      const data = await res.json();
+      if (data?.error) errorCode = String(data.error);
+    } catch {
+      // no-op
+    }
+
+    if (navigator.sendBeacon) {
+      const blob = new Blob([payload], { type: "application/json" });
+      navigator.sendBeacon("/api/order-history", blob);
+    }
+
+    return { ok: false, error: errorCode };
   } catch {
+    try {
+      const payload = JSON.stringify(order);
+      if (navigator.sendBeacon) {
+        const blob = new Blob([payload], { type: "application/json" });
+        navigator.sendBeacon("/api/order-history", blob);
+      }
+    } catch {
+      // no-op
+    }
+
     // no-op: nunca romper envío a WhatsApp
+    return { ok: false, error: "NETWORK_ERROR" };
   }
 }
 
-export function sendOrder(cart, products, deliveryProfile = null) {
+export async function sendOrder(cart, products, deliveryProfile = null) {
   const entries = Object.entries(cart || {});
   if (!entries.length) {
     alert("Tu carrito está vacío.");
@@ -281,8 +303,12 @@ export function sendOrder(cart, products, deliveryProfile = null) {
 
   addOrderToHistory(orderPayload);
 
+  let orderSavedInSheet = true;
+  let sheetErrorCode = "";
   if (isDeliveryEnabled) {
-    pushOrderToSheet(orderPayload);
+    const sheetResult = await pushOrderToSheet(orderPayload);
+    orderSavedInSheet = sheetResult?.ok === true;
+    sheetErrorCode = String(sheetResult?.error || "");
   }
 
   // ✅ número en formato internacional (sin +, sin espacios)
@@ -291,4 +317,11 @@ export function sendOrder(cart, products, deliveryProfile = null) {
 
   // ✅ iPhone/Safari: evita bloqueo de popups
   window.location.href = whatsappURL;
+
+  return {
+    sentToWhatsApp: true,
+    orderSavedInSheet,
+    sheetErrorCode,
+    isDeliveryEnabled,
+  };
 }

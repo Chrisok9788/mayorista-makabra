@@ -40,6 +40,21 @@ function getServiceAccountConfig() {
   };
 }
 
+function resolveOrderHistorySpreadsheetId() {
+  const direct = toStr(process.env.ORDER_HISTORY_SPREADSHEET_ID);
+  if (direct) return direct;
+
+  const fromDirectorySheet = toStr(process.env.DELIVERY_DIRECTORY_SHEET_ID);
+  if (fromDirectorySheet) return fromDirectorySheet;
+
+  const csvUrl = toStr(process.env.DELIVERY_DIRECTORY_CSV_URL);
+  if (!csvUrl) return "";
+
+  // Solo URLs tipo /spreadsheets/d/{id}/... contienen el ID real editable.
+  const match = csvUrl.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+  return match?.[1] ? toStr(match[1]) : "";
+}
+
 async function getAccessToken() {
   const { email, privateKey } = getServiceAccountConfig();
   if (!email || !privateKey) {
@@ -127,7 +142,7 @@ async function ensureCustomerSheet(spreadsheetId, accessToken, title) {
               title,
               gridProperties: {
                 rowCount: 1000,
-                columnCount: 12,
+                columnCount: 16,
               },
             },
           },
@@ -141,14 +156,17 @@ async function ensureCustomerSheet(spreadsheetId, accessToken, title) {
     "orderId",
     "customerKey",
     "customerLabel",
+    "productName",
+    "qty",
+    "unitPriceRounded",
+    "subtotalRounded",
     "totalRounded",
     "hasConsultables",
-    "itemsJson",
     "messagePreview",
   ]];
 
   await sheetsRequest(
-    `${encodeURIComponent(spreadsheetId)}/values/${encodeURIComponent(`${title}!A1:H1`)}?valueInputOption=RAW`,
+    `${encodeURIComponent(spreadsheetId)}/values/${encodeURIComponent(`${title}!A1:K1`)}?valueInputOption=RAW`,
     accessToken,
     {
       method: "PUT",
@@ -186,8 +204,19 @@ function parseOrderPayload(body) {
   };
 }
 
+function normalizeOrderItems(items) {
+  return (Array.isArray(items) ? items : [])
+    .map((item) => ({
+      name: toStr(item?.name),
+      qty: Number(item?.qty) || 0,
+      unitPriceRounded: Math.round(Number(item?.unitPriceRounded) || 0),
+      subtotalRounded: Math.round(Number(item?.subtotalRounded) || 0),
+    }))
+    .filter((item) => item.name && item.qty > 0);
+}
+
 async function appendOrderToSheet(order) {
-  const spreadsheetId = toStr(process.env.ORDER_HISTORY_SPREADSHEET_ID);
+  const spreadsheetId = resolveOrderHistorySpreadsheetId();
   if (!spreadsheetId) {
     throw new Error("MISSING_SPREADSHEET");
   }
@@ -197,23 +226,42 @@ async function appendOrderToSheet(order) {
 
   await ensureCustomerSheet(spreadsheetId, accessToken, title);
 
-  const row = [[
-    order.createdAt,
-    order.orderId,
-    order.customerKey,
-    order.customerLabel,
-    Math.round(order.totalRounded),
-    order.hasConsultables ? "TRUE" : "FALSE",
-    JSON.stringify(order.items || []),
-    order.messagePreview,
-  ]];
+  const normalizedItems = normalizeOrderItems(order.items);
+
+  const rows = normalizedItems.length
+    ? normalizedItems.map((item) => [
+        order.createdAt,
+        order.orderId,
+        order.customerKey,
+        order.customerLabel,
+        item.name,
+        item.qty,
+        item.unitPriceRounded,
+        item.subtotalRounded,
+        Math.round(order.totalRounded),
+        order.hasConsultables ? "TRUE" : "FALSE",
+        order.messagePreview,
+      ])
+    : [[
+        order.createdAt,
+        order.orderId,
+        order.customerKey,
+        order.customerLabel,
+        "(sin items)",
+        0,
+        0,
+        0,
+        Math.round(order.totalRounded),
+        order.hasConsultables ? "TRUE" : "FALSE",
+        order.messagePreview,
+      ]];
 
   await sheetsRequest(
-    `${encodeURIComponent(spreadsheetId)}/values/${encodeURIComponent(`${title}!A:H`)}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,
+    `${encodeURIComponent(spreadsheetId)}/values/${encodeURIComponent(`${title}!A:K`)}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,
     accessToken,
     {
       method: "POST",
-      body: JSON.stringify({ values: row }),
+      body: JSON.stringify({ values: rows }),
     }
   );
 }
@@ -241,7 +289,8 @@ export default async function handler(req, res) {
   try {
     await appendOrderToSheet(order);
     return res.status(200).json({ ok: true });
-  } catch {
-    return res.status(500).json({ ok: false, error: "SHEET_WRITE_FAILED" });
+  } catch (error) {
+    const errorCode = toStr(error?.message) || "SHEET_WRITE_FAILED";
+    return res.status(500).json({ ok: false, error: errorCode });
   }
 }
