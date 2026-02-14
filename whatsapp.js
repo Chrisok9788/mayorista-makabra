@@ -94,49 +94,6 @@ function getUnitPriceByQty(product, qty) {
  * @param {Array} products Lista completa de productos
  */
 
-async function pushOrderToSheet(order) {
-  try {
-    const payload = JSON.stringify(order);
-
-    const res = await fetch("/api/order-history", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: payload,
-      keepalive: true,
-    });
-
-    if (res.ok) return { ok: true, error: "" };
-
-    let errorCode = `HTTP_${res.status}`;
-    try {
-      const data = await res.json();
-      if (data?.error) errorCode = String(data.error);
-    } catch {
-      // no-op
-    }
-
-    if (navigator.sendBeacon) {
-      const blob = new Blob([payload], { type: "application/json" });
-      navigator.sendBeacon("/api/order-history", blob);
-    }
-
-    return { ok: false, error: errorCode };
-  } catch {
-    try {
-      const payload = JSON.stringify(order);
-      if (navigator.sendBeacon) {
-        const blob = new Blob([payload], { type: "application/json" });
-        navigator.sendBeacon("/api/order-history", blob);
-      }
-    } catch {
-      // no-op
-    }
-
-    // no-op: nunca romper envío a WhatsApp
-    return { ok: false, error: "NETWORK_ERROR" };
-  }
-}
-
 export async function sendOrder(cart, products, deliveryProfile = null) {
   const entries = Object.entries(cart || {});
   if (!entries.length) {
@@ -303,14 +260,6 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
 
   addOrderToHistory(orderPayload);
 
-  let orderSavedInSheet = true;
-  let sheetErrorCode = "";
-  if (isDeliveryEnabled) {
-    const sheetResult = await pushOrderToSheet(orderPayload);
-    orderSavedInSheet = sheetResult?.ok === true;
-    sheetErrorCode = String(sheetResult?.error || "");
-  }
-
   // ✅ número en formato internacional (sin +, sin espacios)
   const whatsappURL =
     "https://wa.me/59896405927?text=" + encodeURIComponent(message);
@@ -320,8 +269,6 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
 
   return {
     sentToWhatsApp: true,
-    orderSavedInSheet,
-    sheetErrorCode,
     isDeliveryEnabled,
   };
 }
