@@ -770,7 +770,7 @@ function goToCatalogAndFilterCategory(categoryName) {
 // =======================
 // ENVÍO ROBUSTO WHATSAPP
 // =======================
-function sendWhatsAppOrderSafe() {
+async function sendWhatsAppOrderSafe() {
   if (sending) return;
   sending = true;
 
@@ -787,7 +787,22 @@ function sendWhatsAppOrderSafe() {
       return;
     }
 
-    sendOrder(cart, products, isDeliveryActive() ? getDeliveryProfile() : null);
+    const result = await sendOrder(
+      cart,
+      products,
+      isDeliveryActive() ? getDeliveryProfile() : null
+    );
+
+    if (result?.isDeliveryEnabled && result?.orderSavedInSheet === false) {
+      const details = result?.sheetErrorCode
+        ? `\nCódigo: ${result.sheetErrorCode}`
+        : "";
+
+      alert(
+        "El pedido se envió a WhatsApp, pero no se pudo confirmar el guardado en Google Sheets. Verificá las variables ORDER_HISTORY_SPREADSHEET_ID y GOOGLE_SERVICE_ACCOUNT_* en Vercel y reintentá." +
+          details
+      );
+    }
   } catch (err) {
     console.error("Error al enviar pedido:", err);
 
