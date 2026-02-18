@@ -1,19 +1,36 @@
-// data.js — versión FINAL (Google Sheets CSV -> productos)
-// ✅ Incluye Destacados=TRUE -> destacado:true (para “Destacados por categoría”)
-// ✅ Incluye promo_group (para promos mixtas: 2+1+1 = 4 y aplica precio promo)
+// data.js — versión FINAL (API Vercel -> JSON estático -> CSV emergencia)
+// ✅ Zod (validación/normalización masiva)
 // ✅ Cache local + actualización en background
-// ✅ Fallback: /api/catalog (si existe) -> si falla, usa Google Sheets CSV
-// Compatible con GitHub Pages
+// ✅ Mantiene Destacados=TRUE -> destacado:true (para “Destacados por categoría”)
+// ✅ Mantiene promo_group + dpc (promo_min_qty / promo_precio)
+// ✅ Soporta respuestas API: { products:[...], degraded?, updatedAt? } o directamente [...]
+//
+// NOTA IMPORTANTE:
+// - Este archivo NO exige que instales Zod si ya lo tenés en tu bundle.
+//   Si NO lo tenés instalado, instalalo: `npm i zod` (o quitamos Zod).
+//
+// Autor: Adaptado para Makabra (Vercel + futura integración Scanntech)
+
+import { z } from "zod";
+
+// ==========================================
+// 1) CONFIG DE FUENTES
+// ==========================================
 
 export const PRODUCTS_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJAgesFM5B0OTnVSvcOxrtC4VlI1ijay6erm7XnX8zjRtwUnbX-M0_4yXxRhcairW01hFOjoKQHW7t/pub?gid=1128238455&single=true&output=csv";
 
-const CATALOG_CACHE_KEY = "catalog_cache_v1";
-const DEFAULT_TIMEOUT_MS = 10000;
+const SOURCES = [
+  { url: "/api/catalog", type: "json", timeoutMs: 9000 }, // prioridad
+  { url: "/products.json", type: "json", timeoutMs: 5000 }, // fallback local
+  { url: PRODUCTS_URL, type: "csv", timeoutMs: 10000 }, // emergencia
+];
 
-/* =========================
-   Helpers defensivos
-   ========================= */
+const CATALOG_CACHE_KEY = "catalog_cache_v3";
+
+// ==========================================
+// 2) Helpers defensivos
+// ==========================================
 
 function toStr(v) {
   return String(v ?? "").trim();
@@ -26,15 +43,7 @@ function toBool(v) {
   const s = toStr(v).toLowerCase();
   if (!s) return false;
 
-  if (
-    s === "true" ||
-    s === "verdadero" ||
-    s === "1" ||
-    s === "si" ||
-    s === "sí" ||
-    s === "yes"
-  ) return true;
-
+  if (s === "true" || s === "verdadero" || s === "1" || s === "si" || s === "sí" || s === "yes") return true;
   if (s === "false" || s === "falso" || s === "0" || s === "no") return false;
 
   return false;
@@ -82,9 +91,9 @@ async function fetchWithTimeout(url, timeoutMs) {
   }
 }
 
-/* =========================
-   Cache local (opcional)
-   ========================= */
+// ==========================================
+// 3) Cache local
+// ==========================================
 
 function readCatalogCache() {
   if (typeof localStorage === "undefined") return null;
@@ -92,28 +101,40 @@ function readCatalogCache() {
     const raw = localStorage.getItem(CATALOG_CACHE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed?.products) || parsed.products.length === 0) return null;
+
+    if (!parsed || !Array.isArray(parsed.products) || parsed.products.length === 0) return null;
+
     return {
       products: parsed.products,
       updatedAt: Number(parsed.updatedAt) || null,
+      source: parsed.source || null,
+      degraded: Boolean(parsed.degraded),
+      rejectedCount: Number(parsed.rejectedCount) || 0,
     };
   } catch {
     return null;
   }
 }
 
-function writeCatalogCache(products, updatedAt) {
+function writeCatalogCache(payload) {
   if (typeof localStorage === "undefined") return;
   try {
     localStorage.setItem(
       CATALOG_CACHE_KEY,
-      JSON.stringify({ products, updatedAt: Number(updatedAt) || Date.now() })
+      JSON.stringify({
+        products: payload.products,
+        updatedAt: Number(payload.updatedAt) || Date.now(),
+        source: payload.source || null,
+        degraded: Boolean(payload.degraded),
+        rejectedCount: Number(payload.rejectedCount) || 0,
+      })
     );
   } catch {
     // storage lleno o bloqueado -> ignorar
   }
 }
 
+// Firma simple para detectar cambios sin depender del orden de claves
 function hashString(input) {
   let hash = 0;
   for (let i = 0; i < input.length; i++) {
@@ -150,9 +171,9 @@ function getProductsSignature(list) {
   return `${list.length}:${hashString(combined)}`;
 }
 
-/* =========================
-   CSV parser simple y robusto
-   ========================= */
+// ==========================================
+// 4) CSV parser robusto (mantengo tu versión buena)
+// ==========================================
 
 function parseCSV(text) {
   const rows = [];
@@ -217,9 +238,10 @@ function rowsToObjects(rows) {
   return out;
 }
 
-/* =========================
-   Normalización a tu formato
-   ========================= */
+// ==========================================
+// 5) Zod schema + normalización final al formato Makabra
+//    (incluye destacados + promo_group + dpc + tags + imagen)
+// ==========================================
 
 function getDestacadosValue(r) {
   return (
@@ -249,169 +271,253 @@ function getPromoGroupValue(r) {
   );
 }
 
-function rowToProduct(r) {
-  const id = toStr(r.id);
-  if (!id) return null;
+// Producto “final” que usa tu UI
+const ProductSchema = z
+  .object({
+    id: z.union([z.string().min(1), z.number().transform(String)]),
 
-  const nombre = toStr(r.nombre);
-  const categoria = toStr(r.categoria);
-  const subcategoria = toStr(r.subcategoria);
+    nombre: z.coerce.string().trim().min(1).catch("Producto sin nombre"),
 
-  const precio_base = toNumber(r.precio_base);
-  const imagen = toStr(r.imagen_url) || null;
+    categoria: z.coerce.string().trim().catch("Otros"),
+    subcategoria: z.coerce.string().trim().catch("Otros"),
 
-  const marca = toStr(r.marca) || null;
-  const presentacion = toStr(r.presentacion) || null;
+    // precio final
+    precio: z.coerce.number().nonnegative().catch(0),
 
-  const tags = parseTags(r.tags);
+    // flags
+    oferta: z.preprocess(toBool, z.boolean()).catch(false),
+    destacado: z.preprocess(toBool, z.boolean()).catch(false),
 
-  const activo = r.activo === "" ? true : toBool(r.activo);
-  if (!activo) return null;
+    // opcionales
+    imagen: z.coerce.string().optional().catch(""),
+    imagen_url: z.coerce.string().optional().catch(""),
+    marca: z.coerce.string().optional().catch(""),
+    presentacion: z.coerce.string().optional().catch(""),
+    tags: z.any().optional(),
+    promo_group: z.coerce.string().optional().catch(""),
+    stock: z.coerce.number().optional().catch(undefined),
 
-  const ofertaCarrusel = toBool(r.oferta_carrusel);
-  const destacado = toBool(getDestacadosValue(r));
-  const promo_group = toStr(getPromoGroupValue(r)) || null;
+    // promos DPC (si viene)
+    promo_min_qty: z.coerce.number().optional(),
+    promo_precio: z.coerce.number().optional(),
+    dpc: z.any().optional(),
+  })
+  .passthrough()
+  .transform((r) => {
+    // tags
+    const tags = Array.isArray(r.tags) ? r.tags : parseTags(r.tags);
 
-  const promoMin = toNumber(r.promo_min_qty);
-  const promoPrecio = toNumber(r.promo_precio);
+    // imagen
+    const imagen = toStr(r.imagen) || toStr(r.imagen_url) || null;
 
-  const dpc =
-    promoMin > 0 && promoPrecio > 0
-      ? { tramos: [{ min: promoMin, precio: promoPrecio }] }
-      : undefined;
+    // promo_group
+    const promo_group = toStr(r.promo_group) || null;
 
-  return {
-    id,
-    nombre: nombre || id,
-    categoria: categoria || "Otros",
-    subcategoria: subcategoria || "Otros",
-    precio: precio_base > 0 ? precio_base : 0,
-    oferta: ofertaCarrusel,
-    imagen,
-    marca,
-    presentacion,
-    tags,
-    destacado,
-    promo_group,
-    ...(dpc ? { dpc } : {}),
-    ...(r.stock !== undefined && r.stock !== "" ? { stock: toNumber(r.stock) } : {}),
+    // dpc: si viene ya armado lo respetamos, si no lo armamos desde promo_min_qty/promo_precio
+    const promoMin = toNumber(r.promo_min_qty);
+    const promoPrecio = toNumber(r.promo_precio);
+    const dpc =
+      r.dpc ||
+      (promoMin > 0 && promoPrecio > 0
+        ? { tramos: [{ min: promoMin, precio: promoPrecio }] }
+        : undefined);
+
+    return {
+      id: toStr(r.id),
+      nombre: toStr(r.nombre) || toStr(r.id),
+      categoria: toStr(r.categoria) || "Otros",
+      subcategoria: toStr(r.subcategoria) || "Otros",
+      precio: toNumber(r.precio),
+      oferta: Boolean(r.oferta),
+      imagen,
+      marca: toStr(r.marca) || null,
+      presentacion: toStr(r.presentacion) || null,
+      tags,
+      destacado: Boolean(r.destacado),
+      promo_group,
+      ...(dpc ? { dpc } : {}),
+      ...(r.stock !== undefined && r.stock !== "" ? { stock: toNumber(r.stock) } : {}),
+    };
+  });
+
+// ==========================================
+// 6) Extract list (API puede devolver array o {products})
+// ==========================================
+
+function extractList(payload) {
+  if (Array.isArray(payload)) return payload;
+  if (payload && Array.isArray(payload.products)) return payload.products;
+  return [];
+}
+
+// ==========================================
+// 7) Mapeo previo por fuente (para tolerar nombres distintos)
+// ==========================================
+
+function mapRowAnySource(item) {
+  // Soporta: API Scanntech-like, products.json antiguo, CSV actual
+  const mapped = {
+    ...item,
+    id: item.id ?? item.codigoInterno ?? item.scanntech_id ?? item.scanntechId,
+
+    nombre: item.nombre ?? item.descripcion ?? item.name,
+
+    categoria: item.categoria ?? item.category ?? item.descripcionCorta,
+    subcategoria: item.subcategoria ?? item.subcategory ?? "",
+
+    // Precio: prioriza "precio", si no, "precio_base", si no, "precioRegular"
+    precio: item.precio ?? item.precio_base ?? item.precioRegular ?? item.price ?? item.precioBase,
+
+    // Oferta: usa oferta_carrusel del CSV, o esPrecioOferta del API
+    oferta: item.oferta ?? item.oferta_carrusel ?? item.esPrecioOferta ?? item.offer,
+
+    // Imagen
+    imagen: item.imagen ?? item.img,
+    imagen_url: item.imagen_url ?? item.image_url ?? item.imageUrl,
+
+    // Destacados
+    destacado: item.destacado ?? getDestacadosValue(item) ?? item.oferta_carrusel,
+
+    // promo_group
+    promo_group: getPromoGroupValue(item),
+
+    // promo dpc
+    promo_min_qty: item.promo_min_qty,
+    promo_precio: item.promo_precio,
+    dpc: item.dpc,
+
+    // tags y extras
+    tags: item.tags,
+    marca: item.marca,
+    presentacion: item.presentacion,
+    stock: item.stock,
   };
+
+  return mapped;
 }
 
-/* =========================
-   Fetch desde API (si existe)
-   ========================= */
+// ==========================================
+// 8) Fetch desde una fuente (json/csv) + zod validate
+// ==========================================
 
-async function fetchCatalogFromApi() {
+async function fetchFromSource(source) {
   const base = getApiBase();
-  const apiUrl = base ? `${base}/api/catalog` : "/api/catalog";
-  const url = apiUrl.includes("?") ? `${apiUrl}&_ts=${Date.now()}` : `${apiUrl}?_ts=${Date.now()}`;
+  const finalUrl =
+    source.url.startsWith("/api/") && base
+      ? `${base}${source.url}`
+      : source.url;
 
-  const res = await fetchWithTimeout(url, DEFAULT_TIMEOUT_MS);
+  const url = finalUrl.includes("?")
+    ? `${finalUrl}&_ts=${Date.now()}`
+    : `${finalUrl}?_ts=${Date.now()}`;
 
-  if (!res.ok) {
-    const error = new Error(`Error HTTP ${res.status} al cargar catálogo`);
-    error.status = res.status;
-    throw error;
-  }
-
-  const payload = await res.json();
-
-  // ✅ Acepta ambos formatos:
-  // 1) API devuelve { products: [...] , updatedAt }
-  // 2) API devuelve directamente [...]
-  const products = Array.isArray(payload) ? payload : payload?.products;
-  const updatedAt = Array.isArray(payload) ? Date.now() : (payload?.updatedAt || Date.now());
-
-  if (!Array.isArray(products) || products.length === 0) {
-    throw new Error("Catálogo vacío desde API.");
-  }
-
-  return { products, updatedAt };
-}
-
-/* =========================
-   Fetch desde CSV
-   ========================= */
-
-export async function fetchProducts() {
-  let res;
   try {
-    const url = PRODUCTS_URL.includes("?")
-      ? `${PRODUCTS_URL}&_ts=${Date.now()}`
-      : `${PRODUCTS_URL}?_ts=${Date.now()}`;
+    const res = await fetchWithTimeout(url, source.timeoutMs);
 
-    res = await fetchWithTimeout(url, DEFAULT_TIMEOUT_MS);
-  } catch {
-    throw new Error("No se pudo conectar para cargar la planilla (CSV). Verificá conexión o link publicado.");
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    let payload;
+    let degradedFromApi = false;
+    let updatedAtFromApi = null;
+
+    if (source.type === "json") {
+      payload = await res.json();
+      degradedFromApi = Boolean(payload?.degraded);
+      updatedAtFromApi = payload?.updatedAt ? Number(payload.updatedAt) : null;
+    } else {
+      const text = await res.text();
+
+      if (text.trim().startsWith("<!DOCTYPE html") || text.includes("<html")) {
+        throw new Error("La fuente CSV devolvió HTML (link mal publicado).");
+      }
+
+      const rows = parseCSV(text);
+      payload = rowsToObjects(rows);
+    }
+
+    const list = extractList(payload);
+    if (!Array.isArray(list) || list.length === 0) throw new Error("Fuente vacía o formato inválido");
+
+    const products = [];
+    let rejected = 0;
+
+    for (const item of list) {
+      const mapped = mapRowAnySource(item);
+      const result = ProductSchema.safeParse(mapped);
+      if (result.success) products.push(result.data);
+      else rejected++;
+    }
+
+    if (products.length === 0) throw new Error("Validación falló: 0 productos válidos");
+
+    return {
+      products,
+      updatedAt: updatedAtFromApi || Date.now(),
+      source: source.url,
+      degraded: degradedFromApi || source.url !== "/api/catalog",
+      rejectedCount: rejected,
+    };
+  } catch (err) {
+    console.warn(`[Catalog] Falló fuente ${source.url}: ${err?.message || err}`);
+    return null;
   }
-
-  const text = await res.text();
-
-  if (!res.ok) {
-    throw new Error(`Error HTTP ${res.status} al cargar CSV de Google Sheets`);
-  }
-
-  if (text.trim().startsWith("<!DOCTYPE html") || text.includes("<html")) {
-    throw new Error("El link no está devolviendo CSV (parece HTML). Revisá: Publicar en la web → CSV.");
-  }
-
-  const rows = parseCSV(text);
-  const objs = rowsToObjects(rows);
-
-  const products = [];
-  for (const r of objs) {
-    const p = rowToProduct(r);
-    if (p) products.push(p);
-  }
-
-  if (!products.length) {
-    throw new Error("CSV cargó, pero no se generaron productos. Revisá que exista la columna 'id' y tenga valores.");
-  }
-
-  return products;
 }
 
-/* =========================
-   Loader con cache + update en background
-   ========================= */
+// ==========================================
+// 9) Loader con cache + update en background (API pública)
+// ==========================================
 
 export async function loadProductsWithCache() {
   const cached = readCatalogCache();
   const cachedSignature = cached ? getProductsSignature(cached.products) : "";
 
   const updatePromise = (async () => {
-    try {
-      let fresh;
-      try {
-        fresh = await fetchCatalogFromApi();
-      } catch {
-        const products = await fetchProducts();
-        fresh = { products, updatedAt: Date.now() };
+    for (const source of SOURCES) {
+      console.log(`📡 Intentando cargar desde: ${source.url}`);
+      const fresh = await fetchFromSource(source);
+
+      if (fresh?.products?.length) {
+        const freshSignature = getProductsSignature(fresh.products);
+        const changed = !cached || cachedSignature !== freshSignature;
+
+        if (changed) writeCatalogCache(fresh);
+
+        return {
+          changed,
+          products: fresh.products,
+          updatedAt: fresh.updatedAt,
+          source: fresh.source,
+          degraded: fresh.degraded,
+          rejectedCount: fresh.rejectedCount,
+        };
       }
-
-      const freshSignature = getProductsSignature(fresh.products);
-      const changed = !cached || cachedSignature !== freshSignature;
-
-      if (changed) {
-        writeCatalogCache(fresh.products, fresh.updatedAt);
-      }
-
-      return { changed, products: fresh.products, updatedAt: fresh.updatedAt };
-    } catch (err) {
-      return { error: err?.message || "No se pudo actualizar el catálogo." };
     }
+
+    // Si fallaron todas:
+    return {
+      error: "No se pudo actualizar el catálogo (fallaron todas las fuentes).",
+      products: cached?.products ?? [],
+      updatedAt: Date.now(),
+      source: "none",
+      degraded: true,
+      rejectedCount: 0,
+    };
   })();
 
+  // Si hay cache, devolvemos instantáneo + promise de update
   if (cached?.products?.length) {
     return {
       products: cached.products,
       fromCache: true,
       lastUpdated: cached.updatedAt,
+      source: cached.source,
+      degraded: cached.degraded,
+      rejectedCount: cached.rejectedCount,
       updatePromise,
     };
   }
 
+  // Sin cache: esperamos primer update
   const first = await updatePromise;
   if (first?.error) throw new Error(first.error);
 
@@ -419,6 +525,9 @@ export async function loadProductsWithCache() {
     products: first.products,
     fromCache: false,
     lastUpdated: first.updatedAt,
+    source: first.source,
+    degraded: first.degraded,
+    rejectedCount: first.rejectedCount,
     updatePromise: Promise.resolve(first),
   };
 }
