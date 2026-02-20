@@ -1,228 +1,60 @@
-/*
- * Módulo para manejar el carrito de compras: carga, guarda y
- * operaciones sobre los productos almacenados. El carrito se
- * persiste en localStorage para mantener el estado entre
- * recargas.
- */
+import { store } from "./src/store.js";
+import { computeCartTotal } from "./ui.js";
 
-// Estructura interna del carrito.
-// Clave: productId (o nombre viejo) | Valor: cantidad
-let cart = {};
-const CART_KEY = "cart";
-
-/**
- * Vibración corta (defensiva).
- * No hace nada si el dispositivo/navegador no lo soporta.
- */
+/** Vibración corta (defensiva). */
 function vibrate60ms() {
   try {
-    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
-      navigator.vibrate(60);
-    }
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate(60);
   } catch {
-    // silencioso: no queremos romper nada por esto
+    // noop
   }
 }
 
 /**
- * Carga el carrito desde localStorage.
+ * Sincroniza estado en memoria desde el store persistido.
+ * El store ya carga desde localStorage en su bootstrap, por eso aquí solo
+ * devolvemos una copia del estado actual para conservar la API pública.
  */
 export function loadCart() {
-  try {
-    const stored = localStorage.getItem(CART_KEY);
-    cart = stored ? JSON.parse(stored) : {};
-  } catch {
-    cart = {};
-  }
-
-  // Limpieza mínima
-  for (const k of Object.keys(cart)) {
-    const qty = Number(cart[k]);
-    const key = String(k ?? "").trim();
-
-    if (!key || !Number.isFinite(qty) || qty < 1) {
-      delete cart[k];
-    } else if (key !== k) {
-      // normaliza espacios
-      delete cart[k];
-      cart[key] = qty;
-    }
-  }
-
-  saveCart();
+  return store.getCart();
 }
 
-/**
- * Guarda el carrito en localStorage.
- */
+/** Persistencia aislada en src/store.js. Se mantiene por compatibilidad API. */
 export function saveCart() {
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  return store.getCart();
 }
 
-/**
- * Devuelve una copia del carrito actual.
- */
+/** @returns {Record<string, number>} */
 export function getCart() {
-  return { ...cart };
+  return store.getCart();
 }
 
-/**
- * Devuelve el total de ítems (sumatoria de cantidades).
- */
 export function totalItems() {
-  return Object.values(cart).reduce((sum, qty) => sum + (Number(qty) || 0), 0);
+  return Object.values(store.getCart()).reduce((sum, qty) => sum + (Number(qty) || 0), 0);
 }
 
-/**
- * Agrega una unidad de un producto al carrito.
- * ✅ Vibración 60ms al agregar.
- */
 export function addItem(productKey) {
-  const key = String(productKey ?? "").trim();
-  if (!key) return;
-
-  cart[key] = (cart[key] || 0) + 1;
-  saveCart();
-
-  // ✅ Feedback háptico
+  store.addToCart(productKey, 1);
   vibrate60ms();
 }
 
-/**
- * Actualiza la cantidad de un producto.
- * - Si qty < 1 elimina el producto.
- */
 export function updateItem(productKey, qty) {
-  const key = String(productKey ?? "").trim();
-  const n = Number(qty);
-
-  if (!key) return;
-
-  if (!Number.isFinite(n) || n < 1) {
-    delete cart[key];
-  } else {
-    cart[key] = n;
-  }
-  saveCart();
+  store.updateCartItemQuantity(productKey, qty);
 }
 
-/**
- * Elimina un producto del carrito.
- */
 export function removeItem(productKey) {
-  const key = String(productKey ?? "").trim();
-  if (!key) return;
-
-  delete cart[key];
-  saveCart();
+  store.removeFromCart(productKey);
 }
 
-/**
- * Vacía completamente el carrito.
- */
 export function clearCart() {
-  cart = {};
-  saveCart();
+  store.clearCart();
 }
 
 /**
- * Convierte precio a número (defensivo).
- */
-function toNumberPrice(v) {
-  if (typeof v === "number") return Number.isFinite(v) ? v : 0;
-  if (v == null) return 0;
-
-  let s = String(v).trim();
-  s = s.replace(/\$/g, "").trim();
-  s = s.replace(/\./g, "").replace(/,/g, ".");
-  const n = Number(s);
-  return Number.isFinite(n) ? n : 0;
-}
-
-/**
- * Devuelve el nombre del producto soportando ambos formatos:
- * - nombre (viejo)
- * - name (nuevo)
- */
-function getProductName(p) {
-  return String(p?.nombre ?? p?.name ?? "").trim();
-}
-
-/**
- * Devuelve el precio unitario aplicando promo por cantidad si existe.
- *
- * Soporta ambos formatos de precio:
- * - precio (viejo)
- * - price (nuevo)
- *
- * Promo por cantidad esperada:
- * dpc: { tramos: [ {min, max, precio}, ... ] }
- */
-function getUnitPriceByQty(product, qty) {
-  const base = toNumberPrice(product?.precio ?? product?.price);
-
-  const tramos = product?.dpc?.tramos;
-  if (!Array.isArray(tramos) || tramos.length === 0) return base;
-
-  for (const t of tramos) {
-    const min = Number(t?.min);
-    const max = Number(t?.max);
-    const precio = toNumberPrice(t?.precio);
-
-    if (!Number.isFinite(min) || min <= 0) continue;
-
-    const maxOk = Number.isFinite(max) && max > 0 ? max : Number.POSITIVE_INFINITY;
-
-    if (qty >= min && qty <= maxOk) {
-      return precio > 0 ? precio : base;
-    }
-  }
-
-  return base;
-}
-
-/**
- * Calcula el MONTO TOTAL del carrito en base a los productos.
- * - Ignora productos con precio 0 (Consultar)
- * - COMPATIBLE con carritos viejos: si la key no matchea con p.id,
- *   intenta matchear contra p.nombre o p.name.
- * - APLICA promociones por cantidad si el producto trae dpc.tramos.
- *
- * @param {Object} cartObj Carrito (key -> cantidad)
- * @param {Array} products Lista de productos
- * @returns {number} Total en pesos
+ * Calcula el total del carrito reutilizando la lógica centralizada de precios/promos.
+ * @param {Record<string, number>} cartObj
+ * @param {Array<Record<string, any>>} products
  */
 export function totalAmount(cartObj, products) {
-  if (!cartObj || typeof cartObj !== "object") return 0;
-  if (!Array.isArray(products) || products.length === 0) return 0;
-
-  // Índices para encontrar por id o por nombre
-  const byId = new Map();
-  const byNombre = new Map();
-
-  for (const p of products) {
-    const id = String(p.id ?? "").trim();
-    const nombre = getProductName(p);
-
-    if (id) byId.set(id, p);
-    if (nombre) byNombre.set(nombre, p);
-  }
-
-  let total = 0;
-
-  for (const rawKey in cartObj) {
-    const key = String(rawKey ?? "").trim();
-    const qty = Number(cartObj[rawKey]) || 0;
-    if (!key || qty < 1) continue;
-
-    // 1) Buscar por id (correcto)
-    // 2) Si no existe, buscar por nombre (carrito viejo)
-    const product = byId.get(key) || byNombre.get(key);
-    if (!product) continue;
-
-    const unit = getUnitPriceByQty(product, qty);
-    if (unit > 0) total += unit * qty;
-  }
-
-  return total;
+  return computeCartTotal(products, cartObj);
 }
