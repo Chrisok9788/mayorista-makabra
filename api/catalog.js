@@ -2,7 +2,10 @@ const CSV_URL =
   process.env.CSV_URL ||
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJAgesFM5B0OTnVSvcOxrtC4VlI1ijay6erm7XnX8zjRtwUnbX-M0_4yXxRhcairW01hFOjoKQHW7t/pub?gid=1128238455&single=true&output=csv";
 
-const DEFAULT_TIMEOUT_MS = 10000;
+const DEFAULT_TIMEOUT_MS = Number(process.env.CATALOG_TIMEOUT_MS || 12000);
+const EDGE_CACHE_CONTROL = "public, s-maxage=300, stale-while-revalidate=1800, stale-if-error=86400";
+
+let inMemoryFallback = null;
 
 function toStr(v) {
   return String(v ?? "").trim();
@@ -206,8 +209,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const url = CSV_URL.includes("?") ? `${CSV_URL}&_ts=${Date.now()}` : `${CSV_URL}?_ts=${Date.now()}`;
-    const { res: csvRes, text } = await fetchTextWithTimeout(url, DEFAULT_TIMEOUT_MS);
+    const { res: csvRes, text } = await fetchTextWithTimeout(CSV_URL, DEFAULT_TIMEOUT_MS);
 
     if (!csvRes.ok) {
       return res.status(csvRes.status).json({ error: `Error HTTP ${csvRes.status} al cargar CSV` });
@@ -229,20 +231,35 @@ export default async function handler(req, res) {
     }
 
     if (!products.length) {
-      return res.status(502).json({
-        error: "CSV cargó, pero no se generaron productos. Revisá que exista la columna 'id'.",
-      });
+      throw new Error("CSV cargó, pero no se generaron productos. Revisá que exista la columna 'id'.");
     }
 
-    res.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=3600");
+    inMemoryFallback = {
+      products,
+      updatedAt: Date.now(),
+      degraded: false,
+    };
+
+    res.setHeader("Cache-Control", EDGE_CACHE_CONTROL);
     return res.status(200).json({
       products,
       updatedAt: Date.now(),
+      degraded: false,
     });
   } catch (error) {
-    if (error?.name === "AbortError") {
-      return res.status(504).json({ error: "Timeout al cargar CSV." });
+    res.setHeader("Cache-Control", EDGE_CACHE_CONTROL);
+
+    if (inMemoryFallback?.products?.length) {
+      return res.status(200).json({
+        ...inMemoryFallback,
+        degraded: true,
+        error: error?.name === "AbortError" ? "Timeout al cargar CSV. Se devolvió caché local." : "No se pudo refrescar CSV. Se devolvió caché local.",
+      });
     }
-    return res.status(500).json({ error: "No se pudo cargar el catálogo." });
+
+    if (error?.name === "AbortError") {
+      return res.status(504).json({ error: "Timeout al cargar CSV.", degraded: true });
+    }
+    return res.status(500).json({ error: "No se pudo cargar el catálogo.", degraded: true });
   }
 }

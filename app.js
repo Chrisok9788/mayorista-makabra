@@ -35,6 +35,7 @@ import {
 import { sendOrder } from "./whatsapp.js";
 import { getDeliveryProfile, initDeliveryModeUI, isDeliveryActive } from "./src/delivery-mode.js";
 import { initOrderHistoryUI } from "./src/order-history-ui.js";
+import { store } from "./src/store.js";
 
 let products = [];
 let baseProducts = [];
@@ -896,6 +897,7 @@ function applyProductsToUI(rawList) {
 
   products = sorted;
   baseProducts = sorted;
+  store.setProducts(sorted);
 
   renderFeaturedByCategory(sorted, goToCatalogAndFocusProduct, goToCatalogAndFilterCategory);
 

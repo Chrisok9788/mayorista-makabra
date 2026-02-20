@@ -128,6 +128,164 @@ function money(n) {
   return `$ ${roundUYU(v)}`;
 }
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value).replace(/`/g, "&#96;");
+}
+
+/**
+ * @param {Record<string, any>} product
+ * @returns {string}
+ */
+function buildProductCardHtml(product) {
+  const id = String(product?.id ?? "");
+
+  let badgeLabel = "";
+  let badgeClass = "";
+
+  if (typeof product.stock !== "undefined" && product.stock <= 0) {
+    badgeLabel = "SIN STOCK";
+    badgeClass = "sin-stock";
+  } else if (product.oferta === true || product.offer === true) {
+    badgeLabel = "OFERTA";
+    badgeClass = "oferta";
+  } else if (getBasePrice(product) <= 0) {
+    badgeLabel = "CONSULTAR";
+    badgeClass = "consultar";
+  }
+
+  const metaParts = [product.marca, product.presentacion]
+    .map((v) => String(v ?? "").trim())
+    .filter(Boolean);
+
+  if (!metaParts.length && product.categoria) metaParts.push(String(product.categoria));
+
+  const basePrice = getBasePrice(product);
+  const priceText =
+    typeof product.stock !== "undefined" && product.stock <= 0
+      ? "Sin stock"
+      : basePrice > 0
+        ? money(basePrice)
+        : "Consultar";
+
+  const promoText = getQtyPromoText(product);
+
+  return `
+    <article class="product-card" data-id="${escapeAttr(id)}">
+      ${badgeLabel ? `<span class="badge ${escapeAttr(badgeClass)}">${escapeHtml(badgeLabel)}</span>` : ""}
+      <img class="product-image" alt="${escapeAttr(getProductName(product) || "Producto")}" data-product-image="${escapeAttr(id)}">
+      <div class="product-content">
+        <h3>${escapeHtml(getProductName(product) || "Producto")}</h3>
+        ${metaParts.length ? `<div class="meta">${escapeHtml(metaParts.join(" · "))}</div>` : ""}
+        <p class="price">${escapeHtml(priceText)}</p>
+        ${promoText ? `<div class="price-note">${escapeHtml(promoText)}</div>` : ""}
+        <button class="btn btn-primary" data-add-to-cart="${escapeAttr(id)}" type="button">Agregar al carrito</button>
+      </div>
+    </article>`;
+}
+
+/**
+ * @param {HTMLElement} container
+ * @param {Map<string, Record<string, any>>} byId
+ */
+function hydrateProductImages(container, byId) {
+  container.querySelectorAll("img[data-product-image]").forEach((img) => {
+    const id = img.getAttribute("data-product-image") || "";
+    const product = byId.get(id);
+    if (!product) return;
+
+    setupFastImage(img, product.imagen || product.img || "", getProductName(product) || "Producto", {
+      priority: "low",
+      loading: "lazy",
+    });
+  });
+}
+
+/**
+ * @param {HTMLElement} container
+ * @param {(productId: string) => void} [addHandler]
+ */
+function bindProductActions(container, addHandler) {
+  container.querySelectorAll("button[data-add-to-cart]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-add-to-cart");
+      if (id) addHandler && addHandler(id);
+      btn.classList.add("btn-tap");
+      setTimeout(() => btn.classList.remove("btn-tap"), 100);
+    });
+  });
+}
+
+/**
+ * @param {Record<string, any>} product
+ * @param {number} quantity
+ * @param {Map<string, number>} groupQtyMap
+ * @returns {string}
+ */
+function buildCartItemHtml(product, quantity, groupQtyMap) {
+  const id = String(product?.id ?? "").trim();
+  const q = Number(quantity) || 0;
+  const promoText = getQtyPromoText(product);
+  const group = getPromoGroup(product);
+  const mixQty = group ? groupQtyMap.get(group) || 0 : 0;
+
+  const effQty = getEffectiveQtyForPricing(product, q, groupQtyMap);
+  const unitRaw = getUnitPriceByQty(product, effQty);
+  const calcText =
+    unitRaw > 0
+      ? `${q} x $ ${roundUYU(unitRaw)} = $ ${roundUYU(unitRaw * q)}`
+      : "Consultar";
+
+  return `
+    <div class="cart-item" style="position:relative">
+      <div>
+        <div class="cart-item-name">${escapeHtml(getProductName(product) || "Producto")}</div>
+        ${promoText ? `<div class="cart-item-note">${escapeHtml(promoText)}</div>` : ""}
+        ${group ? `<div class="cart-item-note" style="opacity:.85">${escapeHtml(`Combinados del grupo: ${mixQty}`)}</div>` : ""}
+      </div>
+      <div class="cart-item-calc">${escapeHtml(calcText)}</div>
+      <div class="cart-item-controls">
+        <button type="button" data-cart-op="minus" data-id="${escapeAttr(id)}">−</button>
+        <input type="number" min="1" value="${escapeAttr(q)}" data-cart-op="input" data-id="${escapeAttr(id)}">
+        <button type="button" data-cart-op="plus" data-id="${escapeAttr(id)}">+</button>
+        <button type="button" data-cart-op="remove" data-id="${escapeAttr(id)}">✖</button>
+      </div>
+    </div>`;
+}
+
+/**
+ * @param {HTMLElement} container
+ * @param {Record<string, number>} cart
+ * @param {(id: string, qty: number) => void} [updateHandler]
+ * @param {(id: string) => void} [removeHandler]
+ */
+function bindCartActions(container, cart, updateHandler, removeHandler) {
+  container.querySelectorAll("[data-cart-op]").forEach((node) => {
+    const op = node.getAttribute("data-cart-op");
+    const id = node.getAttribute("data-id") || "";
+    const currentQty = Number(cart?.[id]) || 0;
+    if (!id) return;
+
+    if (op === "minus") node.addEventListener("click", () => updateHandler && updateHandler(id, currentQty - 1));
+    if (op === "plus") node.addEventListener("click", () => updateHandler && updateHandler(id, currentQty + 1));
+    if (op === "remove") node.addEventListener("click", () => removeHandler && removeHandler(id));
+    if (op === "input") {
+      node.addEventListener("change", (e) => {
+        const value = parseInt(e.target.value, 10);
+        updateHandler && updateHandler(id, Number.isNaN(value) ? 1 : Math.max(1, value));
+      });
+    }
+  });
+}
+
 /** Base URL defensivo */
 function getBaseUrl() {
   const BASE =
@@ -308,114 +466,17 @@ export function renderProducts(list, container, addHandler) {
     return;
   }
 
-  list.forEach((product) => {
-    const card = document.createElement("div");
-    card.className = "product-card";
+  const byId = new Map();
+  const html = list
+    .map((product) => {
+      byId.set(String(product?.id ?? ""), product);
+      return buildProductCardHtml(product);
+    })
+    .join("");
 
-    // ✅ CLAVE para focus/highlight desde app.js
-    card.dataset.id = String(product?.id ?? "");
-
-    // BADGE
-    let badgeLabel = "";
-    let badgeClass = "";
-
-    if (typeof product.stock !== "undefined" && product.stock <= 0) {
-      badgeLabel = "SIN STOCK";
-      badgeClass = "sin-stock";
-    } else if (product.oferta === true || product.offer === true) {
-      badgeLabel = "OFERTA";
-      badgeClass = "oferta";
-    } else {
-      const bp = getBasePrice(product);
-      if (bp <= 0) {
-        badgeLabel = "CONSULTAR";
-        badgeClass = "consultar";
-      }
-    }
-
-    if (badgeLabel) {
-      const badge = document.createElement("span");
-      badge.className = `badge ${badgeClass}`;
-      badge.textContent = badgeLabel;
-      card.appendChild(badge);
-    }
-
-    // IMAGEN (catálogo: low + lazy)
-    const img = document.createElement("img");
-    img.className = "product-image";
-
-    const imgSrc = product.imagen || product.img || "";
-    setupFastImage(img, imgSrc, getProductName(product) || "Producto", {
-      priority: "low",
-      loading: "lazy",
-    });
-
-    card.appendChild(img);
-
-    // CONTENIDO
-    const content = document.createElement("div");
-    content.className = "product-content";
-
-    const title = document.createElement("h3");
-    title.textContent = getProductName(product) || "Producto";
-    content.appendChild(title);
-
-    const meta = document.createElement("div");
-    meta.className = "meta";
-
-    if (product.marca) meta.appendChild(document.createTextNode(product.marca));
-
-    if (product.presentacion) {
-      if (meta.childNodes.length) meta.appendChild(document.createTextNode(" · "));
-      meta.appendChild(document.createTextNode(product.presentacion));
-    }
-
-    if (!meta.childNodes.length && product.categoria) {
-      meta.appendChild(document.createTextNode(product.categoria));
-    }
-
-    if (meta.childNodes.length) content.appendChild(meta);
-
-    // PRECIO
-    const price = document.createElement("p");
-    price.className = "price";
-
-    const basePrice = getBasePrice(product);
-
-    if (product.stock !== undefined && product.stock <= 0) {
-      price.textContent = "Sin stock";
-    } else if (basePrice > 0) {
-      price.textContent = money(basePrice);
-    } else {
-      price.textContent = "Consultar";
-    }
-    content.appendChild(price);
-
-    // PROMO POR CANTIDAD / MIX
-    const promoText = getQtyPromoText(product);
-    if (promoText) {
-      const note = document.createElement("div");
-      note.className = "price-note";
-      note.textContent = promoText;
-      content.appendChild(note);
-    }
-
-    // BOTÓN
-    const btn = document.createElement("button");
-    btn.className = "btn btn-primary";
-    btn.textContent = "Agregar al carrito";
-
-    btn.addEventListener("click", () => {
-      addHandler && addHandler(product.id);
-      btn.classList.add("btn-tap");
-      setTimeout(() => btn.classList.remove("btn-tap"), 100);
-    });
-
-    content.appendChild(btn);
-
-    card.appendChild(content);
-    container.appendChild(card);
-  });
+  container.innerHTML = html;
+  hydrateProductImages(container, byId);
+  bindProductActions(container, addHandler);
 }
 
 /* =========================
@@ -530,6 +591,8 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
   const byId = mapById(products || []);
   const groupQtyMap = buildGroupQtyMap(products || [], cart || {});
 
+  const rows = [];
+
   entries.forEach(([productId, qty]) => {
     const id = String(productId ?? "").trim();
     const q = Number(qty) || 0;
@@ -538,84 +601,11 @@ export function renderCart(products, cart, container, updateHandler, removeHandl
     const product = byId.get(id);
     if (!product) return;
 
-    const item = document.createElement("div");
-    item.className = "cart-item";
-    item.style.position = "relative";
-
-    const left = document.createElement("div");
-
-    const name = document.createElement("div");
-    name.className = "cart-item-name";
-    name.textContent = getProductName(product) || "Producto";
-    left.appendChild(name);
-
-    const promoText = getQtyPromoText(product);
-    if (promoText) {
-      const note = document.createElement("div");
-      note.className = "cart-item-note";
-      note.textContent = promoText;
-      left.appendChild(note);
-    }
-
-    const g = getPromoGroup(product);
-    if (g) {
-      const qg = groupQtyMap.get(g) || 0;
-      const mix = document.createElement("div");
-      mix.className = "cart-item-note";
-      mix.style.opacity = "0.85";
-      mix.textContent = `Combinados del grupo: ${qg}`;
-      left.appendChild(mix);
-    }
-
-    item.appendChild(left);
-
-    const effQty = getEffectiveQtyForPricing(product, q, groupQtyMap);
-    const unitRaw = getUnitPriceByQty(product, effQty);
-
-    const calc = document.createElement("div");
-    calc.className = "cart-item-calc";
-    if (unitRaw > 0) {
-      const unitShow = roundUYU(unitRaw);
-      const rowTotalShow = roundUYU(unitRaw * q);
-      calc.textContent = `${q} x $ ${unitShow} = $ ${rowTotalShow}`;
-    } else {
-      calc.textContent = "Consultar";
-    }
-    item.appendChild(calc);
-
-    const controls = document.createElement("div");
-    controls.className = "cart-item-controls";
-
-    const minus = document.createElement("button");
-    minus.type = "button";
-    minus.textContent = "−";
-    minus.onclick = () => updateHandler && updateHandler(id, q - 1);
-
-    const input = document.createElement("input");
-    input.type = "number";
-    input.min = "1";
-    input.value = q;
-    input.onchange = (e) => {
-      const v = parseInt(e.target.value, 10);
-      const safe = isNaN(v) ? 1 : Math.max(1, v);
-      updateHandler && updateHandler(id, safe);
-    };
-
-    const plus = document.createElement("button");
-    plus.type = "button";
-    plus.textContent = "+";
-    plus.onclick = () => updateHandler && updateHandler(id, q + 1);
-
-    const remove = document.createElement("button");
-    remove.type = "button";
-    remove.textContent = "✖";
-    remove.onclick = () => removeHandler && removeHandler(id);
-
-    controls.append(minus, input, plus, remove);
-    item.appendChild(controls);
-
-    container.appendChild(item);
+    rows.push(buildCartItemHtml(product, q, groupQtyMap));
   });
+
+  container.innerHTML = rows.join("");
+  bindCartActions(container, cart || {}, updateHandler, removeHandler);
 
   return computeCartTotal(products, cart);
 }
@@ -761,7 +751,7 @@ export function renderCategoryAccordion(products, onSelect) {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "accordion-btn";
-      btn.innerHTML = `<span>${cat}</span><span class="chev">▾</span><small style="opacity:.7;margin-left:auto">${count}</small>`;
+      btn.innerHTML = `<span>${escapeHtml(cat)}</span><span class="chev">▾</span><small style="opacity:.7;margin-left:auto">${count}</small>`;
       btn.onclick = () => renderSubcategories(cat);
       list.appendChild(btn);
     });
@@ -825,7 +815,7 @@ export function renderCategoryAccordion(products, onSelect) {
       subs.forEach(([sub, arr]) => {
         const row = document.createElement("div");
         row.className = "subcat row";
-        row.innerHTML = `<span>${sub}</span><small>${arr.length}</small>`;
+        row.innerHTML = `<span>${escapeHtml(sub)}</span><small>${arr.length}</small>`;
         row.onclick = () => typeof onSelect === "function" && onSelect(arr);
         body.appendChild(row);
       });

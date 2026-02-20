@@ -1,148 +1,209 @@
-const STORAGE_KEY = 'mm_store_v1';
+/**
+ * @typedef {Record<string, number>} CartState
+ *
+ * @typedef {{
+ *   search: string,
+ *   category: string,
+ *   subcategory: string,
+ *   tags: string[],
+ * }} FiltersState
+ *
+ * @typedef {{
+ *   cart: CartState,
+ *   products: Array<Record<string, any>>,
+ *   filters: FiltersState,
+ * }} AppState
+ */
 
-const DEFAULT_STATE = {
-  cart: [],
+export const STORAGE_KEY = "mm_store_v2";
+const LEGACY_STORE_KEY = "mm_store_v1";
+const LEGACY_CART_KEY = "cart";
+
+export const DEFAULT_STATE = {
+  cart: {},
   products: [],
   filters: {
-    search: '',
-    category: '',
-    subcategory: '',
+    search: "",
+    category: "",
+    subcategory: "",
     tags: [],
   },
 };
 
-function isObject(value) {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
 function deepClone(value) {
-  return typeof structuredClone === 'function'
+  return typeof structuredClone === "function"
     ? structuredClone(value)
     : JSON.parse(JSON.stringify(value));
 }
 
-function mergeState(base, patch) {
-  const output = deepClone(base);
+/** @param {unknown} value */
+function normalizeCart(value) {
+  const cart = {};
 
-  if (Array.isArray(patch?.cart)) output.cart = patch.cart;
-  if (Array.isArray(patch?.products)) output.products = patch.products;
-  if (isObject(patch?.filters)) output.filters = { ...output.filters, ...patch.filters };
+  if (!value || typeof value !== "object") return cart;
 
-  return output;
+  for (const [rawId, rawQty] of Object.entries(value)) {
+    const id = String(rawId ?? "").trim();
+    const qty = Number(rawQty);
+    if (!id || !Number.isFinite(qty) || qty < 1) continue;
+    cart[id] = Math.round(qty);
+  }
+
+  return cart;
+}
+
+/** @param {any} raw */
+function normalizeState(raw) {
+  const base = deepClone(DEFAULT_STATE);
+  if (!raw || typeof raw !== "object") return base;
+
+  base.cart = normalizeCart(raw.cart);
+  base.products = Array.isArray(raw.products) ? raw.products : [];
+
+  if (raw.filters && typeof raw.filters === "object") {
+    base.filters = {
+      ...base.filters,
+      ...raw.filters,
+      tags: Array.isArray(raw.filters.tags) ? raw.filters.tags : [],
+    };
+  }
+
+  return base;
 }
 
 function loadPersistedState() {
-  if (typeof localStorage === 'undefined') return deepClone(DEFAULT_STATE);
+  if (typeof localStorage === "undefined") return deepClone(DEFAULT_STATE);
 
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return deepClone(DEFAULT_STATE);
+  const tryRead = (key) => {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  };
 
-    const parsed = JSON.parse(raw);
-    return mergeState(DEFAULT_STATE, parsed);
-  } catch (error) {
-    console.warn('[store] Persisted state is invalid, using default state.', error);
-    return deepClone(DEFAULT_STATE);
-  }
+  const current = tryRead(STORAGE_KEY);
+  if (current) return normalizeState(current);
+
+  const legacyStore = tryRead(LEGACY_STORE_KEY);
+  const legacyCart = tryRead(LEGACY_CART_KEY);
+
+  return normalizeState({
+    ...(legacyStore || {}),
+    cart: normalizeCart(legacyStore?.cart || legacyCart),
+  });
 }
 
 class Store {
+  /** @param {AppState} initialState */
   constructor(initialState = DEFAULT_STATE) {
-    this.state = mergeState(DEFAULT_STATE, initialState);
+    this.state = normalizeState(initialState);
     this.listeners = new Set();
+    this.persistScheduled = false;
+    this.lastSerializedState = "";
   }
 
   getState() {
     return deepClone(this.state);
   }
 
+  getCart() {
+    return deepClone(this.state.cart);
+  }
+
+  getProducts() {
+    return deepClone(this.state.products);
+  }
+
+  /** @param {(state: AppState) => void} listener */
   subscribe(listener) {
-    if (typeof listener !== 'function') {
-      throw new TypeError('[store] subscribe(listener) expects a function.');
+    if (typeof listener !== "function") {
+      throw new TypeError("[store] subscribe(listener) expects a function.");
     }
 
     this.listeners.add(listener);
-
-    return () => {
-      this.listeners.delete(listener);
-    };
+    return () => this.listeners.delete(listener);
   }
 
-  setState(partialState) {
-    const next = mergeState(this.state, partialState);
+  /** @param {(state: AppState) => AppState} mutator */
+  update(mutator) {
+    const next = normalizeState(mutator(this.getState()));
     this.state = next;
-    this.persist();
+    this.schedulePersist();
     this.emit();
   }
 
+  /** @param {Array<Record<string, any>>} products */
   setProducts(products) {
-    this.setState({ products: Array.isArray(products) ? products : [] });
+    this.update((prev) => ({ ...prev, products: Array.isArray(products) ? products : [] }));
   }
 
-  setFilters(filters) {
-    this.setState({ filters: isObject(filters) ? filters : {} });
+  setCart(cart) {
+    this.update((prev) => ({ ...prev, cart: normalizeCart(cart) }));
   }
 
-  resetFilters() {
-    this.setState({ filters: deepClone(DEFAULT_STATE.filters) });
-  }
+  addToCart(productId, quantity = 1) {
+    const id = String(productId ?? "").trim();
+    const qty = Number(quantity);
+    if (!id || !Number.isFinite(qty) || qty <= 0) return;
 
-  addToCart(product, quantity = 1) {
-    if (!product || !product.id) return;
-
-    const normalizedQty = Number(quantity);
-    if (!Number.isFinite(normalizedQty) || normalizedQty <= 0) return;
-
-    const cart = this.state.cart.map((item) => ({ ...item }));
-    const index = cart.findIndex((item) => item.id === product.id);
-
-    if (index >= 0) {
-      cart[index].quantity += normalizedQty;
-    } else {
-      cart.push({
-        id: product.id,
-        name: product.name ?? product.nombre ?? '',
-        price: Number(product.price ?? product.precio ?? 0) || 0,
-        quantity: normalizedQty,
-      });
-    }
-
-    this.setState({ cart });
+    this.update((prev) => ({
+      ...prev,
+      cart: {
+        ...prev.cart,
+        [id]: (Number(prev.cart[id]) || 0) + Math.round(qty),
+      },
+    }));
   }
 
   updateCartItemQuantity(productId, quantity) {
-    const normalizedQty = Number(quantity);
-    if (!productId) return;
+    const id = String(productId ?? "").trim();
+    const qty = Number(quantity);
+    if (!id) return;
 
-    if (!Number.isFinite(normalizedQty) || normalizedQty <= 0) {
-      this.removeFromCart(productId);
-      return;
-    }
+    this.update((prev) => {
+      const nextCart = { ...prev.cart };
+      if (!Number.isFinite(qty) || qty <= 0) {
+        delete nextCart[id];
+      } else {
+        nextCart[id] = Math.round(qty);
+      }
 
-    const cart = this.state.cart.map((item) =>
-      item.id === productId ? { ...item, quantity: normalizedQty } : item,
-    );
-
-    this.setState({ cart });
+      return { ...prev, cart: nextCart };
+    });
   }
 
   removeFromCart(productId) {
-    if (!productId) return;
-    this.setState({ cart: this.state.cart.filter((item) => item.id !== productId) });
+    const id = String(productId ?? "").trim();
+    if (!id) return;
+
+    this.update((prev) => {
+      const nextCart = { ...prev.cart };
+      delete nextCart[id];
+      return { ...prev, cart: nextCart };
+    });
   }
 
   clearCart() {
-    this.setState({ cart: [] });
+    this.update((prev) => ({ ...prev, cart: {} }));
   }
 
-  persist() {
-    if (typeof localStorage === 'undefined') return;
+  schedulePersist() {
+    if (this.persistScheduled || typeof localStorage === "undefined") return;
 
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
-    } catch (error) {
-      console.warn('[store] Failed to persist state.', error);
-    }
+    this.persistScheduled = true;
+    queueMicrotask(() => {
+      this.persistScheduled = false;
+      try {
+        const serialized = JSON.stringify(this.state);
+        if (serialized === this.lastSerializedState) return;
+        this.lastSerializedState = serialized;
+        localStorage.setItem(STORAGE_KEY, serialized);
+      } catch (error) {
+        console.warn("[store] Failed to persist state.", error);
+      }
+    });
   }
 
   emit() {
@@ -152,11 +213,11 @@ class Store {
       try {
         listener(snapshot);
       } catch (error) {
-        console.error('[store] Listener error:', error);
+        console.error("[store] Listener error:", error);
       }
     }
   }
 }
 
 export const store = new Store(loadPersistedState());
-export { Store, STORAGE_KEY, DEFAULT_STATE };
+export { Store };
