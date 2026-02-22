@@ -1,0 +1,90 @@
+name: Android Release APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_name:
+        description: "Nombre del release (solo metadata)"
+        required: false
+        default: "manual-release"
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    env:
+      ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          check-latest: true
+          cache: npm
+
+      - name: Show Node version
+        run: node -v
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web (Android base)
+        run: npm run build:android
+
+      - name: Add Android platform
+        run: npx cap add android
+
+      - name: Sync Capacitor
+        run: npx cap sync android
+
+      - name: Decode keystore
+        run: |
+          if [ -z "$ANDROID_KEYSTORE_BASE64" ]; then
+            echo "Missing ANDROID_KEYSTORE_BASE64 secret"
+            exit 1
+          fi
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/release.jks
+
+      - name: Write signing properties
+        run: |
+          cat <<EOF > android/gradle.properties
+          MYAPP_STORE_FILE=release.jks
+          MYAPP_STORE_PASSWORD=$ANDROID_KEYSTORE_PASSWORD
+          MYAPP_KEY_ALIAS=$ANDROID_KEY_ALIAS
+          MYAPP_KEY_PASSWORD=$ANDROID_KEY_PASSWORD
+          EOF
+
+      - name: Inject signing config
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          path = Path("android/app/build.gradle")
+          text = path.read_text()
+          if "signingConfigs" not in text:
+            text = text.replace("android {", "android {\n    signingConfigs {\n        release {\n            storeFile file(MYAPP_STORE_FILE)\n            storePassword MYAPP_STORE_PASSWORD\n            keyAlias MYAPP_KEY_ALIAS\n            keyPassword MYAPP_KEY_PASSWORD\n        }\n    }\n", 1)
+          if "signingConfig signingConfigs.release" not in text:
+            text = re.sub(r"release\\s*\\{", "release {\n            signingConfig signingConfigs.release", text, count=1)
+          path.write_text(text)
+          PY
+
+      - name: Build Release APK
+        working-directory: android
+        run: ./gradlew assembleRelease
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: android/app/build/outputs/apk/release/app-release.apk

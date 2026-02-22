@@ -28,6 +28,14 @@ El sitio consume productos desde Google Sheets como CSV (ver `PRODUCTS_URL` en `
 1. Editá la hoja publicada en Google Sheets (columnas: **nombre**, **categoria**, **marca**, **presentacion**, **precio**, **imagen**, **stock**, **tags**, **promo_group**, **Destacados**).
 2. Verificá que el CSV siga publicado y que el link esté actualizado en `data.js`.
 
+### Google Sheets (robusto + caché)
+
+- **Endpoint actual:** se configura en `PRODUCTS_URL` dentro de `data.js`.
+- **Formato esperado:** columnas como `id`, `nombre`, `categoria`, `subcategoria`, `precio_base`, `imagen` (o `imagen_url`), `stock`, `tags`, `Destacados`, etc.
+- **Caché local:** si la carga desde Sheets falla, la app muestra el último catálogo guardado en `localStorage` y avisa en pantalla.
+- **Timeout:** la carga remota corta a los ~10s para evitar “cuelgues” en la app.
+- **Offline básico:** Service Worker cachea assets estáticos para abrir la app sin conexión.
+
 ### Opción alternativa (Excel local)
 
 Si preferís generar un JSON local desde Excel:
@@ -61,6 +69,28 @@ npm run build
 ```
 
 El primer comando asegura que el JSON de productos está actualizado antes de construir.
+
+## Android (APK) con Capacitor
+
+Este repo **no versiona** el proyecto Android para mantenerlo limpio. El flujo recomendado:
+
+```bash
+./scripts/prepare-android-repo.sh
+```
+
+Esto crea un repo local hermano (`../mayorista-makabra-android`) y deja el actual intacto.
+
+Si preferís hacerlo manual:
+
+```bash
+npm install
+npm run build:android
+npm run android:init
+npm run android:sync
+npm run android:open
+```
+
+> Nota: `build:android` usa `VITE_BASE=./` para que los assets se carguen bien en WebView.
 
 ## Desplegar en GitHub Pages
 
