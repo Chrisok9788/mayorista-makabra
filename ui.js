@@ -40,9 +40,25 @@ function toNumberPrice(v) {
   if (typeof v === "number") return Number.isFinite(v) ? v : 0;
   if (v == null) return 0;
 
-  let s = String(v).trim();
-  s = s.replace(/\$/g, "").trim();
-  s = s.replace(/\./g, "").replace(/,/g, ".");
+  let s = String(v).trim().replace(/\$/g, "").replace(/\s+/g, "");
+  if (!s) return 0;
+
+  const hasComma = s.includes(",");
+  const hasDot = s.includes(".");
+
+  if (hasComma && hasDot) {
+    const lastComma = s.lastIndexOf(",");
+    const lastDot = s.lastIndexOf(".");
+    const decimalSep = lastComma > lastDot ? "," : ".";
+
+    if (decimalSep === ",") s = s.replace(/\./g, "").replace(/,/g, ".");
+    else s = s.replace(/,/g, "");
+  } else if (hasComma) {
+    s = s.replace(/,/g, ".");
+  } else if (hasDot && (s.match(/\./g) || []).length > 1) {
+    s = s.replace(/\./g, "");
+  }
+
   const n = Number(s);
   return Number.isFinite(n) ? n : 0;
 }
