@@ -2,7 +2,11 @@
   "rewrites": [
     {
       "source": "/favicon.ico",
-      "destination": "/logo.png"
+      "destination": "/favicon.ico.png"
+    },
+    {
+      "source": "/favicon.png",
+      "destination": "/favicon.ico.png"
     },
     {
       "source": "/placeholder.png",
