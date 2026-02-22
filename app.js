@@ -227,6 +227,18 @@ function getPlaceholderImgUrl() {
   return `${getBaseAssetUrl()}placeholder.png`;
 }
 
+const missingFeaturedImageCache = new Set();
+
+function resolveProductImageUrl(src) {
+  const s = String(src || "").trim();
+  if (!s) return "";
+
+  if (/^(https?:)?\/\//i.test(s) || /^data:/i.test(s) || /^blob:/i.test(s)) return s;
+
+  const clean = s.replace(/^\.?\//, "").replace(/^\/+/, "");
+  return `${getBaseAssetUrl()}${clean}`;
+}
+
 function getPrice(p) {
   const v = p?.precio ?? p?.price ?? p?.precio_base ?? p?.precioBase ?? 0;
 
@@ -611,14 +623,22 @@ function renderFeaturedByCategory(allProducts, onClickProduct, onViewCategory) {
       img.alt = getName(p);
 
       const src = getImg(p);
+      const finalSrc = resolveProductImageUrl(src);
       const placeholder = getPlaceholderImgUrl();
-      img.src = src || placeholder;
+
+      if (finalSrc && !missingFeaturedImageCache.has(finalSrc)) {
+        img.src = finalSrc;
+      } else {
+        img.src = placeholder;
+      }
+
       img.onerror = () => {
         if (img.dataset.fallbackApplied === "1") {
           img.onerror = null;
           return;
         }
 
+        if (finalSrc) missingFeaturedImageCache.add(finalSrc);
         img.dataset.fallbackApplied = "1";
         img.onerror = null;
         img.src = placeholder;
