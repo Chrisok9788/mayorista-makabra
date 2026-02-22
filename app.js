@@ -214,6 +214,19 @@ function getImg(p) {
   return normStr(p?.imagen ?? p?.img);
 }
 
+function getBaseAssetUrl() {
+  const base =
+    typeof import.meta !== "undefined" && import.meta.env && import.meta.env.BASE_URL
+      ? String(import.meta.env.BASE_URL)
+      : "./";
+
+  return base.endsWith("/") ? base : `${base}/`;
+}
+
+function getPlaceholderImgUrl() {
+  return `${getBaseAssetUrl()}placeholder.png`;
+}
+
 function getPrice(p) {
   const v = p?.precio ?? p?.price ?? p?.precio_base ?? p?.precioBase ?? 0;
 
@@ -598,8 +611,18 @@ function renderFeaturedByCategory(allProducts, onClickProduct, onViewCategory) {
       img.alt = getName(p);
 
       const src = getImg(p);
-      img.src = src || "./placeholder.svg";
-      img.onerror = () => (img.src = "./placeholder.svg");
+      const placeholder = getPlaceholderImgUrl();
+      img.src = src || placeholder;
+      img.onerror = () => {
+        if (img.dataset.fallbackApplied === "1") {
+          img.onerror = null;
+          return;
+        }
+
+        img.dataset.fallbackApplied = "1";
+        img.onerror = null;
+        img.src = placeholder;
+      };
 
       card.appendChild(img);
 
