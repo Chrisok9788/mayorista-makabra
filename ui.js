@@ -315,7 +315,7 @@ function getBaseUrl() {
 
 /** Placeholder defensivo (puede ser placeholder.png) */
 function getPlaceholderUrl() {
-  return `${getBaseUrl()}placeholder.svg`;
+  return `${getBaseUrl()}placeholder.png`;
 }
 
 /**
@@ -377,7 +377,20 @@ function setupFastImage(imgEl, realSrc, alt, opts = {}) {
     imgEl.style.opacity = "1";
   };
 
+  const isPlaceholderSource = () => {
+    const current = imgEl.currentSrc || imgEl.src || "";
+    return current.includes("/placeholder.png");
+  };
+
   imgEl.onerror = () => {
+    if (isPlaceholderSource() || imgEl.dataset.fallbackApplied === "1") {
+      imgEl.onerror = null;
+      imgEl.style.opacity = "1";
+      return;
+    }
+
+    imgEl.dataset.fallbackApplied = "1";
+    imgEl.onerror = null;
     imgEl.src = placeholder;
     imgEl.style.opacity = "1";
   };
