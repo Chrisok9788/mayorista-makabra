@@ -5,6 +5,10 @@
       "destination": "/logo.png"
     },
     {
+      "source": "/favicon.png",
+      "destination": "/logo.png"
+    },
+    {
       "source": "/placeholder.png",
       "destination": "/placeholder.svg"
     }
