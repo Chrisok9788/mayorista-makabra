@@ -319,6 +319,12 @@ function getPlaceholderUrl() {
 }
 
 /**
+ * Cachea rutas que ya devolvieron 404 para evitar reintentos en rerenders.
+ * Esto reduce errores intermitentes en Vercel cuando hay imágenes inexistentes.
+ */
+const missingImageCache = new Set();
+
+/**
  * ✅ FIX VERCEL/GH/ANDROID:
  * Convierte rutas relativas o root-relative en una ruta válida respetando BASE_URL.
  * - "images/x.jpg"   => BASE_URL + "images/x.jpg"
@@ -373,6 +379,12 @@ function setupFastImage(imgEl, realSrc, alt, opts = {}) {
     return;
   }
 
+  if (missingImageCache.has(finalSrc)) {
+    imgEl.src = placeholder;
+    imgEl.style.opacity = "1";
+    return;
+  }
+
   imgEl.onload = () => {
     imgEl.style.opacity = "1";
   };
@@ -389,6 +401,7 @@ function setupFastImage(imgEl, realSrc, alt, opts = {}) {
       return;
     }
 
+    missingImageCache.add(finalSrc);
     imgEl.dataset.fallbackApplied = "1";
     imgEl.onerror = null;
     imgEl.src = placeholder;
