@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/favicon.ico",
+      "destination": "/logo.png"
+    },
+    {
+      "source": "/placeholder.png",
+      "destination": "/placeholder.svg"
+    }
+  ]
+}
