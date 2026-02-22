@@ -598,8 +598,8 @@ function renderFeaturedByCategory(allProducts, onClickProduct, onViewCategory) {
       img.alt = getName(p);
 
       const src = getImg(p);
-      img.src = src || "./placeholder.png";
-      img.onerror = () => (img.src = "./placeholder.png");
+      img.src = src || "./placeholder.svg";
+      img.onerror = () => (img.src = "./placeholder.svg");
 
       card.appendChild(img);
 
