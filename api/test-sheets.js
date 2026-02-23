@@ -1,25 +1,19 @@
-// api/test-sheets.js
 import { SignJWT, importPKCS8 } from "jose";
-
 export const config = { runtime: "nodejs" };
 
-function must(name) {
-  const v = process.env[name];
-  if (!v) throw new Error(`Falta ${name} en Vercel`);
+const must = (k) => {
+  const v = process.env[k];
+  if (!v) throw new Error(`Falta env var: ${k}`);
   return v;
-}
+};
 
-async function getAccessToken() {
+async function token() {
   const clientEmail = must("GOOGLE_CLIENT_EMAIL");
   const rawKey = must("GOOGLE_PRIVATE_KEY").replace(/\\n/g, "\n");
   const now = Math.floor(Date.now() / 1000);
-
-  // Google acepta RS256 con PKCS8
   const key = await importPKCS8(rawKey, "RS256");
 
-  const jwt = await new SignJWT({
-    scope: "https://www.googleapis.com/auth/spreadsheets",
-  })
+  const jwt = await new SignJWT({ scope: "https://www.googleapis.com/auth/spreadsheets" })
     .setProtectedHeader({ alg: "RS256", typ: "JWT" })
     .setIssuer(clientEmail)
     .setSubject(clientEmail)
@@ -38,34 +32,31 @@ async function getAccessToken() {
   });
 
   const data = await r.json();
-  if (!r.ok) throw new Error(`Token error: ${r.status} ${JSON.stringify(data)}`);
+  if (!r.ok) throw new Error(`TOKEN ${r.status}: ${JSON.stringify(data)}`);
   return data.access_token;
 }
 
 export default async function handler(req, res) {
   try {
     const spreadsheetId = must("SPREADSHEET_ID");
-    const sheetName = must("SHEET_NAME"); // PRODUCTOS
-    const token = await getAccessToken();
+    const sheetName = must("SHEET_NAME");
 
-    // Escribir "funciona" en R6
-    const range = encodeURIComponent(`${sheetName}!R6`);
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?valueInputOption=RAW`;
+    const access = await token();
+
+    const a1 = `${sheetName}!R6`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(a1)}?valueInputOption=RAW`;
 
     const r = await fetch(url, {
       method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
+      headers: { Authorization: `Bearer ${access}`, "Content-Type": "application/json" },
       body: JSON.stringify({ values: [["funciona"]] }),
     });
 
     const out = await r.json();
-    if (!r.ok) throw new Error(`Sheets error: ${r.status} ${JSON.stringify(out)}`);
+    if (!r.ok) throw new Error(`SHEETS ${r.status}: ${JSON.stringify(out)}`);
 
-    res.status(200).json({ ok: true, wrote: `${sheetName}!R6`, value: "funciona" });
+    res.status(200).json({ ok: true, wrote: a1, out });
   } catch (e) {
-    res.status(500).json({ ok: false, error: String(e?.message || e) });
+    res.status(500).json({ ok: false, error: String(e.message || e) });
   }
 }
