@@ -1,48 +1,71 @@
 // api/test-sheets.js
-import { google } from "googleapis";
+import { SignJWT, importPKCS8 } from "jose";
 
 export const config = { runtime: "nodejs" };
 
-function getAuth() {
-  const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
-  const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+function must(name) {
+  const v = process.env[name];
+  if (!v) throw new Error(`Falta ${name} en Vercel`);
+  return v;
+}
 
-  if (!clientEmail || !privateKey) {
-    throw new Error("Faltan GOOGLE_CLIENT_EMAIL o GOOGLE_PRIVATE_KEY en Vercel");
-  }
+async function getAccessToken() {
+  const clientEmail = must("GOOGLE_CLIENT_EMAIL");
+  const rawKey = must("GOOGLE_PRIVATE_KEY").replace(/\\n/g, "\n");
+  const now = Math.floor(Date.now() / 1000);
 
-  return new google.auth.JWT({
-    email: clientEmail,
-    key: privateKey,
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+  // Google acepta RS256 con PKCS8
+  const key = await importPKCS8(rawKey, "RS256");
+
+  const jwt = await new SignJWT({
+    scope: "https://www.googleapis.com/auth/spreadsheets",
+  })
+    .setProtectedHeader({ alg: "RS256", typ: "JWT" })
+    .setIssuer(clientEmail)
+    .setSubject(clientEmail)
+    .setAudience("https://oauth2.googleapis.com/token")
+    .setIssuedAt(now)
+    .setExpirationTime(now + 3600)
+    .sign(key);
+
+  const r = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+      assertion: jwt,
+    }),
   });
+
+  const data = await r.json();
+  if (!r.ok) throw new Error(`Token error: ${r.status} ${JSON.stringify(data)}`);
+  return data.access_token;
 }
 
 export default async function handler(req, res) {
   try {
-    const spreadsheetId = process.env.SPREADSHEET_ID;
-    const sheetName = process.env.SHEET_NAME || "PRODUCTOS";
-
-    if (!spreadsheetId) {
-      return res.status(500).json({ ok: false, error: "Falta SPREADSHEET_ID" });
-    }
-
-    const auth = getAuth();
-    const sheets = google.sheets({ version: "v4", auth });
+    const spreadsheetId = must("SPREADSHEET_ID");
+    const sheetName = must("SHEET_NAME"); // PRODUCTOS
+    const token = await getAccessToken();
 
     // Escribir "funciona" en R6
-    const range = `${sheetName}!R6`;
-    await sheets.spreadsheets.values.update({
-      spreadsheetId,
-      range,
-      valueInputOption: "RAW",
-      requestBody: { values: [["funciona"]] },
+    const range = encodeURIComponent(`${sheetName}!R6`);
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?valueInputOption=RAW`;
+
+    const r = await fetch(url, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ values: [["funciona"]] }),
     });
 
-    return res.status(200).json({ ok: true, wrote: range, value: "funciona" });
+    const out = await r.json();
+    if (!r.ok) throw new Error(`Sheets error: ${r.status} ${JSON.stringify(out)}`);
+
+    res.status(200).json({ ok: true, wrote: `${sheetName}!R6`, value: "funciona" });
   } catch (e) {
-    return res
-      .status(500)
-      .json({ ok: false, error: String(e?.message || e) });
+    res.status(500).json({ ok: false, error: String(e?.message || e) });
   }
 }
