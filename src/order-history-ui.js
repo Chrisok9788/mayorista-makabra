@@ -5,7 +5,9 @@ import {
   getOrdersByCustomer,
 } from "./order-history.js";
 
-const WA_PHONE = "59896405927";
+import { FRONTEND_CONFIG } from "./config.js";
+
+const WA_PHONE = FRONTEND_CONFIG.whatsappPhone;
 
 function formatUYU(value) {
   const safe = Number(value) || 0;

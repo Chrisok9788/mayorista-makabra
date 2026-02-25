@@ -1,4 +1,5 @@
 import { addOrderToHistory } from "./src/order-history.js";
+import { FRONTEND_CONFIG } from "./src/config.js";
 
 /*
  * whatsapp.js — MODIFICADO y COMPLETO (PROMO MIX + total correcto)
@@ -262,7 +263,7 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
 
   // ✅ número en formato internacional (sin +, sin espacios)
   const whatsappURL =
-    "https://wa.me/59896405927?text=" + encodeURIComponent(message);
+    `https://wa.me/${FRONTEND_CONFIG.whatsappPhone}?text=${encodeURIComponent(message)}`;
 
   // ✅ iPhone/Safari: evita bloqueo de popups
   window.location.href = whatsappURL;

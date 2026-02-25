@@ -12,17 +12,15 @@ function isValidProfile(profile) {
   if (!profile || typeof profile !== "object") return false;
   const code = String(profile.code || "").trim();
   const name = String(profile.name || "").trim();
-  const address = String(profile.address || "").trim();
-  const phone = String(profile.phone || "").trim();
-  return CODE_REGEX.test(code) && Boolean(name) && Boolean(address) && Boolean(phone);
+  return CODE_REGEX.test(code) && Boolean(name);
 }
 
 function normalizeProfile(profile) {
   return {
     code: String(profile.code).trim(),
     name: String(profile.name).trim(),
-    address: String(profile.address).trim(),
-    phone: String(profile.phone).trim(),
+    address: String(profile.address || "").trim(),
+    phone: String(profile.phone || "").trim(),
   };
 }
 

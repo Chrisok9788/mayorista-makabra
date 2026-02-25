@@ -1,16 +1,19 @@
 {
   "rewrites": [
+    { "source": "/favicon.ico", "destination": "/logo.png" },
+    { "source": "/favicon.png", "destination": "/logo.png" },
+    { "source": "/placeholder.png", "destination": "/placeholder.svg" },
+    { "source": "/api/sync-scanntech/run", "destination": "/api/sync-scanntech" },
+    { "source": "/api/sync-scanntech/status", "destination": "/api/sync-scanntech-status" }
+  ],
+  "headers": [
     {
-      "source": "/favicon.ico",
-      "destination": "/logo.png"
-    },
-    {
-      "source": "/favicon.png",
-      "destination": "/logo.png"
-    },
-    {
-      "source": "/placeholder.png",
-      "destination": "/placeholder.svg"
+      "source": "/api/(order-history|validate-delivery|sync-scanntech|sync-scanntech-status)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, max-age=0" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "no-referrer" }
+      ]
     }
   ]
 }

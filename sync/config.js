@@ -1,16 +1,14 @@
 // sync/config.js
-// Archivo de configuración general
-// NO contiene lógica, solo datos de conexión
+// Configuración por variables de entorno (sin hardcodes operativos)
 
 export const CONFIG = {
   SCANNTECH: {
-    BASE_URL: "https://api.scanntech.com.uy", 
-    API_KEY: "PENDIENTE_DE_DEFINIR"
+    BASE_URL: process.env.SCANNTECH_BASE_URL || "",
+    API_KEY: process.env.SCANNTECH_API_KEY || "",
   },
-
   SHEETS: {
-    SPREADSHEET_ID: "ID_DEL_GOOGLE_SHEET",
-    SHEET_PRODUCTOS: "PRODUCTOS",
-    SHEET_PENDIENTES: "PENDIENTES"
-  }
+    SPREADSHEET_ID: process.env.PRODUCTS_SHEET_ID || "",
+    SHEET_PRODUCTOS: process.env.PRODUCTS_SHEET_TAB || "products",
+    SHEET_PENDIENTES: process.env.SHEET_PENDIENTES || "pendientes",
+  },
 };

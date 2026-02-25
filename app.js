@@ -33,6 +33,7 @@ import {
 } from "./ui.js";
 
 import { sendOrder } from "./whatsapp.js";
+import { FRONTEND_CONFIG } from "./src/config.js";
 import { getDeliveryProfile, initDeliveryModeUI, isDeliveryActive } from "./src/delivery-mode.js";
 import { initOrderHistoryUI } from "./src/order-history-ui.js";
 import { store } from "./src/store.js";
@@ -978,10 +979,23 @@ function applyProductsToUI(rawList) {
   rerenderCartUI();
 }
 
+
+function applyWhatsappLinks() {
+  const phone = FRONTEND_CONFIG.whatsappPhone;
+  document.querySelectorAll('a[href*="wa.me/"]').forEach((a) => {
+    const text = (a.textContent || '').trim();
+    a.href = `https://wa.me/${phone}`;
+    if (/^\+?\d/.test(text)) a.textContent = `+${phone}`;
+  });
+  const hidden = document.getElementById("send-whatsapp-link");
+  if (hidden) hidden.href = `https://wa.me/${phone}`;
+}
+
 // =======================
 // INIT
 // =======================
 async function init() {
+  applyWhatsappLinks();
   initDeliveryModeUI();
   initOrderHistoryUI();
   loadCart();

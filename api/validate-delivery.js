@@ -1,6 +1,12 @@
+import { getApiConfig, sanitizeIp } from "./_config.js";
+
 const CODE_REGEX = /^\d{5}$/;
 const DEFAULT_TIMEOUT_MS = 10000;
 const DEFAULT_SHEET_GID = "0";
+const RATE_WINDOW_MS = 60_000;
+const RATE_LIMIT = 60;
+
+const ipHits = new Map();
 
 function sanitizeCode(input) {
   return String(input ?? "").replace(/\D/g, "").trim();
@@ -15,10 +21,17 @@ function toStr(value) {
   return String(value ?? "").trim();
 }
 
+function hitRateLimit(ip) {
+  const now = Date.now();
+  const prev = (ipHits.get(ip) || []).filter((ts) => now - ts < RATE_WINDOW_MS);
+  prev.push(now);
+  ipHits.set(ip, prev);
+  return prev.length > RATE_LIMIT;
+}
 
 function resolveDirectoryCsvUrl() {
-  const directUrl = toStr(process.env.DELIVERY_DIRECTORY_CSV_URL);
-  if (directUrl) return directUrl;
+  const { deliveryDirectoryCsvUrl } = getApiConfig();
+  if (deliveryDirectoryCsvUrl) return deliveryDirectoryCsvUrl;
 
   const sheetId = toStr(process.env.DELIVERY_DIRECTORY_SHEET_ID);
   if (!sheetId) {
@@ -43,7 +56,7 @@ function readDirectoryFromEnv() {
   return parsed;
 }
 
-function parseCsv(csvText) {
+function parseCsv(csvText) { /* unchanged parser */
   const rows = [];
   let currentRow = [];
   let currentCell = "";
@@ -93,13 +106,11 @@ function mapRowsToObjects(rows) {
   const headers = rows[0].map((header) => toStr(header).toLowerCase());
   return rows.slice(1).map((row) => {
     const rowObject = {};
-
     for (let index = 0; index < headers.length; index += 1) {
       const key = headers[index];
       if (!key) continue;
       rowObject[key] = row[index] ?? "";
     }
-
     return rowObject;
   });
 }
@@ -107,19 +118,11 @@ function mapRowsToObjects(rows) {
 async function fetchTextWithTimeout(url, timeoutMs) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
   try {
-    const res = await fetch(url, {
-      method: "GET",
-      headers: { Accept: "text/csv, text/plain, */*" },
-      cache: "no-store",
-      signal: controller.signal,
-    });
+    const res = await fetch(url, { method: "GET", headers: { Accept: "text/csv, text/plain, */*" }, cache: "no-store", signal: controller.signal });
     const text = await res.text();
     return { res, text };
-  } finally {
-    clearTimeout(timeoutId);
-  }
+  } finally { clearTimeout(timeoutId); }
 }
 
 function mapRowToProfile(row) {
@@ -132,36 +135,22 @@ function mapRowToProfile(row) {
 
 async function readDirectoryFromSheets() {
   const csvUrl = resolveDirectoryCsvUrl();
-
   const { res, text } = await fetchTextWithTimeout(csvUrl, DEFAULT_TIMEOUT_MS);
-  if (!res.ok) {
-    throw new Error(`DIRECTORY_HTTP_${res.status}`);
-  }
-
-  const rows = mapRowsToObjects(parseCsv(text));
-  return rows.map(mapRowToProfile).filter(Boolean);
+  if (!res.ok) throw new Error(`DIRECTORY_HTTP_${res.status}`);
+  return mapRowsToObjects(parseCsv(text)).map(mapRowToProfile).filter(Boolean);
 }
 
 async function readDirectory() {
-  try {
-    return await readDirectoryFromSheets();
-  } catch {
-    return readDirectoryFromEnv();
-  }
+  try { return await readDirectoryFromSheets(); } catch { return readDirectoryFromEnv(); }
 }
 
 function sanitizeProfile(entry) {
   if (!entry || typeof entry !== "object") return null;
-
   const code = sanitizeCode(entry.code);
   const name = String(entry.name ?? "").trim();
   const address = String(entry.address ?? "").trim();
   const phone = String(entry.phone ?? "").trim();
-
-  if (!CODE_REGEX.test(code) || !name || !address || !phone) {
-    return null;
-  }
-
+  if (!CODE_REGEX.test(code) || !name || !address || !phone) return null;
   return { code, name, address, phone };
 }
 
@@ -171,6 +160,11 @@ export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ valid: false, error: "METHOD_NOT_ALLOWED" });
+  }
+
+  const ip = sanitizeIp(req);
+  if (hitRateLimit(ip)) {
+    return res.status(429).json({ valid: false, error: "RATE_LIMITED" });
   }
 
   let code = "";
@@ -189,13 +183,12 @@ export default async function handler(req, res) {
     const directory = await readDirectory();
     const match = directory.find((entry) => sanitizeCode(entry?.code) === code);
     const profile = sanitizeProfile(match);
+    if (!profile) return res.status(404).json({ valid: false, error: "NOT_FOUND" });
 
-    if (!profile) {
-      return res.status(404).json({ valid: false, error: "NOT_FOUND" });
-    }
-
-    return res.status(200).json({ valid: true, profile });
-  } catch (error) {
+    const exposePii = getApiConfig().deliveryExposePii;
+    const safeProfile = exposePii ? profile : { code: profile.code, name: profile.name };
+    return res.status(200).json({ valid: true, profile: safeProfile });
+  } catch {
     console.error("[delivery] validation failed for ***" + getLast3(code));
     return res.status(500).json({ valid: false, error: "INTERNAL_ERROR" });
   }

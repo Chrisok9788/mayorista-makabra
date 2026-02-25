@@ -195,3 +195,17 @@ curl -X POST https://TU-DOMINIO.vercel.app/api/validate-delivery \
 ```
 
 > Después de agregar o cambiar variables de entorno en Vercel, hacé **Redeploy** para aplicar cambios.
+
+## Primer deploy (Vercel)
+1. Importar repo en Vercel.
+2. Cargar variables de entorno de `docs/HANDOVER.md` en Preview y Production.
+3. Deploy y verificar:
+   - `GET /api/catalog`
+   - `POST /api/order-history` con `X-APP-TOKEN`
+   - `POST /api/sync-scanntech/run` con `X-SYNC-TOKEN`
+
+## Cambio de dueño
+1. Transferir proyecto Vercel al nuevo owner/team.
+2. Re-cargar todas las env vars y rotar `APP_TOKEN` + `SYNC_TOKEN`.
+3. Transferir acceso a Google Sheet + Service Account.
+4. Verificar cron en Vercel y su header de autenticación.

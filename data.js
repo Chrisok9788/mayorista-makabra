@@ -12,18 +12,18 @@
 // Autor: Adaptado para Makabra (Vercel + futura integración Scanntech)
 
 import { z } from "zod";
+import { FRONTEND_CONFIG } from "./src/config.js";
 
 // ==========================================
 // 1) CONFIG DE FUENTES
 // ==========================================
 
-export const PRODUCTS_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJAgesFM5B0OTnVSvcOxrtC4VlI1ijay6erm7XnX8zjRtwUnbX-M0_4yXxRhcairW01hFOjoKQHW7t/pub?gid=1128238455&single=true&output=csv";
+export const PRODUCTS_URL = FRONTEND_CONFIG.csvUrl;
 
 const SOURCES = [
-  { url: "/api/catalog", type: "json", timeoutMs: 9000 }, // prioridad
-  { url: "/products.json", type: "json", timeoutMs: 5000 }, // fallback local
-  { url: PRODUCTS_URL, type: "csv", timeoutMs: 10000 }, // emergencia
+  { url: "/api/catalog", type: "json", timeoutMs: 9000 },
+  { url: "/products.json", type: "json", timeoutMs: 5000 },
+  ...(PRODUCTS_URL ? [{ url: PRODUCTS_URL, type: "csv", timeoutMs: 10000 }] : []),
 ];
 
 const CATALOG_CACHE_KEY = "catalog_cache_v3";

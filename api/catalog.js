@@ -1,6 +1,6 @@
-const CSV_URL =
-  process.env.CSV_URL ||
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJAgesFM5B0OTnVSvcOxrtC4VlI1ijay6erm7XnX8zjRtwUnbX-M0_4yXxRhcairW01hFOjoKQHW7t/pub?gid=1128238455&single=true&output=csv";
+import { getApiConfig } from "./_config.js";
+
+const { csvUrl: CSV_URL } = getApiConfig();
 
 const DEFAULT_TIMEOUT_MS = Number(process.env.CATALOG_TIMEOUT_MS || 12000);
 const EDGE_CACHE_CONTROL = "public, s-maxage=300, stale-while-revalidate=1800, stale-if-error=86400";
@@ -206,6 +206,10 @@ export default async function handler(req, res) {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
     return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
+  if (!CSV_URL) {
+    return res.status(500).json({ error: "CSV_URL env var is required" });
   }
 
   try {

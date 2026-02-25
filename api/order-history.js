@@ -1,3 +1,4 @@
+import { getApiConfig, getHeader } from "./_config.js";
 import crypto from "node:crypto";
 
 const CODE_REGEX = /^\d{5}$/;
@@ -269,6 +270,19 @@ async function appendOrderToSheet(order) {
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
 
+  const { appToken } = getApiConfig();
+  const provided = getHeader(req, "x-app-token");
+
+  if (!appToken) {
+    return res.status(500).json({ ok: false, error: "MISSING_APP_TOKEN" });
+  }
+  if (!provided) {
+    return res.status(401).json({ ok: false, error: "UNAUTHORIZED" });
+  }
+  if (provided !== appToken) {
+    return res.status(403).json({ ok: false, error: "FORBIDDEN" });
+  }
+
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ ok: false, error: "METHOD_NOT_ALLOWED" });
@@ -291,6 +305,11 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true });
   } catch (error) {
     const errorCode = toStr(error?.message) || "SHEET_WRITE_FAILED";
+    console.error("[order-history] write failed", {
+      customerSuffix: String(order?.customerKey || "").slice(-3),
+      orderId: String(order?.orderId || "").slice(0, 16),
+      error: errorCode,
+    });
     return res.status(500).json({ ok: false, error: errorCode });
   }
 }
