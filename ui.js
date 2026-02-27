@@ -213,14 +213,18 @@ function buildProductCardHtml(product) {
  * @param {Map<string, Record<string, any>>} byId
  */
 function hydrateProductImages(container, byId) {
-  container.querySelectorAll("img[data-product-image]").forEach((img) => {
+  const INITIAL_EAGER_IMAGES = 6;
+
+  container.querySelectorAll("img[data-product-image]").forEach((img, index) => {
     const id = img.getAttribute("data-product-image") || "";
     const product = byId.get(id);
     if (!product) return;
 
+    const isAboveFold = index < INITIAL_EAGER_IMAGES;
+
     setupFastImage(img, product.imagen || product.img || "", getProductName(product) || "Producto", {
-      priority: "low",
-      loading: "lazy",
+      priority: isAboveFold ? "high" : "low",
+      loading: isAboveFold ? "eager" : "lazy",
     });
   });
 }
@@ -966,7 +970,7 @@ export function renderFeaturedByCategory(products, options = {}) {
     const grid = document.createElement("div");
     grid.className = "featured-grid";
 
-    items.forEach((p) => {
+    items.forEach((p, itemIndex) => {
       const card = document.createElement("div");
       card.className = "product-card featured-card";
       card.dataset.id = String(p?.id ?? "");
@@ -995,9 +999,10 @@ export function renderFeaturedByCategory(products, options = {}) {
       const img = document.createElement("img");
       img.className = "product-image";
       const imgSrc = p.imagen || p.img || "";
+      const isFirstFeaturedColumn = itemIndex === 0;
       setupFastImage(img, imgSrc, getProductName(p) || "Producto", {
-        priority: "low",
-        loading: "lazy",
+        priority: isFirstFeaturedColumn ? "high" : "low",
+        loading: isFirstFeaturedColumn ? "eager" : "lazy",
       });
       card.appendChild(img);
 
