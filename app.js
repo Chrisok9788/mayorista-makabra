@@ -236,7 +236,12 @@ function resolveProductImageUrl(src) {
   if (/^(https?:)?\/\//i.test(s) || /^data:/i.test(s) || /^blob:/i.test(s)) return s;
 
   const clean = s.replace(/^\.?\//, "").replace(/^\/+/, "");
-  return `${getBaseAssetUrl()}${clean}`;
+  const safePath = clean
+    .split("/")
+    .map((segment) => encodeURIComponent(segment))
+    .join("/");
+
+  return `${getBaseAssetUrl()}${safePath}`;
 }
 
 function getPrice(p) {
@@ -620,6 +625,7 @@ function renderFeaturedByCategory(allProducts, onClickProduct, onViewCategory) {
       img.className = "product-image";
       img.loading = "lazy";
       img.decoding = "async";
+      img.setAttribute("fetchpriority", "low");
       img.alt = getName(p);
 
       const src = getImg(p);

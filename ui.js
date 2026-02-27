@@ -323,6 +323,21 @@ function getPlaceholderUrl() {
  * Esto reduce errores intermitentes en Vercel cuando hay imágenes inexistentes.
  */
 const missingImageCache = new Set();
+const deferredImageObserver =
+  typeof window !== "undefined" && "IntersectionObserver" in window
+    ? new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const img = entry.target;
+          const src = img.dataset.realSrc;
+          if (src) img.src = src;
+          observer.unobserve(img);
+        });
+      },
+      { rootMargin: "240px 0px" }
+    )
+    : null;
 
 /**
  * ✅ FIX VERCEL/GH/ANDROID:
@@ -341,8 +356,12 @@ function resolveAssetUrl(src) {
 
   // normaliza prefijos
   const clean = s.replace(/^\.?\//, "").replace(/^\/+/, "");
+  const safePath = clean
+    .split("/")
+    .map((segment) => encodeURIComponent(segment))
+    .join("/");
 
-  return `${getBaseUrl()}${clean}`;
+  return `${getBaseUrl()}${safePath}`;
 }
 
 /**
@@ -408,15 +427,13 @@ function setupFastImage(imgEl, realSrc, alt, opts = {}) {
     imgEl.style.opacity = "1";
   };
 
-  if (typeof queueMicrotask === "function") {
-    queueMicrotask(() => {
-      imgEl.src = finalSrc;
-    });
-  } else {
-    setTimeout(() => {
-      imgEl.src = finalSrc;
-    }, 0);
+  if (loading === "eager" || !deferredImageObserver) {
+    imgEl.src = finalSrc;
+    return;
   }
+
+  imgEl.dataset.realSrc = finalSrc;
+  deferredImageObserver.observe(imgEl);
 }
 
 /* =========================
