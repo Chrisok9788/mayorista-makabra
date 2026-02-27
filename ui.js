@@ -3,7 +3,7 @@
  *
  * ✅ Mantiene TODO lo básico (redondeos, carrito, dpc.tramos, etc.)
  * ✅ Performance imágenes:
- *   - Carrusel: eager + fetchpriority high
+ *   - Carrusel: solo primeras 2 eager/high, resto lazy/low
  *   - Catálogo: lazy + decoding async + fetchpriority low
  *   - Placeholder inmediato + fade-in
  *   - Fallback si falla imagen
@@ -213,14 +213,18 @@ function buildProductCardHtml(product) {
  * @param {Map<string, Record<string, any>>} byId
  */
 function hydrateProductImages(container, byId) {
-  container.querySelectorAll("img[data-product-image]").forEach((img) => {
+  const INITIAL_EAGER_IMAGES = 6;
+
+  container.querySelectorAll("img[data-product-image]").forEach((img, index) => {
     const id = img.getAttribute("data-product-image") || "";
     const product = byId.get(id);
     if (!product) return;
 
+    const isAboveFold = index < INITIAL_EAGER_IMAGES;
+
     setupFastImage(img, product.imagen || product.img || "", getProductName(product) || "Producto", {
-      priority: "low",
-      loading: "lazy",
+      priority: isAboveFold ? "high" : "low",
+      loading: isAboveFold ? "eager" : "lazy",
     });
   });
 }
@@ -547,7 +551,7 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
     return;
   }
 
-  const makeCard = (p) => {
+  const makeCard = (p, imageOptions = {}) => {
     const card = document.createElement("div");
     card.className = "offer-card";
     card.setAttribute("data-id", String(p.id ?? ""));
@@ -560,8 +564,8 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
       img.className = "offer-img";
 
       setupFastImage(img, imgSrc, name, {
-        priority: "high",
-        loading: "eager",
+        priority: imageOptions.priority || "low",
+        loading: imageOptions.loading || "lazy",
       });
 
       card.appendChild(img);
@@ -607,10 +611,26 @@ export function renderOffersCarousel(products, frameEl, trackEl, onClick) {
   };
 
   const frag = document.createDocumentFragment();
-  offers.forEach((p) => frag.appendChild(makeCard(p)));
+
+  offers.forEach((p, index) => {
+    const isAboveFold = index < 2;
+    frag.appendChild(
+      makeCard(p, {
+        priority: isAboveFold ? "high" : "low",
+        loading: isAboveFold ? "eager" : "lazy",
+      }),
+    );
+  });
 
   if (offers.length >= 2) {
-    offers.forEach((p) => frag.appendChild(makeCard(p)));
+    offers.forEach((p) => {
+      frag.appendChild(
+        makeCard(p, {
+          priority: "low",
+          loading: "lazy",
+        }),
+      );
+    });
   }
 
   trackEl.appendChild(frag);
@@ -950,7 +970,7 @@ export function renderFeaturedByCategory(products, options = {}) {
     const grid = document.createElement("div");
     grid.className = "featured-grid";
 
-    items.forEach((p) => {
+    items.forEach((p, itemIndex) => {
       const card = document.createElement("div");
       card.className = "product-card featured-card";
       card.dataset.id = String(p?.id ?? "");
@@ -979,9 +999,10 @@ export function renderFeaturedByCategory(products, options = {}) {
       const img = document.createElement("img");
       img.className = "product-image";
       const imgSrc = p.imagen || p.img || "";
+      const isFirstFeaturedColumn = itemIndex === 0;
       setupFastImage(img, imgSrc, getProductName(p) || "Producto", {
-        priority: "low",
-        loading: "lazy",
+        priority: isFirstFeaturedColumn ? "high" : "low",
+        loading: isFirstFeaturedColumn ? "eager" : "lazy",
       });
       card.appendChild(img);
 
