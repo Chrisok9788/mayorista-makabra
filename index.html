@@ -32,11 +32,17 @@
     <link rel="icon" type="image/png" href="/logo.png" />
     <link rel="stylesheet" href="./style.css" />
 
-    <!-- Vercel Web Analytics -->
+    <!-- Vercel Web Analytics (carga dinámica compatible con Vite/GH Pages) -->
     <script>
       window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+      (function loadVercelInsights() {
+        const script = document.createElement("script");
+        script.defer = true;
+        script.src = "/_vercel/insights/script.js";
+        script.onerror = function () {};
+        document.head.appendChild(script);
+      })();
     </script>
-    <script defer src="/_vercel/insights/script.js"></script>
   </head>
 
   <body>
@@ -279,11 +285,17 @@
       document.getElementById("year").textContent = new Date().getFullYear();
     </script>
 
-    <!-- Vercel Speed Insights -->
+    <!-- Vercel Speed Insights (carga dinámica compatible con Vite/GH Pages) -->
     <script>
       window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+      (function loadVercelSpeedInsights() {
+        const script = document.createElement("script");
+        script.defer = true;
+        script.src = "/_vercel/speed-insights/script.js";
+        script.onerror = function () {};
+        document.body.appendChild(script);
+      })();
     </script>
-    <script defer src="/_vercel/speed-insights/script.js"></script>
 
     <script type="module" src="./app.js"></script>
   </body>
