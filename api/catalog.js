@@ -1,265 +1,707 @@
+// api/catalog.js
+
+export const config = {
+  runtime: "nodejs",
+};
+
 const CSV_URL =
   process.env.CSV_URL ||
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJAgesFM5B0OTnVSvcOxrtC4VlI1ijay6erm7XnX8zjRtwUnbX-M0_4yXxRhcairW01hFOjoKQHW7t/pub?gid=1128238455&single=true&output=csv";
 
-const DEFAULT_TIMEOUT_MS = Number(process.env.CATALOG_TIMEOUT_MS || 12000);
-const EDGE_CACHE_CONTROL = "public, s-maxage=300, stale-while-revalidate=1800, stale-if-error=86400";
+const DEFAULT_TIMEOUT_MS = Number(
+  process.env.CATALOG_TIMEOUT_MS || 12000,
+);
 
+const SUPABASE_PAGE_SIZE = 1000;
+
+const EDGE_CACHE_CONTROL =
+  "public, s-maxage=300, stale-while-revalidate=1800, stale-if-error=86400";
+
+/*
+ * Esta caché puede sobrevivir entre solicitudes mientras la misma
+ * instancia serverless siga activa. No reemplaza una caché persistente,
+ * pero permite responder si Supabase y Google Sheets fallan temporalmente.
+ */
 let inMemoryFallback = null;
 
-function toStr(v) {
-  return String(v ?? "").trim();
+function toStr(value) {
+  return String(value ?? "").trim();
 }
 
-function toBool(v) {
-  if (v === true) return true;
-  if (v === false) return false;
+function toBool(value) {
+  if (value === true) return true;
+  if (value === false) return false;
 
-  const s = toStr(v).toLowerCase();
-  if (!s) return false;
+  const normalized = toStr(value).toLowerCase();
 
-  if (s === "true" || s === "verdadero" || s === "1" || s === "si" || s === "sí" || s === "yes") {
+  if (!normalized) return false;
+
+  if (
+    normalized === "true" ||
+    normalized === "verdadero" ||
+    normalized === "1" ||
+    normalized === "si" ||
+    normalized === "sí" ||
+    normalized === "yes"
+  ) {
     return true;
   }
-
-  if (s === "false" || s === "falso" || s === "0" || s === "no") return false;
 
   return false;
 }
 
-function toNumber(v) {
-  if (typeof v === "number") return Number.isFinite(v) ? v : 0;
-  const s = toStr(v)
+function toNumber(value) {
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  const normalized = toStr(value)
     .replace(/\$/g, "")
     .replace(/\./g, "")
     .replace(/,/g, ".");
-  const n = Number(s);
-  return Number.isFinite(n) ? n : 0;
+
+  const number = Number(normalized);
+
+  return Number.isFinite(number) ? number : 0;
 }
 
-function parseTags(v) {
-  const s = toStr(v);
-  if (!s) return [];
-  return s
+function parseTags(value) {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => toStr(item))
+      .filter(Boolean);
+  }
+
+  const text = toStr(value);
+
+  if (!text) return [];
+
+  /*
+   * También soporta etiquetas guardadas como JSON:
+   * ["bebidas", "refresco"]
+   */
+  if (text.startsWith("[") && text.endsWith("]")) {
+    try {
+      const parsed = JSON.parse(text);
+
+      if (Array.isArray(parsed)) {
+        return parsed
+          .map((item) => toStr(item))
+          .filter(Boolean);
+      }
+    } catch {
+      // Si no es JSON válido, continúa con la separación normal.
+    }
+  }
+
+  return text
     .split(/[;,]/g)
-    .map((x) => x.trim())
+    .map((item) => item.trim())
     .filter(Boolean);
 }
 
 function parseCSV(text) {
   const rows = [];
+
   let row = [];
-  let cur = "";
+  let current = "";
   let inQuotes = false;
 
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i];
-    const next = text[i + 1];
+  for (let index = 0; index < text.length; index += 1) {
+    const character = text[index];
+    const nextCharacter = text[index + 1];
 
-    if (ch === '"' && inQuotes && next === '"') {
-      cur += '"';
-      i++;
+    if (
+      character === '"' &&
+      inQuotes &&
+      nextCharacter === '"'
+    ) {
+      current += '"';
+      index += 1;
       continue;
     }
 
-    if (ch === '"') {
+    if (character === '"') {
       inQuotes = !inQuotes;
       continue;
     }
 
-    if (ch === "," && !inQuotes) {
-      row.push(cur);
-      cur = "";
+    if (character === "," && !inQuotes) {
+      row.push(current);
+      current = "";
       continue;
     }
 
-    if ((ch === "\n" || ch === "\r") && !inQuotes) {
-      if (ch === "\r" && next === "\n") i++;
-      row.push(cur);
+    if (
+      (character === "\n" || character === "\r") &&
+      !inQuotes
+    ) {
+      if (
+        character === "\r" &&
+        nextCharacter === "\n"
+      ) {
+        index += 1;
+      }
+
+      row.push(current);
       rows.push(row);
+
       row = [];
-      cur = "";
+      current = "";
+
       continue;
     }
 
-    cur += ch;
+    current += character;
   }
 
-  row.push(cur);
+  row.push(current);
   rows.push(row);
 
-  return rows.filter((r) => r.some((c) => toStr(c) !== ""));
+  return rows.filter((currentRow) =>
+    currentRow.some((cell) => toStr(cell) !== ""),
+  );
 }
 
 function rowsToObjects(rows) {
-  if (!rows || rows.length < 2) return [];
-  const header = rows[0].map((h) => toStr(h));
-  const out = [];
-
-  for (let i = 1; i < rows.length; i++) {
-    const r = rows[i];
-    const obj = {};
-    for (let j = 0; j < header.length; j++) {
-      const key = header[j];
-      if (!key) continue;
-      obj[key] = r[j] ?? "";
-    }
-    out.push(obj);
+  if (!Array.isArray(rows) || rows.length < 2) {
+    return [];
   }
-  return out;
+
+  const headers = rows[0].map((header) =>
+    toStr(header),
+  );
+
+  const objects = [];
+
+  for (let rowIndex = 1; rowIndex < rows.length; rowIndex += 1) {
+    const row = rows[rowIndex];
+    const object = {};
+
+    for (
+      let columnIndex = 0;
+      columnIndex < headers.length;
+      columnIndex += 1
+    ) {
+      const key = headers[columnIndex];
+
+      if (!key) continue;
+
+      object[key] = row[columnIndex] ?? "";
+    }
+
+    objects.push(object);
+  }
+
+  return objects;
 }
 
-function getDestacadosValue(r) {
+function getDestacadosValue(row) {
   return (
-    r.Destacados ??
-    r.destacados ??
-    r.destacado ??
-    r.DESTACADOS ??
-    r["Destacados "] ??
-    r["destacados "] ??
-    r.Featured ??
-    r.featured
+    row.Destacados ??
+    row.destacados ??
+    row.destacado ??
+    row.DESTACADOS ??
+    row["Destacados "] ??
+    row["destacados "] ??
+    row.Featured ??
+    row.featured
   );
 }
 
-function getPromoGroupValue(r) {
+function getPromoGroupValue(row) {
   return (
-    r.promo_group ??
-    r.PROMO_GROUP ??
-    r["promo group"] ??
-    r["Promo Group"] ??
-    r.promogroup ??
-    r.PromoGroup ??
-    r.grupo_promo ??
-    r.GrupoPromo ??
-    r.grupo ??
-    r.Grupo
+    row.promo_group ??
+    row.PROMO_GROUP ??
+    row["promo group"] ??
+    row["Promo Group"] ??
+    row.promogroup ??
+    row.PromoGroup ??
+    row.grupo_promo ??
+    row.GrupoPromo ??
+    row.grupo ??
+    row.Grupo
   );
 }
 
-function rowToProduct(r) {
-  const id = toStr(r.id);
+/*
+ * Convierte tanto una fila de Google Sheets como una fila de Supabase
+ * al formato que ya consume la página.
+ */
+function rowToProduct(row) {
+  const id = toStr(row.id);
+
   if (!id) return null;
 
-  const nombre = toStr(r.nombre);
-  const categoria = toStr(r.categoria);
-  const subcategoria = toStr(r.subcategoria);
+  /*
+   * En Google Sheets, una celda vacía significa activo.
+   * En Supabase, activo normalmente será true o false.
+   */
+  const activo =
+    row.activo === undefined ||
+    row.activo === null ||
+    row.activo === ""
+      ? true
+      : toBool(row.activo);
 
-  const precio_base = toNumber(r.precio_base);
-  const imagen = toStr(r.imagen_url || r.imagen) || null;
-
-  const marca = toStr(r.marca) || null;
-  const presentacion = toStr(r.presentacion) || null;
-
-  const tags = parseTags(r.tags);
-
-  const activo = r.activo === "" ? true : toBool(r.activo);
   if (!activo) return null;
 
-  const ofertaCarrusel = toBool(r.oferta_carrusel);
-  const destacado = toBool(getDestacadosValue(r));
-  const promo_group = toStr(getPromoGroupValue(r)) || null;
+  const nombre = toStr(row.nombre);
+  const categoria = toStr(row.categoria);
+  const subcategoria = toStr(row.subcategoria);
 
-  const promoMin = toNumber(r.promo_min_qty);
-  const promoPrecio = toNumber(r.promo_precio);
+  const precioBase = toNumber(
+    row.precio_base ?? row.precio,
+  );
+
+  const imagen =
+    toStr(
+      row.imagen_url ??
+        row.imagen,
+    ) || null;
+
+  const marca = toStr(row.marca) || null;
+  const presentacion =
+    toStr(row.presentacion) || null;
+
+  const tags = parseTags(row.tags);
+
+  const ofertaCarrusel = toBool(
+    row.oferta_carrusel ?? row.oferta,
+  );
+
+  const destacado = toBool(
+    getDestacadosValue(row),
+  );
+
+  const promoGroup =
+    toStr(getPromoGroupValue(row)) || null;
+
+  const promoMin = toNumber(
+    row.promo_min_qty,
+  );
+
+  const promoPrecio = toNumber(
+    row.promo_precio,
+  );
 
   const dpc =
     promoMin > 0 && promoPrecio > 0
-      ? { tramos: [{ min: promoMin, precio: promoPrecio }] }
+      ? {
+          tramos: [
+            {
+              min: Math.trunc(promoMin),
+              precio: promoPrecio,
+            },
+          ],
+        }
       : undefined;
 
-  return {
+  const product = {
     id,
     nombre: nombre || id,
     categoria: categoria || "Otros",
     subcategoria: subcategoria || "Otros",
-    precio: precio_base > 0 ? precio_base : 0,
+    precio: precioBase > 0 ? precioBase : 0,
     oferta: ofertaCarrusel,
     imagen,
     marca,
     presentacion,
     tags,
     destacado,
-    promo_group,
-    ...(dpc ? { dpc } : {}),
-    ...(r.stock !== undefined && r.stock !== "" ? { stock: toNumber(r.stock) } : {}),
+    promo_group: promoGroup,
   };
+
+  if (dpc) {
+    product.dpc = dpc;
+  }
+
+  /*
+   * Se conserva por compatibilidad futura,
+   * aunque actualmente no estés usando stock.
+   */
+  if (
+    row.stock !== undefined &&
+    row.stock !== null &&
+    row.stock !== ""
+  ) {
+    product.stock = toNumber(row.stock);
+  }
+
+  return product;
 }
 
-async function fetchTextWithTimeout(url, timeoutMs) {
+async function fetchWithTimeout(
+  url,
+  options = {},
+  timeoutMs = DEFAULT_TIMEOUT_MS,
+) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  const timer = setTimeout(() => {
+    controller.abort();
+  }, timeoutMs);
+
   try {
-    const res = await fetch(url, {
-      cache: "no-store",
-      headers: { Accept: "text/csv, text/plain, */*" },
+    return await fetch(url, {
+      ...options,
       signal: controller.signal,
     });
-    const text = await res.text();
-    return { res, text };
   } finally {
     clearTimeout(timer);
   }
 }
 
-export default async function handler(req, res) {
-  if (req.method !== "GET") {
-    res.setHeader("Allow", "GET");
-    return res.status(405).json({ error: "Method Not Allowed" });
+function validateSupabaseConfiguration() {
+  const baseUrl = toStr(
+    process.env.SUPABASE_URL,
+  );
+
+  const serviceRoleKey = toStr(
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+  );
+
+  if (!baseUrl || !serviceRoleKey) {
+    throw new Error(
+      "Faltan SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY.",
+    );
   }
 
+  return {
+    baseUrl: baseUrl.replace(/\/$/, ""),
+    serviceRoleKey,
+  };
+}
+
+async function loadProductsFromSupabase() {
+  const {
+    baseUrl,
+    serviceRoleKey,
+  } = validateSupabaseConfiguration();
+
+  const products = [];
+
+  let offset = 0;
+
+  while (true) {
+    const endpoint = new URL(
+      `${baseUrl}/rest/v1/productos`,
+    );
+
+    endpoint.searchParams.set(
+      "select",
+      [
+        "id",
+        "nombre",
+        "categoria",
+        "subcategoria",
+        "precio_base",
+        "oferta_carrusel",
+        "destacados",
+        "promo_group",
+        "promo_min_qty",
+        "promo_precio",
+        "imagen_url",
+        "marca",
+        "presentacion",
+        "tags",
+        "activo",
+        "prioridad_oferta",
+        "stock",
+      ].join(","),
+    );
+
+    endpoint.searchParams.set(
+      "activo",
+      "eq.true",
+    );
+
+    endpoint.searchParams.set(
+      "order",
+      "prioridad_oferta.desc,nombre.asc",
+    );
+
+    endpoint.searchParams.set(
+      "limit",
+      String(SUPABASE_PAGE_SIZE),
+    );
+
+    endpoint.searchParams.set(
+      "offset",
+      String(offset),
+    );
+
+    const response = await fetchWithTimeout(
+      endpoint,
+      {
+        cache: "no-store",
+        headers: {
+          apikey: serviceRoleKey,
+          Authorization: `Bearer ${serviceRoleKey}`,
+          Accept: "application/json",
+        },
+      },
+    );
+
+    const text = await response.text();
+
+    if (!response.ok) {
+      throw new Error(
+        `Supabase respondió ${response.status}: ${text.slice(
+          0,
+          700,
+        )}`,
+      );
+    }
+
+    let page;
+
+    try {
+      page = JSON.parse(text);
+    } catch {
+      throw new Error(
+        "Supabase devolvió una respuesta que no es JSON válido.",
+      );
+    }
+
+    if (!Array.isArray(page)) {
+      throw new Error(
+        "Supabase devolvió un formato inesperado.",
+      );
+    }
+
+    for (const row of page) {
+      const product = rowToProduct(row);
+
+      if (product) {
+        products.push(product);
+      }
+    }
+
+    if (page.length < SUPABASE_PAGE_SIZE) {
+      break;
+    }
+
+    offset += SUPABASE_PAGE_SIZE;
+  }
+
+  if (!products.length) {
+    throw new Error(
+      "Supabase respondió correctamente, pero no devolvió productos activos.",
+    );
+  }
+
+  return products;
+}
+
+async function loadProductsFromGoogleSheets() {
+  const response = await fetchWithTimeout(
+    CSV_URL,
+    {
+      cache: "no-store",
+      headers: {
+        Accept:
+          "text/csv, text/plain, */*",
+      },
+    },
+  );
+
+  const text = await response.text();
+
+  if (!response.ok) {
+    throw new Error(
+      `Google Sheets respondió ${response.status}.`,
+    );
+  }
+
+  const normalizedText = text
+    .trim()
+    .toLowerCase();
+
+  if (
+    normalizedText.startsWith(
+      "<!doctype html",
+    ) ||
+    normalizedText.includes("<html")
+  ) {
+    throw new Error(
+      "El enlace de Google Sheets devolvió HTML en lugar de CSV.",
+    );
+  }
+
+  const rows = parseCSV(text);
+  const objects = rowsToObjects(rows);
+
+  const products = [];
+
+  for (const row of objects) {
+    const product = rowToProduct(row);
+
+    if (product) {
+      products.push(product);
+    }
+  }
+
+  if (!products.length) {
+    throw new Error(
+      "Google Sheets cargó, pero no se generaron productos. Revisá la columna id.",
+    );
+  }
+
+  return products;
+}
+
+function saveInMemoryFallback(
+  products,
+  source,
+) {
+  inMemoryFallback = {
+    products,
+    updatedAt: Date.now(),
+    source,
+  };
+}
+
+function sendCatalogResponse(
+  res,
+  {
+    products,
+    source,
+    degraded = false,
+    fallbackFrom = null,
+    warning = null,
+  },
+) {
+  res.setHeader(
+    "Cache-Control",
+    EDGE_CACHE_CONTROL,
+  );
+
+  return res.status(200).json({
+    products,
+    updatedAt: Date.now(),
+    degraded,
+    source,
+    ...(fallbackFrom
+      ? { fallbackFrom }
+      : {}),
+    ...(warning ? { warning } : {}),
+  });
+}
+
+export default async function handler(
+  req,
+  res,
+) {
+  if (req.method !== "GET") {
+    res.setHeader("Allow", "GET");
+
+    return res.status(405).json({
+      error: "Method Not Allowed",
+    });
+  }
+
+  /*
+   * 1. Fuente principal: Supabase
+   */
   try {
-    const { res: csvRes, text } = await fetchTextWithTimeout(CSV_URL, DEFAULT_TIMEOUT_MS);
+    const products =
+      await loadProductsFromSupabase();
 
-    if (!csvRes.ok) {
-      return res.status(csvRes.status).json({ error: `Error HTTP ${csvRes.status} al cargar CSV` });
-    }
-
-    if (text.trim().startsWith("<!DOCTYPE html") || text.includes("<html")) {
-      return res
-        .status(502)
-        .json({ error: "El link no está devolviendo CSV (parece HTML)." });
-    }
-
-    const rows = parseCSV(text);
-    const objs = rowsToObjects(rows);
-
-    const products = [];
-    for (const r of objs) {
-      const p = rowToProduct(r);
-      if (p) products.push(p);
-    }
-
-    if (!products.length) {
-      throw new Error("CSV cargó, pero no se generaron productos. Revisá que exista la columna 'id'.");
-    }
-
-    inMemoryFallback = {
+    saveInMemoryFallback(
       products,
-      updatedAt: Date.now(),
-      degraded: false,
-    };
+      "supabase",
+    );
 
-    res.setHeader("Cache-Control", EDGE_CACHE_CONTROL);
-    return res.status(200).json({
+    return sendCatalogResponse(res, {
       products,
-      updatedAt: Date.now(),
+      source: "supabase",
       degraded: false,
     });
-  } catch (error) {
-    res.setHeader("Cache-Control", EDGE_CACHE_CONTROL);
+  } catch (supabaseError) {
+    console.error(
+      "[catalog] Falló Supabase:",
+      supabaseError,
+    );
 
-    if (inMemoryFallback?.products?.length) {
-      return res.status(200).json({
-        ...inMemoryFallback,
+    /*
+     * 2. Respaldo automático: Google Sheets
+     */
+    try {
+      const products =
+        await loadProductsFromGoogleSheets();
+
+      saveInMemoryFallback(
+        products,
+        "google_sheets",
+      );
+
+      return sendCatalogResponse(res, {
+        products,
+        source: "google_sheets",
         degraded: true,
-        error: error?.name === "AbortError" ? "Timeout al cargar CSV. Se devolvió caché local." : "No se pudo refrescar CSV. Se devolvió caché local.",
+        fallbackFrom: "supabase",
+        warning:
+          "Supabase no estuvo disponible. Se cargó el catálogo desde Google Sheets.",
+      });
+    } catch (googleSheetsError) {
+      console.error(
+        "[catalog] Falló Google Sheets:",
+        googleSheetsError,
+      );
+
+      /*
+       * 3. Último respaldo: copia guardada en memoria
+       */
+      if (
+        inMemoryFallback?.products?.length
+      ) {
+        return sendCatalogResponse(res, {
+          products:
+            inMemoryFallback.products,
+          source:
+            inMemoryFallback.source ||
+            "memory",
+          degraded: true,
+          fallbackFrom:
+            "supabase_and_google_sheets",
+          warning:
+            "No se pudo actualizar el catálogo. Se devolvió la última copia disponible.",
+        });
+      }
+
+      res.setHeader(
+        "Cache-Control",
+        EDGE_CACHE_CONTROL,
+      );
+
+      const supabaseMessage =
+        supabaseError?.name ===
+        "AbortError"
+          ? "Supabase agotó el tiempo de espera."
+          : toStr(
+              supabaseError?.message,
+            ) ||
+            "No se pudo cargar Supabase.";
+
+      const sheetsMessage =
+        googleSheetsError?.name ===
+        "AbortError"
+          ? "Google Sheets agotó el tiempo de espera."
+          : toStr(
+              googleSheetsError?.message,
+            ) ||
+            "No se pudo cargar Google Sheets.";
+
+      return res.status(503).json({
+        error:
+          "No se pudo cargar el catálogo.",
+        degraded: true,
+        sources: {
+          supabase: supabaseMessage,
+          google_sheets: sheetsMessage,
+        },
       });
     }
-
-    if (error?.name === "AbortError") {
-      return res.status(504).json({ error: "Timeout al cargar CSV.", degraded: true });
-    }
-    return res.status(500).json({ error: "No se pudo cargar el catálogo.", degraded: true });
   }
 }
