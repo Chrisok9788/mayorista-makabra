@@ -1,0 +1,39 @@
+name: Sincronizar catálogo con Supabase
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Ejecutar sincronización
+        env:
+          SYNC_TOKEN: ${{ secrets.SYNC_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "$SYNC_TOKEN" ]; then
+            echo "Falta configurar el secreto SYNC_TOKEN en GitHub Actions."
+            exit 1
+          fi
+
+          response_file="$(mktemp)"
+          status_code=$(curl --silent --show-error \
+            --output "$response_file" \
+            --write-out "%{http_code}" \
+            --request POST \
+            --header "x-sync-token: $SYNC_TOKEN" \
+            "https://mayorista-makabra.vercel.app/api/sync-supabase")
+
+          cat "$response_file"
+          echo
+
+          if [ "$status_code" -lt 200 ] || [ "$status_code" -ge 300 ]; then
+            echo "La sincronización falló con HTTP $status_code"
+            exit 1
+          fi
