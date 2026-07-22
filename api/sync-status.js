@@ -14,17 +14,22 @@ function sendJson(res, status, body) {
   res.end(JSON.stringify(body, null, 2));
 }
 
-async function supabaseGet(baseUrl, secret, table, params = {}) {
+function headers(secret, extra = {}) {
+  return {
+    apikey: secret,
+    Authorization: `Bearer ${secret}`,
+    Accept: "application/json",
+    ...extra,
+  };
+}
+
+async function supabaseGet(baseUrl, secret, table, params = {}, extraHeaders = {}) {
   const endpoint = new URL(`${baseUrl.replace(/\/$/, "")}/rest/v1/${table}`);
   Object.entries(params).forEach(([key, value]) => endpoint.searchParams.set(key, value));
 
   const response = await fetch(endpoint, {
     cache: "no-store",
-    headers: {
-      apikey: secret,
-      Authorization: `Bearer ${secret}`,
-      Accept: "application/json",
-    },
+    headers: headers(secret, extraHeaders),
   });
 
   const text = await response.text();
@@ -51,6 +56,47 @@ async function loadActiveClients(baseUrl, secret) {
     activo: "eq.true",
   });
   return Array.isArray(rows) ? rows.length : 0;
+}
+
+async function loadTaxonomy(baseUrl, secret) {
+  const rows = [];
+  const pageSize = 1000;
+
+  for (let from = 0; ; from += pageSize) {
+    const batch = await supabaseGet(
+      baseUrl,
+      secret,
+      "productos",
+      {
+        select: "categoria,subcategoria",
+        activo: "eq.true",
+        order: "id.asc",
+      },
+      {
+        Range: `${from}-${from + pageSize - 1}`,
+        "Range-Unit": "items",
+      },
+    );
+
+    if (!Array.isArray(batch)) break;
+    rows.push(...batch);
+    if (batch.length < pageSize) break;
+  }
+
+  const categories = new Set();
+  const subcategories = new Set();
+
+  rows.forEach((row) => {
+    const category = String(row?.categoria || "Otros").trim() || "Otros";
+    const subcategory = String(row?.subcategoria || "Otros").trim() || "Otros";
+    categories.add(category);
+    subcategories.add(`${category}\u0000${subcategory}`);
+  });
+
+  return {
+    categorias: categories.size,
+    subcategorias: subcategories.size,
+  };
 }
 
 function formatLatestSync(row) {
@@ -83,25 +129,6 @@ function formatLatestSync(row) {
   };
 }
 
-function buildTaxonomy(products) {
-  const categories = new Set();
-  const subcategories = new Set();
-
-  products
-    .filter((product) => product?.activo !== false)
-    .forEach((product) => {
-      const category = String(product?.categoria || "Otros").trim() || "Otros";
-      const subcategory = String(product?.subcategoria || "Otros").trim() || "Otros";
-      categories.add(category);
-      subcategories.add(`${category}\u0000${subcategory}`);
-    });
-
-  return {
-    categorias: categories.size,
-    subcategorias: subcategories.size,
-  };
-}
-
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
@@ -122,9 +149,10 @@ export default async function handler(req, res) {
   const startedAt = Date.now();
 
   try {
-    const [products, clients, latestSyncRow] = await Promise.all([
+    const [products, clients, taxonomy, latestSyncRow] = await Promise.all([
       loadSupabaseProducts(baseUrl, secret),
       loadActiveClients(baseUrl, secret),
+      loadTaxonomy(baseUrl, secret),
       loadLatestSync(baseUrl, secret),
     ]);
 
@@ -134,7 +162,6 @@ export default async function handler(req, res) {
     );
     const preview = buildPreviewSummary(results);
     const latestSync = formatLatestSync(latestSyncRow);
-    const taxonomy = buildTaxonomy(products);
 
     const hasSyncError = latestSync.estado === "error";
     const estadoGeneral = hasSyncError || preview.errores_datos > 0 ? "advertencia" : "correcto";
