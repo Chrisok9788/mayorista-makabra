@@ -17,31 +17,11 @@ function getBaseUrl(req) {
   const configured = toStr(process.env.PUBLIC_SITE_URL).replace(/\/$/, "");
   if (configured) return configured;
 
-  const forwardedHost = toStr(req.headers["x-forwarded-host"]);
-  const host = forwardedHost || toStr(req.headers.host);
-  const forwardedProto = toStr(req.headers["x-forwarded-proto"]);
-  const protocol = forwardedProto || (host.includes("localhost") ? "http" : "https");
-
-  if (!host) return "https://mayorista-makabra.vercel.app";
-  return `${protocol}://${host}`;
-}
-
-async function readJsonResponse(response, name) {
-  const text = await response.text();
-  let body = null;
-
-  try {
-    body = text ? JSON.parse(text) : {};
-  } catch {
-    body = { raw: text.slice(0, 1000) };
-  }
-
-  if (!response.ok || body?.ok === false) {
-    const detail = body?.message || body?.error || `HTTP ${response.status}`;
-    throw new Error(`${name}: ${detail}`);
-  }
-
-  return body;
+  const host = toStr(req.headers["x-forwarded-host"] || req.headers.host);
+  const protocol =
+    toStr(req.headers["x-forwarded-proto"]) ||
+    (host.includes("localhost") ? "http" : "https");
+  return host ? `${protocol}://${host}` : "https://mayorista-makabra.vercel.app";
 }
 
 async function runEndpoint(baseUrl, path, token, name) {
@@ -54,77 +34,37 @@ async function runEndpoint(baseUrl, path, token, name) {
     cache: "no-store",
   });
 
-  return readJsonResponse(response, name);
+  const text = await response.text();
+  let body = {};
+  try {
+    body = text ? JSON.parse(text) : {};
+  } catch {
+    body = { raw: text.slice(0, 1000) };
+  }
+
+  if (!response.ok || body?.ok === false) {
+    throw new Error(`${name}: ${body?.message || body?.error || `HTTP ${response.status}`}`);
+  }
+
+  return body;
 }
 
-function getSupabaseConfig() {
+function supabaseConfig() {
   const baseUrl = toStr(process.env.SUPABASE_URL).replace(/\/$/, "");
   const secret = toStr(process.env.SUPABASE_SERVICE_ROLE_KEY);
-
   if (!baseUrl || !secret) {
     throw new Error("Faltan SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY en Vercel");
   }
-
   return { baseUrl, secret };
-}
-
-async function loadProductTaxonomy() {
-  const { baseUrl, secret } = getSupabaseConfig();
-  const products = [];
-  const pageSize = 1000;
-
-  for (let from = 0; ; from += pageSize) {
-    const to = from + pageSize - 1;
-    const endpoint = new URL(`${baseUrl}/rest/v1/productos`);
-    endpoint.searchParams.set("select", "id,categoria,subcategoria,activo");
-    endpoint.searchParams.set("activo", "eq.true");
-    endpoint.searchParams.set("order", "id.asc");
-
-    const response = await fetch(endpoint, {
-      cache: "no-store",
-      headers: {
-        apikey: secret,
-        Authorization: `Bearer ${secret}`,
-        Accept: "application/json",
-        Range: `${from}-${to}`,
-        "Range-Unit": "items",
-      },
-    });
-
-    const text = await response.text();
-    if (!response.ok) {
-      throw new Error(`Resumen de catálogo: Supabase ${response.status}: ${text.slice(0, 500)}`);
-    }
-
-    const rows = JSON.parse(text || "[]");
-    if (!Array.isArray(rows)) break;
-    products.push(...rows);
-    if (rows.length < pageSize) break;
-  }
-
-  const categories = new Set();
-  const subcategories = new Set();
-
-  products.forEach((product) => {
-    const category = toStr(product.categoria) || "Otros";
-    const subcategory = toStr(product.subcategoria) || "Otros";
-    categories.add(category);
-    subcategories.add(`${category}\u0000${subcategory}`);
-  });
-
-  return {
-    productos_activos: products.length,
-    categorias: categories.size,
-    subcategorias: subcategories.size,
-  };
 }
 
 async function writeAggregateLog(startedAt, summary, errorMessage = null) {
   try {
-    const { baseUrl, secret } = getSupabaseConfig();
+    const { baseUrl, secret } = supabaseConfig();
     const productCount = Number(summary?.productos?.processed || 0);
     const clientCount = Number(summary?.clientes?.clients_synced || 0);
-    const errors = errorMessage ? 1 : 0;
+    const categoryCount = Number(summary?.taxonomia?.categorias || 0);
+    const subcategoryCount = Number(summary?.taxonomia?.subcategorias || 0);
 
     await fetch(`${baseUrl}/rest/v1/sincronizaciones`, {
       method: "POST",
@@ -140,11 +80,12 @@ async function writeAggregateLog(startedAt, summary, errorMessage = null) {
         started_at: startedAt,
         finished_at: new Date().toISOString(),
         registros_procesados: productCount + clientCount,
-        registros_actualizados: productCount + clientCount,
-        registros_con_error: errors,
+        registros_actualizados:
+          productCount + clientCount + categoryCount + subcategoryCount,
+        registros_con_error: errorMessage ? 1 : 0,
         mensaje: errorMessage
           ? `Sincronización total con error: ${errorMessage}`.slice(0, 1000)
-          : `Productos: ${productCount}; clientes: ${clientCount}; categorías: ${Number(summary?.taxonomia?.categorias || 0)}; subcategorías: ${Number(summary?.taxonomia?.subcategorias || 0)}`,
+          : `Productos: ${productCount}; clientes: ${clientCount}; categorías: ${categoryCount}; subcategorías: ${subcategoryCount}`,
       }),
     });
   } catch (error) {
@@ -172,7 +113,12 @@ async function executeSync(baseUrl, token) {
       "Sincronización de clientes",
     );
 
-    summary.taxonomia = await loadProductTaxonomy();
+    summary.taxonomia = await runEndpoint(
+      baseUrl,
+      "/api/sync-taxonomy-supabase",
+      token,
+      "Sincronización de categorías y subcategorías",
+    );
 
     const result = {
       ok: true,
@@ -189,10 +135,16 @@ async function executeSync(baseUrl, token) {
         sincronizados: Number(summary.clientes?.clients_synced || 0),
         filas_invalidas: Number(summary.clientes?.invalid_rows || 0),
         codigos_duplicados: Number(summary.clientes?.duplicate_codes || 0),
+        duplicados_eliminados: Number(
+          summary.clientes?.changed_code_duplicates_removed || 0,
+        ),
+        inactivos:
+          Number(summary.clientes?.duplicates_deactivated || 0) +
+          Number(summary.clientes?.missing_clients_deactivated || 0),
       },
-      categorias: summary.taxonomia.categorias,
-      subcategorias: summary.taxonomia.subcategorias,
-      productos_activos: summary.taxonomia.productos_activos,
+      categorias: Number(summary.taxonomia?.categorias || 0),
+      subcategorias: Number(summary.taxonomia?.subcategorias || 0),
+      productos_activos: Number(summary.taxonomia?.productos_activos || 0),
     };
 
     await writeAggregateLog(startedAt, summary);
@@ -212,13 +164,17 @@ export default async function handler(req, res) {
 
   const expectedToken = toStr(process.env.SYNC_TOKEN);
   const receivedToken = toStr(req.query?.token || req.headers["x-sync-token"]);
-
   if (!expectedToken) {
-    return sendJson(res, 500, { ok: false, error: "Falta configurar SYNC_TOKEN en Vercel" });
+    return sendJson(res, 500, {
+      ok: false,
+      error: "Falta configurar SYNC_TOKEN en Vercel",
+    });
   }
-
   if (receivedToken !== expectedToken) {
-    return sendJson(res, 401, { ok: false, error: "Token de sincronización incorrecto" });
+    return sendJson(res, 401, {
+      ok: false,
+      error: "Token de sincronización incorrecto",
+    });
   }
 
   if (runningPromise) {
@@ -229,12 +185,9 @@ export default async function handler(req, res) {
     });
   }
 
-  const baseUrl = getBaseUrl(req);
-  runningPromise = executeSync(baseUrl, expectedToken);
-
+  runningPromise = executeSync(getBaseUrl(req), expectedToken);
   try {
-    const result = await runningPromise;
-    return sendJson(res, 200, result);
+    return sendJson(res, 200, await runningPromise);
   } catch (error) {
     return sendJson(res, 500, {
       ok: false,
