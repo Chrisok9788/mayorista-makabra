@@ -1,0 +1,192 @@
+name: Optimize catalog cache
+
+on:
+  push:
+    paths:
+      - ".github/workflows/optimize-catalog-cache.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply catalog cache optimizations
+        shell: python
+        run: |
+          from pathlib import Path
+
+          def replace_once(text: str, old: str, new: str, label: str) -> str:
+              count = text.count(old)
+              if count != 1:
+                  raise RuntimeError(f"{label}: expected 1 occurrence, found {count}")
+              return text.replace(old, new, 1)
+
+          data_path = Path("data.js")
+          data = data_path.read_text(encoding="utf-8")
+
+          data = replace_once(
+              data,
+              'const CATALOG_CACHE_KEY = "catalog_cache_v3";',
+              'const CATALOG_CACHE_KEY = "catalog_cache_v3";\nconst LOCAL_CACHE_MAX_AGE_MS = 5 * 60 * 1000;',
+              "add local cache TTL",
+          )
+
+          data = replace_once(
+              data,
+              '''async function fetchWithTimeout(url, timeoutMs) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+            try {
+              return await fetch(url, {
+                cache: "no-store",
+                headers: {
+                  Accept: "application/json, text/csv, text/plain, */*",
+                  "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+                  Pragma: "no-cache",
+                },
+                signal: controller.signal,
+              });
+            } finally {
+              clearTimeout(timer);
+            }
+          }''',
+              '''async function fetchWithTimeout(url, timeoutMs) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+            try {
+              return await fetch(url, {
+                method: "GET",
+                cache: "default",
+                headers: {
+                  Accept: "application/json, text/csv, text/plain, */*",
+                },
+                signal: controller.signal,
+              });
+            } finally {
+              clearTimeout(timer);
+            }
+          }''',
+              "allow browser/CDN cache",
+          )
+
+          data = replace_once(
+              data,
+              '''  const url = finalUrl.includes("?")
+            ? `${finalUrl}&_ts=${Date.now()}`
+            : `${finalUrl}?_ts=${Date.now()}`;''',
+              '''  const url = finalUrl;''',
+              "remove timestamp cache buster",
+          )
+
+          data = replace_once(
+              data,
+              '''export async function loadProductsWithCache() {
+            const cached = readCatalogCache();
+            const cachedSignature = cached ? getProductsSignature(cached.products) : "";''',
+              '''export async function loadProductsWithCache() {
+            const cached = readCatalogCache();
+            const cacheAge = cached?.updatedAt
+              ? Date.now() - cached.updatedAt
+              : Infinity;
+            const cacheIsFresh =
+              Boolean(cached?.products?.length) &&
+              cacheAge >= 0 &&
+              cacheAge < LOCAL_CACHE_MAX_AGE_MS;
+
+            if (cacheIsFresh) {
+              const cachedResult = {
+                changed: false,
+                products: cached.products,
+                updatedAt: cached.updatedAt,
+                source: cached.source,
+                degraded: cached.degraded,
+                rejectedCount: cached.rejectedCount,
+              };
+
+              return {
+                products: cached.products,
+                fromCache: true,
+                lastUpdated: cached.updatedAt,
+                source: cached.source,
+                degraded: cached.degraded,
+                rejectedCount: cached.rejectedCount,
+                updatePromise: Promise.resolve(cachedResult),
+              };
+            }
+
+            const cachedSignature = cached ? getProductsSignature(cached.products) : "";''',
+              "respect fresh local cache",
+          )
+
+          data = replace_once(
+              data,
+              '''        if (changed) writeCatalogCache(fresh);''',
+              '''        writeCatalogCache(fresh);''',
+              "refresh local cache timestamp",
+          )
+
+          data_path.write_text(data, encoding="utf-8")
+
+          api_path = Path("api/catalog.js")
+          api = api_path.read_text(encoding="utf-8")
+
+          api = replace_once(
+              api,
+              '''const EDGE_CACHE_CONTROL =
+            "public, s-maxage=300, stale-while-revalidate=1800, stale-if-error=86400";''',
+              '''const BROWSER_CACHE_CONTROL =
+            "public, max-age=60, stale-while-revalidate=300";
+
+          const VERCEL_CACHE_CONTROL =
+            "public, max-age=300, stale-while-revalidate=1800, stale-if-error=86400";
+
+          function setCatalogCacheHeaders(res) {
+            res.setHeader("Cache-Control", BROWSER_CACHE_CONTROL);
+            res.setHeader("Vercel-CDN-Cache-Control", VERCEL_CACHE_CONTROL);
+          }''',
+              "split browser and Vercel cache headers",
+          )
+
+          api = replace_once(
+              api,
+              '''  res.setHeader(
+            "Cache-Control",
+            EDGE_CACHE_CONTROL,
+          );''',
+              '''  setCatalogCacheHeaders(res);''',
+              "use catalog cache headers on success",
+          )
+
+          api = replace_once(
+              api,
+              '''      res.setHeader(
+                "Cache-Control",
+                EDGE_CACHE_CONTROL,
+              );''',
+              '''      setCatalogCacheHeaders(res);''',
+              "use catalog cache headers on error",
+          )
+
+          api_path.write_text(api, encoding="utf-8")
+
+      - name: Commit optimized cache configuration
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data.js api/catalog.js
+          if git diff --cached --quiet; then
+            echo "No changes required"
+            exit 0
+          fi
+          git commit -m "perf: optimize catalog caching for concurrent users"
+          git push origin HEAD:main
