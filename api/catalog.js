@@ -407,7 +407,6 @@ async function loadProductsFromSupabase() {
         "tags",
         "activo",
         "prioridad_oferta",
-        "stock",
       ].join(","),
     );
 
