@@ -1,6 +1,6 @@
 const PROFILE_KEY = "mmw_delivery_profile";
 const SET_AT_KEY = "mmw_delivery_set_at";
-const CODE_REGEX = /^\d{5}$/;
+const CODE_REGEX = /^\d{7}$/;
 
 let currentProfile = null;
 
@@ -114,7 +114,7 @@ async function validateAndActivate() {
   }
 
   if (!CODE_REGEX.test(code)) {
-    feedback.textContent = "Ingresá un código de 5 dígitos";
+    feedback.textContent = "Ingresá un código de 7 dígitos";
     return;
   }
 
@@ -178,8 +178,8 @@ function ensureUI() {
       <div class="delivery-modal-card" role="dialog" aria-modal="true" aria-labelledby="delivery-modal-title">
         <h3 id="delivery-modal-title">Modo Reparto</h3>
         <div id="delivery-current-data" class="delivery-details"></div>
-        <label for="delivery-code-input">Código (5 dígitos, opcional)</label>
-        <input id="delivery-code-input" inputmode="numeric" autocomplete="off" placeholder="12345" maxlength="5" />
+        <label for="delivery-code-input">Código (7 dígitos, opcional)</label>
+        <input id="delivery-code-input" inputmode="numeric" autocomplete="off" placeholder="1234567" maxlength="7" />
         <p id="delivery-feedback" class="delivery-feedback" aria-live="polite"></p>
         <div class="delivery-modal-actions">
           <button type="button" class="btn" id="delivery-cancel">Cancelar</button>
