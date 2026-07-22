@@ -1,6 +1,7 @@
 const CODE_REGEX = /^\d{5}$/;
 const DEFAULT_TIMEOUT_MS = 10000;
-const DEFAULT_SHEET_GID = "0";
+const DEFAULT_SHEET_ID = "1w3lSeXgTnbxvUIzUiWm9eGlQ4ln7DAEXB9KMaYal9Wo";
+const DEFAULT_SHEET_GID = "1075478535";
 
 function sanitizeCode(input) {
   return String(input ?? "").replace(/\D/g, "").trim();
@@ -15,17 +16,13 @@ function toStr(value) {
   return String(value ?? "").trim();
 }
 
-
 function resolveDirectoryCsvUrl() {
   const directUrl = toStr(process.env.DELIVERY_DIRECTORY_CSV_URL);
   if (directUrl) return directUrl;
 
-  const sheetId = toStr(process.env.DELIVERY_DIRECTORY_SHEET_ID);
-  if (!sheetId) {
-    throw new Error("MISSING_DIRECTORY_URL");
-  }
-
+  const sheetId = toStr(process.env.DELIVERY_DIRECTORY_SHEET_ID) || DEFAULT_SHEET_ID;
   const gid = toStr(process.env.DELIVERY_DIRECTORY_SHEET_GID) || DEFAULT_SHEET_GID;
+
   return `https://docs.google.com/spreadsheets/d/${encodeURIComponent(sheetId)}/export?format=csv&gid=${encodeURIComponent(gid)}`;
 }
 
@@ -49,13 +46,13 @@ function parseCsv(csvText) {
   let currentCell = "";
   let inQuotes = false;
 
-  for (let i = 0; i < csvText.length; i += 1) {
-    const char = csvText[i];
-    const next = csvText[i + 1];
+  for (let index = 0; index < csvText.length; index += 1) {
+    const char = csvText[index];
+    const next = csvText[index + 1];
 
     if (char === '"' && inQuotes && next === '"') {
       currentCell += '"';
-      i += 1;
+      index += 1;
       continue;
     }
 
@@ -71,7 +68,7 @@ function parseCsv(csvText) {
     }
 
     if ((char === "\n" || char === "\r") && !inQuotes) {
-      if (char === "\r" && next === "\n") i += 1;
+      if (char === "\r" && next === "\n") index += 1;
       currentRow.push(currentCell);
       rows.push(currentRow);
       currentRow = [];
@@ -84,7 +81,7 @@ function parseCsv(csvText) {
 
   currentRow.push(currentCell);
   rows.push(currentRow);
-  return rows;
+  return rows.filter((row) => row.some((cell) => toStr(cell)));
 }
 
 function mapRowsToObjects(rows) {
@@ -92,15 +89,13 @@ function mapRowsToObjects(rows) {
 
   const headers = rows[0].map((header) => toStr(header).toLowerCase());
   return rows.slice(1).map((row) => {
-    const rowObject = {};
+    const result = {};
 
-    for (let index = 0; index < headers.length; index += 1) {
-      const key = headers[index];
-      if (!key) continue;
-      rowObject[key] = row[index] ?? "";
-    }
+    headers.forEach((header, index) => {
+      if (header) result[header] = row[index] ?? "";
+    });
 
-    return rowObject;
+    return result;
   });
 }
 
@@ -109,40 +104,103 @@ async function fetchTextWithTimeout(url, timeoutMs) {
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const res = await fetch(url, {
+    const response = await fetch(url, {
       method: "GET",
       headers: { Accept: "text/csv, text/plain, */*" },
       cache: "no-store",
       signal: controller.signal,
     });
-    const text = await res.text();
-    return { res, text };
+    const text = await response.text();
+    return { response, text };
   } finally {
     clearTimeout(timeoutId);
   }
 }
 
 function mapRowToProfile(row) {
-  const code = sanitizeCode(row.code ?? row.codigo ?? row.cod);
-  const name = toStr(row.name ?? row.nombre);
-  const address = toStr(row.address ?? row.direccion ?? row.dirección);
-  const phone = toStr(row.phone ?? row.telefono ?? row.teléfono);
-  return { code, name, address, phone };
+  return {
+    code: sanitizeCode(row.code ?? row.codigo ?? row.cod),
+    name: toStr(row.name ?? row.nombre),
+    address: toStr(row.address ?? row.direccion ?? row.dirección),
+    phone: toStr(row.phone ?? row.telefono ?? row.teléfono),
+  };
+}
+
+function sanitizeProfile(entry) {
+  if (!entry || typeof entry !== "object") return null;
+
+  const profile = {
+    code: sanitizeCode(entry.code ?? entry.codigo),
+    name: toStr(entry.name ?? entry.nombre),
+    address: toStr(entry.address ?? entry.direccion),
+    phone: toStr(entry.phone ?? entry.telefono),
+  };
+
+  if (
+    !CODE_REGEX.test(profile.code) ||
+    !profile.name ||
+    !profile.address ||
+    !profile.phone
+  ) {
+    return null;
+  }
+
+  return profile;
+}
+
+async function readProfileFromSupabase(code) {
+  const baseUrl = toStr(process.env.SUPABASE_URL).replace(/\/$/, "");
+  const secret = toStr(process.env.SUPABASE_SERVICE_ROLE_KEY);
+
+  if (!baseUrl || !secret) {
+    throw new Error("SUPABASE_NOT_CONFIGURED");
+  }
+
+  const params = new URLSearchParams({
+    select: "codigo,nombre,direccion,telefono",
+    codigo: `eq.${code}`,
+    activo: "eq.true",
+    limit: "1",
+  });
+
+  const response = await fetch(`${baseUrl}/rest/v1/clientes?${params.toString()}`, {
+    method: "GET",
+    headers: {
+      apikey: secret,
+      Authorization: `Bearer ${secret}`,
+      Accept: "application/json",
+    },
+    cache: "no-store",
+  });
+
+  const text = await response.text();
+  if (!response.ok) {
+    throw new Error(`SUPABASE_${response.status}:${text.slice(0, 300)}`);
+  }
+
+  const rows = JSON.parse(text || "[]");
+  if (!Array.isArray(rows) || !rows.length) return null;
+
+  return sanitizeProfile(rows[0]);
 }
 
 async function readDirectoryFromSheets() {
   const csvUrl = resolveDirectoryCsvUrl();
+  const { response, text } = await fetchTextWithTimeout(csvUrl, DEFAULT_TIMEOUT_MS);
 
-  const { res, text } = await fetchTextWithTimeout(csvUrl, DEFAULT_TIMEOUT_MS);
-  if (!res.ok) {
-    throw new Error(`DIRECTORY_HTTP_${res.status}`);
+  if (!response.ok) {
+    throw new Error(`DIRECTORY_HTTP_${response.status}`);
+  }
+
+  if (text.includes("<html") || text.includes("<!DOCTYPE html")) {
+    throw new Error("DIRECTORY_NOT_CSV");
   }
 
   const rows = mapRowsToObjects(parseCsv(text));
   return rows.map(mapRowToProfile).filter(Boolean);
 }
 
-async function readDirectory() {
+async function readDirectoryFallback() {
   try {
     return await readDirectoryFromSheets();
   } catch {
@@ -150,19 +208,24 @@ async function readDirectory() {
   }
 }
 
-function sanitizeProfile(entry) {
-  if (!entry || typeof entry !== "object") return null;
-
-  const code = sanitizeCode(entry.code);
-  const name = String(entry.name ?? "").trim();
-  const address = String(entry.address ?? "").trim();
-  const phone = String(entry.phone ?? "").trim();
-
-  if (!CODE_REGEX.test(code) || !name || !address || !phone) {
-    return null;
+async function findProfile(code) {
+  try {
+    const profile = await readProfileFromSupabase(code);
+    if (profile) {
+      return { profile, source: "supabase" };
+    }
+  } catch (error) {
+    console.warn(
+      "[delivery] Supabase fallback for ***" + getLast3(code),
+      String(error?.message || error).slice(0, 120),
+    );
   }
 
-  return { code, name, address, phone };
+  const directory = await readDirectoryFallback();
+  const match = directory.find((entry) => sanitizeCode(entry?.code ?? entry?.codigo) === code);
+  const profile = sanitizeProfile(match);
+
+  return profile ? { profile, source: "google_sheets" } : null;
 }
 
 export default async function handler(req, res) {
@@ -174,6 +237,7 @@ export default async function handler(req, res) {
   }
 
   let code = "";
+
   try {
     const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
     code = sanitizeCode(body?.code);
@@ -186,17 +250,22 @@ export default async function handler(req, res) {
   }
 
   try {
-    const directory = await readDirectory();
-    const match = directory.find((entry) => sanitizeCode(entry?.code) === code);
-    const profile = sanitizeProfile(match);
+    const result = await findProfile(code);
 
-    if (!profile) {
+    if (!result?.profile) {
       return res.status(404).json({ valid: false, error: "NOT_FOUND" });
     }
 
-    return res.status(200).json({ valid: true, profile });
+    return res.status(200).json({
+      valid: true,
+      profile: result.profile,
+      source: result.source,
+    });
   } catch (error) {
-    console.error("[delivery] validation failed for ***" + getLast3(code));
+    console.error(
+      "[delivery] validation failed for ***" + getLast3(code),
+      String(error?.message || error).slice(0, 200),
+    );
     return res.status(500).json({ valid: false, error: "INTERNAL_ERROR" });
   }
 }
