@@ -1,0 +1,127 @@
+/* Identidad visual Makabra: rojo en encabezado/ofertas y amarillo en destacados. */
+
+:root {
+  --makabra-red: #b50018;
+  --makabra-red-dark: #8f0013;
+  --makabra-yellow: #ffd400;
+  --makabra-yellow-soft: #ffe45c;
+}
+
+/* Encabezado completo: logo, carrito, cliente e historial. */
+.site-header {
+  background: var(--makabra-red) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 5px 18px rgba(70, 0, 8, 0.22);
+}
+
+.site-header .brand,
+.site-header .brand:visited,
+.site-header .brand-title,
+.site-header .main-nav a,
+.site-header .main-nav a:visited {
+  color: #fff;
+}
+
+.site-header .brand-subtitle {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.site-header .brand-logo {
+  border: 2px solid rgba(255, 255, 255, 0.88);
+  box-shadow: 0 3px 10px rgba(66, 0, 7, 0.22);
+}
+
+.site-header .main-nav a:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.site-header .header-cart-button,
+.site-header .delivery-open-btn,
+.site-header #history-open-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff !important;
+  border-color: rgba(255, 255, 255, 0.62);
+  box-shadow: none;
+}
+
+.site-header .header-cart-button:hover,
+.site-header .delivery-open-btn:hover,
+.site-header #history-open-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff !important;
+  box-shadow: none;
+}
+
+.site-header .header-cart-button .cart-badge {
+  background: var(--makabra-yellow);
+  color: #3a2500;
+}
+
+/* Carrusel de ofertas sobre rojo. */
+.offers-section {
+  background: linear-gradient(180deg, var(--makabra-red), var(--makabra-red-dark));
+  color: #fff;
+}
+
+.offers-section .section-title-row h2 {
+  color: #fff;
+}
+
+.offers-section .section-title-row .muted {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.offers-section .offers-frame {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 12px 28px rgba(65, 0, 8, 0.25);
+}
+
+/* Destacados sobre amarillo. */
+.featured-section {
+  background: linear-gradient(180deg, var(--makabra-yellow), var(--makabra-yellow-soft));
+  color: #211800;
+}
+
+.featured-section .section-title-row h2,
+.featured-section .featured-cat-title {
+  color: #211800;
+}
+
+.featured-section .section-title-row .muted {
+  color: rgba(33, 24, 0, 0.72);
+}
+
+.featured-section .featured-cat {
+  border-radius: 16px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.featured-section .featured-cat-btn {
+  background: var(--makabra-red);
+  color: #fff;
+  border-color: var(--makabra-red-dark);
+}
+
+.featured-section .featured-cat-btn:hover {
+  background: var(--makabra-red-dark);
+  color: #fff;
+}
+
+@media (max-width: 760px) {
+  .site-header .header-row {
+    gap: 8px;
+  }
+
+  .site-header .main-nav {
+    gap: 7px;
+  }
+
+  .offers-section,
+  .featured-section {
+    padding-top: 22px;
+    padding-bottom: 22px;
+  }
+}
