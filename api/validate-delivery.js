@@ -1,4 +1,4 @@
-const CODE_REGEX = /^\d{5}$/;
+const CODE_REGEX = /^\d{7}$/;
 const DEFAULT_TIMEOUT_MS = 10000;
 const DEFAULT_SHEET_ID = "1w3lSeXgTnbxvUIzUiWm9eGlQ4ln7DAEXB9KMaYal9Wo";
 const DEFAULT_SHEET_GID = "1075478535";
