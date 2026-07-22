@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 
-const CODE_REGEX = /^\d{5}$/;
+const CODE_REGEX = /^\d{7}$/;
 const TOKEN_AUDIENCE = "https://oauth2.googleapis.com/token";
 const SHEETS_SCOPE = "https://www.googleapis.com/auth/spreadsheets";
 
@@ -227,7 +227,6 @@ async function appendOrderToSheet(order) {
   await ensureCustomerSheet(spreadsheetId, accessToken, title);
 
   const normalizedItems = normalizeOrderItems(order.items);
-
   const rows = normalizedItems.length
     ? normalizedItems.map((item) => [
         order.createdAt,
