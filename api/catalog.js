@@ -231,7 +231,6 @@ async function loadProductsFromSupabase() {
         "imagen_url",
         "marca",
         "presentacion",
-        "tags",
         "activo",
         "prioridad_oferta",
       ].join(","),
