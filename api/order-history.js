@@ -1,295 +1,204 @@
-import crypto from "node:crypto";
+export const config = { runtime: "nodejs" };
 
-const CODE_REGEX = /^\d{7}$/;
-const TOKEN_AUDIENCE = "https://oauth2.googleapis.com/token";
-const SHEETS_SCOPE = "https://www.googleapis.com/auth/spreadsheets";
+const DELIVERY_CODE_REGEX = /^\d{7}$/;
+const MAX_ITEMS = 200;
 
 function toStr(value) {
   return String(value ?? "").trim();
 }
 
-function toBool(value) {
-  return value === true || value === "true" || value === 1 || value === "1";
+function sendJson(res, status, body) {
+  res.statusCode = status;
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.setHeader("Cache-Control", "no-store");
+  res.end(JSON.stringify(body));
 }
 
-function base64url(input) {
-  return Buffer.from(input)
-    .toString("base64")
-    .replace(/=/g, "")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_");
+function sanitizeCode(value) {
+  return toStr(value).replace(/\D/g, "");
 }
 
-function getServiceAccountConfig() {
-  const fromJson = toStr(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
-  if (fromJson) {
-    try {
-      const parsed = JSON.parse(fromJson);
-      return {
-        email: toStr(parsed.client_email),
-        privateKey: String(parsed.private_key || "").replace(/\\n/g, "\n"),
-      };
-    } catch {
-      return { email: "", privateKey: "" };
-    }
+function supabaseConfig() {
+  const baseUrl = toStr(process.env.SUPABASE_URL).replace(/\/$/, "");
+  const secret = toStr(process.env.SUPABASE_SERVICE_ROLE_KEY);
+  if (!baseUrl || !secret) {
+    throw new Error("Faltan SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY en Vercel");
   }
-
-  return {
-    email: toStr(process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL),
-    privateKey: String(process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY || "").replace(/\\n/g, "\n"),
-  };
+  return { baseUrl, secret };
 }
 
-function resolveOrderHistorySpreadsheetId() {
-  const direct = toStr(process.env.ORDER_HISTORY_SPREADSHEET_ID);
-  if (direct) return direct;
-
-  const fromDirectorySheet = toStr(process.env.DELIVERY_DIRECTORY_SHEET_ID);
-  if (fromDirectorySheet) return fromDirectorySheet;
-
-  const csvUrl = toStr(process.env.DELIVERY_DIRECTORY_CSV_URL);
-  if (!csvUrl) return "";
-
-  // Solo URLs tipo /spreadsheets/d/{id}/... contienen el ID real editable.
-  const match = csvUrl.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
-  return match?.[1] ? toStr(match[1]) : "";
-}
-
-async function getAccessToken() {
-  const { email, privateKey } = getServiceAccountConfig();
-  if (!email || !privateKey) {
-    throw new Error("MISSING_SERVICE_ACCOUNT");
-  }
-
-  const now = Math.floor(Date.now() / 1000);
-  const header = { alg: "RS256", typ: "JWT" };
-  const payload = {
-    iss: email,
-    scope: SHEETS_SCOPE,
-    aud: TOKEN_AUDIENCE,
-    iat: now,
-    exp: now + 3600,
-  };
-
-  const unsigned = `${base64url(JSON.stringify(header))}.${base64url(JSON.stringify(payload))}`;
-  const signer = crypto.createSign("RSA-SHA256");
-  signer.update(unsigned);
-  signer.end();
-  const signature = signer.sign(privateKey);
-  const jwt = `${unsigned}.${base64url(signature)}`;
-
-  const params = new URLSearchParams({
-    grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
-    assertion: jwt,
-  });
-
-  const tokenRes = await fetch(TOKEN_AUDIENCE, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: params.toString(),
-  });
-
-  if (!tokenRes.ok) {
-    throw new Error("TOKEN_REQUEST_FAILED");
-  }
-
-  const tokenData = await tokenRes.json();
-  return toStr(tokenData.access_token);
-}
-
-async function sheetsRequest(path, accessToken, options = {}) {
-  const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${path}`, {
+async function supabaseRequest(path, options = {}) {
+  const { baseUrl, secret } = supabaseConfig();
+  const response = await fetch(`${baseUrl}/rest/v1/${path}`, {
     ...options,
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      apikey: secret,
+      Authorization: `Bearer ${secret}`,
       "Content-Type": "application/json",
+      Accept: "application/json",
+      Prefer: options.prefer || "return=minimal",
       ...(options.headers || {}),
     },
   });
 
-  if (!res.ok) {
-    throw new Error("SHEETS_REQUEST_FAILED");
+  const text = await response.text();
+  if (!response.ok) {
+    throw new Error(`Supabase ${response.status}: ${text.slice(0, 900)}`);
   }
 
-  if (res.status === 204) return null;
-  return res.json();
+  if (!text) return null;
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
 }
 
-function sanitizeSheetTitle(customerKey) {
-  const safe = toStr(customerKey).replace(/[\\/?*\[\]:]/g, "-").slice(0, 90);
-  return safe || "Cliente-SinCodigo";
-}
+function normalizeItems(items) {
+  if (!Array.isArray(items) || items.length > MAX_ITEMS) return [];
 
-async function getSpreadsheetSheetTitles(spreadsheetId, accessToken) {
-  const data = await sheetsRequest(`${encodeURIComponent(spreadsheetId)}?fields=sheets.properties.title`, accessToken, {
-    method: "GET",
-  });
-  const sheets = Array.isArray(data?.sheets) ? data.sheets : [];
-  return sheets.map((sheet) => toStr(sheet?.properties?.title)).filter(Boolean);
-}
+  return items
+    .map((item) => {
+      const cantidad = Math.max(0, Math.trunc(Number(item?.qty) || 0));
+      const precioUnitario = Math.max(0, Math.round(Number(item?.unitPriceRounded) || 0));
+      const subtotalRecibido = Math.max(0, Math.round(Number(item?.subtotalRounded) || 0));
+      const subtotalCalculado = Math.round(precioUnitario * cantidad);
 
-async function ensureCustomerSheet(spreadsheetId, accessToken, title) {
-  const titles = await getSpreadsheetSheetTitles(spreadsheetId, accessToken);
-  if (titles.includes(title)) return;
-
-  await sheetsRequest(`${encodeURIComponent(spreadsheetId)}:batchUpdate`, accessToken, {
-    method: "POST",
-    body: JSON.stringify({
-      requests: [
-        {
-          addSheet: {
-            properties: {
-              title,
-              gridProperties: {
-                rowCount: 1000,
-                columnCount: 16,
-              },
-            },
-          },
-        },
-      ],
-    }),
-  });
-
-  const headers = [[
-    "createdAt",
-    "orderId",
-    "customerKey",
-    "customerLabel",
-    "productName",
-    "qty",
-    "unitPriceRounded",
-    "subtotalRounded",
-    "totalRounded",
-    "hasConsultables",
-    "messagePreview",
-  ]];
-
-  await sheetsRequest(
-    `${encodeURIComponent(spreadsheetId)}/values/${encodeURIComponent(`${title}!A1:K1`)}?valueInputOption=RAW`,
-    accessToken,
-    {
-      method: "PUT",
-      body: JSON.stringify({ values: headers }),
-    }
-  );
+      return {
+        producto_id: toStr(item?.productId || item?.id) || null,
+        nombre: toStr(item?.name).slice(0, 300),
+        cantidad,
+        precio_unitario_uyu: precioUnitario,
+        subtotal_uyu: subtotalRecibido || subtotalCalculado,
+      };
+    })
+    .filter((item) => item.nombre && item.cantidad > 0);
 }
 
 function parseOrderPayload(body) {
-  const payload = body && typeof body === "object" ? body : {};
+  const payload = body && typeof body === "object" ? body : null;
+  if (!payload) return null;
 
-  const customerKey = toStr(payload.customerKey);
-  const customerLabel = toStr(payload.customerLabel) || customerKey;
-  const orderId = toStr(payload.orderId);
-  const createdAt = toStr(payload.createdAt) || new Date().toISOString();
-  const totalRounded = Number(payload.totalRounded) || 0;
-  const hasConsultables = toBool(payload.hasConsultables);
-  const messagePreview = toStr(payload.messagePreview).slice(0, 300);
-  const items = Array.isArray(payload.items) ? payload.items : [];
+  const orderId = toStr(payload.orderId).slice(0, 80);
+  const customerKey = toStr(payload.customerKey).slice(0, 100);
+  const customerLabel = toStr(payload.customerLabel || customerKey).slice(0, 100);
+  const items = normalizeItems(payload.items);
 
-  const code = customerKey.startsWith("C-") ? customerKey.slice(2) : "";
-  if (!CODE_REGEX.test(code) || !orderId) {
-    return null;
-  }
+  if (!orderId || !customerKey || !items.length) return null;
+  if (!/^MK-[A-Z0-9-]+$/i.test(orderId)) return null;
+
+  const keyCode = customerKey.startsWith("C-") ? sanitizeCode(customerKey.slice(2)) : "";
+  const suppliedCode = sanitizeCode(payload.deliveryCode);
+  const deliveryCode = DELIVERY_CODE_REGEX.test(suppliedCode)
+    ? suppliedCode
+    : DELIVERY_CODE_REGEX.test(keyCode)
+      ? keyCode
+      : "";
+
+  const totalFromItems = items.reduce((sum, item) => sum + item.subtotal_uyu, 0);
+  const totalReceived = Math.max(0, Math.round(Number(payload.totalRounded) || 0));
 
   return {
+    orderId,
     customerKey,
     customerLabel,
-    orderId,
-    createdAt,
-    totalRounded,
-    hasConsultables,
-    messagePreview,
+    deliveryCode: deliveryCode || null,
+    customerName: toStr(payload.customerName).slice(0, 300) || null,
+    customerAddress: toStr(payload.customerAddress).slice(0, 500) || null,
+    customerPhone: toStr(payload.customerPhone).slice(0, 100) || null,
     items,
+    total: totalFromItems || totalReceived,
+    hasConsultables: Boolean(payload.hasConsultables),
+    message: toStr(payload.messageText).slice(0, 20000) || null,
+    createdAt: toStr(payload.createdAt) || new Date().toISOString(),
   };
 }
 
-function normalizeOrderItems(items) {
-  return (Array.isArray(items) ? items : [])
-    .map((item) => ({
-      name: toStr(item?.name),
-      qty: Number(item?.qty) || 0,
-      unitPriceRounded: Math.round(Number(item?.unitPriceRounded) || 0),
-      subtotalRounded: Math.round(Number(item?.subtotalRounded) || 0),
-    }))
-    .filter((item) => item.name && item.qty > 0);
+async function loadDeliveryClient(code) {
+  if (!code) return null;
+
+  const rows = await supabaseRequest(
+    `clientes?select=id,codigo,nombre,direccion,telefono,activo&codigo=eq.${encodeURIComponent(code)}&limit=1`,
+    { method: "GET", prefer: "return=representation" },
+  );
+
+  return Array.isArray(rows) ? rows[0] || null : null;
 }
 
-async function appendOrderToSheet(order) {
-  const spreadsheetId = resolveOrderHistorySpreadsheetId();
-  if (!spreadsheetId) {
-    throw new Error("MISSING_SPREADSHEET");
+async function saveOrder(order) {
+  const client = await loadDeliveryClient(order.deliveryCode);
+
+  if (order.deliveryCode && (!client || client.activo === false)) {
+    const error = new Error("CLIENTE_REPARTO_NO_VALIDO");
+    error.statusCode = 400;
+    throw error;
   }
 
-  const accessToken = await getAccessToken();
-  const title = sanitizeSheetTitle(order.customerKey);
+  const record = {
+    order_id: order.orderId,
+    cliente_id: client?.id ?? null,
+    cliente_codigo: order.deliveryCode,
+    cliente_clave: order.customerKey,
+    cliente_nombre: client?.nombre || order.customerName,
+    cliente_direccion: client?.direccion || order.customerAddress,
+    cliente_telefono: client?.telefono || order.customerPhone,
+    estado: "pendiente",
+    total_uyu: order.total,
+    tiene_consultables: order.hasConsultables,
+    items: order.items,
+    mensaje: order.message,
+    origen: "web_whatsapp",
+    creado_en: order.createdAt,
+    actualizado_en: new Date().toISOString(),
+  };
 
-  await ensureCustomerSheet(spreadsheetId, accessToken, title);
+  const rows = await supabaseRequest("pedidos?on_conflict=order_id", {
+    method: "POST",
+    prefer: "return=representation,resolution=merge-duplicates",
+    body: JSON.stringify(record),
+  });
 
-  const normalizedItems = normalizeOrderItems(order.items);
-  const rows = normalizedItems.length
-    ? normalizedItems.map((item) => [
-        order.createdAt,
-        order.orderId,
-        order.customerKey,
-        order.customerLabel,
-        item.name,
-        item.qty,
-        item.unitPriceRounded,
-        item.subtotalRounded,
-        Math.round(order.totalRounded),
-        order.hasConsultables ? "TRUE" : "FALSE",
-        order.messagePreview,
-      ])
-    : [[
-        order.createdAt,
-        order.orderId,
-        order.customerKey,
-        order.customerLabel,
-        "(sin items)",
-        0,
-        0,
-        0,
-        Math.round(order.totalRounded),
-        order.hasConsultables ? "TRUE" : "FALSE",
-        order.messagePreview,
-      ]];
+  if (!Array.isArray(rows) || !rows[0]) {
+    throw new Error("Supabase no devolvió el pedido guardado");
+  }
 
-  await sheetsRequest(
-    `${encodeURIComponent(spreadsheetId)}/values/${encodeURIComponent(`${title}!A:K`)}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,
-    accessToken,
-    {
-      method: "POST",
-      body: JSON.stringify({ values: rows }),
-    }
-  );
+  return rows[0];
 }
 
 export default async function handler(req, res) {
-  res.setHeader("Cache-Control", "no-store");
-
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
-    return res.status(405).json({ ok: false, error: "METHOD_NOT_ALLOWED" });
+    return sendJson(res, 405, { ok: false, error: "METHOD_NOT_ALLOWED" });
   }
 
-  let order = null;
+  let order;
   try {
     const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
     order = parseOrderPayload(body);
   } catch {
-    return res.status(400).json({ ok: false, error: "BAD_REQUEST" });
+    return sendJson(res, 400, { ok: false, error: "BAD_REQUEST" });
   }
 
   if (!order) {
-    return res.status(400).json({ ok: false, error: "INVALID_ORDER" });
+    return sendJson(res, 400, { ok: false, error: "INVALID_ORDER" });
   }
 
   try {
-    await appendOrderToSheet(order);
-    return res.status(200).json({ ok: true });
+    const saved = await saveOrder(order);
+    return sendJson(res, 200, {
+      ok: true,
+      saved: true,
+      database_id: saved.id,
+      order_id: saved.order_id,
+      estado: saved.estado,
+    });
   } catch (error) {
-    const errorCode = toStr(error?.message) || "SHEET_WRITE_FAILED";
-    return res.status(500).json({ ok: false, error: errorCode });
+    const status = Number(error?.statusCode) || 500;
+    console.error("[order-history]", String(error?.message || error));
+    return sendJson(res, status, {
+      ok: false,
+      error: status === 400 ? String(error?.message || "INVALID_ORDER") : "ORDER_SAVE_FAILED",
+      message: status === 500 ? String(error?.message || error) : undefined,
+    });
   }
 }
