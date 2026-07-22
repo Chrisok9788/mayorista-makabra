@@ -262,6 +262,31 @@ export default async function handler(req, res) {
     return sendJson(res, 405, { ok: false, error: "METHOD_NOT_ALLOWED" });
   }
 
+  if (req.method === "GET" && toStr(req.query?.schema) === "1") {
+    try {
+      const spec = await loadOpenApi();
+      const simplify = (name) => {
+        const schema = resolveSchema(spec, name);
+        return {
+          required: schema.required || [],
+          columns: Object.fromEntries(
+            Object.entries(schema.properties || {}).map(([key, value]) => [key, {
+              type: value.type || null,
+              format: value.format || null,
+              description: value.description || null,
+            }]),
+          ),
+        };
+      };
+      return sendJson(res, 200, {
+        categorias: simplify("categorias"),
+        subcategorias: simplify("subcategorias"),
+      });
+    } catch (error) {
+      return sendJson(res, 500, { error: String(error?.message || error) });
+    }
+  }
+
   const expectedToken = toStr(process.env.SYNC_TOKEN);
   const receivedToken = toStr(req.query?.token || req.headers["x-sync-token"]);
   if (!expectedToken) {
