@@ -145,7 +145,7 @@ function buildCategoryRecord(category, schema) {
   const properties = schema?.properties || {};
   const nameColumn = pickColumn(properties, ["nombre", "name", "categoria", "titulo", "descripcion"]);
   const slugColumn = pickColumn(properties, ["slug", "codigo", "code", "clave"]);
-  const activeColumn = pickColumn(properties, ["activo", "active", "habilitado"]);
+  const activeColumn = pickColumn(properties, ["activa", "activo", "active", "habilitada", "habilitado"]);
   const orderColumn = pickColumn(properties, ["orden", "posicion", "position", "prioridad"]);
 
   if (!nameColumn) {
@@ -164,7 +164,7 @@ function buildSubcategoryRecord(category, subcategory, schema, categoryRow, cate
   const categoryProperties = categorySchema?.properties || {};
   const nameColumn = pickColumn(properties, ["nombre", "name", "subcategoria", "titulo", "descripcion"]);
   const slugColumn = pickColumn(properties, ["slug", "codigo", "code", "clave"]);
-  const activeColumn = pickColumn(properties, ["activo", "active", "habilitado"]);
+  const activeColumn = pickColumn(properties, ["activa", "activo", "active", "habilitada", "habilitado"]);
   const orderColumn = pickColumn(properties, ["orden", "posicion", "position", "prioridad"]);
   const categoryIdColumn = pickColumn(properties, ["categoria_id", "id_categoria", "category_id"]);
   const categoryTextColumn = pickColumn(properties, ["categoria", "categoria_nombre", "category"]);
