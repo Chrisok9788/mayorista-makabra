@@ -7,9 +7,8 @@ import { addOrderToHistory } from "./src/order-history.js";
  * ✅ getUnitPriceByQty soporta max vacío/0/null como "sin tope" (Infinity)
  * ✅ Mantiene compatibilidad nombre/name y precio/price
  * ✅ Mantiene compatibilidad carrito por id o por nombre
- * ✅ NUEVO: PROMO MIX por promo_group (igual que ui.js)
- *    - Suma cantidades del carrito por promo_group
- *    - Calcula precio unitario usando qty efectiva del grupo cuando corresponde
+ * ✅ PROMO MIX por promo_group (igual que ui.js)
+ * ✅ Guarda el pedido en Supabase antes de abrir WhatsApp
  */
 
 function roundUYU(n) {
@@ -35,6 +34,36 @@ function getOrCreateCustomerId() {
   return id;
 }
 
+async function persistOrder(orderPayload) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+
+  try {
+    const response = await fetch("/api/order-history", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(orderPayload),
+      signal: controller.signal,
+      cache: "no-store",
+    });
+
+    let data = null;
+    try {
+      data = await response.json();
+    } catch {
+      data = null;
+    }
+
+    if (!response.ok || data?.ok !== true) {
+      throw new Error(data?.message || data?.error || `HTTP ${response.status}`);
+    }
+
+    return data;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 function toNumberPrice(v) {
   if (typeof v === "number") return Number.isFinite(v) ? v : 0;
   if (v == null) return 0;
@@ -50,20 +79,11 @@ function getProductName(p) {
   return String(p?.nombre ?? p?.name ?? "").trim();
 }
 
-/** ✅ Promo group (mix): soporta varias columnas por compatibilidad */
 function getPromoGroup(p) {
   const g = String(p?.promo_group ?? p?.promoGroup ?? p?.grupo_promo ?? "").trim();
   return g || "";
 }
 
-/**
- * Devuelve el precio unitario aplicando promo por cantidad si existe.
- * dpc esperado:
- *  dpc: { tramos: [ {min, max, precio}, ... ] }
- * - max puede venir null/0/vacío → se trata como "sin tope"
- *
- * NOTA: qty puede ser qty del ítem o qty del grupo (mix).
- */
 function getUnitPriceByQty(product, qty) {
   const base = toNumberPrice(product?.precio ?? product?.price);
 
@@ -87,13 +107,6 @@ function getUnitPriceByQty(product, qty) {
   return base;
 }
 
-/**
- * Envía el pedido armado por WhatsApp
- *
- * @param {Object} cart Objeto carrito { productId: qty } (o nombre -> qty en carritos viejos)
- * @param {Array} products Lista completa de productos
- */
-
 export async function sendOrder(cart, products, deliveryProfile = null) {
   const entries = Object.entries(cart || {});
   if (!entries.length) {
@@ -104,7 +117,7 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
   const customerId = getOrCreateCustomerId();
   const orderId = makeOrderId();
   const deliveryCode = String(deliveryProfile?.code || "").trim();
-  const isDeliveryEnabled = Boolean(deliveryProfile && /^\d{5}$/.test(deliveryCode));
+  const isDeliveryEnabled = Boolean(deliveryProfile && /^\d{7}$/.test(deliveryCode));
   const customerLabel = isDeliveryEnabled ? `C-${deliveryCode}` : customerId;
 
   let address = isDeliveryEnabled
@@ -121,7 +134,6 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
     }
   }
 
-  // Índices para compatibilidad con carritos viejos
   const byId = new Map();
   const byNombre = new Map();
 
@@ -132,9 +144,6 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
     if (nombre) byNombre.set(nombre, p);
   }
 
-  // ==========================
-  // ✅ Resolver items reales del carrito (id o nombre)
-  // ==========================
   const resolvedItems = [];
   for (const [productId, qtyRaw] of entries) {
     const qty = Number(qtyRaw) || 0;
@@ -152,9 +161,6 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
     return;
   }
 
-  // ==========================
-  // ✅ PROMO MIX: sumar cantidades por promo_group
-  // ==========================
   const groupQtyMap = new Map();
   for (const it of resolvedItems) {
     const g = getPromoGroup(it.product);
@@ -162,7 +168,6 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
     groupQtyMap.set(g, (groupQtyMap.get(g) || 0) + it.qty);
   }
 
-  /** Qty efectiva: si hay promo_group, usa qty del grupo, si no usa qty del ítem */
   function getEffectiveQtyForPricing(product, itemQty) {
     const g = getPromoGroup(product);
     if (!g) return itemQty;
@@ -170,9 +175,6 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
     return Number(qg) > 0 ? Number(qg) : itemQty;
   }
 
-  // ==========================
-  // Mensaje
-  // ==========================
   const lines = [];
 
   if (isDeliveryEnabled) {
@@ -188,7 +190,7 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
   lines.push(`Cliente: ${customerLabel}`);
   lines.push("");
 
-  let totalRoundedSum = 0; // ✅ sumamos subtotales ya redondeados
+  let totalRoundedSum = 0;
   let hasConsult = false;
   const historyItems = [];
 
@@ -198,8 +200,6 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
 
     const product = it.product;
     const nombre = getProductName(product);
-
-    // ✅ CLAVE: precio según qty efectiva (grupo si hay mix)
     const effQty = getEffectiveQtyForPricing(product, qty);
     const unitExact = getUnitPriceByQty(product, effQty);
 
@@ -209,12 +209,12 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
       continue;
     }
 
-    // ✅ Redondeo coherente: unit mostrado redondeado, subtotal redondeado y total suma de subtotales
     const unitRounded = roundUYU(unitExact);
     const subtotalRounded = roundUYU(unitExact * qty);
 
     totalRoundedSum += subtotalRounded;
     historyItems.push({
+      productId: String(product?.id ?? it.key ?? "").trim(),
       name: nombre,
       qty,
       unitPriceRounded: unitRounded,
@@ -251,6 +251,10 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
     createdAt: new Date().toISOString(),
     customerKey: customerLabel,
     customerLabel,
+    deliveryCode: isDeliveryEnabled ? deliveryCode : null,
+    customerName: isDeliveryEnabled ? String(deliveryProfile?.name || "").trim() : null,
+    customerAddress: address.trim() || null,
+    customerPhone: isDeliveryEnabled ? String(deliveryProfile?.phone || "").trim() : null,
     items: historyItems,
     totalRounded: totalRoundedSum,
     hasConsultables: hasConsult,
@@ -258,17 +262,28 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
     messageText: message,
   };
 
+  let savedToDatabase = false;
+  try {
+    await persistOrder(orderPayload);
+    savedToDatabase = true;
+  } catch (error) {
+    console.error("No se pudo guardar el pedido en Supabase:", error);
+    alert(
+      "El pedido se abrirá en WhatsApp, pero no pudo guardarse en la base de datos. " +
+      "Conservá el mensaje de WhatsApp como respaldo."
+    );
+  }
+
   addOrderToHistory(orderPayload);
 
-  // ✅ número en formato internacional (sin +, sin espacios)
   const whatsappURL =
     "https://wa.me/59896405927?text=" + encodeURIComponent(message);
 
-  // ✅ iPhone/Safari: evita bloqueo de popups
   window.location.href = whatsappURL;
 
   return {
     sentToWhatsApp: true,
+    savedToDatabase,
     isDeliveryEnabled,
   };
 }
