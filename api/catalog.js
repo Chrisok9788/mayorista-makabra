@@ -1,28 +1,25 @@
-// api/catalog.js
+// api/catalog.js — catálogo desde Supabase con respaldo en Google Sheets
 
-export const config = {
-  runtime: "nodejs",
-};
+export const config = { runtime: "nodejs" };
 
 const CSV_URL =
   process.env.CSV_URL ||
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJAgesFM5B0OTnVSvcOxrtC4VlI1ijay6erm7XnX8zjRtwUnbX-M0_4yXxRhcairW01hFOjoKQHW7t/pub?gid=1128238455&single=true&output=csv";
 
-const DEFAULT_TIMEOUT_MS = Number(
-  process.env.CATALOG_TIMEOUT_MS || 12000,
-);
-
+const DEFAULT_TIMEOUT_MS = Number(process.env.CATALOG_TIMEOUT_MS || 12000);
 const SUPABASE_PAGE_SIZE = 1000;
 
-const EDGE_CACHE_CONTROL =
-  "public, s-maxage=300, stale-while-revalidate=1800, stale-if-error=86400";
+const BROWSER_CACHE_CONTROL =
+  "public, max-age=60, stale-while-revalidate=300";
+const VERCEL_CACHE_CONTROL =
+  "public, max-age=300, stale-while-revalidate=1800, stale-if-error=86400";
 
-/*
- * Esta caché puede sobrevivir entre solicitudes mientras la misma
- * instancia serverless siga activa. No reemplaza una caché persistente,
- * pero permite responder si Supabase y Google Sheets fallan temporalmente.
- */
 let inMemoryFallback = null;
+
+function setCatalogCacheHeaders(res) {
+  res.setHeader("Cache-Control", BROWSER_CACHE_CONTROL);
+  res.setHeader("Vercel-CDN-Cache-Control", VERCEL_CACHE_CONTROL);
+}
 
 function toStr(value) {
   return String(value ?? "").trim();
@@ -31,23 +28,9 @@ function toStr(value) {
 function toBool(value) {
   if (value === true) return true;
   if (value === false) return false;
-
-  const normalized = toStr(value).toLowerCase();
-
-  if (!normalized) return false;
-
-  if (
-    normalized === "true" ||
-    normalized === "verdadero" ||
-    normalized === "1" ||
-    normalized === "si" ||
-    normalized === "sí" ||
-    normalized === "yes"
-  ) {
-    return true;
-  }
-
-  return false;
+  return ["true", "verdadero", "1", "si", "sí", "yes"].includes(
+    toStr(value).toLowerCase(),
+  );
 }
 
 function toNumber(value) {
@@ -59,38 +42,22 @@ function toNumber(value) {
     .replace(/\$/g, "")
     .replace(/\./g, "")
     .replace(/,/g, ".");
-
-  const number = Number(normalized);
-
-  return Number.isFinite(number) ? number : 0;
+  const parsed = Number(normalized);
+  return Number.isFinite(parsed) ? parsed : 0;
 }
 
 function parseTags(value) {
-  if (Array.isArray(value)) {
-    return value
-      .map((item) => toStr(item))
-      .filter(Boolean);
-  }
+  if (Array.isArray(value)) return value.map(toStr).filter(Boolean);
 
   const text = toStr(value);
-
   if (!text) return [];
 
-  /*
-   * También soporta etiquetas guardadas como JSON:
-   * ["bebidas", "refresco"]
-   */
   if (text.startsWith("[") && text.endsWith("]")) {
     try {
       const parsed = JSON.parse(text);
-
-      if (Array.isArray(parsed)) {
-        return parsed
-          .map((item) => toStr(item))
-          .filter(Boolean);
-      }
+      if (Array.isArray(parsed)) return parsed.map(toStr).filter(Boolean);
     } catch {
-      // Si no es JSON válido, continúa con la separación normal.
+      // Continúa con etiquetas separadas por coma o punto y coma.
     }
   }
 
@@ -102,245 +69,123 @@ function parseTags(value) {
 
 function parseCSV(text) {
   const rows = [];
-
   let row = [];
-  let current = "";
-  let inQuotes = false;
+  let cell = "";
+  let quoted = false;
 
   for (let index = 0; index < text.length; index += 1) {
     const character = text[index];
-    const nextCharacter = text[index + 1];
+    const next = text[index + 1];
 
-    if (
-      character === '"' &&
-      inQuotes &&
-      nextCharacter === '"'
-    ) {
-      current += '"';
+    if (character === '"' && quoted && next === '"') {
+      cell += '"';
       index += 1;
-      continue;
-    }
-
-    if (character === '"') {
-      inQuotes = !inQuotes;
-      continue;
-    }
-
-    if (character === "," && !inQuotes) {
-      row.push(current);
-      current = "";
-      continue;
-    }
-
-    if (
-      (character === "\n" || character === "\r") &&
-      !inQuotes
-    ) {
-      if (
-        character === "\r" &&
-        nextCharacter === "\n"
-      ) {
-        index += 1;
-      }
-
-      row.push(current);
+    } else if (character === '"') {
+      quoted = !quoted;
+    } else if (character === "," && !quoted) {
+      row.push(cell);
+      cell = "";
+    } else if ((character === "\n" || character === "\r") && !quoted) {
+      if (character === "\r" && next === "\n") index += 1;
+      row.push(cell);
       rows.push(row);
-
       row = [];
-      current = "";
-
-      continue;
+      cell = "";
+    } else {
+      cell += character;
     }
-
-    current += character;
   }
 
-  row.push(current);
+  row.push(cell);
   rows.push(row);
-
-  return rows.filter((currentRow) =>
-    currentRow.some((cell) => toStr(cell) !== ""),
-  );
+  return rows.filter((item) => item.some((value) => toStr(value)));
 }
 
 function rowsToObjects(rows) {
-  if (!Array.isArray(rows) || rows.length < 2) {
-    return [];
-  }
+  if (!Array.isArray(rows) || rows.length < 2) return [];
+  const headers = rows[0].map(toStr);
 
-  const headers = rows[0].map((header) =>
-    toStr(header),
-  );
-
-  const objects = [];
-
-  for (let rowIndex = 1; rowIndex < rows.length; rowIndex += 1) {
-    const row = rows[rowIndex];
+  return rows.slice(1).map((row) => {
     const object = {};
+    headers.forEach((header, index) => {
+      if (header) object[header] = row[index] ?? "";
+    });
+    return object;
+  });
+}
 
-    for (
-      let columnIndex = 0;
-      columnIndex < headers.length;
-      columnIndex += 1
-    ) {
-      const key = headers[columnIndex];
-
-      if (!key) continue;
-
-      object[key] = row[columnIndex] ?? "";
-    }
-
-    objects.push(object);
+function firstValue(object, keys) {
+  for (const key of keys) {
+    const value = object?.[key];
+    if (value !== undefined && value !== null && value !== "") return value;
   }
-
-  return objects;
+  return "";
 }
 
-function getDestacadosValue(row) {
-  return (
-    row.Destacados ??
-    row.destacados ??
-    row.destacado ??
-    row.DESTACADOS ??
-    row["Destacados "] ??
-    row["destacados "] ??
-    row.Featured ??
-    row.featured
-  );
-}
-
-function getPromoGroupValue(row) {
-  return (
-    row.promo_group ??
-    row.PROMO_GROUP ??
-    row["promo group"] ??
-    row["Promo Group"] ??
-    row.promogroup ??
-    row.PromoGroup ??
-    row.grupo_promo ??
-    row.GrupoPromo ??
-    row.grupo ??
-    row.Grupo
-  );
-}
-
-/*
- * Convierte tanto una fila de Google Sheets como una fila de Supabase
- * al formato que ya consume la página.
- */
 function rowToProduct(row) {
-  const id = toStr(row.id);
-
+  const id = toStr(firstValue(row, ["id", "ID", "codigoInterno", "scanntech_id"]));
   if (!id) return null;
 
-  /*
-   * En Google Sheets, una celda vacía significa activo.
-   * En Supabase, activo normalmente será true o false.
-   */
-  const activo =
-    row.activo === undefined ||
-    row.activo === null ||
-    row.activo === ""
-      ? true
-      : toBool(row.activo);
-
-  if (!activo) return null;
-
-  const nombre = toStr(row.nombre);
-  const categoria = toStr(row.categoria);
-  const subcategoria = toStr(row.subcategoria);
-
-  const precioBase = toNumber(
-    row.precio_base ?? row.precio,
+  const nombre = toStr(firstValue(row, ["nombre", "producto", "descripcion", "name"])) || id;
+  const categoria =
+    toStr(firstValue(row, ["categoria", "rubro", "category", "descripcionCorta"])) ||
+    "Otros";
+  const subcategoria =
+    toStr(firstValue(row, ["subcategoria", "subcategory", "sub_category"])) || "Otros";
+  const precio = Math.max(
+    0,
+    toNumber(firstValue(row, ["precio_base", "precio", "precioRegular", "price"])),
   );
-
-  const imagen =
-    toStr(
-      row.imagen_url ??
-        row.imagen,
-    ) || null;
-
-  const marca = toStr(row.marca) || null;
-  const presentacion =
-    toStr(row.presentacion) || null;
-
-  const tags = parseTags(row.tags);
-
-  const ofertaCarrusel = toBool(
-    row.oferta_carrusel ?? row.oferta,
+  const oferta = toBool(
+    firstValue(row, ["oferta_carrusel", "oferta", "esPrecioOferta", "offer"]),
   );
-
   const destacado = toBool(
-    getDestacadosValue(row),
+    firstValue(row, [
+      "destacados",
+      "Destacados",
+      "destacado",
+      "Featured",
+      "featured",
+      "oferta_carrusel",
+    ]),
   );
-
-  const promoGroup =
-    toStr(getPromoGroupValue(row)) || null;
-
-  const promoMin = toNumber(
-    row.promo_min_qty,
-  );
-
-  const promoPrecio = toNumber(
-    row.promo_precio,
-  );
-
-  const dpc =
-    promoMin > 0 && promoPrecio > 0
-      ? {
-          tramos: [
-            {
-              min: Math.trunc(promoMin),
-              precio: promoPrecio,
-            },
-          ],
-        }
-      : undefined;
+  const imagen =
+    toStr(firstValue(row, ["imagen_url", "imagen", "image_url", "imageUrl"])) || null;
+  const marca = toStr(firstValue(row, ["marca", "brand"])) || null;
+  const presentacion =
+    toStr(firstValue(row, ["presentacion", "presentation"])) || null;
+  const promoGroup = toStr(firstValue(row, ["promo_group", "grupo_promo"])) || null;
+  const promoMin = toNumber(firstValue(row, ["promo_min_qty"]));
+  const promoPrecio = toNumber(firstValue(row, ["promo_precio"]));
 
   const product = {
     id,
-    nombre: nombre || id,
-    categoria: categoria || "Otros",
-    subcategoria: subcategoria || "Otros",
-    precio: precioBase > 0 ? precioBase : 0,
-    oferta: ofertaCarrusel,
+    nombre,
+    categoria,
+    subcategoria,
+    precio,
+    oferta,
     imagen,
     marca,
     presentacion,
-    tags,
+    tags: parseTags(firstValue(row, ["tags", "etiquetas"])),
     destacado,
     promo_group: promoGroup,
   };
 
-  if (dpc) {
-    product.dpc = dpc;
+  if (promoMin > 0 && promoPrecio > 0) {
+    product.dpc = { tramos: [{ min: promoMin, precio: promoPrecio }] };
   }
 
-  /*
-   * Se conserva por compatibilidad futura,
-   * aunque actualmente no estés usando stock.
-   */
-  if (
-    row.stock !== undefined &&
-    row.stock !== null &&
-    row.stock !== ""
-  ) {
-    product.stock = toNumber(row.stock);
-  }
+  const stockValue = firstValue(row, ["stock"]);
+  if (stockValue !== "") product.stock = Math.max(0, Math.trunc(toNumber(stockValue)));
 
   return product;
 }
 
-async function fetchWithTimeout(
-  url,
-  options = {},
-  timeoutMs = DEFAULT_TIMEOUT_MS,
-) {
+async function fetchWithTimeout(url, options = {}, timeoutMs = DEFAULT_TIMEOUT_MS) {
   const controller = new AbortController();
-
-  const timer = setTimeout(() => {
-    controller.abort();
-  }, timeoutMs);
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     return await fetch(url, {
@@ -352,42 +197,24 @@ async function fetchWithTimeout(
   }
 }
 
-function validateSupabaseConfiguration() {
-  const baseUrl = toStr(
-    process.env.SUPABASE_URL,
-  );
-
-  const serviceRoleKey = toStr(
-    process.env.SUPABASE_SERVICE_ROLE_KEY,
-  );
+function getSupabaseConfiguration() {
+  const baseUrl = toStr(process.env.SUPABASE_URL).replace(/\/$/, "");
+  const serviceRoleKey = toStr(process.env.SUPABASE_SERVICE_ROLE_KEY);
 
   if (!baseUrl || !serviceRoleKey) {
-    throw new Error(
-      "Faltan SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY.",
-    );
+    throw new Error("Faltan SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY");
   }
 
-  return {
-    baseUrl: baseUrl.replace(/\/$/, ""),
-    serviceRoleKey,
-  };
+  return { baseUrl, serviceRoleKey };
 }
 
 async function loadProductsFromSupabase() {
-  const {
-    baseUrl,
-    serviceRoleKey,
-  } = validateSupabaseConfiguration();
-
+  const { baseUrl, serviceRoleKey } = getSupabaseConfiguration();
   const products = [];
-
   let offset = 0;
 
   while (true) {
-    const endpoint = new URL(
-      `${baseUrl}/rest/v1/productos`,
-    );
-
+    const endpoint = new URL(`${baseUrl}/rest/v1/productos`);
     endpoint.searchParams.set(
       "select",
       [
@@ -409,151 +236,67 @@ async function loadProductsFromSupabase() {
         "prioridad_oferta",
       ].join(","),
     );
+    endpoint.searchParams.set("activo", "eq.true");
+    endpoint.searchParams.set("order", "prioridad_oferta.desc,nombre.asc");
+    endpoint.searchParams.set("limit", String(SUPABASE_PAGE_SIZE));
+    endpoint.searchParams.set("offset", String(offset));
 
-    endpoint.searchParams.set(
-      "activo",
-      "eq.true",
-    );
-
-    endpoint.searchParams.set(
-      "order",
-      "prioridad_oferta.desc,nombre.asc",
-    );
-
-    endpoint.searchParams.set(
-      "limit",
-      String(SUPABASE_PAGE_SIZE),
-    );
-
-    endpoint.searchParams.set(
-      "offset",
-      String(offset),
-    );
-
-    const response = await fetchWithTimeout(
-      endpoint,
-      {
-        cache: "no-store",
-        headers: {
-          apikey: serviceRoleKey,
-          Authorization: `Bearer ${serviceRoleKey}`,
-          Accept: "application/json",
-        },
+    const response = await fetchWithTimeout(endpoint, {
+      cache: "no-store",
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+        Accept: "application/json",
       },
-    );
+    });
 
     const text = await response.text();
-
     if (!response.ok) {
-      throw new Error(
-        `Supabase respondió ${response.status}: ${text.slice(
-          0,
-          700,
-        )}`,
-      );
+      throw new Error(`Supabase respondió ${response.status}: ${text.slice(0, 700)}`);
     }
 
-    let page;
+    const rows = JSON.parse(text);
+    if (!Array.isArray(rows)) throw new Error("Supabase devolvió un formato inesperado");
 
-    try {
-      page = JSON.parse(text);
-    } catch {
-      throw new Error(
-        "Supabase devolvió una respuesta que no es JSON válido.",
-      );
-    }
-
-    if (!Array.isArray(page)) {
-      throw new Error(
-        "Supabase devolvió un formato inesperado.",
-      );
-    }
-
-    for (const row of page) {
+    for (const row of rows) {
       const product = rowToProduct(row);
-
-      if (product) {
-        products.push(product);
-      }
+      if (product) products.push(product);
     }
 
-    if (page.length < SUPABASE_PAGE_SIZE) {
-      break;
-    }
-
+    if (rows.length < SUPABASE_PAGE_SIZE) break;
     offset += SUPABASE_PAGE_SIZE;
   }
 
   if (!products.length) {
-    throw new Error(
-      "Supabase respondió correctamente, pero no devolvió productos activos.",
-    );
+    throw new Error("Supabase no devolvió productos activos");
   }
 
   return products;
 }
 
 async function loadProductsFromGoogleSheets() {
-  const response = await fetchWithTimeout(
-    CSV_URL,
-    {
-      cache: "no-store",
-      headers: {
-        Accept:
-          "text/csv, text/plain, */*",
-      },
-    },
-  );
-
+  const response = await fetchWithTimeout(CSV_URL, {
+    cache: "no-store",
+    headers: { Accept: "text/csv, text/plain, */*" },
+  });
   const text = await response.text();
 
-  if (!response.ok) {
-    throw new Error(
-      `Google Sheets respondió ${response.status}.`,
-    );
+  if (!response.ok) throw new Error(`Google Sheets respondió ${response.status}`);
+
+  const normalized = text.trim().toLowerCase();
+  if (normalized.startsWith("<!doctype html") || normalized.includes("<html")) {
+    throw new Error("Google Sheets devolvió HTML en lugar de CSV");
   }
 
-  const normalizedText = text
-    .trim()
-    .toLowerCase();
+  const products = rowsToObjects(parseCSV(text))
+    .map(rowToProduct)
+    .filter(Boolean);
 
-  if (
-    normalizedText.startsWith(
-      "<!doctype html",
-    ) ||
-    normalizedText.includes("<html")
-  ) {
-    throw new Error(
-      "El enlace de Google Sheets devolvió HTML en lugar de CSV.",
-    );
-  }
-
-  const rows = parseCSV(text);
-  const objects = rowsToObjects(rows);
-
-  const products = [];
-
-  for (const row of objects) {
-    const product = rowToProduct(row);
-
-    if (product) {
-      products.push(product);
-    }
-  }
-
-  if (!products.length) {
-    throw new Error(
-      "Google Sheets cargó, pero no se generaron productos. Revisá la columna id.",
-    );
-  }
-
+  if (!products.length) throw new Error("Google Sheets no devolvió productos válidos");
   return products;
 }
 
-function saveInMemoryFallback(
-  products,
-  source,
-) {
+function saveInMemoryFallback(products, source) {
   inMemoryFallback = {
     products,
     updatedAt: Date.now(),
@@ -563,142 +306,68 @@ function saveInMemoryFallback(
 
 function sendCatalogResponse(
   res,
-  {
-    products,
-    source,
-    degraded = false,
-    fallbackFrom = null,
-    warning = null,
-  },
+  { products, source, degraded = false, fallbackFrom = null, warning = null },
 ) {
-  res.setHeader(
-    "Cache-Control",
-    EDGE_CACHE_CONTROL,
-  );
+  setCatalogCacheHeaders(res);
 
   return res.status(200).json({
     products,
     updatedAt: Date.now(),
     degraded,
     source,
-    ...(fallbackFrom
-      ? { fallbackFrom }
-      : {}),
+    ...(fallbackFrom ? { fallbackFrom } : {}),
     ...(warning ? { warning } : {}),
   });
 }
 
-export default async function handler(
-  req,
-  res,
-) {
+export default async function handler(req, res) {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
-
-    return res.status(405).json({
-      error: "Method Not Allowed",
-    });
+    return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  /*
-   * 1. Fuente principal: Supabase
-   */
   try {
-    const products =
-      await loadProductsFromSupabase();
-
-    saveInMemoryFallback(
-      products,
-      "supabase",
-    );
+    const products = await loadProductsFromSupabase();
+    saveInMemoryFallback(products, "supabase");
 
     return sendCatalogResponse(res, {
       products,
       source: "supabase",
-      degraded: false,
     });
   } catch (supabaseError) {
-    console.error(
-      "[catalog] Falló Supabase:",
-      supabaseError,
-    );
+    console.error("[catalog] Falló Supabase:", supabaseError);
 
-    /*
-     * 2. Respaldo automático: Google Sheets
-     */
     try {
-      const products =
-        await loadProductsFromGoogleSheets();
-
-      saveInMemoryFallback(
-        products,
-        "google_sheets",
-      );
+      const products = await loadProductsFromGoogleSheets();
+      saveInMemoryFallback(products, "google_sheets");
 
       return sendCatalogResponse(res, {
         products,
         source: "google_sheets",
         degraded: true,
         fallbackFrom: "supabase",
-        warning:
-          "Supabase no estuvo disponible. Se cargó el catálogo desde Google Sheets.",
+        warning: "Supabase no estuvo disponible. Se cargó el catálogo desde Google Sheets.",
       });
     } catch (googleSheetsError) {
-      console.error(
-        "[catalog] Falló Google Sheets:",
-        googleSheetsError,
-      );
+      console.error("[catalog] Falló Google Sheets:", googleSheetsError);
 
-      /*
-       * 3. Último respaldo: copia guardada en memoria
-       */
-      if (
-        inMemoryFallback?.products?.length
-      ) {
+      if (inMemoryFallback?.products?.length) {
         return sendCatalogResponse(res, {
-          products:
-            inMemoryFallback.products,
-          source:
-            inMemoryFallback.source ||
-            "memory",
+          products: inMemoryFallback.products,
+          source: inMemoryFallback.source || "memory",
           degraded: true,
-          fallbackFrom:
-            "supabase_and_google_sheets",
-          warning:
-            "No se pudo actualizar el catálogo. Se devolvió la última copia disponible.",
+          fallbackFrom: "supabase_and_google_sheets",
+          warning: "Se devolvió la última copia disponible del catálogo.",
         });
       }
 
-      res.setHeader(
-        "Cache-Control",
-        EDGE_CACHE_CONTROL,
-      );
-
-      const supabaseMessage =
-        supabaseError?.name ===
-        "AbortError"
-          ? "Supabase agotó el tiempo de espera."
-          : toStr(
-              supabaseError?.message,
-            ) ||
-            "No se pudo cargar Supabase.";
-
-      const sheetsMessage =
-        googleSheetsError?.name ===
-        "AbortError"
-          ? "Google Sheets agotó el tiempo de espera."
-          : toStr(
-              googleSheetsError?.message,
-            ) ||
-            "No se pudo cargar Google Sheets.";
-
+      res.setHeader("Cache-Control", "no-store");
       return res.status(503).json({
-        error:
-          "No se pudo cargar el catálogo.",
+        error: "No se pudo cargar el catálogo",
         degraded: true,
         sources: {
-          supabase: supabaseMessage,
-          google_sheets: sheetsMessage,
+          supabase: String(supabaseError?.message || supabaseError),
+          google_sheets: String(googleSheetsError?.message || googleSheetsError),
         },
       });
     }
