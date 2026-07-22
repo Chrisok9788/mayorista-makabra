@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/api/orders-panel",
+      "destination": "/api/order-history"
+    },
+    {
       "source": "/favicon.ico",
       "destination": "/logo.png"
     },
