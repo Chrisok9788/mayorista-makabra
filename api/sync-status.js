@@ -16,6 +16,63 @@ function sendJson(res, status, body) {
   res.end(JSON.stringify(body, null, 2));
 }
 
+async function loadLatestSync(baseUrl, secret) {
+  const endpoint = new URL(`${baseUrl.replace(/\/$/, "")}/rest/v1/sincronizaciones`);
+  endpoint.searchParams.set(
+    "select",
+    "id,origen,estado,started_at,finished_at,registros_procesados,registros_actualizados,registros_con_error,mensaje",
+  );
+  endpoint.searchParams.set("order", "started_at.desc");
+  endpoint.searchParams.set("limit", "1");
+
+  const response = await fetch(endpoint, {
+    cache: "no-store",
+    headers: {
+      apikey: secret,
+      Authorization: `Bearer ${secret}`,
+      Accept: "application/json",
+    },
+  });
+
+  const text = await response.text();
+  if (!response.ok) {
+    throw new Error(`No se pudo leer el historial: Supabase ${response.status}: ${text.slice(0, 500)}`);
+  }
+
+  const rows = JSON.parse(text);
+  return Array.isArray(rows) && rows.length ? rows[0] : null;
+}
+
+function formatLatestSync(row) {
+  if (!row) {
+    return {
+      estado: "sin_registros",
+      mensaje: "Todavía no hay sincronizaciones registradas.",
+    };
+  }
+
+  const started = row.started_at ? new Date(row.started_at) : null;
+  const finished = row.finished_at ? new Date(row.finished_at) : null;
+  const durationMs =
+    started && finished && Number.isFinite(started.getTime()) && Number.isFinite(finished.getTime())
+      ? Math.max(0, finished.getTime() - started.getTime())
+      : null;
+
+  return {
+    id: row.id,
+    origen: row.origen || "desconocido",
+    estado: row.estado || "desconocido",
+    inicio: row.started_at || null,
+    fin: row.finished_at || null,
+    duracion_ms: durationMs,
+    duracion_segundos: durationMs === null ? null : Number((durationMs / 1000).toFixed(2)),
+    registros_procesados: Number(row.registros_procesados || 0),
+    registros_actualizados: Number(row.registros_actualizados || 0),
+    registros_con_error: Number(row.registros_con_error || 0),
+    mensaje: row.mensaje || null,
+  };
+}
+
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
@@ -36,24 +93,39 @@ export default async function handler(req, res) {
   const startedAt = Date.now();
 
   try {
-    const products = await loadSupabaseProducts(baseUrl, secret);
+    const [products, latestSyncRow] = await Promise.all([
+      loadSupabaseProducts(baseUrl, secret),
+      loadLatestSync(baseUrl, secret),
+    ]);
+
     const byId = new Map(products.map((product) => [String(product.id), product]));
     const resultados = MOCK_ARTICLES.map((article) =>
       compareArticle(article, byId.get(String(article.codigo))),
     );
     const resumen = buildPreviewSummary(resultados);
+    const ultimaSincronizacion = formatLatestSync(latestSyncRow);
 
-    const estadoGeneral = resumen.errores_datos > 0 ? "advertencia" : "correcto";
+    const hasSyncError = ultimaSincronizacion.estado === "error";
+    const estadoGeneral =
+      hasSyncError || resumen.errores_datos > 0 ? "advertencia" : "correcto";
 
     return sendJson(res, 200, {
       centro: "sincronizacion_makabra",
-      version: 1,
+      version: 2,
       modo: "solo_lectura",
       escritura_habilitada: false,
       estado_general: estadoGeneral,
       generadoEn: new Date().toISOString(),
       duracion_ms: Date.now() - startedAt,
+      ultima_sincronizacion_google_sheets: ultimaSincronizacion,
       conexiones: {
+        google_sheets: {
+          estado:
+            ultimaSincronizacion.estado === "completada"
+              ? "sincronizado"
+              : ultimaSincronizacion.estado,
+          ultima_ejecucion: ultimaSincronizacion.inicio || null,
+        },
         supabase: {
           estado: "conectado",
           productos: products.length,
@@ -82,10 +154,10 @@ export default async function handler(req, res) {
       siguiente_etapa: {
         nombre: "panel_visual",
         descripcion:
-          "Crear una pantalla privada que muestre este estado y permita ejecutar futuras acciones de forma controlada.",
+          "Crear una pantalla privada que muestre el estado, el historial y futuras acciones controladas.",
       },
       aviso:
-        "Este centro todavía es informativo. No existe ninguna operación de escritura o sincronización real.",
+        "Este centro muestra la sincronización real de Google Sheets y la comparación simulada de Scanntech. No ejecuta escrituras por sí mismo.",
     });
   } catch (error) {
     return sendJson(res, 500, {
