@@ -162,7 +162,7 @@ En ese caso, el ID es: `1AbCdEfGhIjKlMnOpQrStUvWxYz1234567890`
 
 Publicá la hoja como CSV con estos encabezados:
 
-- `code` (obligatorio): **código numérico de 5 dígitos**.
+- `code` (obligatorio): **identificador numérico de exactamente 7 cifras**.
 - `name` (obligatorio): nombre del repartidor/cliente.
 - `address` (obligatorio): dirección.
 - `phone` (obligatorio): teléfono.
@@ -173,16 +173,16 @@ Ejemplo CSV:
 
 ```csv
 code,name,address,phone
-12345,Juan Perez,Av Italia 1234,099123456
-54321,Maria Lopez,8 de Octubre 555,098222333
+1234500,Juan Perez,Av Italia 1234,099123456
+5432100,Maria Lopez,8 de Octubre 555,098222333
 ```
 
 ### Fallback opcional con JSON
 
 ```json
 [
-  {"code":"12345","name":"Juan Perez","address":"Av Italia 1234","phone":"099123456"},
-  {"code":"54321","name":"Maria Lopez","address":"8 de Octubre 555","phone":"098222333"}
+  {"code":"1234500","name":"Juan Perez","address":"Av Italia 1234","phone":"099123456"},
+  {"code":"5432100","name":"Maria Lopez","address":"8 de Octubre 555","phone":"098222333"}
 ]
 ```
 
@@ -191,7 +191,7 @@ code,name,address,phone
 ```bash
 curl -X POST https://TU-DOMINIO.vercel.app/api/validate-delivery \
   -H "Content-Type: application/json" \
-  -d '{"code":"12345"}'
+  -d '{"code":"1234500"}'
 ```
 
 > Después de agregar o cambiar variables de entorno en Vercel, hacé **Redeploy** para aplicar cambios.
