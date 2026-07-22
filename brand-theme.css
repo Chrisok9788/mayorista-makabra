@@ -293,3 +293,68 @@
     padding-bottom: 22px;
   }
 }
+
+/* Carrito Makabra: panel rojo, productos blancos y controles amarillos. */
+.cart-modal-panel {
+  background: linear-gradient(180deg, var(--makabra-red), var(--makabra-red-dark)) !important;
+}
+
+.cart-modal-header,
+.cart-modal-footer {
+  background: var(--makabra-red) !important;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.24) !important;
+}
+
+.cart-modal-title-wrap svg,
+.cart-modal-header h2,
+.cart-modal-footer .total-line,
+.cart-modal-footer #cart-total {
+  color: #fff !important;
+}
+
+.cart-modal-subtitle,
+.cart-modal-footer .muted {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+.cart-modal-content {
+  background: transparent;
+}
+
+.cart-modal-content .cart-item {
+  background: #fff !important;
+  color: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.cart-modal-content .cart-item-name,
+.cart-modal-content .cart-item-calc {
+  color: #111827;
+}
+
+.cart-modal .cart-item-controls button,
+.cart-modal #clear-cart-btn,
+.cart-modal #send-whatsapp-btn,
+.cart-modal .cart-continue-button,
+.cart-modal .cart-modal-close {
+  background: var(--makabra-yellow) !important;
+  color: var(--makabra-yellow-text) !important;
+  border-color: var(--makabra-yellow-dark) !important;
+  box-shadow: 0 5px 12px rgba(66, 42, 0, 0.2);
+}
+
+.cart-modal .cart-item-controls button:hover,
+.cart-modal #clear-cart-btn:hover,
+.cart-modal #send-whatsapp-btn:hover,
+.cart-modal .cart-continue-button:hover,
+.cart-modal .cart-modal-close:hover {
+  background: #ffe04a !important;
+  color: var(--makabra-yellow-text) !important;
+}
+
+.cart-modal .cart-item-controls input {
+  background: #fff;
+  color: #111827;
+  border-color: var(--makabra-yellow-dark);
+}
