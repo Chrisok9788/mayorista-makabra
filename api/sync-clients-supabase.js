@@ -210,23 +210,32 @@ async function removeDuplicateRows(clients) {
   return { removed, deactivated };
 }
 
-async function deactivateMissingClients(activeCodes) {
+async function removeMissingClients(activeCodes) {
   const existing = await loadExistingClients();
+  let removed = 0;
   let deactivated = 0;
 
   for (const row of existing) {
     if (row.origen !== "google_sheets") continue;
     if (activeCodes.has(String(row.codigo))) continue;
-    if (row.activo === false) continue;
 
-    await supabaseRequest(`clientes?id=eq.${encodeURIComponent(row.id)}`, {
-      method: "PATCH",
-      body: JSON.stringify({ activo: false }),
-    });
-    deactivated += 1;
+    try {
+      await supabaseRequest(`clientes?id=eq.${encodeURIComponent(row.id)}`, {
+        method: "DELETE",
+      });
+      removed += 1;
+    } catch {
+      if (row.activo !== false) {
+        await supabaseRequest(`clientes?id=eq.${encodeURIComponent(row.id)}`, {
+          method: "PATCH",
+          body: JSON.stringify({ activo: false }),
+        });
+        deactivated += 1;
+      }
+    }
   }
 
-  return deactivated;
+  return { removed, deactivated };
 }
 
 async function createSyncLog(startedAt) {
@@ -303,16 +312,16 @@ export default async function handler(req, res) {
       body: JSON.stringify(clients),
     });
 
-    const cleanup = await removeDuplicateRows(clients);
+    const duplicateCleanup = await removeDuplicateRows(clients);
     const activeCodes = new Set(clients.map((client) => client.codigo));
-    const staleDeactivated = await deactivateMissingClients(activeCodes);
+    const missingCleanup = await removeMissingClients(activeCodes);
 
     await finishSyncLog(syncId, {
       estado: "completada",
       registros_procesados: rawRows.length,
       registros_actualizados: clients.length,
       registros_con_error: invalidRows,
-      mensaje: `Clientes sincronizados: ${clients.length}; duplicados eliminados: ${cleanup.removed}; inactivos: ${cleanup.deactivated + staleDeactivated}`,
+      mensaje: `Clientes sincronizados: ${clients.length}; duplicados eliminados: ${duplicateCleanup.removed}; eliminados de la planilla: ${missingCleanup.removed}; inactivos protegidos por historial: ${duplicateCleanup.deactivated + missingCleanup.deactivated}`,
     });
 
     return sendJson(res, 200, {
@@ -325,9 +334,10 @@ export default async function handler(req, res) {
       clients_synced: clients.length,
       invalid_rows: invalidRows,
       duplicate_codes: duplicateCodes,
-      changed_code_duplicates_removed: cleanup.removed,
-      duplicates_deactivated: cleanup.deactivated,
-      missing_clients_deactivated: staleDeactivated,
+      changed_code_duplicates_removed: duplicateCleanup.removed,
+      duplicates_deactivated: duplicateCleanup.deactivated,
+      missing_clients_removed: missingCleanup.removed,
+      missing_clients_deactivated: missingCleanup.deactivated,
     });
   } catch (error) {
     try {
