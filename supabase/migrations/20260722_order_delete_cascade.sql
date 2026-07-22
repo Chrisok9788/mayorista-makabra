@@ -5,12 +5,13 @@
 --   - public.pedido_ingresos
 --   - public.articulos_de_pedido (tabla histórica, si todavía existe)
 --
+-- También limpia registros que hayan quedado huérfanos antes de esta migración.
 -- Migración no destructiva e idempotente: puede ejecutarse más de una vez.
 
 begin;
 
 -- ---------------------------------------------------------------------------
--- 1. Limpieza preventiva de registros operativos que ya quedaron huérfanos
+-- 1. Limpieza preventiva de registros que ya quedaron huérfanos
 -- ---------------------------------------------------------------------------
 
 do $$
@@ -35,6 +36,78 @@ begin
         where pedido.order_id = ingreso.pedido_order_id
       )
     $sql$;
+  end if;
+
+  if to_regclass('public.articulos_de_pedido') is not null then
+    -- Usa la primera columna de vínculo heredada que exista.
+    if exists (
+      select 1
+      from information_schema.columns
+      where table_schema = 'public'
+        and table_name = 'articulos_de_pedido'
+        and column_name = 'pedido_id'
+    ) then
+      execute $sql$
+        delete from public.articulos_de_pedido as articulo
+        where articulo.pedido_id is not null
+          and not exists (
+            select 1
+            from public.pedidos as pedido
+            where pedido.id::text = articulo.pedido_id::text
+          )
+      $sql$;
+    elsif exists (
+      select 1
+      from information_schema.columns
+      where table_schema = 'public'
+        and table_name = 'articulos_de_pedido'
+        and column_name = 'pedido_order_id'
+    ) then
+      execute $sql$
+        delete from public.articulos_de_pedido as articulo
+        where articulo.pedido_order_id is not null
+          and not exists (
+            select 1
+            from public.pedidos as pedido
+            where pedido.order_id = articulo.pedido_order_id::text
+          )
+      $sql$;
+    elsif exists (
+      select 1
+      from information_schema.columns
+      where table_schema = 'public'
+        and table_name = 'articulos_de_pedido'
+        and column_name = 'order_id'
+    ) then
+      execute $sql$
+        delete from public.articulos_de_pedido as articulo
+        where articulo.order_id is not null
+          and not exists (
+            select 1
+            from public.pedidos as pedido
+            where pedido.order_id = articulo.order_id::text
+          )
+      $sql$;
+    elsif exists (
+      select 1
+      from information_schema.columns
+      where table_schema = 'public'
+        and table_name = 'articulos_de_pedido'
+        and column_name = 'codigo_pedido'
+    ) then
+      execute $sql$
+        delete from public.articulos_de_pedido as articulo
+        where articulo.codigo_pedido is not null
+          and not exists (
+            select 1
+            from public.pedidos as pedido
+            where coalesce(
+              nullif(to_jsonb(pedido) ->> 'codigo_pedido', ''),
+              pedido.order_id
+            ) = articulo.codigo_pedido::text
+          )
+      $sql$;
+    end if;
   end if;
 end
 $$;
@@ -61,6 +134,7 @@ begin
       );
     end loop;
 
+    execute 'alter table public.pedido_items drop constraint if exists pedido_items_pedido_order_fk';
     execute $sql$
       alter table public.pedido_items
       add constraint pedido_items_pedido_order_fk
@@ -85,6 +159,7 @@ begin
       );
     end loop;
 
+    execute 'alter table public.pedido_ingresos drop constraint if exists pedido_ingresos_pedido_order_fk';
     execute $sql$
       alter table public.pedido_ingresos
       add constraint pedido_ingresos_pedido_order_fk
@@ -119,7 +194,7 @@ declare
   );
 begin
   -- Las claves foráneas ya cubren estas tablas, pero estas eliminaciones hacen
-  -- que la migración también funcione con instalaciones parcialmente antiguas.
+  -- que también funcione con instalaciones parcialmente antiguas.
   if to_regclass('public.pedido_items') is not null and deleted_order_id is not null then
     execute 'delete from public.pedido_items where pedido_order_id = $1'
       using deleted_order_id;
@@ -139,8 +214,8 @@ begin
         and table_name = 'articulos_de_pedido'
         and column_name = 'pedido_id'
     ) then
-      execute 'delete from public.articulos_de_pedido where pedido_id = $1'
-        using old.id;
+      execute 'delete from public.articulos_de_pedido where pedido_id::text = $1'
+        using old.id::text;
     end if;
 
     -- Otras versiones usaban el identificador MK-... directamente.
