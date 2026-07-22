@@ -1,0 +1,139 @@
+/* Mejora del carrito para pantallas de escritorio.
+   En celular se conserva el diseño compacto existente. */
+
+.cart-item-thumb-wrap {
+  display: none;
+}
+
+@media (min-width: 761px) {
+  .cart-modal-panel {
+    width: min(780px, 78vw);
+    max-width: 780px;
+  }
+
+  .cart-modal-header {
+    padding: 18px 22px;
+  }
+
+  .cart-modal-content {
+    padding: 18px 20px 24px;
+  }
+
+  .cart-modal-content .cart-items {
+    gap: 12px;
+  }
+
+  .cart-modal-content .cart-item {
+    grid-template-columns: 68px minmax(180px, 1fr) auto auto;
+    gap: 14px;
+    min-height: 88px;
+    padding: 10px 12px;
+    align-items: center;
+    border-radius: 14px;
+    box-shadow: 0 5px 16px rgba(16, 24, 40, 0.08);
+  }
+
+  .cart-item-thumb-wrap {
+    width: 68px;
+    height: 68px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border: 1px solid rgba(11, 18, 32, 0.1);
+    border-radius: 12px;
+    background: #fff;
+  }
+
+  .cart-item-thumb {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    padding: 4px;
+    background: #fff;
+  }
+
+  .cart-modal-content .cart-item > div:nth-child(2) {
+    min-width: 0;
+  }
+
+  .cart-modal-content .cart-item-name {
+    overflow-wrap: anywhere;
+    line-height: 1.25;
+    font-size: 14px;
+  }
+
+  .cart-modal-content .cart-item-note {
+    width: fit-content;
+    max-width: 100%;
+    margin-top: 5px;
+    padding: 4px 7px;
+    font-size: 11px;
+  }
+
+  .cart-modal-content .cart-item-calc {
+    position: static;
+    min-width: 142px;
+    padding: 7px 9px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .cart-modal-content .cart-item-controls {
+    display: grid;
+    grid-template-columns: 36px 54px 36px 36px;
+    gap: 6px;
+    justify-content: end;
+    flex-wrap: nowrap;
+  }
+
+  .cart-modal-content .cart-item-controls input {
+    width: 54px;
+    height: 36px;
+    padding: 6px;
+    border-radius: 10px;
+  }
+
+  .cart-modal-content .cart-item-controls button {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+  }
+
+  .cart-modal-footer {
+    padding: 14px 20px 16px;
+  }
+
+  .cart-modal-footer .total-line {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1050px) {
+  .cart-modal-panel {
+    width: min(720px, 88vw);
+  }
+
+  .cart-modal-content .cart-item {
+    grid-template-columns: 58px minmax(150px, 1fr) auto;
+  }
+
+  .cart-item-thumb-wrap {
+    width: 58px;
+    height: 58px;
+  }
+
+  .cart-modal-content .cart-item-calc {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .cart-modal-content .cart-item-controls {
+    grid-column: 2 / 4;
+    grid-row: 2;
+    justify-self: end;
+  }
+}
