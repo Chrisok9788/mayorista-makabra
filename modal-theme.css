@@ -1,0 +1,126 @@
+/* Tema Makabra para Modo Reparto e Historial. */
+
+#delivery-modal .delivery-modal-backdrop,
+#history-modal .delivery-modal-backdrop {
+  background: rgba(15, 0, 4, 0.7);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+#delivery-modal .delivery-modal-card,
+#history-modal .delivery-modal-card {
+  background: linear-gradient(155deg, var(--makabra-red), var(--makabra-red-dark)) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 22px 55px rgba(52, 0, 7, 0.48);
+}
+
+#delivery-modal h3,
+#delivery-modal label,
+#delivery-modal .delivery-details,
+#history-modal h3,
+#history-modal .history-order-meta,
+#history-modal .history-order-total,
+#history-modal .history-order-card,
+#history-modal .muted {
+  color: #fff !important;
+}
+
+#delivery-modal .delivery-details {
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+#delivery-modal #delivery-code-input {
+  background: rgba(82, 0, 12, 0.52) !important;
+  color: #fff !important;
+  border: 2px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: inset 0 1px 4px rgba(35, 0, 5, 0.24);
+}
+
+#delivery-modal #delivery-code-input::placeholder {
+  color: rgba(255, 255, 255, 0.66);
+}
+
+#delivery-modal .delivery-feedback {
+  color: #fff4b0 !important;
+  font-weight: 800;
+}
+
+#delivery-modal .btn,
+#history-modal .btn,
+#history-modal .history-customer-btn {
+  background: var(--makabra-yellow) !important;
+  color: var(--makabra-yellow-text) !important;
+  border-color: var(--makabra-yellow-dark) !important;
+  box-shadow: 0 6px 14px rgba(54, 34, 0, 0.25);
+}
+
+#delivery-modal .btn:hover,
+#history-modal .btn:hover,
+#history-modal .history-customer-btn:hover {
+  background: #ffe04a !important;
+  color: var(--makabra-yellow-text) !important;
+}
+
+#delivery-modal .btn:active,
+#history-modal .btn:active,
+#history-modal .history-customer-btn:active {
+  background: var(--makabra-yellow-dark) !important;
+}
+
+#delivery-modal .btn:disabled,
+#history-modal .btn:disabled {
+  opacity: 0.55;
+}
+
+#history-modal .history-customer-btn {
+  min-width: 140px;
+  text-align: left;
+}
+
+#history-modal .history-customer-btn.active {
+  background: #ffe875 !important;
+  border-color: #fff !important;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.42);
+}
+
+#history-modal .history-order-card {
+  background: rgba(79, 0, 11, 0.36) !important;
+  border-color: rgba(255, 255, 255, 0.34) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+#history-modal .history-scroll,
+#history-modal .history-list {
+  scrollbar-color: var(--makabra-yellow) rgba(255, 255, 255, 0.16);
+}
+
+#delivery-modal #delivery-code-input:focus-visible,
+#delivery-modal .btn:focus-visible,
+#history-modal .btn:focus-visible,
+#history-modal .history-customer-btn:focus-visible {
+  outline: 3px solid rgba(255, 212, 0, 0.68) !important;
+  outline-offset: 2px;
+}
+
+@media (max-width: 560px) {
+  #delivery-modal .delivery-modal-card,
+  #history-modal .delivery-modal-card {
+    width: min(94vw, 680px);
+    padding: 1rem;
+  }
+
+  #delivery-modal .delivery-modal-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  #delivery-modal .delivery-modal-actions .btn {
+    min-width: 0;
+    padding-left: 0.55rem;
+    padding-right: 0.55rem;
+  }
+}
