@@ -1,9 +1,13 @@
-name: Sincronizar catálogo con Supabase
+name: Sincronizar Makabra con Supabase
 
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "*/5 * * * *"
   workflow_dispatch:
+
+concurrency:
+  group: makabra-sync-all
+  cancel-in-progress: false
 
 jobs:
   sync:
@@ -11,7 +15,7 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: Ejecutar sincronización
+      - name: Ejecutar sincronización total
         env:
           SYNC_TOKEN: ${{ secrets.SYNC_TOKEN }}
         run: |
@@ -28,12 +32,12 @@ jobs:
             --write-out "%{http_code}" \
             --request POST \
             --header "x-sync-token: $SYNC_TOKEN" \
-            "https://mayorista-makabra.vercel.app/api/sync-supabase")
+            "https://mayorista-makabra.vercel.app/api/sync-all")
 
           cat "$response_file"
           echo
 
           if [ "$status_code" -lt 200 ] || [ "$status_code" -ge 300 ]; then
-            echo "La sincronización falló con HTTP $status_code"
+            echo "La sincronización total falló con HTTP $status_code"
             exit 1
           fi
