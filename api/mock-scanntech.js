@@ -4,19 +4,12 @@ export const config = {
   runtime: "nodejs",
 };
 
-const CACHE_CONTROL =
-  "no-store, max-age=0";
+const CACHE_CONTROL = "no-store, max-age=0";
 
 function sendJson(res, status, body) {
   res.statusCode = status;
-  res.setHeader(
-    "Content-Type",
-    "application/json; charset=utf-8",
-  );
-  res.setHeader(
-    "Cache-Control",
-    CACHE_CONTROL,
-  );
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.setHeader("Cache-Control", CACHE_CONTROL);
   res.end(JSON.stringify(body, null, 2));
 }
 
@@ -26,7 +19,7 @@ function sendJson(res, status, body) {
  * Su único objetivo es entregar datos ficticios para probar
  * el futuro comparador y sincronizador.
  */
-const MOCK_ARTICLES = [
+export const MOCK_ARTICLES = [
   {
     codigo: "aceite-condesa-900cc-143",
     descripcion: "Aceite Condesa 900Cc",
@@ -102,10 +95,7 @@ const MOCK_ARTICLES = [
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
-
-    return sendJson(res, 405, {
-      error: "Method Not Allowed",
-    });
+    return sendJson(res, 405, { error: "Method Not Allowed" });
   }
 
   return sendJson(res, 200, {
@@ -116,7 +106,6 @@ export default async function handler(req, res) {
     generadoEn: new Date().toISOString(),
     total: MOCK_ARTICLES.length,
     articulos: MOCK_ARTICLES,
-    aviso:
-      "Estos datos son ficticios y no modifican Supabase ni la página web.",
+    aviso: "Estos datos son ficticios y no modifican Supabase ni la página web.",
   });
 }
