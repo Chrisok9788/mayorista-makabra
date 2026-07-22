@@ -54,25 +54,20 @@ async function supabaseRequest(path, options = {}) {
   }
 }
 
-function normalizeItems(items) {
-  if (!Array.isArray(items) || items.length > MAX_ITEMS) return [];
+function calculateOrderTotal(items, receivedTotal) {
+  if (!Array.isArray(items) || items.length === 0 || items.length > MAX_ITEMS) {
+    return Math.max(0, Math.round(Number(receivedTotal) || 0));
+  }
 
-  return items
-    .map((item) => {
-      const cantidad = Math.max(0, Math.trunc(Number(item?.qty) || 0));
-      const precioUnitario = Math.max(0, Math.round(Number(item?.unitPriceRounded) || 0));
-      const subtotalRecibido = Math.max(0, Math.round(Number(item?.subtotalRounded) || 0));
-      const subtotalCalculado = Math.round(precioUnitario * cantidad);
+  const calculated = items.reduce((sum, item) => {
+    const quantity = Math.max(0, Math.trunc(Number(item?.qty) || 0));
+    const receivedSubtotal = Math.max(0, Math.round(Number(item?.subtotalRounded) || 0));
+    const unitPrice = Math.max(0, Math.round(Number(item?.unitPriceRounded) || 0));
+    const subtotal = receivedSubtotal || Math.round(unitPrice * quantity);
+    return sum + subtotal;
+  }, 0);
 
-      return {
-        producto_id: toStr(item?.productId || item?.id) || null,
-        nombre: toStr(item?.name).slice(0, 300),
-        cantidad,
-        precio_unitario_uyu: precioUnitario,
-        subtotal_uyu: subtotalRecibido || subtotalCalculado,
-      };
-    })
-    .filter((item) => item.nombre && item.cantidad > 0);
+  return calculated || Math.max(0, Math.round(Number(receivedTotal) || 0));
 }
 
 function parseOrderPayload(body) {
@@ -82,9 +77,8 @@ function parseOrderPayload(body) {
   const orderId = toStr(payload.orderId).slice(0, 80);
   const customerKey = toStr(payload.customerKey).slice(0, 100);
   const customerLabel = toStr(payload.customerLabel || customerKey).slice(0, 100);
-  const items = normalizeItems(payload.items);
 
-  if (!orderId || !customerKey || !items.length) return null;
+  if (!orderId || !customerKey) return null;
   if (!/^MK-[A-Z0-9-]+$/i.test(orderId)) return null;
 
   const keyCode = customerKey.startsWith("C-") ? sanitizeCode(customerKey.slice(2)) : "";
@@ -95,21 +89,14 @@ function parseOrderPayload(body) {
       ? keyCode
       : "";
 
-  const totalFromItems = items.reduce((sum, item) => sum + item.subtotal_uyu, 0);
-  const totalReceived = Math.max(0, Math.round(Number(payload.totalRounded) || 0));
-
   return {
     orderId,
     customerKey,
     customerLabel,
     deliveryCode: deliveryCode || null,
     customerName: toStr(payload.customerName).slice(0, 300) || null,
-    customerAddress: toStr(payload.customerAddress).slice(0, 500) || null,
-    customerPhone: toStr(payload.customerPhone).slice(0, 100) || null,
-    items,
-    total: totalFromItems || totalReceived,
+    total: calculateOrderTotal(payload.items, payload.totalRounded),
     hasConsultables: Boolean(payload.hasConsultables),
-    message: toStr(payload.messageText).slice(0, 20000) || null,
     createdAt: toStr(payload.createdAt) || new Date().toISOString(),
   };
 }
@@ -118,7 +105,7 @@ async function loadDeliveryClient(code) {
   if (!code) return null;
 
   const rows = await supabaseRequest(
-    `clientes?select=id,codigo,nombre,direccion,telefono,activo&codigo=eq.${encodeURIComponent(code)}&limit=1`,
+    `clientes?select=id,codigo,nombre,telefono,activo&codigo=eq.${encodeURIComponent(code)}&limit=1`,
     { method: "GET", prefer: "return=representation" },
   );
 
@@ -139,14 +126,11 @@ async function saveOrder(order) {
     cliente_id: client?.id ?? null,
     cliente_codigo: order.deliveryCode,
     cliente_clave: order.customerKey,
-    cliente_nombre: client?.nombre || order.customerName,
-    cliente_direccion: client?.direccion || order.customerAddress,
-    cliente_telefono: client?.telefono || order.customerPhone,
+    cliente_nombre: client?.nombre || order.customerName || order.customerLabel,
+    cliente_telefono: client?.telefono || null,
     estado: "pendiente",
     total_uyu: order.total,
     tiene_consultables: order.hasConsultables,
-    items: order.items,
-    mensaje: order.message,
     origen: "web_whatsapp",
     creado_en: order.createdAt,
     actualizado_en: new Date().toISOString(),
