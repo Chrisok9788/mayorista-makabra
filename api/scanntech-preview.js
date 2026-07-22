@@ -26,7 +26,7 @@ function normalizePromo(article) {
   return { cantidad, precio };
 }
 
-async function loadSupabaseProducts(baseUrl, secret) {
+export async function loadSupabaseProducts(baseUrl, secret) {
   const products = [];
   const pageSize = 1000;
   let offset = 0;
@@ -67,7 +67,7 @@ async function loadSupabaseProducts(baseUrl, secret) {
   return products;
 }
 
-function compareArticle(article, product) {
+export function compareArticle(article, product) {
   const issues = [];
   const mockPrice = numberOrNull(article.precio);
   const mockPromo = normalizePromo(article);
@@ -142,6 +142,19 @@ function compareArticle(article, product) {
   };
 }
 
+export function buildPreviewSummary(resultados) {
+  return {
+    total_mock: resultados.length,
+    coincidencias: resultados.filter(
+      (item) => item.accion !== "producto_nuevo" && item.accion !== "error_datos",
+    ).length,
+    sin_cambios: resultados.filter((item) => item.accion === "sin_cambios").length,
+    para_actualizar: resultados.filter((item) => item.accion === "actualizar").length,
+    productos_nuevos: resultados.filter((item) => item.accion === "producto_nuevo").length,
+    errores_datos: resultados.filter((item) => item.accion === "error_datos").length,
+  };
+}
+
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
@@ -164,22 +177,13 @@ export default async function handler(req, res) {
       compareArticle(article, byId.get(String(article.codigo))),
     );
 
-    const resumen = {
-      total_mock: resultados.length,
-      coincidencias: resultados.filter((item) => item.accion !== "producto_nuevo" && item.accion !== "error_datos").length,
-      sin_cambios: resultados.filter((item) => item.accion === "sin_cambios").length,
-      para_actualizar: resultados.filter((item) => item.accion === "actualizar").length,
-      productos_nuevos: resultados.filter((item) => item.accion === "producto_nuevo").length,
-      errores_datos: resultados.filter((item) => item.accion === "error_datos").length,
-    };
-
     return sendJson(res, 200, {
       modo: "preview",
       escritura_habilitada: false,
       proveedor: "scanntech_mock",
       generadoEn: new Date().toISOString(),
       total_productos_supabase: products.length,
-      resumen,
+      resumen: buildPreviewSummary(resultados),
       resultados,
       aviso: "Este endpoint solamente compara datos. No modifica Supabase ni la página web.",
     });
