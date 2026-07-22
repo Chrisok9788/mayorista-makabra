@@ -95,7 +95,7 @@ async function loadActiveProducts() {
 
   for (let from = 0; ; from += pageSize) {
     const rows = await supabaseRequest(
-      "productos?select=id,categoria,subcategoria&activo=eq.true&order=id.asc",
+      `productos?select=id,categoria,subcategoria&activo=eq.true&order=id.asc`,
       {
         method: "GET",
         prefer: "return=representation",
@@ -192,16 +192,10 @@ function buildSubcategoryRecord(category, subcategory, schema, categoryRow, cate
 }
 
 async function replaceTaxonomy(taxonomy, categorySchema, subcategorySchema) {
-  const firstCategory = taxonomy[0] || {
-    name: "Otros",
-    slug: "otros",
-    order: 1,
-    subcategories: [{ name: "Otros", slug: "otros-otros", order: 1 }],
-  };
-  const categoryPreview = buildCategoryRecord(firstCategory, categorySchema);
+  const categoryPreview = buildCategoryRecord(taxonomy[0] || { name: "Otros", slug: "otros", order: 1 }, categorySchema);
   const subcategoryPreview = buildSubcategoryRecord(
-    firstCategory,
-    firstCategory.subcategories[0],
+    taxonomy[0] || { name: "Otros" },
+    taxonomy[0]?.subcategories?.[0] || { name: "Otros", slug: "otros-otros", order: 1 },
     subcategorySchema,
     { id: 1 },
     categorySchema,
@@ -227,7 +221,7 @@ async function replaceTaxonomy(taxonomy, categorySchema, subcategorySchema) {
     throw new Error("Supabase no devolvió todas las categorías insertadas");
   }
 
-  const categoryNameColumn = buildCategoryRecord(firstCategory, categorySchema).nameColumn;
+  const categoryNameColumn = buildCategoryRecord(taxonomy[0], categorySchema).nameColumn;
   const categoryRowsByName = new Map(
     insertedCategories.map((row) => [toStr(row[categoryNameColumn]), row]),
   );
@@ -292,6 +286,7 @@ export default async function handler(req, res) {
       ...result,
     });
   } catch (error) {
+    console.error("[sync-taxonomy]", String(error?.message || error));
     return sendJson(res, 500, {
       ok: false,
       error: "No se pudieron sincronizar categorías y subcategorías",
