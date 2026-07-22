@@ -31,6 +31,7 @@
     <title>Mayorista Makabra | Catálogo Mayorista en Uruguay</title>
     <link rel="icon" type="image/png" href="/logo.png" />
     <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./cart-modal.css?v=20260722-1" />
 
     <!-- Vercel Web Analytics -->
     <script>
@@ -56,9 +57,37 @@
           </div>
         </a>
 
-        <nav class="main-nav">
+        <nav class="main-nav" aria-label="Navegación principal">
           <a href="#catalogue">Catálogo</a>
           <a href="#contact">Contacto</a>
+
+          <button
+            id="cart-open-btn"
+            class="header-cart-button"
+            type="button"
+            aria-label="Abrir carrito"
+            aria-controls="cart-modal"
+            aria-expanded="false"
+          >
+            <svg
+              class="header-cart-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="9" cy="20" r="1"></circle>
+              <circle cx="19" cy="20" r="1"></circle>
+              <path d="M3 4h2l2.4 10.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 7H6"></path>
+            </svg>
+            <span class="header-cart-label">Carrito</span>
+            <span class="cart-badge" aria-label="Artículos en el carrito">
+              <span id="cart-count">0</span>
+            </span>
+          </button>
         </nav>
       </div>
     </header>
@@ -150,47 +179,96 @@
         </div>
       </section>
 
-      <!-- CARRITO -->
-      <section id="cart" class="section section-soft">
-        <div class="container">
-          <div class="section-title-row">
-            <h2>Carrito</h2>
-            <span class="muted">Total y envío por WhatsApp</span>
-          </div>
+      <!-- PANEL LATERAL DEL CARRITO -->
+      <section
+        id="cart-modal"
+        class="cart-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cart-modal-title"
+        aria-hidden="true"
+        hidden
+      >
+        <button
+          class="cart-modal-backdrop"
+          type="button"
+          data-cart-close
+          aria-label="Cerrar carrito"
+        ></button>
 
-          <div id="cart-container" class="cart-items"></div>
-
-          <div class="cart-summary">
-            <div class="total-line">
-              <span>Total:</span>
-              <strong id="cart-total">$ 0</strong>
-            </div>
-
-            <div class="cart-actions">
-              <button id="clear-cart-btn" class="btn" type="button">
-                Vaciar carrito
-              </button>
-
-              <button
-                id="send-whatsapp-btn"
-                class="btn btn-primary"
-                type="button"
+        <div class="cart-modal-panel">
+          <header class="cart-modal-header">
+            <div class="cart-modal-title-wrap">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
               >
-                Enviar pedido por WhatsApp
+                <circle cx="9" cy="20" r="1"></circle>
+                <circle cx="19" cy="20" r="1"></circle>
+                <path d="M3 4h2l2.4 10.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 7H6"></path>
+              </svg>
+              <div>
+                <h2 id="cart-modal-title">Tu carrito</h2>
+                <p class="cart-modal-subtitle">Revisá cantidades y enviá el pedido por WhatsApp</p>
+              </div>
+            </div>
+
+            <button
+              id="cart-close-btn"
+              class="cart-modal-close"
+              type="button"
+              aria-label="Cerrar carrito"
+            >
+              ×
+            </button>
+          </header>
+
+          <div class="cart-modal-content">
+            <div id="cart-container" class="cart-items"></div>
+          </div>
+
+          <footer class="cart-modal-footer">
+            <div class="cart-summary">
+              <div class="total-line">
+                <span>Total:</span>
+                <strong id="cart-total">$ 0</strong>
+              </div>
+
+              <div class="cart-actions">
+                <button id="clear-cart-btn" class="btn" type="button">
+                  Vaciar carrito
+                </button>
+
+                <button
+                  id="send-whatsapp-btn"
+                  class="btn btn-primary"
+                  type="button"
+                >
+                  Enviar pedido por WhatsApp
+                </button>
+
+                <a
+                  id="send-whatsapp-link"
+                  href="https://wa.me/59896405927"
+                  style="display: none"
+                  rel="noopener"
+                ></a>
+              </div>
+
+              <button id="cart-continue-btn" class="cart-continue-button" type="button">
+                Seguir comprando
               </button>
 
-              <a
-                id="send-whatsapp-link"
-                href="https://wa.me/59896405927"
-                style="display: none"
-                rel="noopener"
-              ></a>
+              <div class="muted small">
+                Nota: si un producto tiene precio 0, se enviará como “Consultar”.
+              </div>
             </div>
-
-            <div class="muted small">
-              Nota: si un producto tiene precio 0, se enviará como “Consultar”.
-            </div>
-          </div>
+          </footer>
         </div>
       </section>
 
@@ -242,16 +320,9 @@
 
       <!-- BOTONES FLOTANTES -->
       <div class="float-actions" aria-label="Accesos rápidos">
-        <!-- ✅ NUEVO: Botón Inicio (sube a buscador/filtros) -->
+        <!-- ✅ Botón Inicio (sube a buscador/filtros) -->
         <a href="#filters-sticky" class="top-float" aria-label="Ir al buscador">
           ⬆︎ Inicio
-        </a>
-
-        <a href="#cart" class="cart-float" aria-label="Carrito">
-          Carrito
-          <span class="cart-badge">
-            <span id="cart-count">0</span>
-          </span>
         </a>
 
         <a
@@ -286,5 +357,6 @@
     <script defer src="/_vercel/speed-insights/script.js"></script>
 
     <script type="module" src="./app.js"></script>
+    <script type="module" src="./cart-modal.js?v=20260722-1"></script>
   </body>
 </html>
