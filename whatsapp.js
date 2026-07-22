@@ -1,19 +1,18 @@
 import { addOrderToHistory } from "./src/order-history.js";
 
 /*
- * whatsapp.js — MODIFICADO y COMPLETO (PROMO MIX + total correcto)
- * Cambios:
- * ✅ Redondeo UYU en TODO: unitario, subtotales y total final (Math.round)
- * ✅ getUnitPriceByQty soporta max vacío/0/null como "sin tope" (Infinity)
- * ✅ Mantiene compatibilidad nombre/name y precio/price
- * ✅ Mantiene compatibilidad carrito por id o por nombre
- * ✅ PROMO MIX por promo_group (igual que ui.js)
- * ✅ Guarda el pedido en Supabase antes de abrir WhatsApp
+ * whatsapp.js — PROMO MIX + guardado operativo de pedidos
+ *
+ * - Redondeo UYU en unitarios, subtotales y total.
+ * - Mantiene promociones por cantidad y promo_group.
+ * - Guarda el pedido completo antes de abrir WhatsApp.
+ * - Si un cliente registrado ya tiene un pedido de menos de 24 horas,
+ *   el servidor suma este envío al pedido activo.
  */
 
 function roundUYU(n) {
-  const v = Number(n);
-  return Number.isFinite(v) ? Math.round(v) : 0;
+  const value = Number(n);
+  return Number.isFinite(value) ? Math.round(value) : 0;
 }
 
 function formatUYU(n) {
@@ -64,43 +63,49 @@ async function persistOrder(orderPayload) {
   }
 }
 
-function toNumberPrice(v) {
-  if (typeof v === "number") return Number.isFinite(v) ? v : 0;
-  if (v == null) return 0;
+function toNumberPrice(value) {
+  if (typeof value === "number") return Number.isFinite(value) ? value : 0;
+  if (value == null) return 0;
 
-  let s = String(v).trim();
-  s = s.replace(/\$/g, "").trim();
-  s = s.replace(/\./g, "").replace(/,/g, ".");
-  const n = Number(s);
-  return Number.isFinite(n) ? n : 0;
+  let text = String(value).trim();
+  text = text.replace(/\$/g, "").trim();
+  text = text.replace(/\./g, "").replace(/,/g, ".");
+  const number = Number(text);
+  return Number.isFinite(number) ? number : 0;
 }
 
-function getProductName(p) {
-  return String(p?.nombre ?? p?.name ?? "").trim();
+function getProductName(product) {
+  return String(product?.nombre ?? product?.name ?? "").trim();
 }
 
-function getPromoGroup(p) {
-  const g = String(p?.promo_group ?? p?.promoGroup ?? p?.grupo_promo ?? "").trim();
-  return g || "";
+function getProductSector(product) {
+  return String(
+    product?.sector ?? product?.categoria ?? product?.category ?? "Sin sector",
+  ).trim();
+}
+
+function getPromoGroup(product) {
+  const group = String(
+    product?.promo_group ?? product?.promoGroup ?? product?.grupo_promo ?? "",
+  ).trim();
+  return group || "";
 }
 
 function getUnitPriceByQty(product, qty) {
   const base = toNumberPrice(product?.precio ?? product?.price);
+  const tiers = product?.dpc?.tramos;
+  if (!Array.isArray(tiers) || tiers.length === 0) return base;
 
-  const tramos = product?.dpc?.tramos;
-  if (!Array.isArray(tramos) || tramos.length === 0) return base;
-
-  for (const t of tramos) {
-    const min = Number(t?.min);
-    const max = Number(t?.max);
-    const precio = toNumberPrice(t?.precio);
+  for (const tier of tiers) {
+    const min = Number(tier?.min);
+    const max = Number(tier?.max);
+    const price = toNumberPrice(tier?.precio);
 
     if (!Number.isFinite(min) || min <= 0) continue;
 
-    const maxOk = Number.isFinite(max) && max > 0 ? max : Number.POSITIVE_INFINITY;
-
-    if (qty >= min && qty <= maxOk) {
-      return precio > 0 ? precio : base;
+    const maximum = Number.isFinite(max) && max > 0 ? max : Number.POSITIVE_INFINITY;
+    if (qty >= min && qty <= maximum) {
+      return price > 0 ? price : base;
     }
   }
 
@@ -115,9 +120,11 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
   }
 
   const customerId = getOrCreateCustomerId();
-  const orderId = makeOrderId();
+  const incomingOrderId = makeOrderId();
   const deliveryCode = String(deliveryProfile?.code || "").trim();
-  const isDeliveryEnabled = Boolean(deliveryProfile && /^\d{7}$/.test(deliveryCode));
+  const isDeliveryEnabled = Boolean(
+    deliveryProfile && /^\d{5,7}$/.test(deliveryCode),
+  );
   const customerLabel = isDeliveryEnabled ? `C-${deliveryCode}` : customerId;
 
   let address = isDeliveryEnabled
@@ -135,22 +142,22 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
   }
 
   const byId = new Map();
-  const byNombre = new Map();
+  const byName = new Map();
 
-  for (const p of products || []) {
-    const id = String(p?.id ?? "").trim();
-    const nombre = getProductName(p);
-    if (id) byId.set(id, p);
-    if (nombre) byNombre.set(nombre, p);
+  for (const product of products || []) {
+    const id = String(product?.id ?? "").trim();
+    const name = getProductName(product);
+    if (id) byId.set(id, product);
+    if (name) byName.set(name, product);
   }
 
   const resolvedItems = [];
-  for (const [productId, qtyRaw] of entries) {
-    const qty = Number(qtyRaw) || 0;
+  for (const [productId, rawQty] of entries) {
+    const qty = Number(rawQty) || 0;
     if (qty < 1) continue;
 
     const key = String(productId ?? "").trim();
-    const product = byId.get(key) || byNombre.get(key);
+    const product = byId.get(key) || byName.get(key);
     if (!product) continue;
 
     resolvedItems.push({ key, qty, product });
@@ -162,17 +169,17 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
   }
 
   const groupQtyMap = new Map();
-  for (const it of resolvedItems) {
-    const g = getPromoGroup(it.product);
-    if (!g) continue;
-    groupQtyMap.set(g, (groupQtyMap.get(g) || 0) + it.qty);
+  for (const item of resolvedItems) {
+    const group = getPromoGroup(item.product);
+    if (!group) continue;
+    groupQtyMap.set(group, (groupQtyMap.get(group) || 0) + item.qty);
   }
 
-  function getEffectiveQtyForPricing(product, itemQty) {
-    const g = getPromoGroup(product);
-    if (!g) return itemQty;
-    const qg = groupQtyMap.get(g);
-    return Number(qg) > 0 ? Number(qg) : itemQty;
+  function effectiveQuantityForPricing(product, itemQty) {
+    const group = getPromoGroup(product);
+    if (!group) return itemQty;
+    const groupQty = groupQtyMap.get(group);
+    return Number(groupQty) > 0 ? Number(groupQty) : itemQty;
   }
 
   const lines = [];
@@ -186,51 +193,64 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
     lines.push("");
   }
 
-  lines.push(`Pedido: ${orderId}`);
+  lines.push(`Pedido: ${incomingOrderId}`);
   lines.push(`Cliente: ${customerLabel}`);
   lines.push("");
 
   let totalRoundedSum = 0;
-  let hasConsult = false;
-  const historyItems = [];
+  let hasConsultables = false;
+  const orderItems = [];
 
-  for (const it of resolvedItems) {
-    const qty = Number(it.qty) || 0;
+  for (const item of resolvedItems) {
+    const qty = Number(item.qty) || 0;
     if (qty < 1) continue;
 
-    const product = it.product;
-    const nombre = getProductName(product);
-    const effQty = getEffectiveQtyForPricing(product, qty);
-    const unitExact = getUnitPriceByQty(product, effQty);
+    const product = item.product;
+    const name = getProductName(product);
+    const sector = getProductSector(product);
+    const effectiveQty = effectiveQuantityForPricing(product, qty);
+    const exactUnitPrice = getUnitPriceByQty(product, effectiveQty);
+    const productId = String(product?.id ?? item.key ?? "").trim();
 
-    if (unitExact <= 0) {
-      hasConsult = true;
-      lines.push(`${qty} x ${nombre} — Consultar precio`);
+    if (exactUnitPrice <= 0) {
+      hasConsultables = true;
+      orderItems.push({
+        productId,
+        name,
+        qty,
+        unitPriceRounded: 0,
+        subtotalRounded: 0,
+        consultable: true,
+        sector,
+      });
+      lines.push(`${qty} x ${name} — Consultar precio`);
       continue;
     }
 
-    const unitRounded = roundUYU(unitExact);
-    const subtotalRounded = roundUYU(unitExact * qty);
+    const unitRounded = roundUYU(exactUnitPrice);
+    const subtotalRounded = roundUYU(exactUnitPrice * qty);
 
     totalRoundedSum += subtotalRounded;
-    historyItems.push({
-      productId: String(product?.id ?? it.key ?? "").trim(),
-      name: nombre,
+    orderItems.push({
+      productId,
+      name,
       qty,
       unitPriceRounded: unitRounded,
       subtotalRounded,
+      consultable: false,
+      sector,
     });
 
     lines.push(
-      `${qty} x ${nombre} — ${formatUYU(unitRounded)} c/u — Subtotal: ${formatUYU(
-        subtotalRounded
-      )}`
+      `${qty} x ${name} — ${formatUYU(unitRounded)} c/u — Subtotal: ${formatUYU(
+        subtotalRounded,
+      )}`,
     );
   }
 
   lines.push("");
 
-  if (hasConsult) {
+  if (hasConsultables) {
     lines.push("Nota: Algunos productos quedan como 'Consultar precio'.");
   }
 
@@ -244,33 +264,53 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
   lines.push("");
   lines.push("A la brevedad nos comunicaremos vía WhatsApp para coordinar.");
 
-  const message = lines.join("\n");
-
+  let message = lines.join("\n");
   const orderPayload = {
-    orderId,
+    orderId: incomingOrderId,
     createdAt: new Date().toISOString(),
     customerKey: customerLabel,
     customerLabel,
     deliveryCode: isDeliveryEnabled ? deliveryCode : null,
-    customerName: isDeliveryEnabled ? String(deliveryProfile?.name || "").trim() : null,
+    customerName: isDeliveryEnabled
+      ? String(deliveryProfile?.name || "").trim()
+      : null,
     customerAddress: address.trim() || null,
-    customerPhone: isDeliveryEnabled ? String(deliveryProfile?.phone || "").trim() : null,
-    items: historyItems,
+    customerPhone: isDeliveryEnabled
+      ? String(deliveryProfile?.phone || "").trim()
+      : null,
+    items: orderItems,
     totalRounded: totalRoundedSum,
-    hasConsultables: hasConsult,
+    hasConsultables,
     messagePreview: message.slice(0, 300),
     messageText: message,
   };
 
   let savedToDatabase = false;
+  let mergedIntoExisting = false;
+  let canonicalOrderId = incomingOrderId;
+
   try {
-    await persistOrder(orderPayload);
+    const saveResult = await persistOrder(orderPayload);
     savedToDatabase = true;
+    mergedIntoExisting = Boolean(saveResult?.merged);
+    canonicalOrderId = String(saveResult?.order_id || incomingOrderId);
+
+    if (mergedIntoExisting && canonicalOrderId !== incomingOrderId) {
+      message = message.replace(
+        `Pedido: ${incomingOrderId}`,
+        `Pedido activo: ${canonicalOrderId}\nActualización: ${incomingOrderId}`,
+      );
+      message = `PEDIDO AGREGADO AL ANTERIOR\n\n${message}`;
+      orderPayload.messagePreview = message.slice(0, 300);
+      orderPayload.messageText = message;
+      orderPayload.canonicalOrderId = canonicalOrderId;
+      orderPayload.merged = true;
+    }
   } catch (error) {
     console.error("No se pudo guardar el pedido en Supabase:", error);
     alert(
       "El pedido se abrirá en WhatsApp, pero no pudo guardarse en la base de datos. " +
-      "Conservá el mensaje de WhatsApp como respaldo."
+        "Conservá el mensaje de WhatsApp como respaldo.",
     );
   }
 
@@ -285,5 +325,7 @@ export async function sendOrder(cart, products, deliveryProfile = null) {
     sentToWhatsApp: true,
     savedToDatabase,
     isDeliveryEnabled,
+    mergedIntoExisting,
+    canonicalOrderId,
   };
 }
