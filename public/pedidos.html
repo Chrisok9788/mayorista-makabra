@@ -15,7 +15,7 @@
           <p class="eyebrow">Mayorista Makabra</p>
           <h1>Panel de pedidos</h1>
           <p class="login-copy">
-            Acceso exclusivo para facturación y armado de pedidos.
+            Acceso exclusivo para facturación, armado y control de faltantes.
           </p>
 
           <form id="loginForm" class="login-form">
@@ -41,29 +41,49 @@
         <header class="panel-header">
           <div>
             <p class="eyebrow">Mayorista Makabra</p>
-            <h1>Pedidos activos</h1>
+            <h1 id="panelTitle">Pedidos activos</h1>
             <p id="lastUpdated" class="muted">Actualizando…</p>
           </div>
           <div class="header-actions">
-            <button id="refreshButton" class="icon-button" type="button" aria-label="Actualizar pedidos">
+            <button id="refreshButton" class="icon-button" type="button" aria-label="Actualizar panel">
               Actualizar
             </button>
             <button id="logoutButton" class="secondary-button" type="button">Salir</button>
           </div>
         </header>
 
-        <section id="summary" class="summary-grid" aria-label="Resumen de pedidos"></section>
-
-        <nav id="filters" class="filter-row" aria-label="Filtros de pedidos">
-          <button type="button" class="filter-button active" data-filter="all">Todos</button>
-          <button type="button" class="filter-button" data-filter="pending">Pendientes</button>
-          <button type="button" class="filter-button" data-filter="assembling">Armando</button>
-          <button type="button" class="filter-button" data-filter="ready">Armados</button>
+        <nav id="panelTabs" class="panel-tabs" aria-label="Secciones del panel">
+          <button type="button" class="panel-tab active" data-view="orders">
+            Pedidos <span id="ordersBadge" class="tab-badge">0</span>
+          </button>
+          <button type="button" class="panel-tab" data-view="missing">
+            Artículos faltantes <span id="missingBadge" class="tab-badge warning">0</span>
+          </button>
         </nav>
 
         <p id="panelError" class="error-message panel-error" role="alert" hidden></p>
 
-        <section id="ordersList" class="orders-list" aria-live="polite"></section>
+        <section id="ordersView" class="content-view">
+          <section id="summary" class="summary-grid" aria-label="Resumen de pedidos"></section>
+
+          <nav id="filters" class="filter-row" aria-label="Filtros de pedidos">
+            <button type="button" class="filter-button active" data-filter="all">Todos</button>
+            <button type="button" class="filter-button" data-filter="pending">Pendientes</button>
+            <button type="button" class="filter-button" data-filter="assembling">Armando</button>
+            <button type="button" class="filter-button" data-filter="ready">Armados</button>
+          </nav>
+
+          <section id="ordersList" class="orders-list" aria-live="polite"></section>
+        </section>
+
+        <section id="missingView" class="content-view" hidden>
+          <section id="missingSummary" class="summary-grid" aria-label="Resumen de faltantes"></section>
+          <div class="missing-help">
+            Esta lista no desaparece cuando el pedido cumple 24 horas. Los artículos quedan aquí
+            hasta que se marquen como recibidos o repuestos.
+          </div>
+          <section id="missingList" class="missing-list" aria-live="polite"></section>
+        </section>
       </section>
     </main>
 
