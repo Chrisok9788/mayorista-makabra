@@ -1,4 +1,3 @@
-const desktopMedia = window.matchMedia("(min-width: 761px)");
 const cartContainer = document.getElementById("cart-container");
 const PLACEHOLDER = "/placeholder.png";
 
@@ -61,7 +60,7 @@ async function loadCatalog() {
           .filter(([id]) => Boolean(id)),
       );
     } catch (error) {
-      console.warn("[cart-desktop] No se pudieron cargar miniaturas:", error);
+      console.warn("[cart-thumbnails] No se pudieron cargar miniaturas:", error);
     }
 
     return productById;
@@ -102,7 +101,7 @@ function addThumbnail(item, product) {
 
 async function enhanceCart() {
   enhanceScheduled = false;
-  if (!desktopMedia.matches || !cartContainer) return;
+  if (!cartContainer) return;
 
   const catalog = await loadCatalog();
   cartContainer.querySelectorAll(".cart-item").forEach((item) => {
@@ -126,10 +125,7 @@ if (cartContainer) {
   });
 }
 
-desktopMedia.addEventListener?.("change", (event) => {
-  if (event.matches) scheduleEnhancement();
-});
-
 document.getElementById("cart-open-btn")?.addEventListener("click", scheduleEnhancement);
 window.addEventListener("pageshow", scheduleEnhancement);
+window.addEventListener("resize", scheduleEnhancement);
 scheduleEnhancement();
