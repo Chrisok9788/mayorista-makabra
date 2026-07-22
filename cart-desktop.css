@@ -1,10 +1,93 @@
-/* Mejora del carrito para pantallas de escritorio.
-   En celular se conserva el diseño compacto existente. */
+/* Miniaturas y distribución del carrito según el tamaño de pantalla. */
 
 .cart-item-thumb-wrap {
-  display: none;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(11, 18, 32, 0.1);
+  border-radius: 10px;
+  background: #fff;
+  flex: 0 0 auto;
 }
 
+.cart-item-thumb {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  padding: 3px;
+  background: #fff;
+}
+
+/* Celular y tablet vertical: miniatura compacta sin apretar los controles. */
+@media (max-width: 760px) {
+  .cart-modal-content .cart-item {
+    grid-template-columns: 48px minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    column-gap: 10px;
+    row-gap: 7px;
+    align-items: center;
+    padding: 10px;
+  }
+
+  .cart-item-thumb-wrap {
+    width: 48px;
+    height: 48px;
+    grid-column: 1;
+    grid-row: 1 / 3;
+  }
+
+  .cart-modal-content .cart-item > div:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .cart-modal-content .cart-item-name {
+    font-size: 13px;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .cart-modal-content .cart-item-note {
+    margin-top: 4px;
+    padding: 4px 6px;
+    font-size: 10px;
+  }
+
+  .cart-modal-content .cart-item-calc {
+    position: static;
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+    padding: 4px 6px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .cart-modal-content .cart-item-controls {
+    grid-column: 1 / 3;
+    grid-row: 3;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 42px minmax(54px, 1fr) 42px 42px;
+    gap: 7px;
+  }
+
+  .cart-modal-content .cart-item-controls input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .cart-modal-content .cart-item-controls button {
+    width: 42px;
+    min-width: 42px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Escritorio: panel ancho y filas en columnas. */
 @media (min-width: 761px) {
   .cart-modal-panel {
     width: min(780px, 78vw);
@@ -36,21 +119,11 @@
   .cart-item-thumb-wrap {
     width: 68px;
     height: 68px;
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-    border: 1px solid rgba(11, 18, 32, 0.1);
     border-radius: 12px;
-    background: #fff;
   }
 
   .cart-item-thumb {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: contain;
     padding: 4px;
-    background: #fff;
   }
 
   .cart-modal-content .cart-item > div:nth-child(2) {
