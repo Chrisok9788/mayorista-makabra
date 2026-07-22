@@ -3,6 +3,9 @@
 :root {
   --makabra-red: #b50018;
   --makabra-red-dark: #8f0013;
+  --makabra-yellow: #ffd400;
+  --makabra-yellow-dark: #e0b800;
+  --makabra-yellow-text: #2b1d00;
 }
 
 /* Encabezado completo: logo, carrito, cliente e historial. */
@@ -206,6 +209,45 @@
 #catalogue .accordion-btn {
   color: #111827;
   background: rgba(17, 24, 39, 0.04);
+}
+
+/* Botones de compra: amarillo Makabra y texto visible “Comprar”.
+   Se limita a las tarjetas de producto para no modificar carrito, filtros ni WhatsApp. */
+.product-card .btn-primary {
+  position: relative;
+  background: var(--makabra-yellow) !important;
+  border-color: var(--makabra-yellow-dark) !important;
+  color: transparent !important;
+  text-shadow: none !important;
+  box-shadow: 0 6px 14px rgba(63, 42, 0, 0.22);
+}
+
+.product-card .btn-primary::after {
+  content: "Comprar";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--makabra-yellow-text);
+  font: inherit;
+  font-weight: 900;
+  pointer-events: none;
+}
+
+.product-card .btn-primary:hover {
+  background: #ffe04a !important;
+  border-color: #cda700 !important;
+  box-shadow: 0 8px 18px rgba(63, 42, 0, 0.28);
+}
+
+.product-card .btn-primary:active {
+  background: var(--makabra-yellow-dark) !important;
+}
+
+.product-card .btn-primary:focus-visible {
+  outline: 3px solid rgba(255, 212, 0, 0.45);
+  outline-offset: 2px;
 }
 
 /* Contacto sobre rojo con tarjeta blanca. */
