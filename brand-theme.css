@@ -1,10 +1,8 @@
-/* Identidad visual Makabra: rojo en encabezado, ofertas, filtros, catálogo y contacto; amarillo en destacados. */
+/* Identidad visual Makabra: rojo en encabezado, ofertas, filtros, destacados, catálogo y contacto. */
 
 :root {
   --makabra-red: #b50018;
   --makabra-red-dark: #8f0013;
-  --makabra-yellow: #ffd400;
-  --makabra-yellow-soft: #ffe45c;
 }
 
 /* Encabezado completo: logo, carrito, cliente e historial. */
@@ -54,8 +52,8 @@
 }
 
 .site-header .header-cart-button .cart-badge {
-  background: var(--makabra-yellow);
-  color: #3a2500;
+  background: #fff;
+  color: var(--makabra-red-dark);
 }
 
 /* Carrusel de ofertas sobre rojo. */
@@ -123,36 +121,54 @@
   color: #6b7280;
 }
 
-/* Destacados sobre amarillo. */
+/* Destacados también sobre rojo, conservando tarjetas blancas. */
 .featured-section {
-  background: linear-gradient(180deg, var(--makabra-yellow), var(--makabra-yellow-soft));
-  color: #211800;
+  background: linear-gradient(180deg, var(--makabra-red), var(--makabra-red-dark));
+  color: #fff;
 }
 
 .featured-section .section-title-row h2,
 .featured-section .featured-cat-title {
-  color: #211800;
+  color: #fff;
 }
 
 .featured-section .section-title-row .muted {
-  color: rgba(33, 24, 0, 0.72);
+  color: rgba(255, 255, 255, 0.82);
 }
 
 .featured-section .featured-cat {
   border-radius: 16px;
   padding: 10px;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+.featured-section .product-card,
+.featured-section .featured-card {
+  background: #fff;
+  color: #111827;
+}
+
+.featured-section .product-content h3,
+.featured-section .price {
+  color: #111827;
+}
+
+.featured-section .product-content .meta,
+.featured-section .price-note {
+  color: #5b6777;
 }
 
 .featured-section .featured-cat-btn {
-  background: var(--makabra-red);
-  color: #fff;
-  border-color: var(--makabra-red-dark);
+  background: #fff;
+  color: var(--makabra-red-dark);
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 5px 14px rgba(65, 0, 8, 0.2);
 }
 
 .featured-section .featured-cat-btn:hover {
-  background: var(--makabra-red-dark);
-  color: #fff;
+  background: #f3f4f6;
+  color: var(--makabra-red-dark);
 }
 
 /* Catálogo completo sobre rojo, conservando tarjetas blancas. */
