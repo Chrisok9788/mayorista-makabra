@@ -1,5 +1,3 @@
-// api/sync-status.js
-
 import { MOCK_ARTICLES } from "./mock-scanntech.js";
 import {
   buildPreviewSummary,
@@ -16,14 +14,9 @@ function sendJson(res, status, body) {
   res.end(JSON.stringify(body, null, 2));
 }
 
-async function loadLatestSync(baseUrl, secret) {
-  const endpoint = new URL(`${baseUrl.replace(/\/$/, "")}/rest/v1/sincronizaciones`);
-  endpoint.searchParams.set(
-    "select",
-    "id,origen,estado,started_at,finished_at,registros_procesados,registros_actualizados,registros_con_error,mensaje",
-  );
-  endpoint.searchParams.set("order", "started_at.desc");
-  endpoint.searchParams.set("limit", "1");
+async function supabaseGet(baseUrl, secret, table, params = {}) {
+  const endpoint = new URL(`${baseUrl.replace(/\/$/, "")}/rest/v1/${table}`);
+  Object.entries(params).forEach(([key, value]) => endpoint.searchParams.set(key, value));
 
   const response = await fetch(endpoint, {
     cache: "no-store",
@@ -36,11 +29,28 @@ async function loadLatestSync(baseUrl, secret) {
 
   const text = await response.text();
   if (!response.ok) {
-    throw new Error(`No se pudo leer el historial: Supabase ${response.status}: ${text.slice(0, 500)}`);
+    throw new Error(`Supabase ${response.status} en ${table}: ${text.slice(0, 500)}`);
   }
 
-  const rows = JSON.parse(text);
+  return JSON.parse(text || "[]");
+}
+
+async function loadLatestSync(baseUrl, secret) {
+  const rows = await supabaseGet(baseUrl, secret, "sincronizaciones", {
+    select:
+      "id,origen,estado,started_at,finished_at,registros_procesados,registros_actualizados,registros_con_error,mensaje",
+    order: "started_at.desc",
+    limit: "1",
+  });
   return Array.isArray(rows) && rows.length ? rows[0] : null;
+}
+
+async function loadActiveClients(baseUrl, secret) {
+  const rows = await supabaseGet(baseUrl, secret, "clientes", {
+    select: "codigo",
+    activo: "eq.true",
+  });
+  return Array.isArray(rows) ? rows.length : 0;
 }
 
 function formatLatestSync(row) {
@@ -73,6 +83,25 @@ function formatLatestSync(row) {
   };
 }
 
+function buildTaxonomy(products) {
+  const categories = new Set();
+  const subcategories = new Set();
+
+  products
+    .filter((product) => product?.activo !== false)
+    .forEach((product) => {
+      const category = String(product?.categoria || "Otros").trim() || "Otros";
+      const subcategory = String(product?.subcategoria || "Otros").trim() || "Otros";
+      categories.add(category);
+      subcategories.add(`${category}\u0000${subcategory}`);
+    });
+
+  return {
+    categorias: categories.size,
+    subcategorias: subcategories.size,
+  };
+}
+
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
@@ -93,42 +122,43 @@ export default async function handler(req, res) {
   const startedAt = Date.now();
 
   try {
-    const [products, latestSyncRow] = await Promise.all([
+    const [products, clients, latestSyncRow] = await Promise.all([
       loadSupabaseProducts(baseUrl, secret),
+      loadActiveClients(baseUrl, secret),
       loadLatestSync(baseUrl, secret),
     ]);
 
     const byId = new Map(products.map((product) => [String(product.id), product]));
-    const resultados = MOCK_ARTICLES.map((article) =>
+    const results = MOCK_ARTICLES.map((article) =>
       compareArticle(article, byId.get(String(article.codigo))),
     );
-    const resumen = buildPreviewSummary(resultados);
-    const ultimaSincronizacion = formatLatestSync(latestSyncRow);
+    const preview = buildPreviewSummary(results);
+    const latestSync = formatLatestSync(latestSyncRow);
+    const taxonomy = buildTaxonomy(products);
 
-    const hasSyncError = ultimaSincronizacion.estado === "error";
-    const estadoGeneral =
-      hasSyncError || resumen.errores_datos > 0 ? "advertencia" : "correcto";
+    const hasSyncError = latestSync.estado === "error";
+    const estadoGeneral = hasSyncError || preview.errores_datos > 0 ? "advertencia" : "correcto";
 
     return sendJson(res, 200, {
       centro: "sincronizacion_makabra",
-      version: 2,
-      modo: "solo_lectura",
-      escritura_habilitada: false,
+      version: 3,
+      modo: "operativo",
+      escritura_habilitada: true,
       estado_general: estadoGeneral,
       generadoEn: new Date().toISOString(),
       duracion_ms: Date.now() - startedAt,
-      ultima_sincronizacion_google_sheets: ultimaSincronizacion,
+      ultima_sincronizacion_google_sheets: latestSync,
       conexiones: {
         google_sheets: {
-          estado:
-            ultimaSincronizacion.estado === "completada"
-              ? "sincronizado"
-              : ultimaSincronizacion.estado,
-          ultima_ejecucion: ultimaSincronizacion.inicio || null,
+          estado: latestSync.estado === "completada" ? "sincronizado" : latestSync.estado,
+          ultima_ejecucion: latestSync.inicio || null,
         },
         supabase: {
           estado: "conectado",
           productos: products.length,
+          clientes: clients,
+          categorias: taxonomy.categorias,
+          subcategorias: taxonomy.subcategorias,
         },
         scanntech: {
           estado: "simulado",
@@ -136,28 +166,31 @@ export default async function handler(req, res) {
           articulos: MOCK_ARTICLES.length,
         },
         pagina_web: {
-          estado: "sin_modificaciones",
+          estado: "operativa",
           fuente_catalogo: "supabase",
         },
       },
       cambios_detectados: {
-        para_actualizar: resumen.para_actualizar,
-        productos_nuevos: resumen.productos_nuevos,
-        sin_cambios: resumen.sin_cambios,
-        errores_datos: resumen.errores_datos,
+        para_actualizar: preview.para_actualizar,
+        productos_nuevos: preview.productos_nuevos,
+        sin_cambios: preview.sin_cambios,
+        errores_datos: preview.errores_datos,
       },
       accesos: {
+        sincronizar_todo: "/api/sync-all",
+        sincronizar_productos: "/api/sync-supabase",
+        sincronizar_clientes: "/api/sync-clients-supabase",
         simulador: "/api/mock-scanntech",
         vista_previa: "/api/scanntech-preview",
         estado: "/api/sync-status",
       },
-      siguiente_etapa: {
-        nombre: "panel_visual",
-        descripcion:
-          "Crear una pantalla privada que muestre el estado, el historial y futuras acciones controladas.",
+      automatizacion: {
+        proveedor: "github_actions",
+        frecuencia_minutos: 5,
+        endpoint: "/api/sync-all",
       },
       aviso:
-        "Este centro muestra la sincronización real de Google Sheets y la comparación simulada de Scanntech. No ejecuta escrituras por sí mismo.",
+        "El catálogo y los clientes se sincronizan juntos. Las categorías y subcategorías se calculan desde los productos activos.",
     });
   } catch (error) {
     return sendJson(res, 500, {
