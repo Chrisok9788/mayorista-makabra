@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#b71920" />
+  <title>Panel de Productos | Mayorista Makabra</title>
+  <style>
+    :root {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #171717;
+      background: #f4f4f4;
+      --red: #b71920;
+      --red-dark: #8e1117;
+      --yellow: #f2c318;
+      --line: #dedede;
+      --muted: #6f6f6f;
+      --panel: #fff;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .topbar { position: sticky; top: 0; z-index: 20; background: #111; color: #fff; border-bottom: 4px solid var(--red); }
+    .topbar-inner { width: min(1500px, calc(100% - 24px)); margin: 0 auto; padding: 13px 0; display: flex; gap: 16px; align-items: center; justify-content: space-between; }
+    .brand strong { display: block; font-size: 1.08rem; }
+    .brand small { color: #bdbdbd; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .button { border: 1px solid #d2d2d2; border-radius: 10px; padding: 9px 12px; background: #fff; color: #151515; font-weight: 750; }
+    .button.primary { background: var(--yellow); border-color: #d2a800; }
+    .button.danger { background: var(--red); border-color: var(--red-dark); color: #fff; }
+    .button.dark { background: #242424; border-color: #454545; color: #fff; }
+    .button:disabled { opacity: .55; cursor: wait; }
+    .shell { width: min(1500px, calc(100% - 24px)); margin: 18px auto 50px; }
+    .status { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
+    .metric { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+    .metric b { display: block; font-size: 1.6rem; }
+    .metric span { color: var(--muted); font-size: .82rem; }
+    .source-banner { margin-bottom: 14px; border: 1px solid #ead983; background: #fff9d8; border-radius: 12px; padding: 11px 13px; display: flex; justify-content: space-between; gap: 14px; align-items: center; }
+    .source-banner strong { color: #6c5400; }
+    .filters { display: grid; grid-template-columns: minmax(220px, 2fr) minmax(180px, 1fr) auto; gap: 10px; margin-bottom: 10px; }
+    .input, .select, .textarea { width: 100%; border: 1px solid #cfcfcf; background: #fff; border-radius: 10px; padding: 10px 11px; color: #171717; }
+    .textarea { resize: vertical; min-height: 72px; }
+    .tabs { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 12px; }
+    .tab { border: 1px solid #d1d1d1; border-radius: 999px; padding: 8px 12px; background: #fff; font-weight: 750; }
+    .tab.active { background: #111; color: #fff; border-color: #111; }
+    .workspace { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(380px, .8fr); gap: 14px; align-items: start; }
+    .panel { background: #fff; border: 1px solid var(--line); border-radius: 15px; overflow: hidden; }
+    .panel-head { padding: 13px 14px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+    .panel-head h2 { margin: 0; font-size: 1rem; }
+    .count { color: var(--muted); font-size: .85rem; }
+    .table-wrap { overflow: auto; max-height: calc(100vh - 300px); }
+    table { width: 100%; border-collapse: collapse; min-width: 840px; }
+    th, td { padding: 10px 11px; border-bottom: 1px solid #ececec; text-align: left; vertical-align: middle; font-size: .88rem; }
+    th { position: sticky; top: 0; background: #f8f8f8; z-index: 1; color: #555; font-size: .76rem; text-transform: uppercase; letter-spacing: .04em; }
+    tbody tr { cursor: pointer; }
+    tbody tr:hover, tbody tr.selected { background: #fff8db; }
+    .thumb { width: 48px; height: 48px; object-fit: contain; background: #f5f5f5; border: 1px solid #e5e5e5; border-radius: 8px; }
+    .missing { width: 48px; height: 48px; display: grid; place-items: center; background: #f3f3f3; color: #999; border: 1px dashed #cfcfcf; border-radius: 8px; font-size: .7rem; text-align: center; }
+    .badge { display: inline-block; border-radius: 999px; padding: 4px 7px; font-size: .72rem; font-weight: 800; }
+    .badge.on { background: #def6e5; color: #17692e; }
+    .badge.off { background: #eee; color: #6d6d6d; }
+    .badge.offer { background: #fff1b9; color: #6a5000; }
+    .editor { padding: 14px; }
+    .editor h2 { margin: 0 0 12px; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .field.full { grid-column: 1 / -1; }
+    label { display: block; font-size: .76rem; color: #5e5e5e; font-weight: 800; margin-bottom: 5px; }
+    .checks { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .check { border: 1px solid #dedede; border-radius: 10px; padding: 10px; background: #fafafa; display: flex; gap: 8px; align-items: center; font-size: .85rem; }
+    .image-box { grid-column: 1 / -1; display: grid; grid-template-columns: 120px 1fr; gap: 12px; align-items: center; border: 1px solid #e2e2e2; border-radius: 12px; padding: 10px; }
+    .image-preview { width: 120px; height: 120px; object-fit: contain; background: #f5f5f5; border-radius: 9px; }
+    .editor-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 13px; }
+    .taxonomy { margin-top: 14px; padding: 14px; }
+    .taxonomy h3 { margin: 0 0 10px; }
+    .taxonomy-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+    .taxonomy .full { grid-column: 1 / -1; }
+    .note { color: var(--muted); font-size: .82rem; line-height: 1.45; }
+    .toast { position: fixed; right: 14px; bottom: 14px; z-index: 50; max-width: min(440px, calc(100% - 28px)); background: #111; color: #fff; border-radius: 12px; padding: 12px 14px; box-shadow: 0 16px 40px rgba(0,0,0,.22); display: none; }
+    .toast.show { display: block; }
+    .toast.error { background: #8e1117; }
+    .empty { padding: 40px 20px; text-align: center; color: #777; }
+    @media (max-width: 1050px) { .workspace { grid-template-columns: 1fr; } .table-wrap { max-height: 480px; } }
+    @media (max-width: 700px) { .status { grid-template-columns: repeat(2, minmax(0, 1fr)); } .filters { grid-template-columns: 1fr 1fr; } .filters .button { grid-column: 1 / -1; } .form-grid { grid-template-columns: 1fr 1fr; } .source-banner { align-items: flex-start; flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><strong>Mayorista Makabra · Administración</strong><small>Panel de productos conectado directamente a Supabase</small></div>
+      <div class="actions">
+        <button class="button dark" id="reloadBtn">Actualizar</button>
+        <button class="button dark" id="exportBtn">Exportar CSV</button>
+        <a class="button dark" href="https://docs.google.com/spreadsheets/d/1OkOFAhM92bU3vS8hWyBt4VvoA2PJNOpeneYXDREWCV4/edit" target="_blank" rel="noopener">Google Sheets</a>
+        <a class="button dark" href="/admin/sync.html">Sincronización</a>
+        <button class="button primary" id="newBtn">+ Nuevo producto</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="source-banner">
+      <div><strong>Modo de prueba seguro:</strong> el panel escribe en Supabase. Google Sheets sigue disponible como respaldo de lectura si Supabase falla.</div>
+      <span id="connectionText">Conectando…</span>
+    </section>
+
+    <section class="status">
+      <article class="metric"><b id="mTotal">—</b><span>Productos totales</span></article>
+      <article class="metric"><b id="mActive">—</b><span>Activos</span></article>
+      <article class="metric"><b id="mNoImage">—</b><span>Sin imagen</span></article>
+      <article class="metric"><b id="mCarousel">—</b><span>En carrusel</span></article>
+    </section>
+
+    <section class="filters">
+      <input class="input" id="searchInput" placeholder="Buscar nombre, código, marca, ID…" autocomplete="off" />
+      <select class="select" id="categoryFilter"><option value="">Todas las categorías</option></select>
+      <button class="button" id="clearFilters">Limpiar filtros</button>
+    </section>
+
+    <nav class="tabs" aria-label="Filtros rápidos">
+      <button class="tab active" data-tab="all">Todos</button>
+      <button class="tab" data-tab="carousel">Carrusel</button>
+      <button class="tab" data-tab="noimage">Sin imagen</button>
+      <button class="tab" data-tab="inactive">Inactivos</button>
+    </nav>
+
+    <section class="workspace">
+      <article class="panel">
+        <div class="panel-head"><h2>Productos</h2><span class="count" id="resultCount">0 resultados</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Imagen</th><th>Producto</th><th>Categoría</th><th>Precio</th><th>Barcode</th><th>Carrusel</th><th>Estado</th></tr></thead>
+            <tbody id="productRows"></tbody>
+          </table>
+          <div class="empty" id="emptyState" hidden>No hay productos para este filtro.</div>
+        </div>
+      </article>
+
+      <div>
+        <article class="panel editor">
+          <h2 id="editorTitle">Seleccioná un producto</h2>
+          <form id="productForm">
+            <div class="form-grid">
+              <div class="field full"><label>ID interno</label><input class="input" id="fId" disabled placeholder="Se genera automáticamente al crear" /></div>
+              <div class="field full"><label>Nombre</label><input class="input" id="fNombre" required /></div>
+              <div class="field"><label>Categoría</label><input class="input" id="fCategoria" list="categoryList" /></div>
+              <div class="field"><label>Subcategoría</label><input class="input" id="fSubcategoria" list="subcategoryList" /></div>
+              <datalist id="categoryList"></datalist><datalist id="subcategoryList"></datalist>
+              <div class="field"><label>Precio base</label><input class="input" id="fPrecio" type="number" min="0" step="0.01" /></div>
+              <div class="field"><label>Prioridad carrusel</label><input class="input" id="fPrioridad" type="number" min="0" step="1" /></div>
+              <div class="field"><label>Marca</label><input class="input" id="fMarca" /></div>
+              <div class="field"><label>Presentación</label><input class="input" id="fPresentacion" /></div>
+              <div class="field"><label>Código de barras</label><input class="input" id="fBarcode" inputmode="numeric" /></div>
+              <div class="field"><label>ID Scanntech</label><input class="input" id="fScanntech" /></div>
+              <div class="field"><label>Grupo promo</label><input class="input" id="fPromoGroup" /></div>
+              <div class="field"><label>Cantidad mínima promo</label><input class="input" id="fPromoMin" type="number" min="0" step="1" /></div>
+              <div class="field"><label>Precio promo</label><input class="input" id="fPromoPrecio" type="number" min="0" step="0.01" /></div>
+              <div class="field"><label>Texto promo</label><input class="input" id="fPromoTexto" /></div>
+              <div class="field full"><label>Etiquetas</label><input class="input" id="fTags" placeholder="separadas por coma" /></div>
+              <div class="checks">
+                <label class="check"><input id="fActivo" type="checkbox" /> Activo</label>
+                <label class="check"><input id="fCarrusel" type="checkbox" /> Mostrar en carrusel</label>
+                <label class="check"><input id="fDestacado" type="checkbox" /> Destacado</label>
+              </div>
+              <div class="image-box">
+                <img class="image-preview" id="imagePreview" alt="Vista previa" src="/placeholder.svg" />
+                <div>
+                  <label>Imagen URL</label><input class="input" id="fImagen" placeholder="https://…" />
+                  <div style="height:8px"></div>
+                  <label>O subir desde el dispositivo</label><input id="imageFile" type="file" accept="image/jpeg,image/png,image/webp" />
+                  <p class="note">JPG, PNG o WebP. Máximo 2,5 MB. Se guarda en Supabase Storage.</p>
+                </div>
+              </div>
+            </div>
+            <div class="editor-actions">
+              <button class="button primary" id="saveBtn" type="submit">Guardar</button>
+              <button class="button" id="uploadBtn" type="button">Subir imagen</button>
+              <button class="button danger" id="deactivateBtn" type="button">Desactivar</button>
+            </div>
+          </form>
+        </article>
+
+        <article class="panel taxonomy">
+          <h3>Administrar categorías</h3>
+          <p class="note">Renombra una categoría completa o una subcategoría dentro de ella. Se actualizan todos los productos afectados.</p>
+          <div class="taxonomy-grid">
+            <div><label>Categoría actual</label><input class="input" id="taxOldCategory" list="categoryList" /></div>
+            <div><label>Nueva categoría</label><input class="input" id="taxNewCategory" /></div>
+            <div><label>Subcategoría actual (opcional)</label><input class="input" id="taxOldSubcategory" /></div>
+            <div><label>Nueva subcategoría</label><input class="input" id="taxNewSubcategory" /></div>
+            <button class="button full" id="renameTaxonomyBtn" type="button">Aplicar cambio de categoría</button>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module">
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1OkOFAhM92bU3vS8hWyBt4VvoA2PJNOpeneYXDREWCV4/edit';
+    const state = { products: [], taxonomy: [], selectedId: null, tab: 'all', pin: sessionStorage.getItem('makabra_admin_pin') || '' };
+    const $ = (selector) => document.querySelector(selector);
+    const els = {
+      rows: $('#productRows'), empty: $('#emptyState'), count: $('#resultCount'), search: $('#searchInput'), category: $('#categoryFilter'),
+      title: $('#editorTitle'), form: $('#productForm'), toast: $('#toast'), connection: $('#connectionText'),
+      id: $('#fId'), nombre: $('#fNombre'), categoria: $('#fCategoria'), subcategoria: $('#fSubcategoria'), precio: $('#fPrecio'), prioridad: $('#fPrioridad'),
+      marca: $('#fMarca'), presentacion: $('#fPresentacion'), barcode: $('#fBarcode'), scanntech: $('#fScanntech'), promoGroup: $('#fPromoGroup'),
+      promoMin: $('#fPromoMin'), promoPrecio: $('#fPromoPrecio'), promoTexto: $('#fPromoTexto'), tags: $('#fTags'), activo: $('#fActivo'), carrusel: $('#fCarrusel'),
+      destacado: $('#fDestacado'), imagen: $('#fImagen'), imagePreview: $('#imagePreview'), imageFile: $('#imageFile'), deactivate: $('#deactivateBtn'),
+      catList: $('#categoryList'), subcatList: $('#subcategoryList'),
+    };
+
+    function escapeHtml(value) { return String(value ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;'); }
+    function money(value) { return new Intl.NumberFormat('es-UY', { style:'currency', currency:'UYU', maximumFractionDigits: 0 }).format(Number(value) || 0); }
+    function toast(message, error = false) { els.toast.textContent = message; els.toast.className = `toast show${error ? ' error' : ''}`; clearTimeout(toast.timer); toast.timer = setTimeout(() => els.toast.className = 'toast', 3600); }
+    async function ensurePin(force = false) {
+      if (!state.pin || force) {
+        const entered = window.prompt('Ingresá el PIN del panel de administración:') || '';
+        state.pin = entered.trim();
+        if (state.pin) sessionStorage.setItem('makabra_admin_pin', state.pin);
+      }
+      return state.pin;
+    }
+    async function api(path, options = {}) {
+      await ensurePin();
+      if (!state.pin) throw new Error('Se necesita PIN para continuar');
+      const response = await fetch(path, {
+        ...options,
+        headers: { 'x-admin-pin': state.pin, Accept: 'application/json', ...(options.body ? { 'Content-Type':'application/json' } : {}), ...(options.headers || {}) },
+        cache: 'no-store',
+      });
+      const data = await response.json().catch(() => ({}));
+      if (response.status === 401) {
+        sessionStorage.removeItem('makabra_admin_pin'); state.pin = '';
+        await ensurePin(true);
+        if (state.pin) return api(path, options);
+      }
+      if (!response.ok) throw new Error(data.message || data.error || `Error ${response.status}`);
+      return data;
+    }
+    function refreshMetrics(stats) {
+      $('#mTotal').textContent = stats.total ?? 0; $('#mActive').textContent = stats.active ?? 0; $('#mNoImage').textContent = stats.without_image ?? 0; $('#mCarousel').textContent = stats.carousel ?? 0;
+    }
+    function rebuildTaxonomy() {
+      els.category.innerHTML = '<option value="">Todas las categorías</option>' + state.taxonomy.map(x => `<option value="${escapeHtml(x.categoria)}">${escapeHtml(x.categoria)}</option>`).join('');
+      els.catList.innerHTML = state.taxonomy.map(x => `<option value="${escapeHtml(x.categoria)}"></option>`).join('');
+      updateSubcategoryList();
+    }
+    function updateSubcategoryList() {
+      const current = state.taxonomy.find(x => x.categoria === els.categoria.value);
+      const subcats = current?.subcategorias || [...new Set(state.products.map(p => p.subcategoria).filter(Boolean))].sort();
+      els.subcatList.innerHTML = subcats.map(x => `<option value="${escapeHtml(x)}"></option>`).join('');
+    }
+    function filteredProducts() {
+      const q = els.search.value.trim().toLowerCase(); const category = els.category.value;
+      return state.products.filter(p => {
+        if (state.tab === 'carousel' && !p.oferta_carrusel) return false;
+        if (state.tab === 'noimage' && p.imagen_url) return false;
+        if (state.tab === 'inactive' && p.activo) return false;
+        if (state.tab !== 'inactive' && !p.activo && state.tab !== 'all') return false;
+        if (category && p.categoria !== category) return false;
+        if (q) {
+          const haystack = [p.id,p.nombre,p.categoria,p.subcategoria,p.marca,p.presentacion,p.barcode,p.scanntech_id].join(' ').toLowerCase();
+          if (!haystack.includes(q)) return false;
+        }
+        return true;
+      }).sort((a,b) => state.tab === 'carousel' ? (Number(b.prioridad_oferta||0)-Number(a.prioridad_oferta||0)) || String(a.nombre).localeCompare(String(b.nombre),'es') : String(a.nombre).localeCompare(String(b.nombre),'es'));
+    }
+    function renderTable() {
+      const products = filteredProducts(); els.count.textContent = `${products.length} resultados`; els.empty.hidden = products.length !== 0;
+      els.rows.innerHTML = products.map(p => `
+        <tr data-id="${escapeHtml(p.id)}" class="${p.id === state.selectedId ? 'selected' : ''}">
+          <td>${p.imagen_url ? `<img class="thumb" loading="lazy" src="${escapeHtml(p.imagen_url)}" alt="">` : '<div class="missing">Sin<br>imagen</div>'}</td>
+          <td><strong>${escapeHtml(p.nombre)}</strong><br><small>${escapeHtml(p.presentacion || p.marca || '')}</small></td>
+          <td>${escapeHtml(p.categoria || 'Otros')}<br><small>${escapeHtml(p.subcategoria || 'Otros')}</small></td>
+          <td><strong>${escapeHtml(money(p.precio_base))}</strong>${p.promo_precio ? `<br><small>Promo ${escapeHtml(money(p.promo_precio))}</small>` : ''}</td>
+          <td>${escapeHtml(p.barcode || '—')}</td>
+          <td>${p.oferta_carrusel ? `<span class="badge offer">Sí · ${escapeHtml(p.prioridad_oferta || 0)}</span>` : '<span class="badge off">No</span>'}</td>
+          <td><span class="badge ${p.activo ? 'on' : 'off'}">${p.activo ? 'Activo' : 'Inactivo'}</span></td>
+        </tr>`).join('');
+      els.rows.querySelectorAll('tr[data-id]').forEach(row => row.addEventListener('click', () => selectProduct(row.dataset.id)));
+    }
+    function selectProduct(id) {
+      const p = state.products.find(x => x.id === id); if (!p) return; state.selectedId = id;
+      els.title.textContent = p.nombre; els.id.value = p.id || ''; els.nombre.value = p.nombre || ''; els.categoria.value = p.categoria || ''; els.subcategoria.value = p.subcategoria || '';
+      els.precio.value = p.precio_base ?? 0; els.prioridad.value = p.prioridad_oferta ?? 0; els.marca.value = p.marca || ''; els.presentacion.value = p.presentacion || '';
+      els.barcode.value = p.barcode || ''; els.scanntech.value = p.scanntech_id || ''; els.promoGroup.value = p.promo_group || ''; els.promoMin.value = p.promo_min_qty ?? '';
+      els.promoPrecio.value = p.promo_precio ?? ''; els.promoTexto.value = p.promo_texto || ''; els.tags.value = Array.isArray(p.tags) ? p.tags.join(', ') : (p.tags || '');
+      els.activo.checked = Boolean(p.activo); els.carrusel.checked = Boolean(p.oferta_carrusel); els.destacado.checked = Boolean(p.destacados); els.imagen.value = p.imagen_url || '';
+      els.imagePreview.src = p.imagen_url || '/placeholder.svg'; els.deactivate.disabled = !p.activo; updateSubcategoryList(); renderTable();
+    }
+    function newProduct() {
+      state.selectedId = null; els.form.reset(); els.title.textContent = 'Nuevo producto'; els.id.value = ''; els.activo.checked = true; els.prioridad.value = 0; els.imagePreview.src = '/placeholder.svg'; els.deactivate.disabled = true; renderTable();
+    }
+    function payload() {
+      return {
+        nombre: els.nombre.value, categoria: els.categoria.value || 'Otros', subcategoria: els.subcategoria.value || 'Otros', precio_base: Number(els.precio.value || 0),
+        oferta_carrusel: els.carrusel.checked, destacados: els.destacado.checked, promo_group: els.promoGroup.value || null,
+        promo_min_qty: els.promoMin.value === '' ? null : Number(els.promoMin.value), promo_precio: els.promoPrecio.value === '' ? null : Number(els.promoPrecio.value),
+        promo_texto: els.promoTexto.value || null, imagen_url: els.imagen.value || null, marca: els.marca.value || null, presentacion: els.presentacion.value || null,
+        tags: els.tags.value || null, activo: els.activo.checked, prioridad_oferta: Number(els.prioridad.value || 0), scanntech_id: els.scanntech.value || null, barcode: els.barcode.value || null,
+      };
+    }
+    async function saveProduct(event) {
+      event.preventDefault(); const body = payload(); $('#saveBtn').disabled = true;
+      try {
+        const result = state.selectedId
+          ? await api('/api/admin-products', { method:'PATCH', body: JSON.stringify({ id: state.selectedId, changes: body }) })
+          : await api('/api/admin-products', { method:'POST', body: JSON.stringify(body) });
+        toast(state.selectedId ? 'Producto actualizado' : 'Producto creado'); await loadData(); selectProduct(result.product.id);
+      } catch (error) { toast(error.message || error, true); } finally { $('#saveBtn').disabled = false; }
+    }
+    async function deactivate() {
+      if (!state.selectedId || !confirm('¿Desactivar este producto? No se elimina: solo deja de mostrarse en el catálogo.')) return;
+      try { await api('/api/admin-products', { method:'DELETE', body: JSON.stringify({ id: state.selectedId }) }); toast('Producto desactivado'); await loadData(); selectProduct(state.selectedId); }
+      catch (error) { toast(error.message || error, true); }
+    }
+    async function uploadImage() {
+      if (!state.selectedId) return toast('Primero guardá o seleccioná un producto.', true);
+      const file = els.imageFile.files?.[0]; if (!file) return toast('Seleccioná una imagen.', true);
+      if (file.size > 2500000) return toast('La imagen supera 2,5 MB.', true);
+      $('#uploadBtn').disabled = true;
+      try {
+        const dataUrl = await new Promise((resolve,reject) => { const r = new FileReader(); r.onload = () => resolve(r.result); r.onerror = reject; r.readAsDataURL(file); });
+        const result = await api('/api/admin-product-image', { method:'POST', body: JSON.stringify({ product_id: state.selectedId, mime_type: file.type, data_url: dataUrl }) });
+        els.imagen.value = result.image_url; els.imagePreview.src = result.image_url; toast('Imagen subida y asignada'); await loadData(); selectProduct(state.selectedId);
+      } catch (error) { toast(error.message || error, true); } finally { $('#uploadBtn').disabled = false; }
+    }
+    async function renameTaxonomy() {
+      const old_category = $('#taxOldCategory').value.trim(); const new_category = $('#taxNewCategory').value.trim();
+      const old_subcategory = $('#taxOldSubcategory').value.trim(); const new_subcategory = $('#taxNewSubcategory').value.trim();
+      if (!old_category) return toast('Indicá la categoría actual.', true);
+      if (!new_category && !old_subcategory) return toast('Indicá una nueva categoría o una subcategoría.', true);
+      if (!confirm('Este cambio se aplicará a todos los productos coincidentes. ¿Continuar?')) return;
+      try {
+        const result = await api('/api/admin-products', { method:'POST', body: JSON.stringify({ action:'rename_taxonomy', old_category, new_category, old_subcategory, new_subcategory }) });
+        toast(`Categoría actualizada en ${result.updated} productos`); await loadData();
+      } catch (error) { toast(error.message || error, true); }
+    }
+    function exportCsv() {
+      const cols = ['id','nombre','categoria','subcategoria','precio_base','oferta_carrusel','destacados','promo_group','promo_min_qty','promo_precio','promo_texto','imagen_url','marca','presentacion','tags','activo','prioridad_oferta','scanntech_id','barcode'];
+      const quote = v => `"${String(v ?? '').replaceAll('"','""')}"`;
+      const csv = '\uFEFF' + [cols.join(','), ...state.products.map(p => cols.map(c => quote(Array.isArray(p[c]) ? p[c].join(',') : p[c])).join(','))].join('\n');
+      const blob = new Blob([csv], { type:'text/csv;charset=utf-8' }); const url = URL.createObjectURL(blob); const a = document.createElement('a');
+      a.href = url; a.download = `Makabra_Backup_${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
+    }
+    async function loadData() {
+      $('#reloadBtn').disabled = true; els.connection.textContent = 'Cargando desde Supabase…';
+      try {
+        const data = await api('/api/admin-products'); state.products = data.products || []; state.taxonomy = data.taxonomy || []; refreshMetrics(data.stats || {}); rebuildTaxonomy(); renderTable();
+        els.connection.textContent = `Supabase operativo · Google Sheets respaldo: ${data.google_sheets_fallback ? 'activo' : 'no disponible'}`;
+        if (state.selectedId && state.products.some(p => p.id === state.selectedId)) selectProduct(state.selectedId);
+      } catch (error) { els.connection.textContent = 'No se pudo conectar'; toast(error.message || error, true); }
+      finally { $('#reloadBtn').disabled = false; }
+    }
+
+    document.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', () => { state.tab = btn.dataset.tab; document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x === btn)); renderTable(); }));
+    els.search.addEventListener('input', renderTable); els.category.addEventListener('change', renderTable); els.categoria.addEventListener('input', updateSubcategoryList);
+    els.imagen.addEventListener('input', () => { els.imagePreview.src = els.imagen.value.trim() || '/placeholder.svg'; });
+    $('#clearFilters').addEventListener('click', () => { els.search.value = ''; els.category.value = ''; state.tab = 'all'; document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x.dataset.tab === 'all')); renderTable(); });
+    $('#reloadBtn').addEventListener('click', loadData); $('#newBtn').addEventListener('click', newProduct); $('#exportBtn').addEventListener('click', exportCsv);
+    els.form.addEventListener('submit', saveProduct); els.deactivate.addEventListener('click', deactivate); $('#uploadBtn').addEventListener('click', uploadImage); $('#renameTaxonomyBtn').addEventListener('click', renameTaxonomy);
+    loadData();
+  </script>
+</body>
+</html>
