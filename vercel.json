@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/admin/productos",
+      "destination": "/admin/productos.html"
+    },
+    {
       "source": "/api/orders-panel",
       "destination": "/api/order-history"
     },
