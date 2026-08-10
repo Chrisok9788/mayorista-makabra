@@ -8,6 +8,7 @@ const CSV_URL =
 function sendJson(res, status, body) {
   res.statusCode = status;
   res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.setHeader("Cache-Control", "no-store");
   res.end(JSON.stringify(body));
 }
 
@@ -32,6 +33,12 @@ function toNumber(value) {
     .replace(/,/g, ".");
   const number = Number(normalized);
   return Number.isFinite(number) ? number : 0;
+}
+
+function sheetsProductWriteEnabled() {
+  return ["true", "1", "yes", "si", "sí"].includes(
+    toStr(process.env.GOOGLE_SHEETS_PRODUCT_WRITE_ENABLED).toLowerCase(),
+  );
 }
 
 function parseCSV(text) {
@@ -150,6 +157,20 @@ export default async function handler(req, res) {
   }
   if (String(receivedToken) !== String(expectedToken)) {
     return sendJson(res, 401, { error: "Token de sincronización incorrecto" });
+  }
+
+  // Durante la migración al panel, Google Sheets se conserva como respaldo de lectura,
+  // pero no puede sobrescribir cambios hechos directamente en Supabase. Para volver
+  // temporalmente al comportamiento anterior, configurar GOOGLE_SHEETS_PRODUCT_WRITE_ENABLED=true.
+  if (!sheetsProductWriteEnabled()) {
+    return sendJson(res, 200, {
+      ok: true,
+      skipped: true,
+      source: "google_sheets",
+      destination: "supabase",
+      processed: 0,
+      message: "Sincronización de productos Google Sheets → Supabase pausada. El panel administra Supabase y Google Sheets continúa disponible como respaldo.",
+    });
   }
 
   const startedAt = new Date().toISOString();
