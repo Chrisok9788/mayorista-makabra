@@ -150,6 +150,104 @@ async function ensureImageBucket(bucket) {
   }
 }
 
+function githubImagesConfig() {
+  const token = toStr(process.env.GITHUB_IMAGES_TOKEN);
+  const owner = toStr(process.env.GITHUB_IMAGES_OWNER) || "Chrisok9788";
+  const repo = toStr(process.env.GITHUB_IMAGES_REPO) || "makabra-images";
+  const branch = toStr(process.env.GITHUB_IMAGES_BRANCH) || "main";
+  return { token, owner, repo, branch };
+}
+
+async function githubRequest(path, options = {}) {
+  const { token } = githubImagesConfig();
+  if (!token) {
+    const error = new Error("Falta configurar GITHUB_IMAGES_TOKEN en Vercel");
+    error.statusCode = 503;
+    error.code = "GITHUB_IMAGES_TOKEN_NOT_CONFIGURED";
+    throw error;
+  }
+  const response = await fetch(`https://api.github.com${path}`, {
+    ...options,
+    headers: {
+      Accept: "application/vnd.github+json",
+      Authorization: `Bearer ${token}`,
+      "X-GitHub-Api-Version": "2022-11-28",
+      "User-Agent": "mayorista-makabra-admin",
+      ...(options.body ? { "Content-Type": "application/json" } : {}),
+      ...(options.headers || {}),
+    },
+    cache: "no-store",
+  });
+  const text = await response.text();
+  let data = null;
+  if (text) {
+    try { data = JSON.parse(text); } catch { data = text; }
+  }
+  return { response, data };
+}
+
+function encodeGithubPath(path) {
+  return path.split("/").map(encodeURIComponent).join("/");
+}
+
+async function githubContentMeta(path) {
+  const { owner, repo, branch } = githubImagesConfig();
+  const encoded = encodeGithubPath(path);
+  const { response, data } = await githubRequest(`/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${encoded}?ref=${encodeURIComponent(branch)}`);
+  if (response.status === 404) return null;
+  if (!response.ok) {
+    const error = new Error(`GitHub respondió ${response.status}`);
+    error.statusCode = response.status >= 400 && response.status < 500 ? response.status : 502;
+    error.detail = typeof data === "string" ? data.slice(0, 500) : JSON.stringify(data).slice(0, 500);
+    throw error;
+  }
+  return data;
+}
+
+async function githubPutImage(path, base64, message) {
+  const { owner, repo, branch } = githubImagesConfig();
+  const existing = await githubContentMeta(path);
+  const encoded = encodeGithubPath(path);
+  const body = { message, content: base64, branch };
+  if (existing?.sha) body.sha = existing.sha;
+  const { response, data } = await githubRequest(`/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${encoded}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+  if (!response.ok) {
+    const error = new Error(`GitHub rechazó la imagen (${response.status})`);
+    error.statusCode = response.status >= 400 && response.status < 500 ? response.status : 502;
+    error.detail = typeof data === "string" ? data.slice(0, 500) : JSON.stringify(data).slice(0, 500);
+    throw error;
+  }
+  return data;
+}
+
+async function githubDeleteImage(path, message) {
+  const { owner, repo, branch } = githubImagesConfig();
+  const existing = await githubContentMeta(path);
+  if (!existing?.sha) return false;
+  const encoded = encodeGithubPath(path);
+  const { response, data } = await githubRequest(`/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${encoded}`, {
+    method: "DELETE",
+    body: JSON.stringify({ message, sha: existing.sha, branch }),
+  });
+  if (!response.ok && response.status !== 404) {
+    const error = new Error(`GitHub no pudo eliminar la imagen anterior (${response.status})`);
+    error.statusCode = 502;
+    error.detail = typeof data === "string" ? data.slice(0, 500) : JSON.stringify(data).slice(0, 500);
+    throw error;
+  }
+  return response.ok;
+}
+
+function githubPathFromRawUrl(url) {
+  const { owner, repo, branch } = githubImagesConfig();
+  const prefix = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/`;
+  if (!toStr(url).startsWith(prefix)) return null;
+  return decodeURIComponent(toStr(url).slice(prefix.length));
+}
+
 async function loadAllProducts() {
   const products = [];
   let offset = 0;
@@ -268,6 +366,7 @@ async function handleList(res) {
     ok: true,
     source: "supabase",
     google_sheets_fallback: true,
+    image_storage: toStr(process.env.GITHUB_IMAGES_TOKEN) ? "github" : "supabase-fallback",
     products,
     stats: {
       total: products.length,
@@ -353,22 +452,7 @@ async function handleTaxonomy(req, res) {
   return sendJson(res, 200, { ok: true, updated: Array.isArray(rows) ? rows.length : 0 });
 }
 
-async function handleImageUpload(req, res) {
-  const productId = toStr(req.body?.product_id);
-  const mimeType = toStr(req.body?.mime_type).toLowerCase();
-  const dataUrl = toStr(req.body?.data_url);
-  const extension = IMAGE_MIME_TO_EXTENSION.get(mimeType);
-
-  if (!productId || !extension || !dataUrl.startsWith(`data:${mimeType};base64,`)) {
-    return sendJson(res, 400, { ok: false, error: "INVALID_IMAGE" });
-  }
-
-  const base64 = dataUrl.slice(dataUrl.indexOf(",") + 1);
-  const bytes = Buffer.from(base64, "base64");
-  if (!bytes.length || bytes.length > MAX_IMAGE_BYTES) {
-    return sendJson(res, 413, { ok: false, error: "IMAGE_TOO_LARGE", max_bytes: MAX_IMAGE_BYTES });
-  }
-
+async function uploadToSupabaseFallback(productId, mimeType, extension, bytes) {
   const { baseUrl } = supabaseConfig();
   const bucket = toStr(process.env.SUPABASE_PRODUCT_IMAGES_BUCKET) || "product-images";
   await ensureImageBucket(bucket);
@@ -393,7 +477,57 @@ async function handleImageUpload(req, res) {
     throw error;
   }
 
-  const publicUrl = `${baseUrl}/storage/v1/object/public/${encodeURIComponent(bucket)}/${encodedPath}`;
+  return `${baseUrl}/storage/v1/object/public/${encodeURIComponent(bucket)}/${encodedPath}`;
+}
+
+async function handleImageUpload(req, res) {
+  const productId = toStr(req.body?.product_id);
+  const mimeType = toStr(req.body?.mime_type).toLowerCase();
+  const dataUrl = toStr(req.body?.data_url);
+  const extension = IMAGE_MIME_TO_EXTENSION.get(mimeType);
+
+  if (!productId || !extension || !dataUrl.startsWith(`data:${mimeType};base64,`)) {
+    return sendJson(res, 400, { ok: false, error: "INVALID_IMAGE" });
+  }
+
+  const base64 = dataUrl.slice(dataUrl.indexOf(",") + 1);
+  const bytes = Buffer.from(base64, "base64");
+  if (!bytes.length || bytes.length > MAX_IMAGE_BYTES) {
+    return sendJson(res, 413, { ok: false, error: "IMAGE_TOO_LARGE", max_bytes: MAX_IMAGE_BYTES });
+  }
+
+  const currentRows = await supabaseRequest(`productos?select=id,imagen_url&id=eq.${encodeURIComponent(productId)}&limit=1`, {
+    method: "GET",
+    headers: { Prefer: "return=representation" },
+  });
+  const currentProduct = Array.isArray(currentRows) ? currentRows[0] : null;
+  if (!currentProduct) return sendJson(res, 404, { ok: false, error: "NOT_FOUND" });
+
+  let publicUrl;
+  let storage = "github";
+  const githubToken = toStr(process.env.GITHUB_IMAGES_TOKEN);
+
+  if (githubToken) {
+    const { owner, repo, branch } = githubImagesConfig();
+    const safeProduct = productId.replace(/[^a-zA-Z0-9_-]+/g, "-").slice(0, 90) || "producto";
+    const newPath = `productos/${safeProduct}.${extension}`;
+    const oldPath = githubPathFromRawUrl(currentProduct.imagen_url);
+
+    await githubPutImage(newPath, base64, `Imagen producto ${productId}`);
+    publicUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeGithubPath(newPath)}`;
+
+    if (oldPath && oldPath !== newPath) {
+      try {
+        await githubDeleteImage(oldPath, `Eliminar imagen anterior ${productId}`);
+      } catch (error) {
+        console.warn("[admin-products] no se pudo borrar imagen anterior", error?.message || error);
+      }
+    }
+  } else {
+    storage = "supabase-fallback";
+    publicUrl = await uploadToSupabaseFallback(productId, mimeType, extension, bytes);
+  }
+
   const rows = await supabaseRequest(`productos?id=eq.${encodeURIComponent(productId)}`, {
     method: "PATCH",
     headers: { Prefer: "return=representation" },
@@ -401,7 +535,7 @@ async function handleImageUpload(req, res) {
   });
   if (!Array.isArray(rows) || !rows.length) return sendJson(res, 404, { ok: false, error: "NOT_FOUND" });
 
-  return sendJson(res, 200, { ok: true, image_url: publicUrl, product: rows[0] });
+  return sendJson(res, 200, { ok: true, image_url: publicUrl, storage, product: rows[0] });
 }
 
 export default async function handler(req, res) {
