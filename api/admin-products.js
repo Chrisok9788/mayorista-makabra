@@ -3,6 +3,12 @@ import crypto from "node:crypto";
 export const config = { runtime: "nodejs" };
 
 const PAGE_SIZE = 1000;
+const MAX_IMAGE_BYTES = 2_500_000;
+const IMAGE_MIME_TO_EXTENSION = new Map([
+  ["image/jpeg", "jpg"],
+  ["image/png", "png"],
+  ["image/webp", "webp"],
+]);
 const PRODUCT_FIELDS = [
   "id",
   "nombre",
@@ -105,6 +111,42 @@ async function supabaseRequest(path, options = {}) {
     return JSON.parse(text);
   } catch {
     return text;
+  }
+}
+
+async function storageRequest(path, options = {}) {
+  const { baseUrl, secret } = supabaseConfig();
+  return fetch(`${baseUrl}/storage/v1/${path}`, {
+    ...options,
+    headers: {
+      apikey: secret,
+      Authorization: `Bearer ${secret}`,
+      ...(options.headers || {}),
+    },
+    cache: "no-store",
+  });
+}
+
+async function ensureImageBucket(bucket) {
+  const existing = await storageRequest(`bucket/${encodeURIComponent(bucket)}`, { method: "GET" });
+  if (existing.ok) return;
+  if (existing.status !== 404 && existing.status !== 400) {
+    throw new Error(`No se pudo consultar Storage (${existing.status})`);
+  }
+
+  const created = await storageRequest("bucket", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      id: bucket,
+      name: bucket,
+      public: true,
+      file_size_limit: MAX_IMAGE_BYTES,
+      allowed_mime_types: [...IMAGE_MIME_TO_EXTENSION.keys()],
+    }),
+  });
+  if (!created.ok && created.status !== 409) {
+    throw new Error(`No se pudo crear el bucket de imágenes (${created.status})`);
   }
 }
 
@@ -287,9 +329,6 @@ async function handleDeactivate(req, res) {
 }
 
 async function handleTaxonomy(req, res) {
-  const action = toStr(req.body?.action);
-  if (action !== "rename_taxonomy") return sendJson(res, 400, { ok: false, error: "INVALID_ACTION" });
-
   const oldCategory = toStr(req.body?.old_category);
   const newCategory = toStr(req.body?.new_category);
   const oldSubcategory = toStr(req.body?.old_subcategory);
@@ -314,12 +353,66 @@ async function handleTaxonomy(req, res) {
   return sendJson(res, 200, { ok: true, updated: Array.isArray(rows) ? rows.length : 0 });
 }
 
+async function handleImageUpload(req, res) {
+  const productId = toStr(req.body?.product_id);
+  const mimeType = toStr(req.body?.mime_type).toLowerCase();
+  const dataUrl = toStr(req.body?.data_url);
+  const extension = IMAGE_MIME_TO_EXTENSION.get(mimeType);
+
+  if (!productId || !extension || !dataUrl.startsWith(`data:${mimeType};base64,`)) {
+    return sendJson(res, 400, { ok: false, error: "INVALID_IMAGE" });
+  }
+
+  const base64 = dataUrl.slice(dataUrl.indexOf(",") + 1);
+  const bytes = Buffer.from(base64, "base64");
+  if (!bytes.length || bytes.length > MAX_IMAGE_BYTES) {
+    return sendJson(res, 413, { ok: false, error: "IMAGE_TOO_LARGE", max_bytes: MAX_IMAGE_BYTES });
+  }
+
+  const { baseUrl } = supabaseConfig();
+  const bucket = toStr(process.env.SUPABASE_PRODUCT_IMAGES_BUCKET) || "product-images";
+  await ensureImageBucket(bucket);
+
+  const safeProduct = productId.replace(/[^a-zA-Z0-9_-]+/g, "-").slice(0, 90) || "producto";
+  const objectPath = `${safeProduct}/${Date.now()}-${crypto.randomUUID()}.${extension}`;
+  const encodedPath = objectPath.split("/").map(encodeURIComponent).join("/");
+  const uploaded = await storageRequest(`object/${encodeURIComponent(bucket)}/${encodedPath}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": mimeType,
+      "x-upsert": "false",
+      "Cache-Control": "3600",
+    },
+    body: bytes,
+  });
+
+  if (!uploaded.ok) {
+    const detail = (await uploaded.text()).slice(0, 400);
+    const error = new Error(`Storage rechazó la imagen (${uploaded.status})`);
+    error.detail = detail;
+    throw error;
+  }
+
+  const publicUrl = `${baseUrl}/storage/v1/object/public/${encodeURIComponent(bucket)}/${encodedPath}`;
+  const rows = await supabaseRequest(`productos?id=eq.${encodeURIComponent(productId)}`, {
+    method: "PATCH",
+    headers: { Prefer: "return=representation" },
+    body: JSON.stringify({ imagen_url: publicUrl }),
+  });
+  if (!Array.isArray(rows) || !rows.length) return sendJson(res, 404, { ok: false, error: "NOT_FOUND" });
+
+  return sendJson(res, 200, { ok: true, image_url: publicUrl, product: rows[0] });
+}
+
 export default async function handler(req, res) {
   try {
     authorize(req);
     if (req.method === "GET") return handleList(res);
     if (req.method === "POST") {
-      if (req.body?.action) return handleTaxonomy(req, res);
+      if (toStr(req.query?.route) === "image" || req.body?.action === "upload_image") {
+        return handleImageUpload(req, res);
+      }
+      if (req.body?.action === "rename_taxonomy") return handleTaxonomy(req, res);
       return handleCreate(req, res);
     }
     if (req.method === "PATCH") return handlePatch(req, res);
