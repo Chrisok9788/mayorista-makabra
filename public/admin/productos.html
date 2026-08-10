@@ -38,7 +38,7 @@
     .metric span { color: var(--muted); font-size: .82rem; }
     .source-banner { margin-bottom: 14px; border: 1px solid #ead983; background: #fff9d8; border-radius: 12px; padding: 11px 13px; display: flex; justify-content: space-between; gap: 14px; align-items: center; }
     .source-banner strong { color: #6c5400; }
-    .filters { display: grid; grid-template-columns: minmax(220px, 2fr) minmax(180px, 1fr) auto; gap: 10px; margin-bottom: 10px; }
+    .filters { display: grid; grid-template-columns: minmax(220px, 2fr) minmax(180px, 1fr) minmax(180px, 1fr) auto; gap: 10px; margin-bottom: 10px; }
     .input, .select, .textarea { width: 100%; border: 1px solid #cfcfcf; background: #fff; border-radius: 10px; padding: 10px 11px; color: #171717; }
     .textarea { resize: vertical; min-height: 72px; }
     .tabs { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 12px; }
@@ -114,6 +114,7 @@
     <section class="filters">
       <input class="input" id="searchInput" placeholder="Buscar nombre, código, marca, ID…" autocomplete="off" />
       <select class="select" id="categoryFilter"><option value="">Todas las categorías</option></select>
+      <select class="select" id="subcategoryFilter"><option value="">Todas las subcategorías</option></select>
       <button class="button" id="clearFilters">Limpiar filtros</button>
     </section>
 
@@ -202,7 +203,7 @@
     const state = { products: [], taxonomy: [], selectedId: null, tab: 'all', pin: sessionStorage.getItem('makabra_admin_pin') || '' };
     const $ = (selector) => document.querySelector(selector);
     const els = {
-      rows: $('#productRows'), empty: $('#emptyState'), count: $('#resultCount'), search: $('#searchInput'), category: $('#categoryFilter'),
+      rows: $('#productRows'), empty: $('#emptyState'), count: $('#resultCount'), search: $('#searchInput'), category: $('#categoryFilter'), subcategory: $('#subcategoryFilter'),
       title: $('#editorTitle'), form: $('#productForm'), toast: $('#toast'), connection: $('#connectionText'),
       id: $('#fId'), nombre: $('#fNombre'), categoria: $('#fCategoria'), subcategoria: $('#fSubcategoria'), precio: $('#fPrecio'), prioridad: $('#fPrioridad'),
       marca: $('#fMarca'), presentacion: $('#fPresentacion'), barcode: $('#fBarcode'), scanntech: $('#fScanntech'), promoGroup: $('#fPromoGroup'),
@@ -243,9 +244,24 @@
       $('#mTotal').textContent = stats.total ?? 0; $('#mActive').textContent = stats.active ?? 0; $('#mNoImage').textContent = stats.without_image ?? 0; $('#mCarousel').textContent = stats.carousel ?? 0;
     }
     function rebuildTaxonomy() {
+      const currentCategory = els.category.value;
+      const currentSubcategory = els.subcategory.value;
       els.category.innerHTML = '<option value="">Todas las categorías</option>' + state.taxonomy.map(x => `<option value="${escapeHtml(x.categoria)}">${escapeHtml(x.categoria)}</option>`).join('');
+      if ([...els.category.options].some(option => option.value === currentCategory)) els.category.value = currentCategory;
       els.catList.innerHTML = state.taxonomy.map(x => `<option value="${escapeHtml(x.categoria)}"></option>`).join('');
+      rebuildSubcategoryFilter(currentSubcategory);
       updateSubcategoryList();
+    }
+    function rebuildSubcategoryFilter(preferredValue = els.subcategory.value) {
+      const category = els.category.value;
+      const taxonomyEntry = state.taxonomy.find(x => x.categoria === category);
+      const subcats = category
+        ? (taxonomyEntry?.subcategorias || [...new Set(state.products.filter(p => p.categoria === category).map(p => p.subcategoria).filter(Boolean))])
+        : [...new Set(state.products.map(p => p.subcategoria).filter(Boolean))];
+      const sorted = [...new Set(subcats)].sort((a,b) => String(a).localeCompare(String(b), 'es'));
+      els.subcategory.innerHTML = '<option value="">Todas las subcategorías</option>' + sorted.map(x => `<option value="${escapeHtml(x)}">${escapeHtml(x)}</option>`).join('');
+      if (preferredValue && sorted.includes(preferredValue)) els.subcategory.value = preferredValue;
+      else els.subcategory.value = '';
     }
     function updateSubcategoryList() {
       const current = state.taxonomy.find(x => x.categoria === els.categoria.value);
@@ -253,13 +269,16 @@
       els.subcatList.innerHTML = subcats.map(x => `<option value="${escapeHtml(x)}"></option>`).join('');
     }
     function filteredProducts() {
-      const q = els.search.value.trim().toLowerCase(); const category = els.category.value;
+      const q = els.search.value.trim().toLowerCase();
+      const category = els.category.value;
+      const subcategory = els.subcategory.value;
       return state.products.filter(p => {
         if (state.tab === 'carousel' && !p.oferta_carrusel) return false;
         if (state.tab === 'noimage' && p.imagen_url) return false;
         if (state.tab === 'inactive' && p.activo) return false;
         if (state.tab !== 'inactive' && !p.activo && state.tab !== 'all') return false;
         if (category && p.categoria !== category) return false;
+        if (subcategory && p.subcategoria !== subcategory) return false;
         if (q) {
           const haystack = [p.id,p.nombre,p.categoria,p.subcategoria,p.marca,p.presentacion,p.barcode,p.scanntech_id].join(' ').toLowerCase();
           if (!haystack.includes(q)) return false;
@@ -356,9 +375,12 @@
     }
 
     document.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', () => { state.tab = btn.dataset.tab; document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x === btn)); renderTable(); }));
-    els.search.addEventListener('input', renderTable); els.category.addEventListener('change', renderTable); els.categoria.addEventListener('input', updateSubcategoryList);
+    els.search.addEventListener('input', renderTable);
+    els.category.addEventListener('change', () => { rebuildSubcategoryFilter(); renderTable(); });
+    els.subcategory.addEventListener('change', renderTable);
+    els.categoria.addEventListener('input', updateSubcategoryList);
     els.imagen.addEventListener('input', () => { els.imagePreview.src = els.imagen.value.trim() || '/placeholder.svg'; });
-    $('#clearFilters').addEventListener('click', () => { els.search.value = ''; els.category.value = ''; state.tab = 'all'; document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x.dataset.tab === 'all')); renderTable(); });
+    $('#clearFilters').addEventListener('click', () => { els.search.value = ''; els.category.value = ''; rebuildSubcategoryFilter(''); state.tab = 'all'; document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x.dataset.tab === 'all')); renderTable(); });
     $('#reloadBtn').addEventListener('click', loadData); $('#newBtn').addEventListener('click', newProduct); $('#exportBtn').addEventListener('click', exportCsv);
     els.form.addEventListener('submit', saveProduct); els.deactivate.addEventListener('click', deactivate); $('#uploadBtn').addEventListener('click', uploadImage); $('#renameTaxonomyBtn').addEventListener('click', renameTaxonomy);
     loadData();
