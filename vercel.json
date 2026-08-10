@@ -5,6 +5,14 @@
       "destination": "/admin/productos.html"
     },
     {
+      "source": "/api/admin-product-image",
+      "destination": "/api/admin-products?route=image"
+    },
+    {
+      "source": "/api/catalog-supabase",
+      "destination": "/api/catalog"
+    },
+    {
       "source": "/api/orders-panel",
       "destination": "/api/order-history"
     },
