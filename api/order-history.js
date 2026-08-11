@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import ordersHandler from "../lib/orders-api.js";
+import { buildClientAnalytics } from "../lib/client-analytics.js";
 import { listStaffPerformance, recordStaffPerformance } from "../lib/staff-performance.js";
 
 export const config = { runtime: "nodejs" };
@@ -7,6 +8,8 @@ export const config = { runtime: "nodejs" };
 const STAFF_DOMAIN = "staff.makabra.local";
 const STAFF_ROLES = new Set(["empleado", "supervisor", "admin"]);
 const ACTIVE_WINDOW_MS = 24 * 60 * 60 * 1000;
+const DATA_PAGE_SIZE = 1000;
+const MAX_DATA_ROWS = 100000;
 const ASSIGNMENT_FIELDS = [
   "order_id",
   "asignado_usuario_id",
@@ -288,6 +291,153 @@ async function updateEmployee(body) {
   return actorFromUser(data);
 }
 
+function clientAnalyticsRange(body) {
+  const period = toStr(body?.period) || "30";
+  if (period === "all") return { period, from: null, to: null };
+
+  if (period === "custom") {
+    const fromValue = toStr(body?.from);
+    const toValue = toStr(body?.to);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(fromValue) || !/^\d{4}-\d{2}-\d{2}$/.test(toValue)) {
+      const error = new Error("Elegí una fecha inicial y una fecha final");
+      error.statusCode = 400;
+      error.code = "INVALID_CLIENT_DATE_RANGE";
+      throw error;
+    }
+    const from = new Date(`${fromValue}T00:00:00-03:00`);
+    const inclusiveTo = new Date(`${toValue}T00:00:00-03:00`);
+    if (!Number.isFinite(from.getTime()) || !Number.isFinite(inclusiveTo.getTime()) || inclusiveTo < from) {
+      const error = new Error("El período de clientes no es válido");
+      error.statusCode = 400;
+      error.code = "INVALID_CLIENT_DATE_RANGE";
+      throw error;
+    }
+    const to = new Date(inclusiveTo.getTime() + 24 * 60 * 60 * 1000);
+    return { period, from: from.toISOString(), to: to.toISOString() };
+  }
+
+  const days = ["30", "90", "365"].includes(period) ? Number(period) : 30;
+  return {
+    period: String(days),
+    from: new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString(),
+    to: null,
+  };
+}
+
+async function listAllRows(path, errorCode, errorMessage) {
+  const rows = [];
+  let offset = 0;
+
+  while (offset < MAX_DATA_ROWS) {
+    const separator = path.includes("?") ? "&" : "?";
+    const { response, data } = await dataRequest(
+      `${path}${separator}limit=${DATA_PAGE_SIZE}&offset=${offset}`,
+      { method: "GET" },
+    );
+    if (!response.ok) {
+      const error = new Error(errorMessage);
+      error.statusCode = 503;
+      error.code = errorCode;
+      throw error;
+    }
+    const page = Array.isArray(data) ? data : [];
+    rows.push(...page);
+    if (page.length < DATA_PAGE_SIZE) break;
+    offset += DATA_PAGE_SIZE;
+  }
+
+  return rows;
+}
+
+async function listClients(body) {
+  const range = clientAnalyticsRange(body);
+  const orderFilters = [];
+  if (range.from) orderFilters.push(`ultimo_ingreso_en=gte.${encodeURIComponent(range.from)}`);
+  if (range.to) orderFilters.push(`ultimo_ingreso_en=lt.${encodeURIComponent(range.to)}`);
+  const orderQuery = [
+    "pedidos?select=order_id,cliente_id,cliente_codigo,cliente_clave,cliente_nombre,cliente_telefono,estado,estado_armado,estado_facturacion,total_uyu,actualizaciones,creado_en,actualizado_en,ultimo_ingreso_en",
+    ...orderFilters,
+    "order=ultimo_ingreso_en.desc",
+  ].join("&");
+
+  const [clients, orders] = await Promise.all([
+    listAllRows(
+      "clientes?select=id,codigo,nombre,direccion,telefono,tipo,activo,observaciones,origen,creado_en,actualizado_en&order=nombre.asc",
+      "CLIENTS_SCHEMA_NOT_CONFIGURED",
+      "No se pudo leer la tabla de clientes",
+    ),
+    listAllRows(
+      orderQuery,
+      "CLIENT_ORDERS_NOT_AVAILABLE",
+      "No se pudo leer el historial de pedidos",
+    ),
+  ]);
+
+  return {
+    ...buildClientAnalytics(clients, orders),
+    period: range,
+  };
+}
+
+async function createClient(body) {
+  const codigo = toStr(body?.codigo).replace(/\D/g, "");
+  const nombre = toStr(body?.nombre).slice(0, 180);
+  const direccion = toStr(body?.direccion).slice(0, 300);
+  const telefono = toStr(body?.telefono).slice(0, 80);
+  const observaciones = toStr(body?.observaciones).slice(0, 500);
+  const phoneDigits = telefono.replace(/\D/g, "");
+
+  if (!/^\d{7}$/.test(codigo)) {
+    const error = new Error("El código debe tener exactamente 7 cifras");
+    error.statusCode = 400;
+    error.code = "INVALID_CLIENT_CODE";
+    throw error;
+  }
+  if (!nombre || !direccion || phoneDigits.length < 6) {
+    const error = new Error("Nombre, dirección y teléfono válido son obligatorios");
+    error.statusCode = 400;
+    error.code = "INVALID_CLIENT";
+    throw error;
+  }
+
+  const { response, data } = await dataRequest("clientes", {
+    method: "POST",
+    prefer: "return=representation",
+    body: JSON.stringify({
+      codigo,
+      nombre,
+      direccion,
+      telefono,
+      tipo: "reparto",
+      activo: true,
+      observaciones: observaciones || null,
+      origen: "panel_admin",
+    }),
+  });
+
+  if (response.status === 409) {
+    const error = new Error("Ya existe un cliente con ese código");
+    error.statusCode = 409;
+    error.code = "CLIENT_CODE_EXISTS";
+    throw error;
+  }
+  if (!response.ok) {
+    const error = new Error("No se pudo guardar el cliente");
+    error.statusCode = 503;
+    error.code = "CLIENT_CREATE_FAILED";
+    throw error;
+  }
+
+  const client = Array.isArray(data) ? data[0] || null : null;
+  if (!client) {
+    const error = new Error("Supabase no devolvió el cliente guardado");
+    error.statusCode = 500;
+    error.code = "CLIENT_CREATE_FAILED";
+    throw error;
+  }
+  return client;
+}
+
 async function handleStaffPut(req, res) {
   let body;
   try { body = parseBody(req); } catch { return sendJson(res, 400, { ok: false, error: "BAD_REQUEST" }); }
@@ -314,6 +464,15 @@ async function handleStaffPut(req, res) {
       to: body.to,
     });
     return sendJson(res, 200, { ok: true, actor, performance });
+  }
+  if (action === "list_clients") {
+    const clients = await listClients(body);
+    return sendJson(res, 200, { ok: true, actor, clients });
+  }
+  if (action === "create_client") {
+    const client = await createClient(body);
+    console.info("[orders-audit]", JSON.stringify({ actor: actor.username, action: "create_client", target: client?.codigo || null, at: new Date().toISOString() }));
+    return sendJson(res, 201, { ok: true, actor, client });
   }
   if (action === "create_employee") {
     const employee = await createEmployee(body);

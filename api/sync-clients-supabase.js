@@ -188,7 +188,10 @@ async function removeDuplicateRows(clients) {
 
   for (const incoming of clients) {
     const matches = existing.filter(
-      (row) => String(row.codigo) !== incoming.codigo && samePerson(row, incoming),
+      (row) =>
+        row.origen === "google_sheets" &&
+        String(row.codigo) !== incoming.codigo &&
+        samePerson(row, incoming),
     );
 
     for (const row of matches) {
@@ -307,21 +310,32 @@ export default async function handler(req, res) {
     const clients = [...clientsByCode.values()];
     if (!clients.length) throw new Error("No se encontraron clientes válidos en la hoja Reparto");
 
-    await supabaseRequest("clientes?on_conflict=codigo", {
-      method: "POST",
-      body: JSON.stringify(clients),
-    });
+    const existingBeforeSync = await loadExistingClients();
+    const protectedCodes = new Set(
+      existingBeforeSync
+        .filter((client) => client.origen !== "google_sheets")
+        .map((client) => String(client.codigo)),
+    );
+    const clientsToSync = clients.filter((client) => !protectedCodes.has(client.codigo));
+    const protectedManualClients = clients.length - clientsToSync.length;
 
-    const duplicateCleanup = await removeDuplicateRows(clients);
+    if (clientsToSync.length) {
+      await supabaseRequest("clientes?on_conflict=codigo", {
+        method: "POST",
+        body: JSON.stringify(clientsToSync),
+      });
+    }
+
+    const duplicateCleanup = await removeDuplicateRows(clientsToSync);
     const activeCodes = new Set(clients.map((client) => client.codigo));
     const missingCleanup = await removeMissingClients(activeCodes);
 
     await finishSyncLog(syncId, {
       estado: "completada",
       registros_procesados: rawRows.length,
-      registros_actualizados: clients.length,
+      registros_actualizados: clientsToSync.length,
       registros_con_error: invalidRows,
-      mensaje: `Clientes sincronizados: ${clients.length}; duplicados eliminados: ${duplicateCleanup.removed}; eliminados de la planilla: ${missingCleanup.removed}; inactivos protegidos por historial: ${duplicateCleanup.deactivated + missingCleanup.deactivated}`,
+      mensaje: `Clientes sincronizados: ${clientsToSync.length}; clientes del panel protegidos: ${protectedManualClients}; duplicados eliminados: ${duplicateCleanup.removed}; eliminados de la planilla: ${missingCleanup.removed}; inactivos protegidos por historial: ${duplicateCleanup.deactivated + missingCleanup.deactivated}`,
     });
 
     return sendJson(res, 200, {
@@ -331,7 +345,8 @@ export default async function handler(req, res) {
       sheet_id: DEFAULT_SHEET_ID,
       sheet_gid: DEFAULT_SHEET_GID,
       rows_read: rawRows.length,
-      clients_synced: clients.length,
+      clients_synced: clientsToSync.length,
+      manual_clients_protected: protectedManualClients,
       invalid_rows: invalidRows,
       duplicate_codes: duplicateCodes,
       changed_code_duplicates_removed: duplicateCleanup.removed,

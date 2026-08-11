@@ -12,6 +12,7 @@ const s = {
   missing: [],
   employees: [],
   performance: null,
+  clients: null,
   filter: "all",
   view: "orders",
   busy: false,
@@ -39,8 +40,10 @@ const e = {
   missingView: $("#missingView"),
   usersView: $("#usersView"),
   performanceView: $("#performanceView"),
+  clientsView: $("#clientsView"),
   usersTab: $("#usersTab"),
   performanceTab: $("#performanceTab"),
+  clientsTab: $("#clientsTab"),
   ordersList: $("#ordersList"),
   missingList: $("#missingList"),
   summary: $("#summary"),
@@ -53,6 +56,23 @@ const e = {
   performanceFromWrap: $("#performanceFromWrap"),
   performanceToWrap: $("#performanceToWrap"),
   reloadPerformance: $("#reloadPerformanceButton"),
+  clientsSummary: $("#clientsSummary"),
+  clientsList: $("#clientsList"),
+  clientForm: $("#clientForm"),
+  clientCode: $("#clientCode"),
+  clientName: $("#clientName"),
+  clientAddress: $("#clientAddress"),
+  clientPhone: $("#clientPhone"),
+  clientNotes: $("#clientNotes"),
+  clientFormMessage: $("#clientFormMessage"),
+  clientSearch: $("#clientSearch"),
+  clientPeriod: $("#clientPeriod"),
+  clientSort: $("#clientSort"),
+  clientFrom: $("#clientFrom"),
+  clientTo: $("#clientTo"),
+  clientFromWrap: $("#clientFromWrap"),
+  clientToWrap: $("#clientToWrap"),
+  reloadClients: $("#reloadClientsButton"),
   filters: $("#filters"),
   updated: $("#lastUpdated"),
   refresh: $("#refreshButton"),
@@ -83,6 +103,11 @@ const clock = (v) => {
 const dateTime = (v) => {
   const d = date(v);
   return valid(d) ? new Intl.DateTimeFormat("es-UY", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }).format(d) : "—";
+};
+const fullDateTime = (v) => {
+  if (!v) return "—";
+  const d = date(v);
+  return valid(d) ? new Intl.DateTimeFormat("es-UY", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }).format(d) : "—";
 };
 
 function duration(seconds) {
@@ -153,6 +178,7 @@ function clearSession() {
   s.missing = [];
   s.employees = [];
   s.performance = null;
+  s.clients = null;
   s.open.clear();
   sessionStorage.removeItem(TOKEN_KEY);
   sessionStorage.removeItem(REFRESH_KEY);
@@ -174,13 +200,15 @@ function updateActorUI() {
     e.staffChip.innerHTML = "";
     e.usersTab.hidden = true;
     e.performanceTab.hidden = true;
+    e.clientsTab.hidden = true;
     return;
   }
   e.staffChip.innerHTML = `<strong>${esc(a.name || a.username || "Usuario")}</strong><span class="role-pill">${esc(a.role || "empleado")}</span>${a.legacy ? '<span class="muted">PIN temporal</span>' : ""}`;
   const admin = a.role === "admin";
   e.usersTab.hidden = !admin;
   e.performanceTab.hidden = !admin;
-  if (!admin && (s.view === "users" || s.view === "performance")) s.view = "orders";
+  e.clientsTab.hidden = !admin;
+  if (!admin && (s.view === "users" || s.view === "performance" || s.view === "clients")) s.view = "orders";
 }
 
 function panel() {
@@ -384,26 +412,104 @@ function renderPerformance() {
   e.performanceRows.innerHTML = rows.length ? rows.map((r, index) => `<tr><td><span class="performance-rank">${index + 1}</span></td><td><span class="performance-name">${esc(r.nombre || r.usuario || "Empleado")}</span><br><span class="muted">${esc(r.usuario || "")}</span></td><td><strong>${Math.max(0, Number(r.pedidos) || 0)}</strong></td><td>${Math.max(0, Number(r.unidades) || 0)}</td><td>${Math.max(0, Number(r.articulos) || 0)}</td><td>${Math.max(0, Number(r.faltantes) || 0)}</td><td>${esc(duration(r.duracion_promedio_segundos))}</td><td>${esc(dateTime(r.ultima_finalizacion))}</td></tr>`).join("") : '<tr><td colspan="8"><div class="empty-state">Todavía no hay pedidos armados registrados en este período.</div></td></tr>';
 }
 
+function clientSourceLabel(value) {
+  if (value === "panel_admin") return "Creado en el panel";
+  if (value === "google_sheets") return "Google Sheets";
+  if (value === "historial") return "Solo historial";
+  return "Supabase";
+}
+
+function clientOrderRows(client) {
+  const orders = Array.isArray(client.detalle_pedidos) ? client.detalle_pedidos : [];
+  if (!orders.length) return '<div class="client-empty">No tiene pedidos en el período seleccionado.</div>';
+  return `<div class="performance-table-wrap"><table class="performance-table client-order-table"><thead><tr><th>Fecha</th><th>Pedido</th><th>Monto</th><th>Pedidos sumados</th><th>Armado</th><th>Facturación</th></tr></thead><tbody>${orders.map((order) => `<tr><td>${esc(fullDateTime(order.fecha))}</td><td><strong>${esc(order.order_id || "—")}</strong></td><td>${esc(money(order.monto))}</td><td>${Math.max(1, Number(order.pedidos_acumulados) || 1)}</td><td>${esc(armLabel(order.estado_armado))}</td><td>${esc(bill(order.estado_facturacion))}</td></tr>`).join("")}</tbody></table></div>`;
+}
+
+function clientCard(client) {
+  const status = client.registrado ? (client.activo ? "Activo" : "Inactivo") : "Solo historial";
+  const statusClass = client.registrado && client.activo ? "" : "inactive";
+  const contact = [
+    client.telefono ? `Tel. ${client.telefono}` : "",
+    client.direccion || "",
+    `Origen: ${clientSourceLabel(client.origen)}`,
+    client.primera_compra ? `Primera compra: ${fullDateTime(client.primera_compra)}` : "Sin compras en el período",
+  ].filter(Boolean);
+  return `<details class="client-row"><summary class="client-row-summary"><div><div class="client-identity"><span class="client-code">${esc(client.codigo || "Sin código")}</span><span class="client-status ${statusClass}">${esc(status)}</span></div><span class="client-name">${esc(client.nombre || "Cliente sin nombre")}</span></div><div class="client-metrics"><div class="client-metric"><strong>${Math.max(0, Number(client.pedidos) || 0)}</strong><span>Pedidos</span></div><div class="client-metric"><strong>${esc(money(client.monto_total))}</strong><span>Monto</span></div><div class="client-metric"><strong>${esc(fullDateTime(client.ultima_compra))}</strong><span>Última compra</span></div></div></summary><div class="client-body"><div class="client-contact">${contact.map((value) => `<span>${esc(value)}</span>`).join("")}</div>${client.observaciones ? `<p class="muted"><strong>Observaciones:</strong> ${esc(client.observaciones)}</p>` : ""}<div class="client-history-heading"><h3>Historial del período</h3><span>Promedio: ${esc(money(client.ticket_promedio))}</span></div>${clientOrderRows(client)}</div></details>`;
+}
+
+function normalizedSearch(value) {
+  return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+}
+
+function renderClients() {
+  const data = s.clients || { rows: [], summary: {} };
+  const summary = data.summary || {};
+  cards(e.clientsSummary, [
+    [summary.clientes_registrados || 0, "Clientes registrados"],
+    [summary.clientes_activos || 0, "Clientes activos"],
+    [summary.clientes_con_pedidos || 0, "Compraron en el período"],
+    [summary.pedidos || 0, "Pedidos"],
+    [money(summary.monto_total), "Monto en pedidos"],
+    [money(summary.ticket_promedio), "Promedio por pedido"],
+  ]);
+
+  const search = normalizedSearch(e.clientSearch?.value);
+  const rows = (Array.isArray(data.rows) ? [...data.rows] : []).filter((client) => {
+    if (!search) return true;
+    return normalizedSearch([
+      client.nombre,
+      client.codigo,
+      client.telefono,
+      client.direccion,
+    ].join(" ")).includes(search);
+  });
+
+  const sort = e.clientSort?.value || "recent";
+  rows.sort((a, b) => {
+    if (sort === "amount") return (Number(b.monto_total) || 0) - (Number(a.monto_total) || 0);
+    if (sort === "orders") return (Number(b.pedidos) || 0) - (Number(a.pedidos) || 0);
+    if (sort === "name") return String(a.nombre || "").localeCompare(String(b.nombre || ""), "es");
+    return (date(b.ultima_compra).getTime() || 0) - (date(a.ultima_compra).getTime() || 0);
+  });
+
+  e.clientsList.innerHTML = rows.length
+    ? rows.map(clientCard).join("")
+    : '<div class="empty-state">No hay clientes que coincidan con la búsqueda.</div>';
+}
+
+function clientFormStatus(message = "", isError = false) {
+  if (!e.clientFormMessage) return;
+  e.clientFormMessage.textContent = message;
+  e.clientFormMessage.classList.toggle("error", Boolean(isError));
+  e.clientFormMessage.hidden = !message;
+}
+
 function render() {
   summaries();
   const miss = s.view === "missing";
   const users = s.view === "users";
   const performance = s.view === "performance";
-  e.ordersView.hidden = miss || users || performance;
+  const clients = s.view === "clients";
+  e.ordersView.hidden = miss || users || performance || clients;
   e.missingView.hidden = !miss;
   e.usersView.hidden = !users;
   e.performanceView.hidden = !performance;
-  e.title.textContent = users ? "Usuarios internos" : performance ? "Rendimiento de empleados" : miss ? "Artículos faltantes" : "Pedidos activos";
+  e.clientsView.hidden = !clients;
+  e.title.textContent = users ? "Usuarios internos" : performance ? "Rendimiento de empleados" : clients ? "Clientes" : miss ? "Artículos faltantes" : "Pedidos activos";
   e.ordersBadge.textContent = s.orders.length;
   e.missingBadge.textContent = s.missing.length;
   e.tabs.querySelectorAll("[data-view]").forEach((b) => b.classList.toggle("active", b.dataset.view === s.view));
-  document.title = performance ? "Rendimiento | Makabra" : miss ? `(${s.missing.length}) Faltantes | Makabra` : users ? "Usuarios | Makabra" : `(${s.orders.length}) Pedidos | Makabra`;
+  document.title = performance ? "Rendimiento | Makabra" : clients ? "Clientes | Makabra" : miss ? `(${s.missing.length}) Faltantes | Makabra` : users ? "Usuarios | Makabra" : `(${s.orders.length}) Pedidos | Makabra`;
   if (users) {
     renderEmployees();
     return;
   }
   if (performance) {
     renderPerformance();
+    return;
+  }
+  if (clients) {
+    renderClients();
     return;
   }
   if (miss) {
@@ -488,10 +594,35 @@ async function loadPerformance() {
   }
 }
 
+async function loadClients() {
+  if (s.actor?.role !== "admin") return;
+  const period = e.clientPeriod?.value || "30";
+  const body = {
+    action: "list_clients",
+    period,
+    from: period === "custom" ? e.clientFrom?.value || "" : "",
+    to: period === "custom" ? e.clientTo?.value || "" : "",
+  };
+  try {
+    const d = await api("PUT", body);
+    s.clients = d.clients || { rows: [], summary: {} };
+    renderClients();
+    error(e.err, "");
+  } catch (x) {
+    error(e.err, x.message || "No se pudieron cargar los clientes.");
+  }
+}
+
 function updateCustomRangeVisibility() {
   const custom = e.performancePeriod?.value === "custom";
   if (e.performanceFromWrap) e.performanceFromWrap.hidden = !custom;
   if (e.performanceToWrap) e.performanceToWrap.hidden = !custom;
+}
+
+function updateClientCustomRangeVisibility() {
+  const custom = e.clientPeriod?.value === "custom";
+  if (e.clientFromWrap) e.clientFromWrap.hidden = !custom;
+  if (e.clientToWrap) e.clientToWrap.hidden = !custom;
 }
 
 e.form.addEventListener("submit", async (ev) => {
@@ -528,6 +659,7 @@ e.logout.addEventListener("click", logout);
 e.refresh.addEventListener("click", () => {
   if (s.view === "users") return loadEmployees();
   if (s.view === "performance") return loadPerformance();
+  if (s.view === "clients") return loadClients();
   return load();
 });
 
@@ -535,11 +667,12 @@ e.tabs.addEventListener("click", async (ev) => {
   const b = ev.target.closest("[data-view]");
   if (!b) return;
   const next = b.dataset.view;
-  if ((next === "users" || next === "performance") && s.actor?.role !== "admin") return;
-  s.view = ["orders", "missing", "users", "performance"].includes(next) ? next : "orders";
+  if ((next === "users" || next === "performance" || next === "clients") && s.actor?.role !== "admin") return;
+  s.view = ["orders", "missing", "users", "performance", "clients"].includes(next) ? next : "orders";
   render();
   if (s.view === "users") await loadEmployees();
   if (s.view === "performance") await loadPerformance();
+  if (s.view === "clients") await loadClients();
 });
 
 e.filters.addEventListener("click", (ev) => {
@@ -632,14 +765,59 @@ e.performanceTo?.addEventListener("change", () => {
   if (e.performancePeriod?.value === "custom" && e.performanceTo.value && e.performanceFrom?.value) loadPerformance();
 });
 
+e.clientCode?.addEventListener("input", () => {
+  e.clientCode.value = e.clientCode.value.replace(/\D/g, "").slice(0, 7);
+});
+
+e.clientForm?.addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  const button = e.clientForm.querySelector('button[type="submit"]');
+  const body = {
+    action: "create_client",
+    codigo: e.clientCode.value,
+    nombre: e.clientName.value.trim(),
+    direccion: e.clientAddress.value.trim(),
+    telefono: e.clientPhone.value.trim(),
+    observaciones: e.clientNotes.value.trim(),
+  };
+  clientFormStatus();
+  button.disabled = true;
+  try {
+    const d = await api("PUT", body);
+    e.clientForm.reset();
+    clientFormStatus(`Cliente ${d.client?.nombre || body.nombre} guardado correctamente.`);
+    await loadClients();
+  } catch (x) {
+    clientFormStatus(x.message || "No se pudo guardar el cliente.", true);
+  } finally {
+    button.disabled = false;
+  }
+});
+
+e.reloadClients?.addEventListener("click", loadClients);
+e.clientSearch?.addEventListener("input", renderClients);
+e.clientSort?.addEventListener("change", renderClients);
+e.clientPeriod?.addEventListener("change", async () => {
+  updateClientCustomRangeVisibility();
+  if (e.clientPeriod.value !== "custom") await loadClients();
+});
+e.clientFrom?.addEventListener("change", () => {
+  if (e.clientPeriod?.value === "custom" && e.clientFrom.value && e.clientTo?.value) loadClients();
+});
+e.clientTo?.addEventListener("change", () => {
+  if (e.clientPeriod?.value === "custom" && e.clientTo.value && e.clientFrom?.value) loadClients();
+});
+
 document.addEventListener("visibilitychange", () => {
   if (document.hidden || !(s.token || s.pin)) return;
   if (s.view === "users") loadEmployees();
   else if (s.view === "performance") loadPerformance();
+  else if (s.view === "clients") loadClients();
   else load(true);
 });
 
 updateCustomRangeVisibility();
+updateClientCustomRangeVisibility();
 if (s.token || s.pin) {
   panel();
   load();

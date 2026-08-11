@@ -22,7 +22,12 @@
       .performance-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:end;margin-bottom:14px}.performance-toolbar label{display:grid;gap:5px;font-weight:700;font-size:.82rem}.performance-toolbar select,.performance-toolbar input{padding:9px 10px;border:1px solid #ccc;border-radius:10px;background:#fff}
       .performance-table-wrap{overflow:auto;border:1px solid #eee;border-radius:12px}.performance-table{width:100%;border-collapse:collapse;min-width:760px}.performance-table th,.performance-table td{text-align:left;padding:11px 12px;border-bottom:1px solid #eee;white-space:nowrap}.performance-table th{font-size:.78rem;text-transform:uppercase;color:#666;background:#fafafa}.performance-table tbody tr:last-child td{border-bottom:0}.performance-name{font-weight:800}.performance-rank{display:inline-flex;min-width:26px;height:26px;border-radius:999px;align-items:center;justify-content:center;background:#f1f1f1;font-weight:800}
       .performance-note{margin-top:12px;color:#666;font-size:.85rem}.custom-range[hidden]{display:none!important}
-      @media (max-width:760px){.users-view{grid-template-columns:1fr}.staff-chip{width:100%}.user-row{grid-template-columns:1fr}.user-row-actions{justify-content:flex-start}.performance-toolbar{align-items:stretch}.performance-toolbar label{flex:1 1 140px}}
+      .panel-tabs{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+      .clients-layout{display:grid;grid-template-columns:minmax(280px,.65fr) minmax(0,1.35fr);gap:16px;align-items:start}.client-admin-card,.client-list-card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,.08)}.client-admin-card h2,.client-list-card h2{margin-top:0}.client-form{display:grid;gap:10px}.client-form label,.client-toolbar label{font-weight:700;font-size:.86rem}.client-form input,.client-form textarea,.client-toolbar input,.client-toolbar select{width:100%;padding:10px 11px;border:1px solid #ccc;border-radius:10px;background:#fff}.client-form textarea{min-height:82px;resize:vertical}.client-form-message{margin:0;padding:10px 12px;border-radius:10px;background:#e9f7ed;color:#206437;font-weight:700}.client-form-message.error{background:#fde8e8;color:#8a1010}
+      .client-toolbar{display:grid;grid-template-columns:minmax(190px,1.5fr) repeat(2,minmax(130px,.7fr)) auto;gap:10px;align-items:end;margin-bottom:14px}.client-toolbar label{display:grid;gap:5px}.client-toolbar .custom-range{min-width:130px}.clients-list{display:grid;gap:10px}.client-row{overflow:hidden;border:1px solid #e1e1e1;border-radius:14px;background:#fff}.client-row[open]{border-color:#bbb}.client-row-summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px;cursor:pointer;list-style:none}.client-row-summary::-webkit-details-marker{display:none}.client-identity{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.client-code{display:inline-flex;padding:4px 8px;border-radius:999px;background:#f0f0f0;color:#444;font-size:.76rem;font-weight:800}.client-status{display:inline-flex;padding:4px 8px;border-radius:999px;background:#dff3e4;color:#1b6030;font-size:.72rem;font-weight:800}.client-status.inactive{background:#eee;color:#666}.client-name{display:block;margin-top:6px;font-size:1.02rem;font-weight:850}.client-metrics{display:grid;grid-template-columns:repeat(3,minmax(88px,1fr));gap:8px;text-align:right}.client-metric strong,.client-metric span{display:block}.client-metric span{margin-top:2px;color:#666;font-size:.72rem}.client-body{display:grid;gap:14px;padding:0 14px 14px;border-top:1px solid #eee}.client-contact{display:flex;gap:8px;flex-wrap:wrap;padding-top:13px}.client-contact span{padding:5px 9px;border-radius:999px;background:#f2f2f2;color:#555;font-size:.78rem}.client-history-heading{display:flex;justify-content:space-between;gap:10px;align-items:end}.client-history-heading h3{margin:0}.client-history-heading span{color:#666;font-size:.78rem}.client-order-table{min-width:680px}.client-empty{padding:20px;text-align:center;color:#666}.client-list-note{margin:12px 0 0;color:#666;font-size:.82rem;line-height:1.4}
+      @media (max-width:900px){.client-toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}.client-toolbar>button{width:100%}}
+      @media (max-width:760px){.users-view,.clients-layout{grid-template-columns:1fr}.staff-chip{width:100%}.user-row{grid-template-columns:1fr}.user-row-actions{justify-content:flex-start}.performance-toolbar{align-items:stretch}.performance-toolbar label{flex:1 1 140px}.panel-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.client-row-summary{grid-template-columns:1fr}.client-metrics{text-align:left}}
+      @media (max-width:460px){.client-toolbar{grid-template-columns:1fr}.panel-tabs{grid-template-columns:1fr}.client-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
     </style>
   </head>
   <body>
@@ -71,6 +76,7 @@
         <nav id="panelTabs" class="panel-tabs" aria-label="Secciones del panel">
           <button type="button" class="panel-tab active" data-view="orders">Pedidos <span id="ordersBadge" class="tab-badge">0</span></button>
           <button type="button" class="panel-tab" data-view="missing">Artículos faltantes <span id="missingBadge" class="tab-badge warning">0</span></button>
+          <button id="clientsTab" type="button" class="panel-tab" data-view="clients" hidden>Clientes</button>
           <button id="performanceTab" type="button" class="panel-tab" data-view="performance" hidden>Rendimiento</button>
           <button id="usersTab" type="button" class="panel-tab" data-view="users" hidden>Usuarios</button>
         </nav>
@@ -92,6 +98,60 @@
           <section id="missingSummary" class="summary-grid" aria-label="Resumen de faltantes"></section>
           <div class="missing-help">Esta lista no desaparece cuando el pedido cumple 24 horas. Los artículos quedan aquí hasta que se marquen como recibidos o repuestos.</div>
           <section id="missingList" class="missing-list" aria-live="polite"></section>
+        </section>
+
+        <section id="clientsView" class="content-view" hidden>
+          <section id="clientsSummary" class="summary-grid" aria-label="Resumen de clientes"></section>
+          <div class="clients-layout">
+            <article class="client-admin-card">
+              <h2>Ingresar nuevo cliente</h2>
+              <p class="muted">El código identifica al cliente cuando hace un pedido con reparto.</p>
+              <form id="clientForm" class="client-form">
+                <div><label for="clientCode">Código de 7 cifras</label><input id="clientCode" inputmode="numeric" pattern="[0-9]{7}" minlength="7" maxlength="7" autocomplete="off" required /></div>
+                <div><label for="clientName">Nombre o comercio</label><input id="clientName" maxlength="180" autocomplete="organization" required /></div>
+                <div><label for="clientAddress">Dirección</label><input id="clientAddress" maxlength="300" autocomplete="street-address" required /></div>
+                <div><label for="clientPhone">Teléfono</label><input id="clientPhone" type="tel" maxlength="80" autocomplete="tel" required /></div>
+                <div><label for="clientNotes">Observaciones</label><textarea id="clientNotes" maxlength="500" placeholder="Opcional"></textarea></div>
+                <button type="submit" class="primary-button">Guardar cliente</button>
+                <p id="clientFormMessage" class="client-form-message" role="status" hidden></p>
+              </form>
+            </article>
+
+            <article class="client-list-card">
+              <div class="panel-header" style="padding:0 0 12px"><div><h2>Análisis por cliente</h2><p class="muted">Pedidos, montos y fechas guardados en Supabase.</p></div></div>
+              <div class="client-toolbar">
+                <label>Buscar
+                  <input id="clientSearch" type="search" placeholder="Nombre, código, teléfono…" />
+                </label>
+                <label>Período
+                  <select id="clientPeriod">
+                    <option value="30" selected>Últimos 30 días</option>
+                    <option value="90">Últimos 90 días</option>
+                    <option value="365">Último año</option>
+                    <option value="all">Histórico</option>
+                    <option value="custom">Personalizado</option>
+                  </select>
+                </label>
+                <label>Ordenar
+                  <select id="clientSort">
+                    <option value="recent">Compra más reciente</option>
+                    <option value="amount">Mayor monto</option>
+                    <option value="orders">Más pedidos</option>
+                    <option value="name">Nombre</option>
+                  </select>
+                </label>
+                <label class="custom-range" id="clientFromWrap" hidden>Desde
+                  <input id="clientFrom" type="date" />
+                </label>
+                <label class="custom-range" id="clientToWrap" hidden>Hasta
+                  <input id="clientTo" type="date" />
+                </label>
+                <button id="reloadClientsButton" type="button" class="secondary-button">Actualizar</button>
+              </div>
+              <div id="clientsList" class="clients-list" aria-live="polite"></div>
+              <p class="client-list-note">Si varios pedidos del mismo cliente se acumularon dentro de 24 horas, se cuentan por separado mediante “pedidos sumados”; el monto conserva el total completo.</p>
+            </article>
+          </div>
         </section>
 
         <section id="performanceView" class="content-view" hidden>
@@ -158,6 +218,6 @@
       </section>
     </main>
 
-    <script type="module" src="/orders-panel.js?v=20260811-1"></script>
+    <script type="module" src="/orders-panel.js?v=20260811-2"></script>
   </body>
 </html>
