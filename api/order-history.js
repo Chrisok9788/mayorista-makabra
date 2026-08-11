@@ -462,7 +462,7 @@ async function ensureOrderOwnership(orderId, actor) {
 async function markOrderCompleted(orderId, actor) {
   if (!actor || !orderId) return;
   const completedAt = new Date().toISOString();
-  const { response } = await dataRequest(
+  const { response, data } = await dataRequest(
     `pedidos?order_id=eq.${encodeURIComponent(orderId)}&estado_armado=eq.armado`,
     {
       method: "PATCH",
@@ -478,10 +478,14 @@ async function markOrderCompleted(orderId, actor) {
     console.warn("[orders-audit] No se pudo registrar quién completó el pedido", orderId);
     return;
   }
+  if (!Array.isArray(data) || !data.length) return;
+
   const saved = await recordStaffPerformance(orderId, actor).catch((error) => ({ saved: false, error }));
   if (!saved?.saved) {
     console.warn("[orders-performance] No se pudo guardar el rendimiento", orderId, saved?.error?.message || saved?.detail || "");
+    return;
   }
+  console.info("[orders-performance]", JSON.stringify({ actor: actor.username, action: "record_completion", order_id: orderId, at: completedAt }));
 }
 
 export default async function handler(req, res) {
@@ -616,7 +620,10 @@ export default async function handler(req, res) {
   const result = await ordersHandler(req, res);
   if (req.method === "PATCH" && patchBody && actor) {
     const action = toStr(patchBody.action);
-    if (action === "set_order_assembly_status" && toStr(patchBody.status) === "armado") {
+    const successful = Number(res.statusCode) >= 200 && Number(res.statusCode) < 300;
+    const completedExplicitly = action === "set_order_assembly_status" && toStr(patchBody.status) === "armado";
+    const mayHaveCompletedAutomatically = action === "set_item_status" || action === "toggle_item";
+    if (successful && (completedExplicitly || mayHaveCompletedAutomatically)) {
       await markOrderCompleted(toStr(patchBody.orderId), actor).catch((error) => console.warn("[orders-audit]", error?.message || error));
     }
   }
