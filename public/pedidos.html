@@ -9,7 +9,18 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>Panel de pedidos | Mayorista Makabra</title>
-    <link rel="stylesheet" href="/orders-panel.css?v=20260722-3" />
+    <link rel="stylesheet" href="/orders-panel.css?v=20260810-1" />
+    <style>
+      .login-switch{margin-top:14px;padding-top:14px;border-top:1px solid rgba(0,0,0,.12)}
+      .login-switch summary{cursor:pointer;font-weight:700}
+      .staff-chip{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.9rem}
+      .staff-chip strong{font-weight:800}.role-pill{display:inline-flex;padding:3px 8px;border-radius:999px;background:#f1f1f1;font-size:.75rem;text-transform:capitalize}
+      .users-view{display:grid;grid-template-columns:minmax(280px,.7fr) minmax(0,1.3fr);gap:16px;align-items:start}
+      .user-admin-card,.user-list-card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+      .user-admin-card h2,.user-list-card h2{margin-top:0}.user-form{display:grid;gap:10px}.user-form label{font-weight:700;font-size:.86rem}.user-form input,.user-form select{width:100%;padding:10px 11px;border:1px solid #ccc;border-radius:10px}
+      .user-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:12px 0;border-bottom:1px solid #eee;align-items:center}.user-row:last-child{border-bottom:0}.user-row-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.user-meta{color:#666;font-size:.82rem;margin-top:4px}.user-status-off{opacity:.55}
+      @media (max-width:760px){.users-view{grid-template-columns:1fr}.staff-chip{width:100%}.user-row{grid-template-columns:1fr}.user-row-actions{justify-content:flex-start}}
+    </style>
   </head>
   <body>
     <main class="app-shell">
@@ -17,24 +28,24 @@
         <div class="login-card">
           <p class="eyebrow">Mayorista Makabra</p>
           <h1>Panel de pedidos</h1>
-          <p class="login-copy">
-            Acceso exclusivo para facturación, armado y control de faltantes.
-          </p>
+          <p class="login-copy">Cada trabajador entra con su propio usuario y contraseña.</p>
 
           <form id="loginForm" class="login-form">
-            <label for="pinInput">PIN del personal</label>
-            <input
-              id="pinInput"
-              name="pin"
-              type="password"
-              inputmode="numeric"
-              autocomplete="current-password"
-              maxlength="20"
-              required
-              autofocus
-            />
+            <label for="usernameInput">Usuario</label>
+            <input id="usernameInput" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="32" required autofocus />
+            <label for="passwordInput">Contraseña</label>
+            <input id="passwordInput" name="password" type="password" autocomplete="current-password" minlength="8" required />
             <button type="submit" class="primary-button">Ingresar</button>
           </form>
+
+          <details class="login-switch">
+            <summary>Acceso temporal con PIN de administrador</summary>
+            <form id="pinLoginForm" class="login-form" style="margin-top:12px">
+              <label for="pinInput">PIN del personal</label>
+              <input id="pinInput" name="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="20" required />
+              <button type="submit" class="secondary-button">Ingresar con PIN</button>
+            </form>
+          </details>
 
           <p id="loginError" class="error-message" role="alert" hidden></p>
         </div>
@@ -46,50 +57,61 @@
             <p class="eyebrow">Mayorista Makabra</p>
             <h1 id="panelTitle">Pedidos activos</h1>
             <p id="lastUpdated" class="muted">Actualizando…</p>
+            <div id="staffChip" class="staff-chip"></div>
           </div>
           <div class="header-actions">
-            <button id="refreshButton" class="icon-button" type="button" aria-label="Actualizar panel">
-              Actualizar
-            </button>
+            <button id="refreshButton" class="icon-button" type="button" aria-label="Actualizar panel">Actualizar</button>
             <button id="logoutButton" class="secondary-button" type="button">Salir</button>
           </div>
         </header>
 
         <nav id="panelTabs" class="panel-tabs" aria-label="Secciones del panel">
-          <button type="button" class="panel-tab active" data-view="orders">
-            Pedidos <span id="ordersBadge" class="tab-badge">0</span>
-          </button>
-          <button type="button" class="panel-tab" data-view="missing">
-            Artículos faltantes <span id="missingBadge" class="tab-badge warning">0</span>
-          </button>
+          <button type="button" class="panel-tab active" data-view="orders">Pedidos <span id="ordersBadge" class="tab-badge">0</span></button>
+          <button type="button" class="panel-tab" data-view="missing">Artículos faltantes <span id="missingBadge" class="tab-badge warning">0</span></button>
+          <button id="usersTab" type="button" class="panel-tab" data-view="users" hidden>Usuarios</button>
         </nav>
 
         <p id="panelError" class="error-message panel-error" role="alert" hidden></p>
 
         <section id="ordersView" class="content-view">
           <section id="summary" class="summary-grid" aria-label="Resumen de pedidos"></section>
-
           <nav id="filters" class="filter-row" aria-label="Filtros de pedidos">
             <button type="button" class="filter-button active" data-filter="all">Todos</button>
             <button type="button" class="filter-button" data-filter="pending">Pendientes</button>
             <button type="button" class="filter-button" data-filter="assembling">Armando</button>
             <button type="button" class="filter-button" data-filter="ready">Armados</button>
           </nav>
-
           <section id="ordersList" class="orders-list" aria-live="polite"></section>
         </section>
 
         <section id="missingView" class="content-view" hidden>
           <section id="missingSummary" class="summary-grid" aria-label="Resumen de faltantes"></section>
-          <div class="missing-help">
-            Esta lista no desaparece cuando el pedido cumple 24 horas. Los artículos quedan aquí
-            hasta que se marquen como recibidos o repuestos.
-          </div>
+          <div class="missing-help">Esta lista no desaparece cuando el pedido cumple 24 horas. Los artículos quedan aquí hasta que se marquen como recibidos o repuestos.</div>
           <section id="missingList" class="missing-list" aria-live="polite"></section>
+        </section>
+
+        <section id="usersView" class="content-view" hidden>
+          <div class="users-view">
+            <article class="user-admin-card">
+              <h2>Crear usuario interno</h2>
+              <p class="muted">El usuario entra sin correo: por ejemplo <strong>maria</strong> o <strong>juan.p</strong>.</p>
+              <form id="employeeForm" class="user-form">
+                <div><label for="employeeName">Nombre</label><input id="employeeName" maxlength="120" required /></div>
+                <div><label for="employeeUsername">Usuario</label><input id="employeeUsername" maxlength="32" autocapitalize="none" spellcheck="false" required /></div>
+                <div><label for="employeePassword">Contraseña inicial</label><input id="employeePassword" type="password" minlength="8" required /></div>
+                <div><label for="employeeRole">Rol</label><select id="employeeRole"><option value="empleado">Empleado</option><option value="supervisor">Supervisor</option><option value="admin">Administrador</option></select></div>
+                <button type="submit" class="primary-button">Crear usuario</button>
+              </form>
+            </article>
+            <article class="user-list-card">
+              <div class="panel-header" style="padding:0 0 12px"><div><h2>Usuarios internos</h2><p class="muted">Activá, desactivá o cambiá el rol de cada trabajador.</p></div><button id="reloadUsersButton" type="button" class="secondary-button">Actualizar</button></div>
+              <div id="employeesList"></div>
+            </article>
+          </div>
         </section>
       </section>
     </main>
 
-    <script type="module" src="/orders-panel.js?v=20260722-3"></script>
+    <script type="module" src="/orders-panel.js?v=20260810-1"></script>
   </body>
 </html>
