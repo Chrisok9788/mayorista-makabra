@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import ordersHandler from "../lib/orders-api.js";
+import { listStaffPerformance, recordStaffPerformance } from "../lib/staff-performance.js";
 
 export const config = { runtime: "nodejs" };
 
@@ -306,6 +307,14 @@ async function handleStaffPut(req, res) {
   if (action === "list_employees") {
     return sendJson(res, 200, { ok: true, actor, employees: await listEmployees() });
   }
+  if (action === "list_performance") {
+    const performance = await listStaffPerformance({
+      period: body.period,
+      from: body.from,
+      to: body.to,
+    });
+    return sendJson(res, 200, { ok: true, actor, performance });
+  }
   if (action === "create_employee") {
     const employee = await createEmployee(body);
     console.info("[orders-audit]", JSON.stringify({ actor: actor.username, action: "create_employee", target: employee?.username || null, at: new Date().toISOString() }));
@@ -452,6 +461,7 @@ async function ensureOrderOwnership(orderId, actor) {
 
 async function markOrderCompleted(orderId, actor) {
   if (!actor || !orderId) return;
+  const completedAt = new Date().toISOString();
   const { response } = await dataRequest(
     `pedidos?order_id=eq.${encodeURIComponent(orderId)}&estado_armado=eq.armado`,
     {
@@ -460,11 +470,18 @@ async function markOrderCompleted(orderId, actor) {
         completado_usuario_id: actor.id,
         completado_usuario: actor.username,
         completado_nombre: actor.name,
-        completado_en: new Date().toISOString(),
+        completado_en: completedAt,
       }),
     },
   );
-  if (!response.ok) console.warn("[orders-audit] No se pudo registrar quién completó el pedido", orderId);
+  if (!response.ok) {
+    console.warn("[orders-audit] No se pudo registrar quién completó el pedido", orderId);
+    return;
+  }
+  const saved = await recordStaffPerformance(orderId, actor).catch((error) => ({ saved: false, error }));
+  if (!saved?.saved) {
+    console.warn("[orders-performance] No se pudo guardar el rendimiento", orderId, saved?.error?.message || saved?.detail || "");
+  }
 }
 
 export default async function handler(req, res) {
