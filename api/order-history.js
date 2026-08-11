@@ -5,6 +5,18 @@ export const config = { runtime: "nodejs" };
 
 const STAFF_DOMAIN = "staff.makabra.local";
 const STAFF_ROLES = new Set(["empleado", "supervisor", "admin"]);
+const ACTIVE_WINDOW_MS = 24 * 60 * 60 * 1000;
+const ASSIGNMENT_FIELDS = [
+  "order_id",
+  "asignado_usuario_id",
+  "asignado_usuario",
+  "asignado_nombre",
+  "asignado_en",
+  "completado_usuario_id",
+  "completado_usuario",
+  "completado_nombre",
+  "completado_en",
+].join(",");
 
 function sendJson(res, status, body) {
   res.statusCode = status;
@@ -49,6 +61,28 @@ async function authRequest(path, options = {}, userToken = "") {
       Authorization: `Bearer ${userToken || serviceRole}`,
       Accept: "application/json",
       ...(options.body ? { "Content-Type": "application/json" } : {}),
+      ...(options.headers || {}),
+    },
+    cache: "no-store",
+  });
+  const text = await response.text();
+  let data = null;
+  if (text) {
+    try { data = JSON.parse(text); } catch { data = text; }
+  }
+  return { response, data };
+}
+
+async function dataRequest(path, options = {}) {
+  const { baseUrl, serviceRole } = supabaseAuthConfig();
+  const response = await fetch(`${baseUrl}/rest/v1/${path}`, {
+    ...options,
+    headers: {
+      apikey: serviceRole,
+      Authorization: `Bearer ${serviceRole}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Prefer: options.prefer || "return=representation",
       ...(options.headers || {}),
     },
     cache: "no-store",
@@ -113,6 +147,14 @@ function requireAdmin(actor) {
   const error = new Error("Se requiere permiso de administrador");
   error.statusCode = 403;
   error.code = "ADMIN_REQUIRED";
+  throw error;
+}
+
+function requireSupervisor(actor) {
+  if (actor?.role === "admin" || actor?.role === "supervisor") return;
+  const error = new Error("Esta acción requiere supervisor o administrador");
+  error.statusCode = 403;
+  error.code = "SUPERVISOR_REQUIRED";
   throw error;
 }
 
@@ -195,13 +237,7 @@ async function createEmployee(body) {
   const metadata = { makabra_internal: true, active: true, username, name, role };
   const { response, data } = await authRequest("/admin/users", {
     method: "POST",
-    body: JSON.stringify({
-      email,
-      password,
-      email_confirm: true,
-      user_metadata: metadata,
-      app_metadata: metadata,
-    }),
+    body: JSON.stringify({ email, password, email_confirm: true, user_metadata: metadata, app_metadata: metadata }),
   });
   if (!response.ok) {
     const error = new Error(data?.msg || data?.message || `No se pudo crear el usuario (${response.status})`);
@@ -283,6 +319,154 @@ async function handleStaffPut(req, res) {
   return sendJson(res, 400, { ok: false, error: "INVALID_ACTION" });
 }
 
+function assignmentCutoffIso() {
+  return new Date(Date.now() - ACTIVE_WINDOW_MS).toISOString();
+}
+
+async function loadAssignments() {
+  const { response, data } = await dataRequest(
+    `pedidos?select=${ASSIGNMENT_FIELDS}&creado_en=gte.${encodeURIComponent(assignmentCutoffIso())}`,
+    { method: "GET" },
+  );
+  if (!response.ok) return { enabled: false, rows: [], status: response.status, detail: data };
+  return { enabled: true, rows: Array.isArray(data) ? data : [] };
+}
+
+async function loadAssignment(orderId) {
+  const { response, data } = await dataRequest(
+    `pedidos?select=${ASSIGNMENT_FIELDS}&order_id=eq.${encodeURIComponent(orderId)}&limit=1`,
+    { method: "GET" },
+  );
+  if (!response.ok) {
+    const error = new Error("Falta aplicar la migración de asignación de pedidos en Supabase");
+    error.statusCode = 503;
+    error.code = "ORDER_ASSIGNMENT_SCHEMA_NOT_CONFIGURED";
+    throw error;
+  }
+  return Array.isArray(data) ? data[0] || null : null;
+}
+
+async function claimOrder(orderId, actor) {
+  if (!actor || actor.legacy) {
+    const error = new Error("Ingresá con un usuario interno para tomar pedidos");
+    error.statusCode = 403;
+    error.code = "INDIVIDUAL_LOGIN_REQUIRED";
+    throw error;
+  }
+  if (!/^MK-[A-Z0-9-]+$/i.test(orderId)) {
+    const error = new Error("Pedido inválido");
+    error.statusCode = 400;
+    error.code = "INVALID_ORDER_ID";
+    throw error;
+  }
+  const now = new Date().toISOString();
+  const { response, data } = await dataRequest(
+    `pedidos?order_id=eq.${encodeURIComponent(orderId)}&creado_en=gte.${encodeURIComponent(assignmentCutoffIso())}&asignado_usuario_id=is.null`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({
+        asignado_usuario_id: actor.id,
+        asignado_usuario: actor.username,
+        asignado_nombre: actor.name,
+        asignado_en: now,
+      }),
+    },
+  );
+  if (!response.ok) {
+    const error = new Error("Falta aplicar la migración de asignación de pedidos en Supabase");
+    error.statusCode = 503;
+    error.code = "ORDER_ASSIGNMENT_SCHEMA_NOT_CONFIGURED";
+    throw error;
+  }
+  if (Array.isArray(data) && data.length) {
+    console.info("[orders-audit]", JSON.stringify({ actor: actor.username, action: "claim_order", order_id: orderId, at: now }));
+    return data[0];
+  }
+  const current = await loadAssignment(orderId);
+  if (!current) {
+    const error = new Error("El pedido ya no está activo");
+    error.statusCode = 404;
+    error.code = "ORDER_NOT_ACTIVE";
+    throw error;
+  }
+  if (toStr(current.asignado_usuario_id) === actor.id) return current;
+  const error = new Error(`Este pedido ya fue tomado por ${current.asignado_nombre || current.asignado_usuario || "otro empleado"}`);
+  error.statusCode = 409;
+  error.code = "ORDER_ALREADY_ASSIGNED";
+  error.assignment = current;
+  throw error;
+}
+
+async function releaseOrder(orderId, actor) {
+  requireAdmin(actor);
+  const { response, data } = await dataRequest(
+    `pedidos?order_id=eq.${encodeURIComponent(orderId)}`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({
+        asignado_usuario_id: null,
+        asignado_usuario: null,
+        asignado_nombre: null,
+        asignado_en: null,
+      }),
+    },
+  );
+  if (!response.ok) {
+    const error = new Error("No se pudo liberar el pedido");
+    error.statusCode = 503;
+    error.code = "ORDER_ASSIGNMENT_SCHEMA_NOT_CONFIGURED";
+    throw error;
+  }
+  console.info("[orders-audit]", JSON.stringify({ actor: actor.username, action: "release_order", order_id: orderId, at: new Date().toISOString() }));
+  return Array.isArray(data) ? data[0] || null : null;
+}
+
+async function ensureOrderOwnership(orderId, actor) {
+  if (!actor) {
+    const error = new Error("Sesión no válida");
+    error.statusCode = 401;
+    error.code = "UNAUTHORIZED";
+    throw error;
+  }
+  if (actor.role === "admin" || actor.role === "supervisor") return;
+  const assignment = await loadAssignment(orderId);
+  if (!assignment) {
+    const error = new Error("Pedido no encontrado");
+    error.statusCode = 404;
+    error.code = "ORDER_NOT_FOUND";
+    throw error;
+  }
+  if (!assignment.asignado_usuario_id) {
+    const error = new Error("Primero tenés que tomar este pedido");
+    error.statusCode = 409;
+    error.code = "ORDER_NOT_CLAIMED";
+    throw error;
+  }
+  if (toStr(assignment.asignado_usuario_id) !== actor.id) {
+    const error = new Error(`Este pedido pertenece a ${assignment.asignado_nombre || assignment.asignado_usuario || "otro empleado"}`);
+    error.statusCode = 403;
+    error.code = "ORDER_LOCKED";
+    throw error;
+  }
+}
+
+async function markOrderCompleted(orderId, actor) {
+  if (!actor || !orderId) return;
+  const { response } = await dataRequest(
+    `pedidos?order_id=eq.${encodeURIComponent(orderId)}&estado_armado=eq.armado`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({
+        completado_usuario_id: actor.id,
+        completado_usuario: actor.username,
+        completado_nombre: actor.name,
+        completado_en: new Date().toISOString(),
+      }),
+    },
+  );
+  if (!response.ok) console.warn("[orders-audit] No se pudo registrar quién completó el pedido", orderId);
+}
+
 export default async function handler(req, res) {
   if (req.method === "PUT") {
     try {
@@ -299,14 +483,7 @@ export default async function handler(req, res) {
 
   if (req.method === "POST") {
     let body;
-    try {
-      body = parseBody(req);
-    } catch {
-      return sendJson(res, 400, { ok: false, error: "BAD_REQUEST" });
-    }
-
-    // El panel operativo es exclusivo para clientes registrados.
-    // Los pedidos anónimos siguen su curso por WhatsApp, pero no se guardan aquí.
+    try { body = parseBody(req); } catch { return sendJson(res, 400, { ok: false, error: "BAD_REQUEST" }); }
     if (!registeredCodeFrom(body)) {
       const incomingOrderId = String(body?.orderId || "").trim() || null;
       return sendJson(res, 200, {
@@ -326,52 +503,86 @@ export default async function handler(req, res) {
   let actor = null;
   if (req.method === "GET" || req.method === "PATCH") {
     actor = await authenticateStaff(req);
-    if (actor && !actor.legacy) {
-      // El controlador operativo existente conserva la validación del PIN. Lo inyectamos
-      // únicamente del lado servidor después de validar la sesión individual.
-      req.headers["x-orders-panel-pin"] = toStr(process.env.ORDERS_PANEL_PIN);
-    }
+    if (!actor) return sendJson(res, 401, { ok: false, error: "UNAUTHORIZED", message: "Sesión no válida" });
+    if (!actor.legacy) req.headers["x-orders-panel-pin"] = toStr(process.env.ORDERS_PANEL_PIN);
   }
 
+  let patchBody = null;
   if (req.method === "PATCH") {
+    try { patchBody = parseBody(req); } catch { return sendJson(res, 400, { ok: false, error: "BAD_REQUEST" }); }
+    const action = toStr(patchBody.action);
+    const orderId = toStr(patchBody.orderId);
+
     try {
-      const body = parseBody(req);
-      if (body.action === "complete_order") {
-        req.body = {
-          ...body,
-          action: "set_order_assembly_status",
-          status: "armado",
-        };
+      if (action === "claim_order") {
+        const assignment = await claimOrder(orderId, actor);
+        return sendJson(res, 200, { ok: true, actor, assignment });
       }
-      if (actor) {
-        console.info("[orders-audit]", JSON.stringify({ actor: actor.username, role: actor.role, action: req.body?.action || body.action, order_id: body.orderId || null, product_id: body.productId || null, at: new Date().toISOString() }));
+      if (action === "release_order") {
+        const assignment = await releaseOrder(orderId, actor);
+        return sendJson(res, 200, { ok: true, actor, assignment });
       }
-    } catch {
-      // El controlador principal devolverá BAD_REQUEST.
+      if (action === "resolve_missing_product") {
+        requireSupervisor(actor);
+      } else if (orderId) {
+        await ensureOrderOwnership(orderId, actor);
+      }
+
+      if (action === "complete_order") {
+        req.body = { ...patchBody, action: "set_order_assembly_status", status: "armado" };
+        patchBody = req.body;
+      }
+
+      console.info("[orders-audit]", JSON.stringify({
+        actor: actor.username,
+        role: actor.role,
+        action: req.body?.action || action,
+        order_id: orderId || null,
+        product_id: patchBody.productId || null,
+        at: new Date().toISOString(),
+      }));
+    } catch (error) {
+      return sendJson(res, Number(error?.statusCode) || 500, {
+        ok: false,
+        error: error?.code || "ORDER_ACCESS_FAILED",
+        message: error?.message || "No se pudo acceder al pedido",
+        ...(error?.assignment ? { assignment: error.assignment } : {}),
+      });
     }
   }
 
   if (req.method === "GET") {
+    const assignments = await loadAssignments();
+    const assignmentMap = new Map(assignments.rows.map((row) => [toStr(row.order_id), row]));
     const originalEnd = res.end.bind(res);
     res.end = (chunk, ...args) => {
       try {
         const payload = JSON.parse(String(chunk || "{}"));
         if (payload?.ok === true) {
           payload.actor = actor || legacyActor(req) || null;
-          // También ocultamos pedidos anónimos antiguos que hayan quedado en la tabla.
+          payload.assignment_enabled = assignments.enabled;
+          payload.assignment_schema_error = assignments.enabled ? null : "Ejecutá supabase/pedidos_asignacion_empleados.sql en Supabase";
           payload.orders = (Array.isArray(payload.orders) ? payload.orders : [])
             .filter((order) => /^(?:\d{5}|\d{7})$/.test(String(order?.cliente_codigo || "")))
-            .map((order) => ({
-              ...order,
-              progress: {
-                ...(order.progress || {}),
-                resolved: Number(order?.progress?.handled) || 0,
-              },
-            }));
+            .map((order) => {
+              const assignment = assignmentMap.get(toStr(order.order_id)) || {};
+              const mine = actor && toStr(assignment.asignado_usuario_id) === actor.id;
+              const canOpen = actor?.role === "admin" || actor?.role === "supervisor" || mine;
+              return {
+                ...order,
+                ...assignment,
+                assignment_mine: Boolean(mine),
+                can_open: Boolean(canOpen),
+                locked: Boolean(assignment.asignado_usuario_id && !canOpen),
+                items: canOpen ? order.items : [],
+                progress: {
+                  ...(order.progress || {}),
+                  resolved: Number(order?.progress?.handled) || 0,
+                },
+              };
+            });
 
-          payload.missing_items = (
-            Array.isArray(payload.missing_items) ? payload.missing_items : []
-          ).map((item) => ({
+          payload.missing_items = (Array.isArray(payload.missing_items) ? payload.missing_items : []).map((item) => ({
             ...item,
             cantidad_pedidos: Array.isArray(item.pedidos) ? item.pedidos.length : 0,
             marcado_en: item.marcado_primero_en || item.marcado_ultimo_en || null,
@@ -379,11 +590,18 @@ export default async function handler(req, res) {
           return originalEnd(JSON.stringify(payload), ...args);
         }
       } catch {
-        // Si no es JSON, se devuelve la respuesta original.
+        // Se devuelve la respuesta original.
       }
       return originalEnd(chunk, ...args);
     };
   }
 
-  return ordersHandler(req, res);
+  const result = await ordersHandler(req, res);
+  if (req.method === "PATCH" && patchBody && actor) {
+    const action = toStr(patchBody.action);
+    if (action === "set_order_assembly_status" && toStr(patchBody.status) === "armado") {
+      await markOrderCompleted(toStr(patchBody.orderId), actor).catch((error) => console.warn("[orders-audit]", error?.message || error));
+    }
+  }
+  return result;
 }
